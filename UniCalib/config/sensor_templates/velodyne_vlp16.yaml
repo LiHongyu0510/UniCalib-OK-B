@@ -1,0 +1,7 @@
+# Velodyne VLP-16 LiDAR 模板
+sensor_id: "lidar_vlp16"
+sensor_type: "lidar"
+topic: "/velodyne_points"
+frame_id: "velodyne"
+lidar_type: "spinning"
+rate: 10  # Hz

@@ -1,0 +1,25 @@
+# 示例车辆标定配置
+# 传感器安装位置先验（单位: 米，相对于车辆坐标系）
+
+vehicle_frame_id: "base_link"
+
+sensor_mounts:
+  imu0:
+    position: [0.0, 0.0, 1.0]     # x, y, z (m)
+    orientation: [0.0, 0.0, 0.0]  # roll, pitch, yaw (deg)
+
+  lidar0:
+    position: [0.0, 0.0, 2.0]
+    orientation: [0.0, 0.0, 0.0]
+
+  cam_front:
+    position: [1.5, 0.0, 1.5]
+    orientation: [0.0, -5.0, 0.0]  # 略微下倾
+
+  cam_left:
+    position: [0.0, 1.0, 1.2]
+    orientation: [0.0, -10.0, 90.0]
+
+  cam_right:
+    position: [0.0, -1.0, 1.2]
+    orientation: [0.0, -10.0, -90.0]

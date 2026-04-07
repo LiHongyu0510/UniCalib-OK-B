@@ -1,0 +1,6 @@
+source;share/mobile_sam/hook/pythonpath.ps1
+source;share/mobile_sam/hook/pythonpath.dsv
+source;share/mobile_sam/hook/pythonpath.sh
+source;../../build/mobile_sam/share/mobile_sam/hook/pythonpath_develop.ps1
+source;../../build/mobile_sam/share/mobile_sam/hook/pythonpath_develop.dsv
+source;../../build/mobile_sam/share/mobile_sam/hook/pythonpath_develop.sh

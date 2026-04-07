@@ -1,0 +1,8 @@
+include(CMakeFindDependencyMacro)
+
+find_dependency(Eigen3 REQUIRED)
+find_dependency(Sophus REQUIRED)
+find_dependency(Ceres REQUIRED)
+
+# Add the targets file
+include("${CMAKE_CURRENT_LIST_DIR}/ctrajTargets.cmake")

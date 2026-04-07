@@ -1,0 +1,176 @@
+# =============================================================================
+# UniCalib C++ 优化配置文件 - 基于最新标定精度优化研究
+# 参考: CalibRefine (2025), iKalibr (2024), TON-VIO (2024)
+# =============================================================================
+
+system:
+  name: "autonomous_vehicle_calib_optimized"
+  output_dir: "./calib_results/"
+  log_level: "INFO"
+  
+  # 迭代精化配置
+  iterative_refinement:
+    enabled: true
+    max_iterations: 3
+    convergence_threshold: 0.001  # 旋转变化 < 0.1°
+    translation_threshold: 0.001  # 平移变化 < 1mm
+    early_stop: true
+
+# =============================================================================
+# 传感器定义
+# =============================================================================
+sensors:
+  - sensor_id: "imu0"
+    sensor_type: "imu"
+    topic: "/imu/data"
+    frame_id: "imu_link"
+    rate: 200
+
+  - sensor_id: "lidar0"
+    sensor_type: "lidar"
+    topic: "/velodyne_points"
+    frame_id: "velodyne"
+    lidar_type: "spinning"
+
+  - sensor_id: "cam_front"
+    sensor_type: "camera_pinhole"
+    topic: "/camera/front/image_raw"
+    frame_id: "camera_front"
+    resolution: [1920, 1080]
+
+# =============================================================================
+# 数据采集需求
+# =============================================================================
+data_collection:
+  imu_intrinsic:
+    static_duration: 7200
+    multi_position: true
+
+  extrinsic:
+    duration: 180
+    motion_type: "figure_8"
+    min_acceleration: 2.0
+    min_rotation_deg: 10.0
+
+# =============================================================================
+# 标定策略配置 - 优化版
+# =============================================================================
+calibration:
+  # Stage 1: 内参标定
+  stage1_intrinsic:
+    camera_pinhole:
+      primary_method: "dm_calib"
+      refinement_method: "opencv"
+      min_reproj_error: 0.3
+      evaluate_multiple_models: true
+
+    imu:
+      method: "ikalibr"
+      accel_model: "FULL_TWELVE"
+      gyro_model: "FULL_TWELVE"
+
+  # Stage 2: 粗外参标定
+  stage2_coarse:
+    imu_lidar:
+      method: "l2calib_rl_init"
+      min_rotation_deg: 5.0
+      n_segments: 20
+      hand_eye:
+        method: "park_martin"
+        ransac_threshold: 0.01
+        min_inliers: 5
+
+    lidar_camera:
+      method: "mias_lcec_coarse"
+      c3m_matching:
+        use_large_vision_model: true
+        min_match_score: 0.7
+        max_correspondences: 500
+
+  # Stage 3: 精外参标定 - 优化版
+  stage3_fine:
+    global_optimization:
+      method: "ikalibr"
+      spline_order: 4
+      knot_distance_so3: 0.015      # 减小提高精度
+      knot_distance_pos: 0.015
+      max_iterations: 100
+      enable_time_offset: true
+      time_offset_padding: 0.15
+      robust_kernel: "huber"
+      robust_kernel_param: 1.345
+      
+      # 多分辨率优化
+      multiresolution:
+        enabled: true
+        levels: 3
+        knot_factors: [4.0, 2.0, 1.0]
+
+    lidar_camera_refinement:
+      method: "mias_lcec_fine"
+      use_imu_motion_compensation: true
+      optimize_time_offset: true
+      
+      iterative_refinement:
+        enabled: true
+        max_iterations: 5
+        attention_refinement: true
+      
+      edge_alignment:
+        method: "distance_transform"
+        distance_threshold: 2.0
+        use_intensity: true
+
+  # Stage 4: 验证 - 优化版
+  stage4_validation:
+    metrics:
+      - "reprojection_error"
+      - "point_cloud_colorization"
+      - "edge_alignment"
+      - "temporal_consistency"
+    
+    thresholds:
+      reproj_error_px: 0.5
+      edge_alignment_px: 1.5
+      time_offset_ms: 3.0
+      color_consistency: 0.1
+    
+    cross_validation:
+      enabled: true
+      k_fold: 5
+
+# =============================================================================
+# 时间同步优化 (基于 TON-VIO)
+# =============================================================================
+temporal_calibration:
+  online_estimation:
+    enabled: true
+    method: "feature_velocity"
+    update_rate: 10
+    max_offset_ms: 100
+  
+  filtering:
+    type: "weighted_moving_average"
+    window_size: 20
+    outlier_rejection: true
+    outlier_threshold_sigma: 3.0
+
+# =============================================================================
+# 质量保证
+# =============================================================================
+quality_assurance:
+  data_quality:
+    min_motion_excitation: 2.0
+    min_feature_count: 100
+    max_outlier_ratio: 0.1
+  
+  result_validation:
+    check_observability: true
+    check_covariance: true
+    max_rotation_uncertainty_deg: 0.5
+    max_translation_uncertainty_m: 0.01
+  
+  consistency_check:
+    enabled: true
+    loop_closure_check: true
+    temporal_consistency: true

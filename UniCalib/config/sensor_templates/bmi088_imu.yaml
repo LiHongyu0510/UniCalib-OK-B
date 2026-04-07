@@ -1,0 +1,13 @@
+# Bosch BMI088 IMU 模板
+sensor_id: "imu_bmi088"
+sensor_type: "imu"
+topic: "/imu/data"
+frame_id: "imu_link"
+rate: 400  # Hz
+
+# BMI088 典型噪声参数（出厂规格）
+intrinsic_prior:
+  gyro_noise: 1.6968e-4      # rad/s/√Hz
+  gyro_bias_instability: 2.9e-6
+  accel_noise: 2.0e-3        # m/s²/√Hz
+  accel_bias_instability: 3.0e-4

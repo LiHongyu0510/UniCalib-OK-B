@@ -1,0 +1,555 @@
+#pragma once
+/**
+ * UniCalib Unified — 统一标定可视化系统
+ *
+ * 功能:
+ *   1. IMU-LiDAR 标定可视化
+ *      - LiDAR 里程计轨迹 3D 显示
+ *      - 旋转对可视化 (IMU vs LiDAR 旋转对比)
+ *      - 手眼标定残差分布
+ *      - B样条轨迹收敛动画
+ *      - 时间偏移估计可视化
+ *
+ *   2. LiDAR-Camera 标定可视化
+ *      - 点云投影到图像 (深度着色)
+ *      - 边缘对齐可视化
+ *      - 互信息热力图
+ *      - 重投影误差分布
+ *
+ *   3. 通用可视化
+ *      - 收敛曲线 (残差 vs 迭代次数)
+ *      - 参数变化曲线
+ *      - 不确定性椭圆
+ *      - 实时进度显示
+ *
+ * 使用示例:
+ *   auto viz = CalibVisualizer::Create();
+ *   viz->set_progress_callback([](const std::string& stage, double progress) {
+ *       printf("[%s] %.1f%%\n", stage.c_str(), progress * 100);
+ *   });
+ *   viz->show_imu_lidar_result(imu_data, lidar_scans, extrinsic);
+ */
+
+#include "unicalib/viz/cloud_viewer.h"
+#include "unicalib/common/sensor_types.h"
+#include "unicalib/common/calib_param.h"
+#include <Eigen/Core>
+#include <sophus/se3.hpp>
+#include <opencv2/core.hpp>
+#include <memory>
+#include <functional>
+#include <vector>
+#include <string>
+#include <map>
+
+namespace ns_unicalib {
+
+// ===========================================================================
+// 可视化配置
+// ===========================================================================
+struct VizConfig {
+    // 窗口设置
+    std::string window_title = "UniCalib Visualization";
+    bool enable_background_thread = true;
+    int window_width = 1280;
+    int window_height = 720;
+
+    // 颜色主题
+    ViewColor imu_trajectory_color = ViewColor::Red();
+    ViewColor lidar_trajectory_color = ViewColor::Blue();
+    ViewColor refined_trajectory_color = ViewColor::Green();
+    ViewColor point_cloud_color = ViewColor::White();
+
+    // 3D 显示参数
+    float coordinate_frame_scale = 0.3f;
+    float trajectory_line_width = 2.0f;
+    float point_cloud_size = 1.5f;
+
+    // 2D 图表参数
+    int plot_width = 800;
+    int plot_height = 400;
+
+    // 动画设置
+    bool enable_animation = true;
+    int animation_delay_ms = 50;  // 动画帧间隔
+
+    // 保存设置
+    bool auto_save_screenshots = false;
+    std::string screenshot_dir = "./viz_output";
+
+    // 调试模式
+    bool verbose = false;
+};
+
+// ===========================================================================
+// 进度回调类型
+// ===========================================================================
+using ProgressCallback = std::function<void(
+    const std::string& stage,      // 阶段名称
+    const std::string& step,       // 步骤名称
+    double progress,               // 0.0 ~ 1.0
+    const std::string& message     // 附加消息
+)>;
+
+// ===========================================================================
+// IMU 内参可视化数据
+// ===========================================================================
+struct IMUIntrinsicVizData {
+    std::string sensor_id;
+    IMUIntrinsics intrinsics;
+    AllanResult allan_result;
+    std::vector<double> gyro_noise_samples;   // 陀螺噪声样本
+    std::vector<double> accel_noise_samples;  // 加速度计噪声样本
+    std::vector<IMUFrame> raw_imu_data;       // 原始IMU数据 (用于可视化)
+};
+
+// ===========================================================================
+// 相机内参可视化数据
+// ===========================================================================
+struct CameraIntrinsicVizData {
+    std::string sensor_id;
+    CameraIntrinsics intrinsics;
+    std::vector<cv::Mat> calibration_images;     // 标定图像
+    std::vector<std::vector<cv::Point2f>> detected_corners;  // 检测到的角点
+    std::vector<double> reprojection_errors;     // 每张图像的重投影误差
+    cv::Mat undistort_example;                  // 去畸变示例图像
+};
+
+// ===========================================================================
+// IMU-LiDAR 可视化数据
+// ===========================================================================
+struct IMULiDARVizData {
+    // 原始数据
+    std::vector<IMUFrame> imu_data;
+    std::vector<LiDARScan> lidar_scans;
+
+    // LiDAR 里程计轨迹
+    std::vector<std::pair<double, Sophus::SE3d>> lidar_odom_poses;
+
+    // 旋转对 (用于手眼标定)
+    struct RotationPair {
+        double t_begin, t_end;
+        Sophus::SO3d rot_imu;
+        Sophus::SO3d rot_lidar;
+        double quality;
+    };
+    std::vector<RotationPair> rotation_pairs;
+
+    // 标定结果
+    ExtrinsicSE3 coarse_extrinsic;
+    ExtrinsicSE3 refined_extrinsic;
+
+    // 优化收敛数据
+    struct OptimizationLog {
+        int iteration;
+        double cost;
+        double rot_error_deg;
+        double trans_error_m;
+        double time_offset_s;
+    };
+    std::vector<OptimizationLog> optimization_history;
+
+    // 残差分布
+    std::vector<double> residual_distribution;
+};
+
+// ===========================================================================
+// LiDAR-Camera 可视化数据
+// ===========================================================================
+struct LiDARCameraVizData {
+    std::string lidar_id;
+    std::string camera_id;
+    
+    // 点云
+    std::shared_ptr<pcl::PointCloud<pcl::PointXYZI>> cloud;
+    
+    // 图像
+    cv::Mat image;
+    CameraIntrinsics intrinsics;
+    
+    // 外参
+    ExtrinsicSE3 extrinsic;
+    
+    // 投影结果
+    cv::Mat projected_image;           // 点云投影到图像
+    cv::Mat edge_overlay_image;        // 边缘叠加
+    cv::Mat mutual_info_heatmap;       // 互信息热力图
+    
+    // 误差统计
+    std::vector<double> reproj_errors;
+    double mean_error = 0.0;
+    double std_error = 0.0;
+    
+    // 边缘对齐数据
+    struct EdgeAlignment {
+        std::vector<Eigen::Vector2d> lidar_edges;   // LiDAR 边缘点 (图像坐标)
+        std::vector<Eigen::Vector2d> image_edges;   // 图像边缘点
+        std::vector<double> distances;              // 距离误差
+    };
+    EdgeAlignment edge_alignment;
+};
+
+// ===========================================================================
+// Camera-Camera 可视化数据
+// ===========================================================================
+struct CameraCameraVizData {
+    std::string cam0_id;
+    std::string cam1_id;
+    
+    // 外参
+    ExtrinsicSE3 extrinsic;
+    
+    // 匹配数据
+    std::vector<std::pair<Eigen::Vector2d, Eigen::Vector2d>> matched_points;  // 匹配的特征点对
+    std::vector<double> matching_errors;  // 匹配误差
+    
+    // 图像对
+    std::pair<cv::Mat, cv::Mat> stereo_pair;  // 立体图像对
+    cv::Mat disparity_map;                   // 视差图
+    cv::Mat epipolar_visualization;          // 极线可视化
+    
+    // 重投影误差
+    std::vector<double> reproj_errors_cam0;  // 相机0的重投影误差
+    std::vector<double> reproj_errors_cam1;  // 相机1的重投影误差
+};
+
+// ===========================================================================
+// LiDAR-Camera 可视化数据
+// ===========================================================================
+struct LiDARCamVizData {
+    // 点云
+    std::shared_ptr<pcl::PointCloud<pcl::PointXYZI>> cloud;
+
+    // 图像
+    cv::Mat image;
+    CameraIntrinsics intrinsics;
+
+    // 外参
+    ExtrinsicSE3 extrinsic;
+
+    // 投影结果
+    cv::Mat projected_image;           // 点云投影到图像
+    cv::Mat edge_overlay_image;        // 边缘叠加
+    cv::Mat mutual_info_heatmap;       // 互信息热力图
+
+    // 误差统计
+    std::vector<double> reproj_errors;
+    double mean_error = 0.0;
+    double std_error = 0.0;
+
+    // 边缘对齐数据
+    struct EdgeAlignment {
+        std::vector<Eigen::Vector2d> lidar_edges;   // LiDAR 边缘点 (图像坐标)
+        std::vector<Eigen::Vector2d> image_edges;   // 图像边缘点
+        std::vector<double> distances;              // 距离误差
+    };
+    EdgeAlignment edge_alignment;
+};
+
+// ===========================================================================
+// 收敛曲线数据
+// ===========================================================================
+struct ConvergenceCurve {
+    std::string name;                   // 曲线名称
+    std::vector<double> iterations;     // 迭代次数
+    std::vector<double> values;         // 值 (残差/误差等)
+    std::string y_label;                // Y轴标签
+    ViewColor color = ViewColor::Blue();
+};
+
+// ===========================================================================
+// CalibVisualizer — 统一标定可视化类
+// ===========================================================================
+class CalibVisualizer {
+public:
+    using Ptr = std::shared_ptr<CalibVisualizer>;
+
+    explicit CalibVisualizer(const VizConfig& config = VizConfig());
+    ~CalibVisualizer();
+
+    // -------------------------------------------------------------------------
+    // 工厂方法
+    // -------------------------------------------------------------------------
+    static Ptr Create(const VizConfig& config = VizConfig()) {
+        return std::make_shared<CalibVisualizer>(config);
+    }
+
+    // -------------------------------------------------------------------------
+    // 配置
+    // -------------------------------------------------------------------------
+    void set_config(const VizConfig& config);
+    const VizConfig& get_config() const { return config_; }
+
+    // 进度回调
+    void set_progress_callback(ProgressCallback cb) { progress_cb_ = std::move(cb); }
+
+    // -------------------------------------------------------------------------
+    // IMU内参标定可视化
+    // -------------------------------------------------------------------------
+
+    /**
+     * @brief 显示 IMU 内参标定完整结果
+     * 包含: Allan 方差曲线、噪声样本、陀螺仪/加速度计参数
+     */
+    void show_imu_intrinsic_result(const IMUIntrinsicVizData& data, bool block = true);
+
+    /**
+     * @brief 显示 Allan 方差曲线
+     */
+    void show_allan_variance_plot(const AllanResult& allan);
+
+    // -------------------------------------------------------------------------
+    // 相机内参标定可视化
+    // -------------------------------------------------------------------------
+
+    /**
+     * @brief 显示相机内参标定完整结果
+     * 包含: 棋盘格检测结果、重投影误差、畸变校正示例
+     */
+    void show_camera_intrinsic_result(const CameraIntrinsicVizData& data, bool block = true);
+
+    /**
+     * @brief 显示重投影误差分布
+     */
+    void show_reprojection_error_distribution(const std::vector<double>& errors);
+
+    /**
+     * @brief 显示畸变校正前后对比
+     */
+    void show_undistortion_comparison(const cv::Mat& raw_image, const cv::Mat& undistorted_image,
+                                     const CameraIntrinsics& intrinsics);
+
+    // -------------------------------------------------------------------------
+    // IMU-LiDAR 标定可视化
+    // -------------------------------------------------------------------------
+
+    /**
+     * @brief 显示 IMU-LiDAR 标定完整结果
+     * 包含: 轨迹对比、旋转对、残差分布
+     */
+    void show_imu_lidar_result(const IMULiDARVizData& data, bool block = true);
+
+    /**
+     * @brief 显示 LiDAR 里程计轨迹
+     * 3D 视图展示 LiDAR 运动轨迹
+     */
+    void show_lidar_odometry(const std::vector<std::pair<double, Sophus::SE3d>>& poses,
+                              const std::vector<LiDARScan>& scans = {},
+                              bool show_clouds = false);
+
+    /**
+     * @brief 显示旋转对可视化
+     * 对比 IMU 积分旋转 vs LiDAR 里程计旋转
+     */
+    void show_rotation_pairs(const std::vector<IMULiDARVizData::RotationPair>& pairs,
+                              const Sophus::SO3d& extrinsic_rot);
+
+    /**
+     * @brief 显示 B样条优化过程
+     * 动画展示优化收敛过程
+     */
+    void show_bspline_optimization(const std::vector<IMULiDARVizData::OptimizationLog>& history,
+                                    const IMULiDARVizData& data);
+
+    /**
+     * @brief 显示时间偏移估计
+     * 图表展示时间偏移收敛过程
+     */
+    cv::Mat plot_time_offset_estimation(
+        const std::vector<IMULiDARVizData::OptimizationLog>& history);
+
+    /**
+     * @brief 显示对齐点云
+     * 用外参将多帧点云变换到同一坐标系
+     */
+    void show_aligned_point_clouds(
+        const std::vector<std::shared_ptr<pcl::PointCloud<pcl::PointXYZI>>>& clouds,
+        const std::vector<Sophus::SE3d>& poses,
+        const Sophus::SE3d& extrinsic);
+
+    // -------------------------------------------------------------------------
+    // LiDAR-Camera 标定可视化
+    // -------------------------------------------------------------------------
+
+    /**
+     * @brief 显示 LiDAR-Camera 标定完整结果
+     */
+    void show_lidar_cam_result(const LiDARCamVizData& data,
+                                bool block = true);
+
+    /**
+     * @brief 显示点云投影到图像
+     * 深度着色 (红近蓝远)
+     */
+    cv::Mat show_projection_to_image(const LiDARCamVizData& data,
+                                      double min_depth = 0.5,
+                                      double max_depth = 50.0);
+
+    /**
+     * @brief 显示边缘对齐
+     * 叠加 LiDAR 边缘和图像边缘
+     */
+    cv::Mat show_edge_alignment(const LiDARCamVizData& data);
+
+    /**
+     * @brief 显示互信息热力图
+     * 用于评估 LiDAR-Camera 外参质量
+     */
+    cv::Mat show_mutual_info_heatmap(const LiDARCamVizData& data);
+
+    /**
+     * @brief 显示重投影误差分布
+     * 柱状图展示误差分布
+     */
+    cv::Mat plot_reprojection_error_distribution(const LiDARCamVizData& data);
+
+    // -------------------------------------------------------------------------
+    // Camera-Camera 标定可视化
+    // -------------------------------------------------------------------------
+
+    /**
+     * @brief 显示 Camera-Camera 标定完整结果
+     * 包含: 立体匹配点、视差图、极线可视化
+     */
+    void show_camera_cam_result(const CameraCameraVizData& data, bool block = true);
+
+    /**
+     * @brief 显示立体匹配点对
+     * 3D 视图展示匹配特征点的对应关系
+     */
+    void show_matched_points_3d(const std::vector<Eigen::Vector3d>& points_cam0,
+                                const std::vector<Eigen::Vector3d>& points_cam1,
+                                const std::vector<std::pair<int, int>>& correspondences);
+
+    /**
+     * @brief 显示视差图
+     * 2D 图表展示视差分布和深度估计
+     */
+    cv::Mat show_disparity_map(const cv::Mat& disparity, const cv::Mat& left_image, bool depth_colored = true);
+
+    /**
+     * @brief 显示极线可视化
+     * 叠加极线到左/右图像上，用于验证极线约束
+     */
+    void show_epipolar_lines(const cv::Mat& left_image, const cv::Mat& right_image,
+                              const CameraIntrinsics& intrinsics0, const CameraIntrinsics& intrinsics1,
+                              const ExtrinsicSE3& extrinsic);
+
+    /**
+     * @brief 显示三角化误差分布
+     */
+    cv::Mat plot_triangulation_errors(const std::vector<double>& errors_cam0,
+                                        const std::vector<double>& errors_cam1);
+
+    // -------------------------------------------------------------------------
+    // 通用可视化
+    // -------------------------------------------------------------------------
+
+    /**
+     * @brief 绘制收敛曲线
+     * 支持多条曲线叠加
+     */
+    cv::Mat plot_convergence_curves(const std::vector<ConvergenceCurve>& curves,
+                                     const std::string& title = "Convergence");
+
+    /**
+     * @brief 绘制残差柱状图
+     */
+    cv::Mat plot_residual_histogram(const std::vector<double>& residuals,
+                                     const std::string& title = "Residual Distribution");
+
+    /**
+     * @brief 绘制 Allan 方差曲线
+     */
+    cv::Mat plot_allan_variance(const struct AllanResult& allan);
+
+    /**
+     * @brief 绘制参数变化曲线
+     */
+    cv::Mat plot_parameter_evolution(
+        const std::vector<double>& iterations,
+        const std::map<std::string, std::vector<double>>& param_history,
+        const std::string& title = "Parameter Evolution");
+
+    /**
+     * @brief 显示不确定性椭圆
+     * 3D 椭圆表示位置/旋转不确定性
+     */
+    void show_uncertainty_ellipse(const Sophus::SE3d& pose,
+                                   const Eigen::Matrix6d& covariance,
+                                   const std::string& id,
+                                   double sigma = 3.0);
+
+    // -------------------------------------------------------------------------
+    // 3D 点云查看器访问
+    // -------------------------------------------------------------------------
+    CloudViewer::Ptr get_3d_viewer() { return cloud_viewer_; }
+
+    // 直接添加元素到 3D 查看器
+    void add_point_cloud(const std::shared_ptr<pcl::PointCloud<pcl::PointXYZI>>& cloud,
+                          const std::string& id,
+                          const ViewColor& color = ViewColor::White());
+    void add_trajectory(const std::vector<Sophus::SE3d>& poses,
+                         const std::string& id,
+                         const ViewColor& color = ViewColor::Green());
+    void add_coordinate_frame(const Sophus::SE3d& pose,
+                               const std::string& id);
+    void clear_viewer();
+
+    // -------------------------------------------------------------------------
+    // 控制方法
+    // -------------------------------------------------------------------------
+    void spin();                    // 阻塞显示
+    void spin_once(int ms = 50);    // 单次刷新
+    bool is_stopped() const;
+
+    void save_screenshot(const std::string& filename);
+    void save_all_plots(const std::string& output_dir);
+
+    // -------------------------------------------------------------------------
+    // 进度报告
+    // -------------------------------------------------------------------------
+    void report_progress(const std::string& stage,
+                         const std::string& step,
+                         double progress,
+                         const std::string& message = "");
+
+private:
+    // -------------------------------------------------------------------------
+    // 内部绘图工具
+    // -------------------------------------------------------------------------
+    cv::Mat draw_trajectory_comparison_2d(
+        const std::vector<Sophus::SE3d>& poses_imu,
+        const std::vector<Sophus::SE3d>& poses_lidar,
+        const std::string& title);
+
+    cv::Mat draw_rotation_error_plot(
+        const std::vector<IMULiDARVizData::RotationPair>& pairs,
+        const Sophus::SO3d& extrinsic_rot);
+
+    cv::Mat draw_optimization_convergence(
+        const std::vector<IMULiDARVizData::OptimizationLog>& history);
+
+    void draw_coordinate_frame_on_image(cv::Mat& image,
+                                         const Sophus::SE3d& T_cam_lidar,
+                                         const CameraIntrinsics& intrin);
+
+    // HSV 颜色映射
+    ViewColor depth_to_color(double depth, double min_d, double max_d);
+
+private:
+    VizConfig config_;
+    CloudViewer::Ptr cloud_viewer_;
+    ProgressCallback progress_cb_;
+    bool stopped_ = false;
+    int id_counter_ = 0;
+    std::shared_ptr<spdlog::logger> logger_;
+    std::shared_ptr<ReportGenerator> report_generator_;
+    std::map<std::string, VisualizationData> viz_data_;
+    std::mutex mtx_;
+
+    // 保存的图像 (用于批量输出)
+    std::map<std::string, cv::Mat> saved_plots_;
+};
+
+}  // namespace ns_unicalib

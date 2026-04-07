@@ -1,0 +1,120 @@
+version: "3.8"
+
+# =============================================================================
+# UniCalib 多传感器标定系统 Docker Compose
+# 主框架: C++ (unicalib_C_plus_plus)，与 README 一致
+# =============================================================================
+#
+# 用法:
+#   # 一键标定（C++ 主框架，自动构建若未构建）
+#   make run
+#
+#   # 或直接:
+#   docker-compose -f docker/docker-compose.yaml run --rm unicalib /opt/scripts/run_calib_cpp.sh
+#
+#   # 仅运行 Python 标定（参考实现）
+#   make run-python
+#
+#   # 进入交互式 Shell
+#   docker-compose run --rm unicalib bash
+# =============================================================================
+
+services:
+  unicalib:
+    image: calib_env:humble
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: unicalib_dev
+    privileged: true
+    network_mode: host
+    ipc: host
+
+    # GPU 支持
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+
+    # 环境变量（C++ 主框架 third_party 路径，供 unicalib_example 使用）
+    environment:
+      - DISPLAY=${DISPLAY:-:0}
+      - QT_X11_NO_MITSHM=1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - ROS_DOMAIN_ID=0
+      - RCUTILS_COLORIZED_OUTPUT=1
+      - WORKSPACE=/root/calib_ws
+      - PYTHONPATH=/root/calib_ws/src/UniCalib:/root/calib_ws/src/learn-to-calibrate:/root/calib_ws/src/learn-to-calibrate/rl_solver:${PYTHONPATH:-}
+      # C++ 深度融合第三方工具路径（未在 sensors.yaml 中配置时由环境变量提供）
+      - UNICALIB_DM_CALIB=/root/calib_ws/src/DM-Calib
+      - UNICALIB_LEARN_TO_CALIB=/root/calib_ws/src/learn-to-calibrate
+      - UNICALIB_MIAS_LCEC=/root/calib_ws/src/MIAS-LCEC
+      - UNICALIB_IKALIBR=/root/calib_ws/src/iKalibr
+      - UNICALIB_CLICK_CALIB=/root/calib_ws/src/click_calib
+      - UNICALIB_TRANSFORMER_IMU=/root/calib_ws/src/Transformer-IMU-Calibrator
+
+    # 卷挂载: 将本地工程目录挂载到容器工作空间
+    volumes:
+      # X11 GUI 支持
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${HOME}/.Xauthority:/root/.Xauthority:ro
+
+      # C++ 主框架（与 README 一致）
+      - ../unicalib_C_plus_plus:/root/calib_ws/unicalib_C_plus_plus:rw
+
+      # Python 参考实现与第三方工具
+      - ../UniCalib:/root/calib_ws/src/UniCalib:rw
+      - ../click_calib:/root/calib_ws/src/click_calib:rw
+      - ../MIAS-LCEC:/root/calib_ws/src/MIAS-LCEC:rw
+      - ../iKalibr:/root/calib_ws/src/iKalibr:rw
+      - ../learn-to-calibrate:/root/calib_ws/src/learn-to-calibrate:rw
+      - ../DM-Calib:/root/calib_ws/src/DM-Calib:rw
+      - ../Transformer-IMU-Calibrator:/root/calib_ws/src/Transformer-IMU-Calibrator:rw
+
+      # 数据目录（根据实际路径修改）
+      - ${CALIB_DATA_DIR:-/tmp/calib_data}:/root/calib_ws/data:rw
+
+      # 结果目录
+      - ${CALIB_RESULTS_DIR:-/tmp/calib_results}:/root/calib_ws/results:rw
+
+      # 日志目录
+      - ${CALIB_LOGS_DIR:-/tmp/calib_logs}:/root/calib_ws/logs:rw
+
+    # 默认命令: 交由 entrypoint 进入交互 Shell（entrypoint 已 source 环境）
+    command: ["/bin/bash"]
+
+    stdin_open: true
+    tty: true
+
+    # 端口映射
+    ports:
+      - "8888:8888"   # JupyterLab
+      - "6006:6006"   # TensorBoard
+      - "11311:11311" # RViz2
+
+  # JupyterLab 服务（可选，用于交互式调试）
+  jupyter:
+    image: calib_env:humble
+    container_name: unicalib_jupyter
+    network_mode: host
+    environment:
+      - WORKSPACE=/root/calib_ws
+      - PYTHONPATH=/root/calib_ws/src/UniCalib:${PYTHONPATH:-}
+    volumes:
+      - ../UniCalib:/root/calib_ws/src/UniCalib:rw
+      - ${CALIB_DATA_DIR:-/tmp/calib_data}:/root/calib_ws/data:rw
+      - ${CALIB_RESULTS_DIR:-/tmp/calib_results}:/root/calib_ws/results:rw
+    command: >
+      bash -c "
+        source /opt/ros/humble/setup.bash &&
+        jupyter lab --ip=0.0.0.0 --port=8888 --no-browser
+          --allow-root --NotebookApp.token=''
+      "
+    ports:
+      - "8889:8888"
+    profiles:
+      - jupyter

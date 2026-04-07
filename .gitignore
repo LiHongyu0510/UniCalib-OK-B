@@ -1,0 +1,70 @@
+# =============================================================================
+# .gitignore - 排除大文件和构建产物
+# =============================================================================
+
+# Docker 镜像（大文件不推送）
+*.tar
+*.tar.gz
+docker/build.log
+
+# OpenCV 预下载依赖
+deps/opencv_deps/
+!deps/opencv_deps/.gitkeep
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# ROS2 / CMake 构建目录
+build/
+calib_unified/build/
+calib_unified/install/
+calib_unified/log/
+*/build/
+*/install/
+*/log/
+
+# 数据文件（大文件不推送）
+*.bag
+*.pcd
+*.db3
+data/
+results/
+
+# AI / 深度学习模型权重（大文件不推送）
+*.pth
+*.ckpt
+*.pt
+*.safetensors
+*.h5
+models/
+weights/
+
+# 日志文件
+*.log
+logs/
+
+# IDE 配置
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# PyTorch CUDA wheels
+calib_unified/thirdparty/wheels/torch-*.whl

@@ -1,0 +1,1 @@
+/root/calib_ws/build/faster_lio/rosidl_generator_cpp/faster_lio/msg/detail/pose6_d__type_support.hpp

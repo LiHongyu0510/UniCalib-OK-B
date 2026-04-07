@@ -1,0 +1,7 @@
+# Livox Mid-360 固态 LiDAR 模板
+sensor_id: "lidar_mid360"
+sensor_type: "lidar"
+topic: "/livox/lidar"
+frame_id: "livox_frame"
+lidar_type: "solid_state"
+rate: 10  # Hz

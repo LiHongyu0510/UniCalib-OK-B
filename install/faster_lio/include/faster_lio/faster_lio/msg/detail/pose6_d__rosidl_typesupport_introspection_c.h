@@ -1,0 +1,1 @@
+/root/calib_ws/build/faster_lio/rosidl_typesupport_introspection_c/faster_lio/msg/detail/pose6_d__rosidl_typesupport_introspection_c.h

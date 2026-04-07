@@ -1,0 +1,1 @@
+/root/calib_ws/build/process_bag/ament_cmake_environment_hooks/local_setup.zsh

@@ -1,0 +1,7 @@
+# 构建时排除，减小上下文
+reference/
+build.log
+*.tar
+.git
+.gitignore
+*.md

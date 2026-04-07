@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>ikalibr</name>
+  <version>0.0.0</version>
+  <description>The ikalibr package</description>
+  <maintainer email="csl@todo.todo">csl</maintainer>
+  <license>TODO</license>
+
+  <!-- ROS2 build tool -->
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>rosidl_default_generators</buildtool_depend>
+
+  <!-- ROS2 dependencies -->
+  <depend>rclcpp</depend>
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>cv_bridge</depend>
+  <!-- velodyne_msgs and velodyne_pointcloud commented out for ROS2 migration
+       These packages may not be available in ROS2 Humble or have different names -->
+  <!-- <depend>velodyne_msgs</depend> -->
+  <!-- <depend>velodyne_pointcloud</depend> -->
+  
+  <!-- ROS2 bag dependencies -->
+  <depend>rosbag2_cpp</depend>
+  <depend>rosbag2_storage</depend>
+
+  <exec_depend>rosidl_default_runtime</exec_depend>
+  <member_of_group>rosidl_interface_packages</member_of_group>
+
+  <!-- Export the package -->
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

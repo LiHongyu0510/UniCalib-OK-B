@@ -1,0 +1,9 @@
+/root/calib_ws/iKalibr/thirdparty-install/veta-install/lib/cmake/veta/vetaTargets.cmake
+/root/calib_ws/iKalibr/thirdparty-install/veta-install/include/veta/landmark.h
+/root/calib_ws/iKalibr/thirdparty-install/veta-install/include/veta/veta.h
+/root/calib_ws/iKalibr/thirdparty-install/veta-install/include/veta/camera/pinhole.h
+/root/calib_ws/iKalibr/thirdparty-install/veta-install/include/veta/camera/pinhole_fisheye.h
+/root/calib_ws/iKalibr/thirdparty-install/veta-install/include/veta/camera/pinhole_brown.h
+/root/calib_ws/iKalibr/thirdparty-install/veta-install/include/veta/type_def.hpp
+/root/calib_ws/iKalibr/thirdparty-install/veta-install/lib/cmake/veta/vetaConfig.cmake
+/root/calib_ws/iKalibr/thirdparty-install/veta-install/lib/cmake/veta/vetaConfigVersion.cmake
