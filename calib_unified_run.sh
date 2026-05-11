@@ -273,6 +273,7 @@ print_task_help() {
   • 全工程唯一配置: calib_unified/config/unicalib_example.yaml（--run 时默认使用）。
   • 数据路径: 默认数据目录 CALIB_DATA_DIR 或 ./data；可用 --data-dir <路径> 指定根目录。
   • 数据集: 使用 --dataset <名>（如 nya_02_ros2）时，数据目录为 <data-dir>/<名>。
+  • 数据源优先级: new_format.enable=true 时，任务优先走 NEW_FORMAT（CSV 索引 + 原始文件）。
   • 结果目录: 默认 CALIB_RESULTS_DIR 或 ./results；可用 --results-dir 指定。
   • lidar-cam 任务默认启用粗标定（MIAS-LCEC）；其他任务需加 --coarse 才启用。--no-coarse 可关闭粗标定。
   • --coarse 会调用相应 AI 模型（需已挂载 DM-Calib/MIAS-LCEC 等），首次可能较慢。
@@ -1021,6 +1022,39 @@ if [[ ! -f "\${CONFIG}" ]]; then
     CONFIG="${CONTAINER_CALIB}/config/unicalib_example.yaml"
 fi
 
+# 读取配置中的数据源开关，统一打印当前任务将使用的数据源（NEW_FORMAT / ROS2 / FILES）
+DATA_SOURCE_INFO=\$(python3 - "\${CONFIG}" <<'PY'
+import sys
+try:
+    import yaml
+except Exception:
+    print("UNKNOWN (python-yaml missing)")
+    raise SystemExit(0)
+cfg_path = sys.argv[1]
+try:
+    with open(cfg_path, "r", encoding="utf-8") as f:
+        cfg = yaml.safe_load(f) or {}
+except Exception as e:
+    print(f"UNKNOWN (read config failed: {e})")
+    raise SystemExit(0)
+nf = cfg.get("new_format", {}) or {}
+ros2 = cfg.get("ros2", {}) or {}
+if bool(nf.get("enable", False)):
+    root = str(nf.get("root_dir", "") or "")
+    unit = str(nf.get("timestamp_unit", "s") or "s")
+    if root:
+        print(f"NEW_FORMAT root={root} unit={unit}")
+    else:
+        print("NEW_FORMAT root=(未设置)")
+elif bool(ros2.get("use_ros2_bag", False)):
+    print(f"ROS2_BAG bag={ros2.get('ros2_bag_file', '(未设置)')}")
+elif bool(ros2.get("use_ros2_topics", False)):
+    print("ROS2_TOPIC")
+else:
+    print("FILES/LOCAL")
+PY
+)
+
 echo ""
 echo "┌─────────────────────────────────────────────────────────────────────────┐"
 echo "│  运行前检查 — 请确认以下项                                                │"
@@ -1032,6 +1066,7 @@ echo "│  数据目录: ${CONTAINER_DATA}  (宿主机: 请将数据放入 CALIB
 echo "│  结果目录: ${CONTAINER_RESULTS}"
 echo "│  可执行:   \${EXE}"
 echo "│  选项:     coarse=${coarse}  manual=${manual}"
+echo "│  数据源:   \${DATA_SOURCE_INFO}"
 echo "│  IMU 备选: UNICALIB_TRANSFORMER_IMU=\${UNICALIB_TRANSFORMER_IMU:-未设置}"
 echo "└─────────────────────────────────────────────────────────────────────────┘"
 echo "  详细任务说明与数据要求: 宿主机执行 ./calib_unified_run.sh --task-help"

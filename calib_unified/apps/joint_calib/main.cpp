@@ -39,6 +39,7 @@
 #include <filesystem>
 #include <iostream>
 #include <iomanip>
+#include <vector>
 #include <cstdlib>
 
 namespace fs = std::filesystem;
@@ -640,6 +641,45 @@ int main(int argc, char** argv) {
         if (!p.is_absolute())
             pipe_cfg.ros2_bag_file = resolve_data_path(base_data_dir, pipe_cfg.ros2_bag_file);
     }
+    // NEW_FORMAT：启用后优先于 ROS2
+    const YAML::Node new_format_node = cfg["new_format"];
+    if (new_format_node && new_format_node["enable"] && new_format_node["enable"].as<bool>()) {
+        pipe_cfg.use_new_format = true;
+        if (new_format_node["root_dir"])
+            pipe_cfg.new_format_root_dir = new_format_node["root_dir"].as<std::string>();
+        if (new_format_node["timestamp_unit"])
+            pipe_cfg.new_format_timestamp_unit = new_format_node["timestamp_unit"].as<std::string>();
+        if (new_format_node["oem7_imu_rate_hz"])
+            pipe_cfg.new_format_oem7_imu_rate_hz = new_format_node["oem7_imu_rate_hz"].as<double>();
+        if (new_format_node["oem7_time_base"])
+            pipe_cfg.new_format_oem7_time_base = new_format_node["oem7_time_base"].as<std::string>();
+        if (new_format_node["oem7_gps_utc_leap_sec"])
+            pipe_cfg.new_format_oem7_gps_utc_leap_sec = new_format_node["oem7_gps_utc_leap_sec"].as<int>();
+        if (new_format_node["oem7_time_offset_sec"])
+            pipe_cfg.new_format_oem7_time_offset_sec = new_format_node["oem7_time_offset_sec"].as<double>();
+        if (new_format_node["lidar_index_files"] && new_format_node["lidar_index_files"].IsMap()) {
+            for (const auto& kv : new_format_node["lidar_index_files"])
+                pipe_cfg.new_format_lidar_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+        }
+        if (new_format_node["camera_index_files"] && new_format_node["camera_index_files"].IsMap()) {
+            for (const auto& kv : new_format_node["camera_index_files"])
+                pipe_cfg.new_format_camera_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+        }
+        if (new_format_node["imu_index_files"] && new_format_node["imu_index_files"].IsMap()) {
+            for (const auto& kv : new_format_node["imu_index_files"])
+                pipe_cfg.new_format_imu_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+        }
+        pipe_cfg.use_ros2_bag = false;
+        pipe_cfg.use_ros2_topics = false;
+        UNICALIB_INFO("[Joint] 数据源: NEW_FORMAT root={} unit={}",
+                      pipe_cfg.new_format_root_dir.empty() ? "(未设置)" : pipe_cfg.new_format_root_dir,
+                      pipe_cfg.new_format_timestamp_unit);
+        if (!pipe_cfg.new_format_root_dir.empty() && !base_data_dir.empty()) {
+            fs::path pr(pipe_cfg.new_format_root_dir);
+            if (!pr.is_absolute())
+                pipe_cfg.new_format_root_dir = resolve_data_path(base_data_dir, pipe_cfg.new_format_root_dir);
+        }
+    }
     // 传感器话题与数量全可配置：从 sensors 按类型填入 lidar_topics / camera_topics / imu_topics
     // 若 ros2.camera_topic 已以数组形式填入 camera_topics，则不再用 sensors 覆盖
     for (const auto& s : sys_cfg.sensors) {
@@ -730,6 +770,33 @@ int main(int argc, char** argv) {
         };
         if (lc["initial_extrinsic"]) pipe_cfg.lidar_cam_coarse_initial = parse_4x4_se3(lc["initial_extrinsic"]);
         if (!pipe_cfg.lidar_cam_coarse_initial.has_value() && lc["T_cam_lidar"]) pipe_cfg.lidar_cam_coarse_initial = parse_4x4_se3(lc["T_cam_lidar"]);
+        if (lc["use_config_extrinsic_only"])
+            pipe_cfg.lidar_cam_use_config_extrinsic_only = lc["use_config_extrinsic_only"].as<bool>();
+        // 与 lidar_camera_extrin 一致：按 lidar__camera 键加载初值，供多相机 fine 阶段使用
+        if (lc["initial_extrinsics"] && lc["initial_extrinsics"].IsMap()) {
+            auto parse_4x4_flat = [](const YAML::Node& node) -> std::vector<double> {
+                if (!node || !node["rows"] || !node["cols"] || !node["data"] || !node["data"].IsSequence())
+                    return {};
+                if (node["rows"].as<int>() != 4 || node["cols"].as<int>() != 4) return {};
+                const auto& data = node["data"];
+                if (data.size() < 16) return {};
+                std::vector<double> v;
+                for (size_t i = 0; i < 16; ++i) v.push_back(data[i].as<double>());
+                return v;
+            };
+            for (const auto& kv : lc["initial_extrinsics"]) {
+                const std::string key = kv.first.as<std::string>();
+                if (!kv.second || !kv.second.IsMap()) continue;
+                std::vector<double> v = parse_4x4_flat(kv.second);
+                if (v.size() >= 16u)
+                    pipe_cfg.lidar_camera_initial_extrinsic_inline[key] = std::move(v);
+                else
+                    UNICALIB_WARN("[Joint/LiDAR-Cam] initial_extrinsics['{}'] 无效，已忽略", key);
+            }
+            if (!pipe_cfg.lidar_camera_initial_extrinsic_inline.empty())
+                UNICALIB_INFO("[Joint] lidar_camera.initial_extrinsics 已加载 {} 组",
+                              pipe_cfg.lidar_camera_initial_extrinsic_inline.size());
+        }
     }
     // cam_cam_pairs 已由 load_calib_pairs_from_yaml + load_cam_cam_pairs_compat 填充，此处不再重复解析
     // 多 IMU 内参文件：未做 IMU 内参时从 results/imu_intrinsic/ 读取，供 IMU-LiDAR 等外参使用
@@ -741,6 +808,17 @@ int main(int argc, char** argv) {
         if (s.type == SensorType::IMU) {
             std::string path = output_dir + "/" + results_imu_intrinsic + "/imu_intrinsic_" + s.sensor_id + ".yaml";
             pipe_cfg.imu_intrinsic_files[s.sensor_id] = path;
+        }
+    }
+    // IMU 内参 Allan / NEW_FORMAT：与 reference_imu 对齐，否则取 sensors 中第一个 IMU
+    if (!pipe_cfg.reference_imu.empty())
+        pipe_cfg.imu_sensor_id = pipe_cfg.reference_imu;
+    else {
+        for (const auto& s : sys_cfg.sensors) {
+            if (s.type == SensorType::IMU) {
+                pipe_cfg.imu_sensor_id = s.sensor_id;
+                break;
+            }
         }
     }
 

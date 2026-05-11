@@ -565,11 +565,15 @@ set(UNICALIB_NEW_SOURCES
     src/viz/pangolin_render.cpp
     # I/O
     src/io/yaml_io.cpp
+    src/io/unified_data_loader.cpp
+    src/io/new_format_data_source.cpp
+    src/io/lidar_packet_reader.cpp
+    src/io/oem7_imu_reader.cpp
     # 工程化基础设施（header-only, 部分cpp实现）
     src/common/calib_param.cpp  # 确保包含
 )
 
-# ROS2 数据源与 UnifiedDataLoader 实现（仅 UNICALIB_WITH_ROS2 时链接进 unicalib）
+# ROS2 bag/话题数据源（仅 UNICALIB_WITH_ROS2）；UnifiedDataLoader 主体见 unified_data_loader.cpp（始终编译）
 if(UNICALIB_WITH_ROS2)
     list(APPEND UNICALIB_NEW_SOURCES src/io/ros2_data_source.cpp)
 endif()

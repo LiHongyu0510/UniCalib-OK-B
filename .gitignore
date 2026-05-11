@@ -38,6 +38,14 @@ calib_unified/log/
 data/
 results/
 
+# 本地/构建产物（备份仓库不镜像；与 data/results 无关）
+.tmp_excel_env/
+iKalibr/thirdparty-install/
+iKalibr/thirdparty/aslam_cv2-build/
+calib_unified/_build_oem7/
+calib_unified/build_check/
+install/mpl_calibration_toolbox/
+
 # AI / 深度学习模型权重（大文件不推送）
 *.pth
 *.ckpt

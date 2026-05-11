@@ -18,6 +18,7 @@
 #include "unicalib/viz/report_gen.h"
 #include "unicalib/pipeline/ai_coarse_calib.h"
 #include "unicalib/extrinsic/imu_lidar_calib.h"
+#include "unicalib/io/ros2_data_source.h"
 #include <yaml-cpp/yaml.h>
 #include <iostream>
 #include <fstream>
@@ -25,12 +26,10 @@
 #include <filesystem>
 #include <string>
 #include <vector>
+#include <map>
 #include <chrono>
 #include <iomanip>
 #include <cstdlib>
-#if defined(UNICALIB_WITH_ROS2) && UNICALIB_WITH_ROS2
-#include "unicalib/io/ros2_data_source.h"
-#endif
 
 namespace fs = std::filesystem;
 
@@ -87,6 +86,16 @@ struct AppConfig {
     ns_unicalib::IMUIntrinsicCalibrator::Config calib_cfg;
     // ROS2 bag 模式（与 unicalib_example.yaml 中 ros2 段一致）
     bool use_ros2_bag = false;
+    bool use_new_format = false;
+    std::string new_format_root_dir;
+    std::string new_format_timestamp_unit = "s";
+    double new_format_oem7_imu_rate_hz = 200.0;
+    std::string new_format_oem7_time_base = "gps";
+    int new_format_oem7_gps_utc_leap_sec = 18;
+    double new_format_oem7_time_offset_sec = 0.0;
+    std::map<std::string, std::string> new_format_lidar_index_files;
+    std::map<std::string, std::string> new_format_camera_index_files;
+    std::map<std::string, std::string> new_format_imu_index_files;
     std::string ros2_bag_file;
     std::string imu_ros2_topic;     // 来自 ros2.imu_topic 或 sensors 中第一个 IMU 的 topic
     bool ros2_strict_topic_match = true;  // 配置话题在 bag 中无数据则失败，不自动回退
@@ -127,6 +136,34 @@ AppConfig parse_config(int argc, char** argv) {
                     if (ros2_node["ros2_bag_file"]) cfg.ros2_bag_file = ros2_node["ros2_bag_file"].as<std::string>();
                     if (ros2_node["imu_topic"]) cfg.imu_ros2_topic = ros2_node["imu_topic"].as<std::string>();
                     if (ros2_node["strict_topic_match"]) cfg.ros2_strict_topic_match = ros2_node["strict_topic_match"].as<bool>();
+                }
+                const YAML::Node new_format_node = node["new_format"];
+                if (new_format_node && new_format_node["enable"] && new_format_node["enable"].as<bool>()) {
+                    cfg.use_new_format = true;
+                    if (new_format_node["root_dir"]) cfg.new_format_root_dir = new_format_node["root_dir"].as<std::string>();
+                    if (new_format_node["timestamp_unit"]) cfg.new_format_timestamp_unit = new_format_node["timestamp_unit"].as<std::string>();
+                    if (new_format_node["oem7_imu_rate_hz"])
+                        cfg.new_format_oem7_imu_rate_hz = new_format_node["oem7_imu_rate_hz"].as<double>();
+                    if (new_format_node["oem7_time_base"])
+                        cfg.new_format_oem7_time_base = new_format_node["oem7_time_base"].as<std::string>();
+                    if (new_format_node["oem7_gps_utc_leap_sec"])
+                        cfg.new_format_oem7_gps_utc_leap_sec = new_format_node["oem7_gps_utc_leap_sec"].as<int>();
+                    if (new_format_node["oem7_time_offset_sec"])
+                        cfg.new_format_oem7_time_offset_sec = new_format_node["oem7_time_offset_sec"].as<double>();
+                    if (new_format_node["lidar_index_files"] && new_format_node["lidar_index_files"].IsMap()) {
+                        for (const auto& kv : new_format_node["lidar_index_files"])
+                            cfg.new_format_lidar_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+                    }
+                    if (new_format_node["camera_index_files"] && new_format_node["camera_index_files"].IsMap()) {
+                        for (const auto& kv : new_format_node["camera_index_files"])
+                            cfg.new_format_camera_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+                    }
+                    if (new_format_node["imu_index_files"] && new_format_node["imu_index_files"].IsMap()) {
+                        for (const auto& kv : new_format_node["imu_index_files"])
+                            cfg.new_format_imu_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+                    }
+                    cfg.use_ros2_bag = false;
+                    cfg.data_file.clear();
                 }
                 if (cfg.use_ros2_bag) {
                     cfg.data_file.clear();  // 使用 bag 时不用 data.imu 的 CSV 路径
@@ -265,9 +302,9 @@ int main(int argc, char** argv) {
         if (env_data && env_data[0]) cfg.data_dir = env_data;
     }
 
-    if (!cfg.use_ros2_bag && cfg.data_file.empty()) {
+    if (!cfg.use_new_format && !cfg.use_ros2_bag && cfg.data_file.empty()) {
         ns_unicalib::Logger::init("UniCalib-IMU-Intrinsic");
-        UNICALIB_ERROR("No data source: set ros2.use_ros2_bag + ros2.ros2_bag_file in config and pass --data-dir, or set data.imu.<id> / --data_file for CSV");
+        UNICALIB_ERROR("No data source: set new_format.enable, or ros2.use_ros2_bag + ros2.ros2_bag_file, or data.imu.<id> / --data_file for CSV");
         return 1;
     }
 
@@ -279,7 +316,28 @@ int main(int argc, char** argv) {
     UNICALIB_INFO("日志文件: {}", log_file);
 
     ns_unicalib::IMURawData imu_data;
-    if (cfg.use_ros2_bag) {
+    if (cfg.use_new_format) {
+        ns_unicalib::UnifiedDataLoader::Config load_cfg;
+        load_cfg.source_type = ns_unicalib::UnifiedDataLoader::SourceType::NEW_FORMAT;
+        load_cfg.new_format_root_dir = cfg.new_format_root_dir;
+        load_cfg.new_format_lidar_index_files = cfg.new_format_lidar_index_files;
+        load_cfg.new_format_camera_index_files = cfg.new_format_camera_index_files;
+        load_cfg.new_format_imu_index_files = cfg.new_format_imu_index_files;
+        load_cfg.new_format_timestamp_unit = cfg.new_format_timestamp_unit;
+        load_cfg.new_format_oem7_imu_rate_hz = cfg.new_format_oem7_imu_rate_hz;
+        load_cfg.new_format_oem7_time_base = cfg.new_format_oem7_time_base;
+        load_cfg.new_format_oem7_gps_utc_leap_sec = cfg.new_format_oem7_gps_utc_leap_sec;
+        load_cfg.new_format_oem7_time_offset_sec = cfg.new_format_oem7_time_offset_sec;
+        load_cfg.max_frames = 0;
+        ns_unicalib::UnifiedDataLoader loader(load_cfg);
+        if (!loader.load()) {
+            UNICALIB_ERROR("从 NEW_FORMAT 加载失败: {}", loader.get_status_message());
+            return 1;
+        }
+        imu_data = loader.to_imu_raw_data(cfg.sensor_id);
+        UNICALIB_INFO("Loading IMU data from NEW_FORMAT: root={} sensor_id={} frames={}",
+                      cfg.new_format_root_dir, cfg.sensor_id, imu_data.size());
+    } else if (cfg.use_ros2_bag) {
 #if defined(UNICALIB_WITH_ROS2) && UNICALIB_WITH_ROS2
         std::string bag_path = cfg.ros2_bag_file;
         if (!bag_path.empty() && !cfg.data_dir.empty()) {

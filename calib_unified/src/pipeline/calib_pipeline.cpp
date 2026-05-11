@@ -20,6 +20,7 @@
 
 // ROS2 头必须在 namespace 外包含，避免 sensor_msgs 等被注入 ns_unicalib 导致编译错误
 #include "unicalib/io/ros2_data_source.h"
+#include "unicalib/io/new_format_path.h"
 
 #include "unicalib/pipeline/calib_pipeline.h"
 #include "unicalib/pipeline/ai_coarse_calib.h"
@@ -340,14 +341,17 @@ PipelineReport CalibPipeline::run() {
             (task == CalibTaskType::IMU_INTRINSIC     && cfg_.enable_coarse_imu_intrin)  ||
             (task == CalibTaskType::IMU_LIDAR_EXTRIN && cfg_.enable_coarse_imu_lidar)   ||
             (task == CalibTaskType::LIDAR_LIDAR_EXTRIN && false)  /* LiDAR-LiDAR 无 AI 粗标定，用 NDT 粗标定 */ ||
-            (task == CalibTaskType::LIDAR_CAM_EXTRIN && cfg_.enable_coarse_lidar_cam)   ||
+            (task == CalibTaskType::LIDAR_CAM_EXTRIN && cfg_.enable_coarse_lidar_cam &&
+             !cfg_.lidar_cam_use_config_extrinsic_only)   ||
             (task == CalibTaskType::CAM_CAM_EXTRIN   && cfg_.enable_coarse_cam_cam);
 
         // 增强日志：为何未执行粗标定（便于排查未传 --coarse 或配置关闭）
         if (task == CalibTaskType::LIDAR_CAM_EXTRIN) {
             UNICALIB_INFO("[Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam={} → do_coarse={}",
                           cfg_.enable_coarse_lidar_cam, do_coarse);
-            if (!do_coarse)
+            if (cfg_.lidar_cam_use_config_extrinsic_only && cfg_.enable_coarse_lidar_cam && !do_coarse)
+                UNICALIB_INFO("[Coarse-AI/LiDAR-Cam] 跳过粗标定: lidar_camera.use_config_extrinsic_only=true");
+            else if (!do_coarse)
                 UNICALIB_INFO("[Coarse-AI/LiDAR-Cam] 跳过粗标定: 未启用 (请使用 --coarse 启用 MIAS-LCEC 粗标定)");
         }
 
@@ -905,11 +909,14 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
     enum class DataSourceType {
         FILES,
         ROS2_BAG,
-        ROS2_TOPIC
+        ROS2_TOPIC,
+        NEW_FORMAT
     };
     
     DataSourceType data_source_type = DataSourceType::FILES;
-    if (cfg_.use_ros2_bag && !cfg_.ros2_bag_file.empty()) {
+    if (cfg_.use_new_format) {
+        data_source_type = DataSourceType::NEW_FORMAT;
+    } else if (cfg_.use_ros2_bag && !cfg_.ros2_bag_file.empty()) {
         data_source_type = DataSourceType::ROS2_BAG;
     } else if (cfg_.use_ros2_topics && (!cfg_.lidar_ros2_topic.empty() || !cfg_.camera_ros2_topic.empty())) {
         data_source_type = DataSourceType::ROS2_TOPIC;
@@ -919,7 +926,8 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
     UNICALIB_INFO("[STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始");
     UNICALIB_INFO("[Fine-Auto/LiDAR-Cam] 开始执行精标定...");
     const char* data_src_str = (data_source_type == DataSourceType::ROS2_BAG) ? "ROS2_BAG" :
-                               (data_source_type == DataSourceType::ROS2_TOPIC) ? "ROS2_TOPIC" : "FILES";
+                               (data_source_type == DataSourceType::ROS2_TOPIC) ? "ROS2_TOPIC" :
+                               (data_source_type == DataSourceType::NEW_FORMAT) ? "NEW_FORMAT" : "FILES";
     UNICALIB_INFO("  [精标定数据源] 类型={}  lidar_id={}", data_src_str, cfg_.lidar_id);
 
     if (data_source_type == DataSourceType::ROS2_BAG) {
@@ -928,6 +936,10 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
     } else if (data_source_type == DataSourceType::ROS2_TOPIC) {
         UNICALIB_INFO("  ROS2 实时: LiDAR={}  相机={}  最大等待={:.1f}s",
                       cfg_.lidar_ros2_topic, cfg_.camera_ros2_topic, cfg_.ros2_max_wait_time);
+    } else if (data_source_type == DataSourceType::NEW_FORMAT) {
+        UNICALIB_INFO("  新格式目录: {}  时间戳单位={}",
+                      cfg_.new_format_root_dir.empty() ? "(未设置)" : cfg_.new_format_root_dir,
+                      cfg_.new_format_timestamp_unit);
     } else {
         UNICALIB_INFO("  文件目录: lidar={}  camera={}",
                       cfg_.lidar_data_dir.empty() ? "(未设置)" : cfg_.lidar_data_dir,
@@ -993,6 +1005,25 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
         if (cfg_.lidar_ros2_topic.empty() || cfg_.camera_ros2_topic.empty()) {
             r.success = false;
             r.message = "ROS2 实时模式需同时配置 LiDAR 与相机话题（config 中 ros2.lidar_topic / ros2.camera_topic 或 sensors[].topic）";
+            auto t_end = std::chrono::high_resolution_clock::now();
+            r.elapsed_ms = std::chrono::duration<double, std::milli>(t_end - t_start).count();
+            UNICALIB_ERROR("[Fine-Auto/LiDAR-Cam] {}", r.message);
+            return r;
+        }
+    } else if (data_source_type == DataSourceType::NEW_FORMAT) {
+        const std::string nf_root = resolve_new_format_root_dir(cfg_.new_format_root_dir);
+        if (nf_root.empty()) {
+            r.success = false;
+            r.message = "NEW_FORMAT 模式需配置 new_format.root_dir";
+            auto t_end = std::chrono::high_resolution_clock::now();
+            r.elapsed_ms = std::chrono::duration<double, std::milli>(t_end - t_start).count();
+            UNICALIB_ERROR("[Fine-Auto/LiDAR-Cam] {}", r.message);
+            return r;
+        }
+        if (!fs::exists(nf_root)) {
+            r.success = false;
+            r.message = "NEW_FORMAT 根目录不存在: " + nf_root +
+                        (nf_root == cfg_.new_format_root_dir ? "" : (" (配置中为: " + cfg_.new_format_root_dir + ")"));
             auto t_end = std::chrono::high_resolution_clock::now();
             r.elapsed_ms = std::chrono::duration<double, std::milli>(t_end - t_start).count();
             UNICALIB_ERROR("[Fine-Auto/LiDAR-Cam] {}", r.message);
@@ -1111,6 +1142,36 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
             return r;
         }
         UNICALIB_INFO("[Fine-Auto/LiDAR-Cam] LiDAR 加载完成: {} 帧 (将按相机逐路取帧)", lidar_scans.size());
+    } else if (data_source_type == DataSourceType::NEW_FORMAT) {
+        UNICALIB_INFO("[Fine-Auto/LiDAR-Cam] 从 NEW_FORMAT 加载数据...");
+        UnifiedDataLoader::Config unified_cfg;
+        unified_cfg.source_type = UnifiedDataLoader::SourceType::NEW_FORMAT;
+        unified_cfg.new_format_root_dir = resolve_new_format_root_dir(cfg_.new_format_root_dir);
+        unified_cfg.new_format_lidar_index_files = cfg_.new_format_lidar_index_files;
+        unified_cfg.new_format_camera_index_files = cfg_.new_format_camera_index_files;
+        unified_cfg.new_format_imu_index_files = cfg_.new_format_imu_index_files;
+        unified_cfg.new_format_timestamp_unit = cfg_.new_format_timestamp_unit;
+        unified_cfg.new_format_oem7_imu_rate_hz = cfg_.new_format_oem7_imu_rate_hz;
+        unified_cfg.new_format_oem7_time_base = cfg_.new_format_oem7_time_base;
+        unified_cfg.new_format_oem7_gps_utc_leap_sec = cfg_.new_format_oem7_gps_utc_leap_sec;
+        unified_cfg.new_format_oem7_time_offset_sec = cfg_.new_format_oem7_time_offset_sec;
+        unified_cfg.max_frames = cfg_.ros2_max_frames;
+        unified_cfg.sample_interval = cfg_.ros2_sample_interval;
+        loader_opt.emplace(unified_cfg);
+        if (!loader_opt->load()) {
+            r.success = false;
+            r.message = "NEW_FORMAT 数据加载失败: " + loader_opt->get_status_message();
+            r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
+            return r;
+        }
+        lidar_scans = loader_opt->to_lidar_scans(cfg_.lidar_id);
+        if (lidar_scans.empty()) {
+            r.success = false;
+            r.message = "未能从 NEW_FORMAT 加载 LiDAR 数据（请检查 lidar 索引和 sensor_id）";
+            r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
+            return r;
+        }
+        UNICALIB_INFO("[Fine-Auto/LiDAR-Cam] LiDAR 加载完成: {} 帧 (NEW_FORMAT)", lidar_scans.size());
     }
 
     const size_t MAX_FRAMES = 100;
@@ -1271,10 +1332,27 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
         }
 #endif
 
-        std::optional<Sophus::SE3d> coarse_init = coarse_lidar_cam_init_;
-        if (coarse_init.has_value())
+        // 初值优先级：
+        // 1) lidar_camera.initial_extrinsics[`${lidar}__${camera}`]（或带 T_ 前缀）
+        // 2) 全局 coarse_lidar_cam_init_（来自 initial_extrinsic/T_cam_lidar 或 Stage-1 粗标定）
+        std::optional<Sophus::SE3d> coarse_init;
+        const std::string key = cfg_.lidar_id + "__" + cur_cam;
+        const std::string key_alt = "T_" + cfg_.lidar_id + "__" + cur_cam;
+        auto it_inline = cfg_.lidar_camera_initial_extrinsic_inline.find(key);
+        if (it_inline == cfg_.lidar_camera_initial_extrinsic_inline.end())
+            it_inline = cfg_.lidar_camera_initial_extrinsic_inline.find(key_alt);
+        if (it_inline != cfg_.lidar_camera_initial_extrinsic_inline.end() && it_inline->second.size() >= 16u) {
+            Eigen::Matrix4d T = Eigen::Matrix4d::Identity();
+            for (int i = 0; i < 16; ++i) T(i / 4, i % 4) = it_inline->second[static_cast<size_t>(i)];
+            coarse_init = Sophus::SE3d(T);
+            UNICALIB_INFO("[Fine-Auto/LiDAR-Cam] 使用按相机初值 key={} (camera={})", it_inline->first, cur_cam);
+        } else {
+            coarse_init = coarse_lidar_cam_init_;
+        }
+        if (coarse_init.has_value()) {
             UNICALIB_INFO("[Fine-Auto/LiDAR-Cam] 使用粗标定初值 t=[{:.3f},{:.3f},{:.3f}]m",
                           coarse_init->translation().x(), coarse_init->translation().y(), coarse_init->translation().z());
+        }
 
         if (cfg_.lidar_cam_use_config_extrinsic_only && coarse_init.has_value()) {
             // 仅用配置初值：跳过精标定优化，直接以配置外参作为结果，供手动微调
@@ -1392,9 +1470,11 @@ StageResult CalibPipeline::run_fine_cam_cam() {
 
     auto t_start = std::chrono::high_resolution_clock::now();
 
-    if (!cfg_.use_ros2_bag || cfg_.ros2_bag_file.empty()) {
+    const bool use_new_format = cfg_.use_new_format;
+    const bool use_ros2_bag = (!use_new_format && cfg_.use_ros2_bag && !cfg_.ros2_bag_file.empty());
+    if (!use_new_format && !use_ros2_bag) {
         r.success = false;
-        r.message = "Camera-Camera 多目标定当前需使用 ROS2 bag（use_ros2_bag: true 且 ros2_bag_file 已配置）";
+        r.message = "Camera-Camera 需要 NEW_FORMAT 或 ROS2 bag 数据源";
         r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
         UNICALIB_WARN("[Fine-Auto/Cam-Cam] {}", r.message);
         return r;
@@ -1402,7 +1482,19 @@ StageResult CalibPipeline::run_fine_cam_cam() {
 
     // 参与标定的相机 ID：配置了则用配置；否则留空，加载 bag 后从 loader 取「全部相机」
     std::vector<std::string> camera_ids;
-    if (!cfg_.camera_topics.empty()) {
+    if (!cfg_.cam_cam_pairs.empty()) {
+        // pairs 优先：只加载配置中涉及的相机
+        std::set<std::string> cam_set;
+        for (const auto& pr : cfg_.cam_cam_pairs) {
+            cam_set.insert(pr.first);
+            cam_set.insert(pr.second);
+        }
+        camera_ids.assign(cam_set.begin(), cam_set.end());
+    } else if (use_new_format && !cfg_.new_format_camera_index_files.empty()) {
+        for (const auto& kv : cfg_.new_format_camera_index_files)
+            camera_ids.push_back(kv.first);
+        std::sort(camera_ids.begin(), camera_ids.end());
+    } else if (!cfg_.camera_topics.empty()) {
         for (const auto& [id, _] : cfg_.camera_topics)
             camera_ids.push_back(id);
         std::sort(camera_ids.begin(), camera_ids.end());
@@ -1411,7 +1503,38 @@ StageResult CalibPipeline::run_fine_cam_cam() {
     }
 
     std::map<std::string, std::vector<std::pair<double, cv::Mat>>> frames_per_cam;
-    {
+    if (use_new_format) {
+        UnifiedDataLoader::Config load_cfg;
+        load_cfg.source_type = UnifiedDataLoader::SourceType::NEW_FORMAT;
+        load_cfg.new_format_root_dir = resolve_new_format_root_dir(cfg_.new_format_root_dir);
+        load_cfg.new_format_lidar_index_files = cfg_.new_format_lidar_index_files;
+        load_cfg.new_format_camera_index_files = cfg_.new_format_camera_index_files;
+        load_cfg.new_format_imu_index_files = cfg_.new_format_imu_index_files;
+        load_cfg.new_format_timestamp_unit = cfg_.new_format_timestamp_unit;
+        load_cfg.new_format_oem7_imu_rate_hz = cfg_.new_format_oem7_imu_rate_hz;
+        load_cfg.new_format_oem7_time_base = cfg_.new_format_oem7_time_base;
+        load_cfg.new_format_oem7_gps_utc_leap_sec = cfg_.new_format_oem7_gps_utc_leap_sec;
+        load_cfg.new_format_oem7_time_offset_sec = cfg_.new_format_oem7_time_offset_sec;
+        load_cfg.max_frames = cfg_.ros2_max_frames;
+        load_cfg.sample_interval = cfg_.ros2_sample_interval;
+        UnifiedDataLoader loader(load_cfg);
+        if (!loader.load()) {
+            r.success = false;
+            r.message = "NEW_FORMAT 数据加载失败: " + loader.get_status_message();
+            r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
+            return r;
+        }
+        if (camera_ids.empty()) {
+            camera_ids = loader.get_camera_ids();
+            std::sort(camera_ids.begin(), camera_ids.end());
+            UNICALIB_INFO("[Fine-Auto/Cam-Cam] NEW_FORMAT 模式，使用索引内全部相机: {} 个", camera_ids.size());
+        }
+        for (const auto& cid : camera_ids) {
+            auto fr = loader.to_camera_frames(cid);
+            if (!fr.empty())
+                frames_per_cam[cid] = std::move(fr);
+        }
+    } else {
         RosDataSourceConfig ros_cfg;
         ros_cfg.bag_file = cfg_.ros2_bag_file;
         ros_cfg.strict_topic_match = cfg_.ros2_strict_topic_match;
@@ -1795,7 +1918,44 @@ StageResult CalibPipeline::run_fine_imu_intrinsic() {
     // ─── 1. 数据加载 ─────────────────────────────────────────────────
     ns_unicalib::IMURawData imu_data;
 
-    if (cfg_.use_ros2_bag && !cfg_.ros2_bag_file.empty()) {
+    if (cfg_.use_new_format) {
+        UNICALIB_INFO("  数据源类型: NEW_FORMAT");
+        const std::string nf_root_resolved = resolve_new_format_root_dir(cfg_.new_format_root_dir);
+        UNICALIB_INFO("  NEW_FORMAT 根目录: {} (解析后: {})",
+                      cfg_.new_format_root_dir.empty() ? "(未设置)" : cfg_.new_format_root_dir,
+                      nf_root_resolved.empty() ? "(未设置)" : nf_root_resolved);
+
+        if (nf_root_resolved.empty() || !fs::exists(nf_root_resolved)) {
+            r.success = false;
+            r.message = "NEW_FORMAT 根目录未配置或不存在: " +
+                        (nf_root_resolved.empty() ? cfg_.new_format_root_dir : nf_root_resolved);
+            return r;
+        }
+
+        UnifiedDataLoader::Config unified_cfg;
+        unified_cfg.source_type = UnifiedDataLoader::SourceType::NEW_FORMAT;
+        unified_cfg.new_format_root_dir = nf_root_resolved;
+        unified_cfg.new_format_lidar_index_files = cfg_.new_format_lidar_index_files;
+        unified_cfg.new_format_camera_index_files = cfg_.new_format_camera_index_files;
+        unified_cfg.new_format_imu_index_files = cfg_.new_format_imu_index_files;
+        unified_cfg.new_format_timestamp_unit = cfg_.new_format_timestamp_unit;
+        unified_cfg.new_format_oem7_imu_rate_hz = cfg_.new_format_oem7_imu_rate_hz;
+        unified_cfg.new_format_oem7_time_base = cfg_.new_format_oem7_time_base;
+        unified_cfg.new_format_oem7_gps_utc_leap_sec = cfg_.new_format_oem7_gps_utc_leap_sec;
+        unified_cfg.new_format_oem7_time_offset_sec = cfg_.new_format_oem7_time_offset_sec;
+        unified_cfg.max_frames = 0;  // IMU 内参希望尽量使用全量静止数据
+
+        UnifiedDataLoader loader(unified_cfg);
+        if (!loader.load()) {
+            r.success = false;
+            r.message = "NEW_FORMAT 数据加载失败: " + loader.get_status_message();
+            return r;
+        }
+
+        imu_data = loader.to_imu_raw_data(cfg_.imu_sensor_id);
+        UNICALIB_INFO("  加载IMU数据: {} 帧 (sensor_id={})", imu_data.size(), cfg_.imu_sensor_id);
+
+    } else if (cfg_.use_ros2_bag && !cfg_.ros2_bag_file.empty()) {
         UNICALIB_INFO("  数据源类型: ROS2 Bag 文件");
         UNICALIB_INFO("  ROS2 Bag 文件: {}", cfg_.ros2_bag_file);
 
@@ -1939,41 +2099,60 @@ StageResult CalibPipeline::run_fine_imu_lidar() {
         return r;
     }
 
-    if (!cfg_.use_ros2_bag || cfg_.ros2_bag_file.empty()) {
-        r.success = false;
-        r.message = "IMU-LiDAR 精标定当前仅支持 ROS2 Bag 数据源，请配置 ros2.use_ros2_bag 与 ros2.ros2_bag_file";
-        r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
-        UNICALIB_ERROR("[Fine-Auto/IMU-LiDAR] {}", r.message);
-        return r;
-    }
-    if (!fs::exists(cfg_.ros2_bag_file)) {
-        r.success = false;
-        r.message = "ROS2 Bag 路径不存在: " + cfg_.ros2_bag_file;
-        r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
-        return r;
-    }
-
-    RosDataSourceConfig ros_cfg;
-    ros_cfg.bag_file = cfg_.ros2_bag_file;
-    ros_cfg.realtime_mode = false;
-    // 0 = 不限制帧数（LiDAR 不抽帧，保持 ~100ms 间隔，利于标定精度）
-    ros_cfg.max_frames = cfg_.ros2_max_frames;
-    ros_cfg.strict_topic_match = cfg_.ros2_strict_topic_match;
-    ros_cfg.imu_topics = cfg_.imu_topics;
-    ros_cfg.lidar_topics = cfg_.lidar_topics;
-    if (ros_cfg.imu_topics.empty() && !cfg_.imu_ros2_topic.empty())
-        ros_cfg.imu_topics["imu_0"] = cfg_.imu_ros2_topic;
-    if (ros_cfg.lidar_topics.empty() && !cfg_.lidar_ros2_topic.empty())
-        ros_cfg.lidar_topics[cfg_.lidar_id] = cfg_.lidar_ros2_topic;
-
     UnifiedDataLoader::Config load_cfg;
-    load_cfg.source_type = UnifiedDataLoader::SourceType::ROS2_BAG;
-    load_cfg.ros_config = ros_cfg;
-    load_cfg.max_frames = ros_cfg.max_frames;
+    if (cfg_.use_new_format) {
+        load_cfg.source_type = UnifiedDataLoader::SourceType::NEW_FORMAT;
+        load_cfg.new_format_root_dir = resolve_new_format_root_dir(cfg_.new_format_root_dir);
+        load_cfg.new_format_lidar_index_files = cfg_.new_format_lidar_index_files;
+        load_cfg.new_format_camera_index_files = cfg_.new_format_camera_index_files;
+        load_cfg.new_format_imu_index_files = cfg_.new_format_imu_index_files;
+        load_cfg.new_format_timestamp_unit = cfg_.new_format_timestamp_unit;
+        load_cfg.new_format_oem7_imu_rate_hz = cfg_.new_format_oem7_imu_rate_hz;
+        load_cfg.new_format_oem7_time_base = cfg_.new_format_oem7_time_base;
+        load_cfg.new_format_oem7_gps_utc_leap_sec = cfg_.new_format_oem7_gps_utc_leap_sec;
+        load_cfg.new_format_oem7_time_offset_sec = cfg_.new_format_oem7_time_offset_sec;
+        load_cfg.max_frames = cfg_.ros2_max_frames;
+        load_cfg.sample_interval = cfg_.ros2_sample_interval;
+        if (load_cfg.new_format_root_dir.empty() || !fs::exists(load_cfg.new_format_root_dir)) {
+            r.success = false;
+            r.message = "IMU-LiDAR NEW_FORMAT 根目录无效或不存在: " + load_cfg.new_format_root_dir;
+            r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
+            return r;
+        }
+    } else {
+        if (!cfg_.use_ros2_bag || cfg_.ros2_bag_file.empty()) {
+            r.success = false;
+            r.message = "IMU-LiDAR 精标定当前需 NEW_FORMAT 或 ROS2 bag 数据源";
+            r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
+            UNICALIB_ERROR("[Fine-Auto/IMU-LiDAR] {}", r.message);
+            return r;
+        }
+        if (!fs::exists(cfg_.ros2_bag_file)) {
+            r.success = false;
+            r.message = "ROS2 Bag 路径不存在: " + cfg_.ros2_bag_file;
+            r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
+            return r;
+        }
+        RosDataSourceConfig ros_cfg;
+        ros_cfg.bag_file = cfg_.ros2_bag_file;
+        ros_cfg.realtime_mode = false;
+        ros_cfg.max_frames = cfg_.ros2_max_frames;
+        ros_cfg.strict_topic_match = cfg_.ros2_strict_topic_match;
+        ros_cfg.imu_topics = cfg_.imu_topics;
+        ros_cfg.lidar_topics = cfg_.lidar_topics;
+        if (ros_cfg.imu_topics.empty() && !cfg_.imu_ros2_topic.empty())
+            ros_cfg.imu_topics["imu_0"] = cfg_.imu_ros2_topic;
+        if (ros_cfg.lidar_topics.empty() && !cfg_.lidar_ros2_topic.empty())
+            ros_cfg.lidar_topics[cfg_.lidar_id] = cfg_.lidar_ros2_topic;
+        load_cfg.source_type = UnifiedDataLoader::SourceType::ROS2_BAG;
+        load_cfg.ros_config = ros_cfg;
+        load_cfg.max_frames = ros_cfg.max_frames;
+    }
+
     UnifiedDataLoader loader(load_cfg);
     if (!loader.load()) {
         r.success = false;
-        r.message = "ROS2 数据加载失败: " + loader.get_status_message();
+        r.message = (cfg_.use_new_format ? "NEW_FORMAT 数据加载失败: " : "ROS2 数据加载失败: ") + loader.get_status_message();
         r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
         return r;
     }

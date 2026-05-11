@@ -14,6 +14,7 @@
 #include "unicalib/pipeline/manual_calib.h"
 #include "unicalib/viz/calib_visualizer.h"
 #include "unicalib/io/yaml_io.h"
+#include "unicalib/io/ros2_data_source.h"
 #include <yaml-cpp/yaml.h>
 #include <Eigen/Dense>
 #include <sophus/se3.hpp>
@@ -29,10 +30,6 @@
 #include <map>
 #include <memory>
 #include <optional>
-
-#if defined(UNICALIB_WITH_ROS2) && UNICALIB_WITH_ROS2
-#include "unicalib/io/ros2_data_source.h"
-#endif
 
 namespace fs = std::filesystem;
 using namespace ns_unicalib;
@@ -497,6 +494,47 @@ int main(int argc, char** argv) {
     }
     if (ll["use_ndt"]) calib_cfg.use_ndt = ll["use_ndt"].as<bool>();
 
+    bool use_new_format = false;
+    std::unique_ptr<UnifiedDataLoader> loader_new_format;
+    const YAML::Node new_format_node = cfg["new_format"];
+    if (new_format_node && new_format_node["enable"] && new_format_node["enable"].as<bool>()) {
+        UnifiedDataLoader::Config load_cfg;
+        load_cfg.source_type = UnifiedDataLoader::SourceType::NEW_FORMAT;
+        if (new_format_node["root_dir"])
+            load_cfg.new_format_root_dir = new_format_node["root_dir"].as<std::string>();
+        if (new_format_node["timestamp_unit"])
+            load_cfg.new_format_timestamp_unit = new_format_node["timestamp_unit"].as<std::string>();
+        if (new_format_node["oem7_imu_rate_hz"])
+            load_cfg.new_format_oem7_imu_rate_hz = new_format_node["oem7_imu_rate_hz"].as<double>();
+        if (new_format_node["oem7_time_base"])
+            load_cfg.new_format_oem7_time_base = new_format_node["oem7_time_base"].as<std::string>();
+        if (new_format_node["oem7_gps_utc_leap_sec"])
+            load_cfg.new_format_oem7_gps_utc_leap_sec = new_format_node["oem7_gps_utc_leap_sec"].as<int>();
+        if (new_format_node["oem7_time_offset_sec"])
+            load_cfg.new_format_oem7_time_offset_sec = new_format_node["oem7_time_offset_sec"].as<double>();
+        if (new_format_node["lidar_index_files"] && new_format_node["lidar_index_files"].IsMap()) {
+            for (const auto& kv : new_format_node["lidar_index_files"])
+                load_cfg.new_format_lidar_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+        }
+        if (new_format_node["camera_index_files"] && new_format_node["camera_index_files"].IsMap()) {
+            for (const auto& kv : new_format_node["camera_index_files"])
+                load_cfg.new_format_camera_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+        }
+        if (new_format_node["imu_index_files"] && new_format_node["imu_index_files"].IsMap()) {
+            for (const auto& kv : new_format_node["imu_index_files"])
+                load_cfg.new_format_imu_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+        }
+        load_cfg.max_frames = static_cast<size_t>(std::max(0, YG(ll, "max_frames", 80)));
+        loader_new_format = std::make_unique<UnifiedDataLoader>(load_cfg);
+        if (!loader_new_format->load()) {
+            UNICALIB_ERROR("[LiDAR-LiDAR][NEW_FORMAT] 加载失败: {}", loader_new_format->get_status_message());
+            return 1;
+        }
+        use_new_format = true;
+        UNICALIB_INFO("[LiDAR-LiDAR][NEW_FORMAT] 已启用 root_dir='{}' unit='{}'",
+                      load_cfg.new_format_root_dir, load_cfg.new_format_timestamp_unit);
+    }
+
     std::optional<Sophus::SE3d> lidar_lidar_init_from_config;
     if (ll["initial_extrinsic"])
         lidar_lidar_init_from_config = parse_se3_from_yaml_4x4(ll["initial_extrinsic"]);
@@ -551,23 +589,32 @@ int main(int argc, char** argv) {
     int done = 0;
     for (const auto& [ref_id, target_id] : pairs) {
         UNICALIB_INFO("━━━ 标定对: {} -> {} ━━━", ref_id, target_id);
-        std::string ref_path = get_lidar_pcd_dir(ref_id);
-        std::string tgt_path = get_lidar_pcd_dir(target_id);
-        std::optional<std::string> ref_topic_ov = get_topic_from_lidar_yaml(ref_id);
-        std::optional<std::string> tgt_topic_ov = get_topic_from_lidar_yaml(target_id);
-        UNICALIB_INFO("[LiDAR-LiDAR][Pair] PCD 目录: ref_id='{}' -> '{}' ; target_id='{}' -> '{}'",
-                      ref_id, ref_path.empty() ? "(无)" : ref_path, target_id, tgt_path.empty() ? "(无)" : tgt_path);
-        if (ref_topic_ov) UNICALIB_INFO("[LiDAR-LiDAR][Pair] ref 传感器 YAML 中 pointcloud_topic: {}", *ref_topic_ov);
-        if (tgt_topic_ov) UNICALIB_INFO("[LiDAR-LiDAR][Pair] target 传感器 YAML 中 pointcloud_topic: {}", *tgt_topic_ov);
         std::vector<LiDARScan> scans_ref, scans_target;
-        bool pcd_ok = false;
-        if (!ref_path.empty() && !tgt_path.empty()) {
-            pcd_ok = load_lidar_scans_from_dir(ref_path, scans_ref, static_cast<size_t>(calib_cfg.max_frames)) &&
-                     load_lidar_scans_from_dir(tgt_path, scans_target, static_cast<size_t>(calib_cfg.max_frames));
+        if (use_new_format && loader_new_format) {
+            scans_ref = loader_new_format->to_lidar_scans(ref_id);
+            scans_target = loader_new_format->to_lidar_scans(target_id);
+            if (scans_ref.empty() || scans_target.empty()) {
+                UNICALIB_WARN("[LiDAR-LiDAR][NEW_FORMAT] 跳过: ref_id={} frames={} target_id={} frames={}",
+                              ref_id, scans_ref.size(), target_id, scans_target.size());
+                continue;
+            }
         } else {
-            UNICALIB_INFO("[LiDAR-LiDAR][Pair] data.lidar 未配置或路径为空，跳过 PCD 目录加载");
-        }
-        if (!pcd_ok) {
+            std::string ref_path = get_lidar_pcd_dir(ref_id);
+            std::string tgt_path = get_lidar_pcd_dir(target_id);
+            std::optional<std::string> ref_topic_ov = get_topic_from_lidar_yaml(ref_id);
+            std::optional<std::string> tgt_topic_ov = get_topic_from_lidar_yaml(target_id);
+            UNICALIB_INFO("[LiDAR-LiDAR][Pair] PCD 目录: ref_id='{}' -> '{}' ; target_id='{}' -> '{}'",
+                          ref_id, ref_path.empty() ? "(无)" : ref_path, target_id, tgt_path.empty() ? "(无)" : tgt_path);
+            if (ref_topic_ov) UNICALIB_INFO("[LiDAR-LiDAR][Pair] ref 传感器 YAML 中 pointcloud_topic: {}", *ref_topic_ov);
+            if (tgt_topic_ov) UNICALIB_INFO("[LiDAR-LiDAR][Pair] target 传感器 YAML 中 pointcloud_topic: {}", *tgt_topic_ov);
+            bool pcd_ok = false;
+            if (!ref_path.empty() && !tgt_path.empty()) {
+                pcd_ok = load_lidar_scans_from_dir(ref_path, scans_ref, static_cast<size_t>(calib_cfg.max_frames)) &&
+                         load_lidar_scans_from_dir(tgt_path, scans_target, static_cast<size_t>(calib_cfg.max_frames));
+            } else {
+                UNICALIB_INFO("[LiDAR-LiDAR][Pair] data.lidar 未配置或路径为空，跳过 PCD 目录加载");
+            }
+            if (!pcd_ok) {
             UNICALIB_WARN("  PCD 目录不可用或未配置，尝试 ROS2 bag 回退（需 ros2.use_ros2_bag；话题来自传感器 YAML 的 "
                           "pointcloud_topic 或 ros2.lidar_topics）");
 #if defined(UNICALIB_WITH_ROS2) && UNICALIB_WITH_ROS2
@@ -591,6 +638,7 @@ int main(int argc, char** argv) {
                 UNICALIB_WARN("  提示: 确认目录存在且含 .pcd；相对路径相对于 --data-dir");
             continue;
 #endif
+            }
         }
         UNICALIB_INFO("  加载点云: ref {} 帧, target {} 帧", scans_ref.size(), scans_target.size());
         UNICALIB_INFO_EX("[LiDAR-LiDAR][Fine] main: calling calibrate_two_stage pair {} -> {}", ref_id, target_id);

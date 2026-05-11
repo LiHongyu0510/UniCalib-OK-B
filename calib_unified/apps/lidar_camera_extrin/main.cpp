@@ -33,6 +33,7 @@
 #include <filesystem>
 #include <iostream>
 #include <string>
+#include <vector>
 #include <cstdlib>
 #include <algorithm>
 #if defined(UNICALIB_WITH_ROS2) && UNICALIB_WITH_ROS2
@@ -71,6 +72,22 @@ static std::optional<Sophus::SE3d> parse_se3_from_yaml_4x4(const YAML::Node& nod
     Eigen::Matrix3d R = project_to_so3(T.block<3, 3>(0, 0));
     Eigen::Vector3d t = T.block<3, 1>(0, 3);
     return Sophus::SE3d(Sophus::SO3d(R), t);
+}
+
+// initial_extrinsics Map 项：rows/cols/data 行优先 16 个数
+static std::vector<double> parse_4x4_matrix_data(const YAML::Node& node) {
+    if (!node || !node["rows"] || !node["cols"] || !node["data"] || !node["data"].IsSequence())
+        return {};
+    if (node["rows"].as<int>() != 4 || node["cols"].as<int>() != 4)
+        return {};
+    const auto& data = node["data"];
+    if (data.size() < 16)
+        return {};
+    std::vector<double> v;
+    v.reserve(16);
+    for (size_t i = 0; i < 16; ++i)
+        v.push_back(data[i].as<double>());
+    return v;
 }
 
 #if !defined(_WIN32)
@@ -178,6 +195,7 @@ int main(int argc, char** argv) {
     // ROS2 参数
     bool use_ros2_bag = false;
     bool use_ros2_topics = false;
+    bool use_new_format = false;
     std::string ros2_bag_file;
     std::string lidar_ros2_topic;
     std::string camera_ros2_topic;
@@ -474,6 +492,24 @@ int main(int argc, char** argv) {
     }
     if (lidar_cam_initial_from_config.has_value())
         pipe_cfg.lidar_cam_coarse_initial = lidar_cam_initial_from_config;
+    // 多相机初值：lidar_camera.initial_extrinsics
+    // 键支持 "lidar_id__camera_id" 或 "T_lidar_id__camera_id"，值为 rows/cols/data 的 4x4
+    if (cfg["lidar_camera"] && cfg["lidar_camera"]["initial_extrinsics"] &&
+        cfg["lidar_camera"]["initial_extrinsics"].IsMap()) {
+        for (const auto& kv : cfg["lidar_camera"]["initial_extrinsics"]) {
+            const std::string key = kv.first.as<std::string>();
+            if (!kv.second || !kv.second.IsMap()) continue;
+            std::vector<double> v = parse_4x4_matrix_data(kv.second);
+            if (v.size() >= 16u) {
+                pipe_cfg.lidar_camera_initial_extrinsic_inline[key] = std::move(v);
+            } else {
+                UNICALIB_WARN("[LiDAR-Cam] initial_extrinsics['{}'] 不是有效 4x4，已忽略", key);
+            }
+        }
+        if (!pipe_cfg.lidar_camera_initial_extrinsic_inline.empty()) {
+            UNICALIB_INFO("[LiDAR-Cam] 已加载 {} 组按相机初值", pipe_cfg.lidar_camera_initial_extrinsic_inline.size());
+        }
+    }
     pipe_cfg.lidar_cam_use_config_extrinsic_only = use_config_extrinsic_only;
     if (use_config_extrinsic_only) {
         do_coarse = false;
@@ -516,6 +552,44 @@ int main(int argc, char** argv) {
     
     // 未从命令行指定时，从配置文件 ros2 / data / sensors 读取
     std::string imu_ros2_topic;
+    const YAML::Node new_format_node = cfg["new_format"];
+    if (new_format_node && new_format_node["enable"] && new_format_node["enable"].as<bool>()) {
+        use_new_format = true;
+        if (new_format_node["root_dir"]) {
+            std::string root_dir = new_format_node["root_dir"].as<std::string>();
+            if (!base_data_dir.empty() && !fs::path(root_dir).is_absolute()) {
+                root_dir = resolve_data_path(base_data_dir, root_dir);
+            }
+            pipe_cfg.new_format_root_dir = root_dir;
+        }
+        if (new_format_node["oem7_imu_rate_hz"])
+            pipe_cfg.new_format_oem7_imu_rate_hz = new_format_node["oem7_imu_rate_hz"].as<double>();
+        if (new_format_node["oem7_time_base"])
+            pipe_cfg.new_format_oem7_time_base = new_format_node["oem7_time_base"].as<std::string>();
+        if (new_format_node["oem7_gps_utc_leap_sec"])
+            pipe_cfg.new_format_oem7_gps_utc_leap_sec = new_format_node["oem7_gps_utc_leap_sec"].as<int>();
+        if (new_format_node["oem7_time_offset_sec"])
+            pipe_cfg.new_format_oem7_time_offset_sec = new_format_node["oem7_time_offset_sec"].as<double>();
+        if (new_format_node["timestamp_unit"]) {
+            pipe_cfg.new_format_timestamp_unit = new_format_node["timestamp_unit"].as<std::string>();
+        }
+        if (new_format_node["lidar_index_files"] && new_format_node["lidar_index_files"].IsMap()) {
+            for (const auto& kv : new_format_node["lidar_index_files"]) {
+                pipe_cfg.new_format_lidar_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+            }
+        }
+        if (new_format_node["camera_index_files"] && new_format_node["camera_index_files"].IsMap()) {
+            for (const auto& kv : new_format_node["camera_index_files"]) {
+                pipe_cfg.new_format_camera_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+            }
+        }
+        if (new_format_node["imu_index_files"] && new_format_node["imu_index_files"].IsMap()) {
+            for (const auto& kv : new_format_node["imu_index_files"]) {
+                pipe_cfg.new_format_imu_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+            }
+        }
+    }
+
     const YAML::Node ros2_node = cfg["ros2"];
     if (ros2_node) {
         if (!use_ros2_bag && ros2_node["use_ros2_bag"] && ros2_node["use_ros2_bag"].as<bool>()) {
@@ -578,7 +652,11 @@ int main(int argc, char** argv) {
     }
     
     // 设置数据源配置（在线=实时话题，离线=bag 文件；话题名以 config 中 ros2/sensors 为准）
-    if (use_ros2_bag && !ros2_bag_file.empty()) {
+    if (use_new_format) {
+        pipe_cfg.use_new_format = true;
+        UNICALIB_INFO("配置: 使用 NEW_FORMAT 模式（索引 CSV 对齐）");
+        UNICALIB_INFO("  root_dir: {}", pipe_cfg.new_format_root_dir.empty() ? "(未设置)" : pipe_cfg.new_format_root_dir);
+    } else if (use_ros2_bag && !ros2_bag_file.empty()) {
         pipe_cfg.use_ros2_bag = true;
         pipe_cfg.ros2_bag_file = ros2_bag_file;
         pipe_cfg.lidar_ros2_topic = lidar_ros2_topic;
@@ -606,7 +684,11 @@ int main(int argc, char** argv) {
     }
 
     // 统一日志：当前数据源类型（便于 grep 与排障）
-    if (pipe_cfg.use_ros2_bag && !pipe_cfg.ros2_bag_file.empty()) {
+    if (pipe_cfg.use_new_format) {
+        UNICALIB_INFO("[数据源] 类型=NEW_FORMAT  root_dir={}  timestamp_unit={}",
+                      pipe_cfg.new_format_root_dir.empty() ? "(未设置)" : pipe_cfg.new_format_root_dir,
+                      pipe_cfg.new_format_timestamp_unit);
+    } else if (pipe_cfg.use_ros2_bag && !pipe_cfg.ros2_bag_file.empty()) {
         UNICALIB_INFO("[数据源] 类型=ROS2_BAG  path={}  lidar_topic={}  camera_topic={}",
                       pipe_cfg.ros2_bag_file, pipe_cfg.lidar_ros2_topic, pipe_cfg.camera_ros2_topic);
     } else if (pipe_cfg.use_ros2_topics) {

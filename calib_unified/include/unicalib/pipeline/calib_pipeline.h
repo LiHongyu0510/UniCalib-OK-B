@@ -216,6 +216,18 @@ struct PipelineConfig {
     size_t ros2_max_frames = 100;         // ROS2 最大帧数限制
     bool   ros2_strict_topic_match = true; // 为 true 时配置话题在 bag 中无数据则加载失败，不自动回退
 
+    // ─── 新采集格式数据源（索引 CSV） ───
+    bool use_new_format = false;
+    std::string new_format_root_dir;
+    std::map<std::string, std::string> new_format_lidar_index_files;   // sensor_id -> csv
+    std::map<std::string, std::string> new_format_camera_index_files;  // sensor_id -> csv
+    std::map<std::string, std::string> new_format_imu_index_files;     // sensor_id -> csv
+    std::string new_format_timestamp_unit = "s";  // s | ms | us | ns
+    double new_format_oem7_imu_rate_hz = 200.0;   // OEM7 CORRIMUDATAS 解码（Hz）
+    std::string new_format_oem7_time_base = "gps";
+    int new_format_oem7_gps_utc_leap_sec = 18;
+    double new_format_oem7_time_offset_sec = 0.0;
+
     // ─── LiDAR-Camera 标定参数 ───
     // 方法: "edge"(无目标边缘对齐) | "target"(标定板) | "motion"(B样条运动)
     std::string lidar_cam_method = "edge";
@@ -318,6 +330,8 @@ struct PipelineConfig {
     std::string mias_lcec_work_dir     = "/tmp/mias_work";
     /** LiDAR-Camera 粗标定初值（来自配置 initial_extrinsic/T_cam_lidar）：作为粗标定输入，粗标定必执行，其结果为精标定初值 */
     std::optional<Sophus::SE3d> lidar_cam_coarse_initial;
+    /** LiDAR-Camera 每对初值（可选）：key="lidar_id__camera_id" 或 "T_lidar_id__camera_id"，value=4x4 行优先 16 个数 */
+    std::map<std::string, std::vector<double>> lidar_camera_initial_extrinsic_inline;
     /** 为 true 时：跳过 AI 粗标定与精标定，直接使用配置中的 initial_extrinsic 作为手动微调的起始值（需同时配置 initial_extrinsic 且通常配合 --manual） */
     bool lidar_cam_use_config_extrinsic_only = false;
 };

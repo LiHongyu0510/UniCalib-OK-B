@@ -1,0 +1,47 @@
+# NTU Day 02 数据集 LiDAR-Camera 外参标定结果
+# 数据来源: atv_calib.yaml (已提供的标定参数)
+# 时间: 2026-04-21
+
+calibration_type: lidar_camera_extrinsic
+reference_sensor: os1_128
+target_sensor: d455b_color
+timestamp: 20260421
+source: atv_calib.yaml (provided)
+
+coarse_result:
+  method: provided_calibration
+  rms: 0
+  translation: [0.1159, -0.0248, -0.1359]
+  rotation_rpy_deg: [-90.28, -0.12, -90.66]
+  transformation_matrix:
+    - [-0.01157243, -0.00489461, 0.99992106, 0.11592963]
+    - [-0.999931, -0.00196219, -0.01158215, -0.02479597]
+    - [0.00201872, -0.9999861, -0.00487156, -0.13591907]
+    - [0, 0, 0, 1]
+
+fine_result:
+  method: none (calibration already provided)
+  rms: 0
+  converged: true
+  translation: [0.1159, -0.0248, -0.1359]
+  rotation_rpy_deg: [-90.28, -0.12, -90.66]
+
+intrinsics:
+  d455b_color:
+    fx: 383.93
+    fy: 382.96
+    cx: 322.81
+    cy: 250.97
+    width: 640
+    height: 480
+    distortion_model: radtan
+    distortion_coeffs: [-0.044064718, 0.040436293, -0.000001213, 0.001843517]
+
+  d455b_infra1:
+    fx: 383.26
+    fy: 383.24
+    cx: 325.96
+    cy: 236.53
+    width: 640
+    height: 480
+    distortion_coeffs: [0.001790477, -0.000401047, -0.000147121, 0.000664630]

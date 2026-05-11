@@ -260,6 +260,38 @@ int main(int argc, char** argv) {
             pipe_cfg.ros2_strict_topic_match = ros2_node["strict_topic_match"].as<bool>();
     }
 
+    // NEW_FORMAT：启用时优先于 ROS2 bag
+    const YAML::Node new_format_node = cfg["new_format"];
+    if (new_format_node && new_format_node["enable"] && new_format_node["enable"].as<bool>()) {
+        pipe_cfg.use_new_format = true;
+        if (new_format_node["root_dir"])
+            pipe_cfg.new_format_root_dir = new_format_node["root_dir"].as<std::string>();
+        if (new_format_node["timestamp_unit"])
+            pipe_cfg.new_format_timestamp_unit = new_format_node["timestamp_unit"].as<std::string>();
+        if (new_format_node["oem7_imu_rate_hz"])
+            pipe_cfg.new_format_oem7_imu_rate_hz = new_format_node["oem7_imu_rate_hz"].as<double>();
+        if (new_format_node["oem7_time_base"])
+            pipe_cfg.new_format_oem7_time_base = new_format_node["oem7_time_base"].as<std::string>();
+        if (new_format_node["oem7_gps_utc_leap_sec"])
+            pipe_cfg.new_format_oem7_gps_utc_leap_sec = new_format_node["oem7_gps_utc_leap_sec"].as<int>();
+        if (new_format_node["oem7_time_offset_sec"])
+            pipe_cfg.new_format_oem7_time_offset_sec = new_format_node["oem7_time_offset_sec"].as<double>();
+        if (new_format_node["lidar_index_files"] && new_format_node["lidar_index_files"].IsMap()) {
+            for (const auto& kv : new_format_node["lidar_index_files"])
+                pipe_cfg.new_format_lidar_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+        }
+        if (new_format_node["camera_index_files"] && new_format_node["camera_index_files"].IsMap()) {
+            for (const auto& kv : new_format_node["camera_index_files"])
+                pipe_cfg.new_format_camera_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+        }
+        if (new_format_node["imu_index_files"] && new_format_node["imu_index_files"].IsMap()) {
+            for (const auto& kv : new_format_node["imu_index_files"])
+                pipe_cfg.new_format_imu_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+        }
+        pipe_cfg.use_ros2_bag = false;
+        pipe_cfg.use_ros2_topics = false;
+    }
+
     for (const auto& s : sys_cfg.sensors) {
         if (s.type == SensorType::CAMERA && !s.topic.empty()) {
             if (pipe_cfg.camera_topics.empty()) {
@@ -275,7 +307,7 @@ int main(int argc, char** argv) {
     if (pipe_cfg.ros2_bag_file.empty() && cfg["data"] && cfg["data"]["bag_file"])
         pipe_cfg.ros2_bag_file = cfg["data"]["bag_file"].as<std::string>();
 
-    if (!ros2_bag_cli.empty()) {
+    if (!pipe_cfg.use_new_format && !ros2_bag_cli.empty()) {
         pipe_cfg.use_ros2_bag = true;
         pipe_cfg.ros2_bag_file = ros2_bag_cli;
     }
@@ -304,7 +336,11 @@ int main(int argc, char** argv) {
         }
     }
 
-    if (pipe_cfg.use_ros2_bag && !pipe_cfg.ros2_bag_file.empty()) {
+    if (pipe_cfg.use_new_format) {
+        UNICALIB_INFO("[Cam-Cam] 数据源: NEW_FORMAT root={} unit={}",
+                      pipe_cfg.new_format_root_dir.empty() ? "(未设置)" : pipe_cfg.new_format_root_dir,
+                      pipe_cfg.new_format_timestamp_unit);
+    } else if (pipe_cfg.use_ros2_bag && !pipe_cfg.ros2_bag_file.empty()) {
         UNICALIB_INFO("[Cam-Cam] 数据源: ROS2 bag  path={}", pipe_cfg.ros2_bag_file);
         if (!pipe_cfg.camera_topics.empty()) {
             for (const auto& [id, top] : pipe_cfg.camera_topics)
@@ -317,7 +353,9 @@ int main(int argc, char** argv) {
     CalibPipeline pipeline(pipe_cfg);
 
     UNICALIB_INFO("▶ Stage 1 (粗标定): 特征点匹配 + 本质矩阵");
-    if (pipe_cfg.use_ros2_bag && !pipe_cfg.ros2_bag_file.empty())
+    if (pipe_cfg.use_new_format)
+        UNICALIB_INFO("  图像: 从 NEW_FORMAT 索引加载");
+    else if (pipe_cfg.use_ros2_bag && !pipe_cfg.ros2_bag_file.empty())
         UNICALIB_INFO("  图像: 从 ROS2 bag 按 camera_topics / sensors 加载");
     else {
         UNICALIB_INFO("  相机0 图像: {}",

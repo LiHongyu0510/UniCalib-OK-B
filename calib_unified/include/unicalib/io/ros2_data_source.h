@@ -344,7 +344,8 @@ public:
     enum class SourceType {
         FILES,      // PCD 文件 + 图像文件
         ROS2_BAG,   // ROS2 bag 文件
-        ROS2_TOPIC  // ROS2 实时话题
+        ROS2_TOPIC, // ROS2 实时话题
+        NEW_FORMAT  // 新采集格式（索引 CSV）
     };
     
     struct Config {
@@ -357,7 +358,18 @@ public:
         
         // ROS2 模式
         RosDataSourceConfig ros_config;
-        
+
+        // 新采集格式模式
+        std::string new_format_root_dir;
+        std::map<std::string, std::string> new_format_lidar_index_files;   // sensor_id -> csv
+        std::map<std::string, std::string> new_format_camera_index_files;  // sensor_id -> csv
+        std::map<std::string, std::string> new_format_imu_index_files;     // sensor_id -> csv
+        std::string new_format_timestamp_unit = "s"; // s | ms | us | ns
+        double new_format_oem7_imu_rate_hz = 200.0;  // OEM7 CORRIMUDATAS 解码用（Hz）
+        std::string new_format_oem7_time_base = "gps";       // gps | unix（与 LiDAR/相机 Unix 时间对齐）
+        int new_format_oem7_gps_utc_leap_sec = 18;           // unix 模式下 GPS-UTC 闰秒差
+        double new_format_oem7_time_offset_sec = 0.0;      // 解码后再加上的秒偏移
+
         // 通用参数
         size_t max_frames = 100;
         double sample_interval = 0.0;
@@ -395,6 +407,7 @@ private:
     
     // 数据源
     RosDataSourceBase::Ptr ros_source_;
+    std::shared_ptr<class NewFormatDataSource> new_format_source_;
     
     // 从文件加载的数据
     std::map<std::string, std::vector<LiDARScanRos>> file_lidar_data_;
@@ -411,6 +424,9 @@ private:
     
     // 从 ROS2 加载
     bool load_from_ros();
+
+    // 从新采集格式加载
+    bool load_from_new_format();
 };
 
 }  // namespace ns_unicalib

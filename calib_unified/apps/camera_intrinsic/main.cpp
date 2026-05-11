@@ -20,6 +20,7 @@
 #include "unicalib/common/accuracy_logger.h"
 #include "unicalib/intrinsic/camera_calib.h"
 #include "unicalib/pipeline/ai_coarse_calib.h"
+#include "unicalib/io/ros2_data_source.h"
 #include <yaml-cpp/yaml.h>
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgcodecs.hpp>
@@ -30,14 +31,12 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <map>
 #include <algorithm>
 #include <chrono>
 #include <iomanip>
 #include <cstdlib>
 #include <thread>
-#if defined(UNICALIB_WITH_ROS2) && UNICALIB_WITH_ROS2
-#include "unicalib/io/ros2_data_source.h"
-#endif
 
 namespace fs = std::filesystem;
 using namespace ns_unicalib;
@@ -347,8 +346,18 @@ int main(int argc, char** argv) {
     std::string sensor_id = "cam_0";
     bool use_ros2_bag = false;
     bool use_ros2_realtime = false;
+    bool use_new_format = false;
     std::string ros2_bag_file;
     std::string camera_topic;
+    std::string new_format_root_dir;
+    std::string new_format_timestamp_unit = "s";
+    double new_format_oem7_imu_rate_hz = 200.0;
+    std::string new_format_oem7_time_base = "gps";
+    int new_format_oem7_gps_utc_leap_sec = 18;
+    double new_format_oem7_time_offset_sec = 0.0;
+    std::map<std::string, std::string> new_format_lidar_index_files;
+    std::map<std::string, std::string> new_format_camera_index_files;
+    std::map<std::string, std::string> new_format_imu_index_files;
     double realtime_timeout_sec = 60.0;
     size_t realtime_max_frames = 0;  // 0 = 按超时采集
     bool prefer_no_checkerboard = true;  // 优先无棋盘格标定，避免无棋盘格时失败
@@ -396,6 +405,34 @@ int main(int argc, char** argv) {
                     if (ros2_node["use_ros2_topics"]) use_ros2_realtime = ros2_node["use_ros2_topics"].as<bool>();
                     if (ros2_node["realtime_timeout"]) realtime_timeout_sec = ros2_node["realtime_timeout"].as<double>(60.0);
                     else if (ros2_node["max_wait_time"]) realtime_timeout_sec = ros2_node["max_wait_time"].as<double>(60.0);
+                }
+                const YAML::Node new_format_node = n["new_format"];
+                if (new_format_node && new_format_node["enable"] && new_format_node["enable"].as<bool>()) {
+                    use_new_format = true;
+                    if (new_format_node["root_dir"]) new_format_root_dir = new_format_node["root_dir"].as<std::string>();
+                    if (new_format_node["timestamp_unit"]) new_format_timestamp_unit = new_format_node["timestamp_unit"].as<std::string>();
+                    if (new_format_node["oem7_imu_rate_hz"])
+                        new_format_oem7_imu_rate_hz = new_format_node["oem7_imu_rate_hz"].as<double>();
+                    if (new_format_node["oem7_time_base"])
+                        new_format_oem7_time_base = new_format_node["oem7_time_base"].as<std::string>();
+                    if (new_format_node["oem7_gps_utc_leap_sec"])
+                        new_format_oem7_gps_utc_leap_sec = new_format_node["oem7_gps_utc_leap_sec"].as<int>();
+                    if (new_format_node["oem7_time_offset_sec"])
+                        new_format_oem7_time_offset_sec = new_format_node["oem7_time_offset_sec"].as<double>();
+                    if (new_format_node["lidar_index_files"] && new_format_node["lidar_index_files"].IsMap()) {
+                        for (const auto& kv : new_format_node["lidar_index_files"])
+                            new_format_lidar_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+                    }
+                    if (new_format_node["camera_index_files"] && new_format_node["camera_index_files"].IsMap()) {
+                        for (const auto& kv : new_format_node["camera_index_files"])
+                            new_format_camera_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+                    }
+                    if (new_format_node["imu_index_files"] && new_format_node["imu_index_files"].IsMap()) {
+                        for (const auto& kv : new_format_node["imu_index_files"])
+                            new_format_imu_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
+                    }
+                    use_ros2_bag = false;
+                    use_ros2_realtime = false;
                 }
 
                 for (const auto& s : n["sensors"]) {
@@ -596,7 +633,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    bool need_images_dir = !use_ros2_bag && !use_ros2_realtime;
+    bool need_images_dir = !use_new_format && !use_ros2_bag && !use_ros2_realtime;
     if (need_images_dir) {
         bool any_has_dir = false;
         for (const auto& t : camera_tasks) {
@@ -604,7 +641,7 @@ int main(int argc, char** argv) {
         }
         if (!any_has_dir) {
             ns_unicalib::Logger::init("UniCalib-Camera-Intrinsic");
-            UNICALIB_ERROR("No images source: set ros2.use_ros2_bag + ros2.ros2_bag_file (and --data-dir), or data.camera.<id>.images_dir + --data-dir");
+            UNICALIB_ERROR("No images source: set new_format.enable, or ros2.use_ros2_bag + ros2.ros2_bag_file, or data.camera.<id>.images_dir + --data-dir");
             return 1;
         }
         for (const auto& t : camera_tasks) {
@@ -650,7 +687,43 @@ int main(int argc, char** argv) {
                   prefer_no_checkerboard ? "优先无棋盘格 (DM-Calib/先验)，棋盘格可选精化" : "仅棋盘格标定");
 
     int num_ok = 0;
-    if (use_ros2_bag || use_ros2_realtime) {
+    if (use_new_format) {
+        ns_unicalib::UnifiedDataLoader::Config load_cfg;
+        load_cfg.source_type = ns_unicalib::UnifiedDataLoader::SourceType::NEW_FORMAT;
+        load_cfg.new_format_root_dir = new_format_root_dir;
+        load_cfg.new_format_lidar_index_files = new_format_lidar_index_files;
+        load_cfg.new_format_camera_index_files = new_format_camera_index_files;
+        load_cfg.new_format_imu_index_files = new_format_imu_index_files;
+        load_cfg.new_format_timestamp_unit = new_format_timestamp_unit;
+        load_cfg.new_format_oem7_imu_rate_hz = new_format_oem7_imu_rate_hz;
+        load_cfg.new_format_oem7_time_base = new_format_oem7_time_base;
+        load_cfg.new_format_oem7_gps_utc_leap_sec = new_format_oem7_gps_utc_leap_sec;
+        load_cfg.new_format_oem7_time_offset_sec = new_format_oem7_time_offset_sec;
+        if (cfg.max_images > 0) load_cfg.max_frames = static_cast<size_t>(cfg.max_images);
+        ns_unicalib::UnifiedDataLoader loader(load_cfg);
+        if (!loader.load()) {
+            UNICALIB_ERROR("加载 NEW_FORMAT 数据失败: {}", loader.get_status_message());
+            return 1;
+        }
+        for (const auto& task : camera_tasks) {
+            auto frames = loader.get_camera_frames(task.sensor_id);
+            std::vector<cv::Mat> image_mats;
+            int image_width = 0, image_height = 0;
+            for (const auto& fr : frames) {
+                if (!fr.image.empty()) {
+                    image_mats.push_back(fr.image.clone());
+                    if (image_width == 0) { image_width = fr.image.cols; image_height = fr.image.rows; }
+                }
+            }
+            UNICALIB_INFO("从 NEW_FORMAT 获取 {} 帧图像 (sensor_id={})", image_mats.size(), task.sensor_id);
+            if (image_mats.size() < static_cast<size_t>(cfg.min_images)) {
+                UNICALIB_ERROR("{} 图像不足: {} 帧 (需要 ≥ {})", task.sensor_id, image_mats.size(), cfg.min_images);
+                continue;
+            }
+            int ret = run_single_camera(task, g, {}, std::move(image_mats), image_width, image_height);
+            if (ret == 0) ++num_ok;
+        }
+    } else if (use_ros2_bag || use_ros2_realtime) {
 #if defined(UNICALIB_WITH_ROS2) && UNICALIB_WITH_ROS2
         std::string bag_path = ros2_bag_file;
         if (use_ros2_bag) {
