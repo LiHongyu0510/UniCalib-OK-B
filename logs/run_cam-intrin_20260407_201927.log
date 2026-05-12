@@ -1,0 +1,113 @@
+
+ ╔══════════════════════════════════════════════╗
+ ║    UniCalib — 相机内参标定 (针孔 + 鱼眼)    ║
+ ╚══════════════════════════════════════════════╝
+
+[2026-04-07 20:19:28.602] [info] [UniCalib-Camera-Intrinsic] [:] 日志文件: /root/calib_ws/results/logs/camera_intrinsic_20260407_201928.log
+[2026-04-07 20:19:28.602] [info] [UniCalib-Camera-Intrinsic] [:] 待标定相机数: 2 (配置中 sensors 内 type:camera 数量)
+[2026-04-07 20:19:28.602] [info] [UniCalib-Camera-Intrinsic] [:] 相机内参标定策略: 优先无棋盘格 (DM-Calib/先验)，棋盘格可选精化 (避免无棋盘格时标定失败)
+[2026-04-07 20:19:28.602] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[2026-04-07 20:19:28.602] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/metadata.yaml
+[2026-04-07 20:19:28.603] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 自动检测 LiDAR 话题: /os1_cloud_node1/points
+[2026-04-07 20:19:28.603] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 使用配置的相机话题: /left/image_raw
+[2026-04-07 20:19:28.603] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 自动检测 IMU 话题: /dji_sdk/attitude
+[INFO] [1775564368.607539155] [rosbag2_storage]: Opened database '/root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/nya_02_ros2.db3' for READ_ONLY.
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 找到 19 个话题
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/imu  类型: sensor_msgs/msg/Imu  消息数: 171462
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/attitude  类型: geometry_msgs/msg/QuaternionStamped  消息数: 42866
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /os1_cloud_node2/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /os1_cloud_node1/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /imu/imu  类型: sensor_msgs/msg/Imu  消息数: 166428
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /imu/magnetic_field  类型: sensor_msgs/msg/MagneticField  消息数: 166428
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /imu/temperature  类型: sensor_msgs/msg/Temperature  消息数: 166428
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/gps_position  类型: sensor_msgs/msg/NavSatFix  消息数: 21433
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/height_above_takeoff  类型: std_msgs/msg/Float32  消息数: 21433
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/gps_health  类型: std_msgs/msg/UInt8  消息数: 21433
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /uwb_endorange_info  类型: uwb_driver/msg/UwbRange  消息数: 25172
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /left/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /right/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /os1_cloud_node1/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4287
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /os1_cloud_node2/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4286
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /uwb_exorange_info  类型: uwb_driver/msg/UwbEcho  消息数: 2437
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /node_pos_marker_sc  类型: visualization_msgs/msg/Marker  消息数: 2437
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /node_pos_sc  类型: nav_msgs/msg/Path  消息数: 2437
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /leica/pose/relative  类型: geometry_msgs/msg/PoseStamped  消息数: 7679
+[2026-04-07 20:19:28.607] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[2026-04-07 20:19:47.750] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   LiDAR [/os1_cloud_node1/points]: 4287 帧
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   LiDAR [/os1_cloud_node2/points]: 4286 帧
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   相机 [/left/image_raw]: 4285 帧
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   相机 [/right/image_raw]: 4285 帧
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   IMU [/dji_sdk/imu]: 171462 帧
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   IMU [/imu/imu]: 166428 帧
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   IMU [/os1_cloud_node1/imu]: 42862 帧
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   IMU [/os1_cloud_node2/imu]: 42862 帧
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   选用 LiDAR  lidar_0 -> /os1_cloud_node1/points
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   选用 相机  cam_left -> /left/image_raw
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   选用 相机  cam_right -> /right/image_raw
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   选用 IMU    imu_0 -> /dji_sdk/imu
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:]   时间范围: 1609045331.127 - 1609045759.771 秒
+[2026-04-07 20:19:47.751] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 应用采样/帧数限制...
+[2026-04-07 20:19:47.864] [info] [UniCalib-Camera-Intrinsic] [:]   LiDAR /os1_cloud_node1/points 采样后: 100 帧
+[2026-04-07 20:19:47.911] [info] [UniCalib-Camera-Intrinsic] [:]   LiDAR /os1_cloud_node2/points 采样后: 100 帧
+[2026-04-07 20:19:47.958] [info] [UniCalib-Camera-Intrinsic] [:]   相机 /left/image_raw 采样后: 100 帧
+[2026-04-07 20:19:47.987] [info] [UniCalib-Camera-Intrinsic] [:]   相机 /right/image_raw 采样后: 100 帧
+[2026-04-07 20:19:48.101] [info] [UniCalib-Camera-Intrinsic] [:] 从 ROS2 bag 获取 100 帧图像 (cam_left 话题: /left/image_raw)
+[2026-04-07 20:19:48.101] [info] [UniCalib-Camera-Intrinsic] [:] ========== 相机内参标定: cam_left ==========
+[2026-04-07 20:19:48.273] [info] [UniCalib-Camera-Intrinsic] [:] [cam_left] 步骤1/2: 无棋盘格标定 — 已写入 25 张图像到 /root/calib_ws/results/dm_calib_input/cam_left 供 DM-Calib
+[2026-04-07 20:19:48.274] [info] [UniCalib-Camera-Intrinsic] [:] [AI-Calib] DM-Calib 使用专用 Python (UNICALIB_DM_CALIB_PYTHON): /root/calib_ws/.calib_scripts/dmcalib_python_wrapper.sh
+[2026-04-07 20:19:49.412] [info] [UniCalib-Camera-Intrinsic] [:] [AI-Calib] DM-Calib 配置的 Python 无 torch，改用已装 torch 的 Python: python3
+[2026-04-07 20:19:49.412] [info] [UniCalib-Camera-Intrinsic] [:] [DM-Calib] 可用性检查 失败 原因=推理脚本不存在 路径=/root/calib_ws/DM-Calib/DMCalib/tools/infer_unicalib.py
+[2026-04-07 20:19:49.412] [warning] [UniCalib-Camera-Intrinsic] [:] [cam_left] DM-Calib 不可用，已回退先验内参
+[2026-04-07 20:19:49.412] [info] [UniCalib-Camera-Intrinsic] [:] [cam_left] 步骤2/2: 棋盘格角点检测与精化...
+[2026-04-07 20:19:49.413] [info] [UniCalib-Camera-Intrinsic] [:] === 棋盘格角点标定 (cv::Mat) ===
+[2026-04-07 20:19:49.413] [info] [UniCalib-Camera-Intrinsic] [:]   图像数量: 100  分辨率: 752×480  标定板: 7×5
+  [cam_left] 检测角点: 0/100    [cam_left] 检测角点: 10/100    [cam_left] 检测角点: 20/100    [cam_left] 检测角点: 30/100    [cam_left] 检测角点: 40/100    [cam_left] 检测角点: 50/100    [cam_left] 检测角点: 60/100    [cam_left] 检测角点: 70/100    [cam_left] 检测角点: 80/100    [cam_left] 检测角点: 90/100    [cam_left] 检测角点: 99/100  [2026-04-07 20:19:50.033] [info] [UniCalib-Camera-Intrinsic] [:]   棋盘格有效帧: 0/100 (需 ≥15 才采用棋盘格结果)
+[2026-04-07 20:19:50.033] [warning] [UniCalib-Camera-Intrinsic] [:] Camera intrinsic: only 0 valid frames (need ≥15 for 棋盘格精化，将采用无棋盘格/先验结果)
+[2026-04-07 20:19:50.033] [info] [UniCalib-Camera-Intrinsic] [:]   说明: 图像中未检测到标定板 (type=chessboard, 7×5)，可能为 SLAM/外参数据；已启用 prefer_no_checkerboard，标定不失败
+
+[2026-04-07 20:19:50.033] [warning] [UniCalib-Camera-Intrinsic] [:] [cam_left] 棋盘格有效帧不足，采用无棋盘格结果 (method=prior)
+[2026-04-07 20:19:50.034] [info] [UniCalib-Camera-Intrinsic] [:] Saved: /root/calib_ws/results/camera_intrinsic/camera_intrinsic_cam_left.yaml
+
+┌────────────────────────────────────────────────┐
+│ 相机内参                 cam_left │
+├──────────────────────┬──────────────────────────┤
+│ 来源/方法            │                    prior │
+│ 分辨率               │                 752×480 │
+│ 有效图像帧           │                        0 │
+│ fx / fy / cx / cy    │                    384.0 384.0 376.0 240.0 │
+└──────────────────────┴──────────────────────────┘
+结果: /root/calib_ws/results/camera_intrinsic/camera_intrinsic_cam_left.yaml
+
+[2026-04-07 20:19:50.110] [info] [UniCalib-Camera-Intrinsic] [:] 从 ROS2 bag 获取 100 帧图像 (cam_right 话题: /right/image_raw)
+[2026-04-07 20:19:50.110] [info] [UniCalib-Camera-Intrinsic] [:] ========== 相机内参标定: cam_right ==========
+[2026-04-07 20:19:50.281] [info] [UniCalib-Camera-Intrinsic] [:] [cam_right] 步骤1/2: 无棋盘格标定 — 已写入 25 张图像到 /root/calib_ws/results/dm_calib_input/cam_right 供 DM-Calib
+[2026-04-07 20:19:50.281] [info] [UniCalib-Camera-Intrinsic] [:] [AI-Calib] DM-Calib 使用专用 Python (UNICALIB_DM_CALIB_PYTHON): /root/calib_ws/.calib_scripts/dmcalib_python_wrapper.sh
+[2026-04-07 20:19:51.391] [info] [UniCalib-Camera-Intrinsic] [:] [AI-Calib] DM-Calib 配置的 Python 无 torch，改用已装 torch 的 Python: python3
+[2026-04-07 20:19:51.391] [info] [UniCalib-Camera-Intrinsic] [:] [DM-Calib] 可用性检查 失败 原因=推理脚本不存在 路径=/root/calib_ws/DM-Calib/DMCalib/tools/infer_unicalib.py
+[2026-04-07 20:19:51.391] [warning] [UniCalib-Camera-Intrinsic] [:] [cam_right] DM-Calib 不可用，已回退先验内参
+[2026-04-07 20:19:51.391] [info] [UniCalib-Camera-Intrinsic] [:] [cam_right] 步骤2/2: 棋盘格角点检测与精化...
+[2026-04-07 20:19:51.391] [info] [UniCalib-Camera-Intrinsic] [:] === 棋盘格角点标定 (cv::Mat) ===
+[2026-04-07 20:19:51.391] [info] [UniCalib-Camera-Intrinsic] [:]   图像数量: 100  分辨率: 752×480  标定板: 7×5
+  [cam_right] 检测角点: 0/100    [cam_right] 检测角点: 10/100    [cam_right] 检测角点: 20/100    [cam_right] 检测角点: 30/100    [cam_right] 检测角点: 40/100    [cam_right] 检测角点: 50/100    [cam_right] 检测角点: 60/100    [cam_right] 检测角点: 70/100    [cam_right] 检测角点: 80/100    [cam_right] 检测角点: 90/100    [cam_right] 检测角点: 99/100  [2026-04-07 20:19:52.054] [info] [UniCalib-Camera-Intrinsic] [:]   棋盘格有效帧: 0/100 (需 ≥15 才采用棋盘格结果)
+[2026-04-07 20:19:52.054] [warning] [UniCalib-Camera-Intrinsic] [:] Camera intrinsic: only 0 valid frames (need ≥15 for 棋盘格精化，将采用无棋盘格/先验结果)
+[2026-04-07 20:19:52.054] [info] [UniCalib-Camera-Intrinsic] [:]   说明: 图像中未检测到标定板 (type=chessboard, 7×5)，可能为 SLAM/外参数据；已启用 prefer_no_checkerboard，标定不失败
+
+[2026-04-07 20:19:52.054] [warning] [UniCalib-Camera-Intrinsic] [:] [cam_right] 棋盘格有效帧不足，采用无棋盘格结果 (method=prior)
+[2026-04-07 20:19:52.054] [info] [UniCalib-Camera-Intrinsic] [:] Saved: /root/calib_ws/results/camera_intrinsic/camera_intrinsic_cam_right.yaml
+
+┌────────────────────────────────────────────────┐
+│ 相机内参                cam_right │
+├──────────────────────┬──────────────────────────┤
+│ 来源/方法            │                    prior │
+│ 分辨率               │                 752×480 │
+│ 有效图像帧           │                        0 │
+│ fx / fy / cx / cy    │                    384.0 384.0 376.0 240.0 │
+└──────────────────────┴──────────────────────────┘
+结果: /root/calib_ws/results/camera_intrinsic/camera_intrinsic_cam_right.yaml
+
+[2026-04-07 20:19:52.264] [info] [UniCalib-Camera-Intrinsic] [:] 相机内参标定结束: 成功 2 / 2
+
+共标定 2 个相机，结果见 /root/calib_ws/results/camera_intrinsic/camera_intrinsic_<id>.yaml
+

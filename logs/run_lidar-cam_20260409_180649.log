@@ -1,0 +1,217 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-09 18:06:49.468] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 18:06:49.468] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 18:06:49.468] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-09 18:06:49.468] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-09 18:06:49.468] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-09 18:06:49.468] [info] [LiDAR-Camera] [:] AI粗标定: true | 手动校准: true
+[2026-04-09 18:06:49.468] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 18:06:49.469] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [数据路径] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]   数据路径来源: 统一格式 (data.lidar.<id> / data.camera.<id>.images_dir)
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]   配置原始值 — lidar:  converted/lidar_pcd
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]   配置原始值 — camera: converted/Image/cam_left
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]   base_data_dir:  /root/calib_ws/data
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]   base 来源: 命令行 --data-dir
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]   lidar_dir:      /root/calib_ws/data/converted/lidar_pcd
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]   camera_dir:     /root/calib_ws/data/converted/Image/cam_left
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]   【数据就绪】是 — 点云与图像目录均存在，将执行精标定
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:]   说明: 使用 --dataset 时请将 data.lidar/data.camera 设为相对 base 的路径（如 pcd、images），不要使用 /path/to/... 占位符
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:] [LiDAR-Cam] use_config_extrinsic_only=true：跳过 AI 粗标定，将使用配置 initial_extrinsic 直接进入精标定/手动微调
+[2026-04-09 18:06:49.470] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 18:06:49.472] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-09 18:06:49.472] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] [数据源] 类型=FILES  lidar_dir=/root/calib_ws/data/converted/lidar_pcd  camera_dir=/root/calib_ws/data/converted/Image/cam_left
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:]   内参将从相机标定结果读取: ./results/camera_intrinsic/camera_intrinsic_cam_left.yaml (camera_id=cam_left)
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] [CalibPipeline] 初始化 ID=pipeline_20260409_180649
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] [CalibPipeline] 无目标优先: true
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] [CalibPipeline] 任务掩码: 0x10
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] ▶ Stage 2: 精标定 (方法=edge)
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] ▶ Stage 3: 手动校准 (manual_threshold=2.00px)
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:]   使用 ManualCalibSession 进行 6-DOF 交互式调整
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:]   调用示例:
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:]     ManualCalibSession::SessionConfig sess_cfg;
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:]     sess_cfg.save_dir = "./results/manual_sessions";
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:]     ManualCalibSession session(sess_cfg);
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:]     auto result = session.run_lidar_cam(scan, image, intrin, auto_result, auto_rms);
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] 
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] ║   Pipeline ID: pipeline_20260409_180649       ║
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-09 18:06:49.474] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=true → do_coarse=true
+[18:06:49.474] [info] 
+[18:06:49.474] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:06:49.474] [info] ▶ 开始阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[18:06:49.474] [info]   描述: AI模型提供初始估计值
+[18:06:49.474] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:06:49.474] [info] [CALC] 粗标定阶段开始 task=lidar_cam_extrin
+[18:06:49.474] [info] [Coarse-AI/LiDAR-Cam] 使用配置粗标定初值作为粗标定结果 t=[0.123,0.040,-0.058]m，精标定将以此起步
+[18:06:49.474] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:06:49.474] [info] ■ 结束阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[18:06:49.474] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 0 ms
+[18:06:49.474] [info]   消息: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[18:06:49.474] [info] [CALC] 阶段结束 stage=Coarse-AI task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=0.0 threshold=-1.0000
+[18:06:49.474] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:06:49.474] [info] 
+[18:06:49.474] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:06:49.474] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[18:06:49.474] [info]   描述: 无目标优化
+[18:06:49.474] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:06:49.474] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[18:06:49.474] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[18:06:49.474] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[18:06:49.474] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[18:06:49.474] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[18:06:49.474] [info]   [精标定数据源] 类型=FILES  lidar_id=lidar_front
+[18:06:49.474] [info]   文件目录: lidar=/root/calib_ws/data/converted/lidar_pcd  camera=/root/calib_ws/data/converted/Image/cam_left
+[18:06:49.474] [info] [Fine-Auto/LiDAR-Cam] 步骤: 从文件加载点云
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+[18:06:51.149] [info] [Fine-Auto/LiDAR-Cam] 点云加载完成 — 22 帧
+[18:06:51.491] [info] [Fine-Auto] 推断内参: 1024x768 fx=921.6 fy=921.6
+[18:06:51.492] [info] [Fine-Auto/LiDAR-Cam] 步骤: LiDAR-Camera 标定 相机=camera_list (方法: 边缘对齐)
+[18:06:51.493] [info] [CalibVisualizer] 初始化完成
+[18:06:51.493] [info] [Fine-Auto/LiDAR-Cam] 可视化已启用：仅标定结束后显示一帧「图像+点云投影」叠加，不创建 3D 窗口、不泵送其他帧
+[18:06:51.493] [info] [Fine-Auto/LiDAR-Cam] 使用粗标定初值 t=[0.123,0.040,-0.058]m
+[18:06:51.494] [info] [Fine-Auto] 结果已保存: ./results/lidar_cam_camera_list_extrinsic.yaml
+[18:06:51.494] [info] [Viz] 即将生成投影图并保存到 ./results/lidar_cam_camera_list_projection.png
+[18:06:51.513] [info] 投影可视化保存: ./results/lidar_cam_camera_list_projection.png
+[18:06:51.513] [info] [Viz] 投影图已保存（仅使用配置初值，未做精标定）
+[18:06:51.513] [info] [Fine-Auto/LiDAR-Cam] 相机 camera_list 已使用配置初值跳过精标定，直接供手动微调
+[18:06:51.513] [info] [Viz/Display] 即将关闭可视化窗口 原因=用户关闭或流程结束 pangolin_running=false
+[18:06:51.518] [info] [Fine-Auto/LiDAR-Cam] 精标定完成: 1 个相机  最大 RMS=0.0000 px
+[18:06:51.518] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 完成
+[18:06:51.518] [info] [Fine-Auto/LiDAR-Cam] RMS 阈值=2.00 px  最大 RMS=0.0000 px  在阈值内
+[18:06:51.521] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:06:51.521] [info] ■ 结束阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[18:06:51.521] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 2046 ms
+[18:06:51.521] [info]   消息: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=0.000000 px
+[18:06:51.521] [info] [CALC] 阶段结束 stage=Fine-Auto task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=2044.0 threshold=2.0000
+[18:06:51.521] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:06:51.521] [info] [Pipeline] 用户已启用手动校准 (--manual), 进入 6-DOF 调整
+[18:06:51.521] [info] 
+[18:06:51.521] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:06:51.521] [info] ▶ 开始阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[18:06:51.521] [info]   描述: 手动校准: 6-DOF 交互式调整
+[18:06:51.521] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:06:51.521] [info] [Manual-Refine] 任务: lidar_cam_extrin
+[18:06:51.521] [info] [Manual-Refine] 操作说明: Q/A Roll  W/S Pitch  E/D Yaw  R/F Tx  T/G Ty  Y/H Tz  U Undo  Enter 接受  Esc 取消
+[18:06:51.521] [info] [ManualSession] 会话ID: session_2026-04-09_18-06-51
+[18:06:51.521] [info] [ManualSession] 保存目录: ./results/manual_sessions
+[18:06:51.521] [info] [Manual-Refine] 已打开 6-DOF 可视化调整窗口，请在本窗口内按键微调后 Enter 接受或 Esc 取消
+[18:06:51.521] [info] [Manual-Refine] LiDAR-Camera 手动调整仅使用首帧匹配数据（第 0 帧点云 + 第 0 帧图像）
+[18:06:51.521] [info] [ManualSession] 启动 LiDAR-Camera 手动校准
+[18:06:51.521] [info] [ManualSession] 自动标定 RMS: 0.0000 px (阈值建议 < 2.0px)
+[18:06:51.521] [debug] [ManualSession] 事件: lidar_cam_start | auto_rms=0.000000
+[18:06:51.521] [info] [ManualAdjust] 初始外参:
+[18:06:51.521] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[18:06:51.521] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[18:06:51.521] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[18:06:51.521] [info] [ManualSession] ===== 手动校准操作说明 =====
+[18:06:51.521] [info]   Q/A: Roll ±0.1deg   W/S: Pitch ±0.1deg   E/D: Yaw ±0.1deg
+[18:06:51.521] [info]   R/F: Tx ±0.5cm   T/G: Ty ±0.5cm   Y/H: Tz ±0.5cm
+[18:06:51.521] [info]   Shift+键: 10倍步长
+[18:06:51.521] [info]   P: 进入点击精化模式  U: 撤销  Z: 重做
+[18:06:51.521] [info]   S: 保存  ESC: 接受并退出
+[18:06:51.521] [info]   点云投影质量越高 (边缘对齐越好) 表示标定越准确
+[18:06:51.539] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_180651_initial.yaml
+[18:06:51.539] [info] [ManualCalib] 交互窗口启动前已自动保存初始状态快照（备用）:
+[18:06:51.539] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_180651_initial.png
+[18:06:51.539] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_180651_initial.pcd
+[18:06:51.539] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_180651_initial.yaml
+
+(unicalib_lidar_camera:100): dbind-WARNING **: 18:06:51.541: Couldn't connect to accessibility bus: Failed to connect to socket /run/user/1000/at-spi/bus: No such file or directory
+[18:06:51.553] [info] [ManualCalib] 3D 点云窗口已禁用（避免 VTK 闪退），请在 2D 投影窗口进行微调。按下 'S' 键可手动保存当前微调结果图片和点云。
+[18:06:51.553] [info] [ManualCalib] 初始位姿 T_lidar_to_cam:
+[18:06:51.553] [info]   - Translation: 0.1230, 0.0399, -0.0577
+[18:06:51.553] [info]   - RPY (deg):   90.7545, -179.8846, 91.2509
+[18:07:51.388] [info] [ManualSession] 用户取消，保留自动标定结果
+[18:07:51.388] [debug] [ManualSession] 事件: lidar_cam_end | final_rms=0.000000
+[18:07:51.388] [info] [ManualSession] 会话已保存: ./results/manual_sessions/session_2026-04-09_18-06-51.yaml
+[18:07:51.388] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:07:51.388] [info] ■ 结束阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[18:07:51.388] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 59867 ms
+[18:07:51.388] [info]   消息: LiDAR-Camera 手动调整完成
+[18:07:51.388] [info] [CALC] 阶段结束 stage=Manual-Refine task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=59867.1 threshold=-1.0000
+[18:07:51.388] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:07:51.388] [info] ====== Pipeline Report: pipeline_20260409_180649 ======
+[18:07:51.388] [info]   Total time: 61911.1 ms
+[18:07:51.388] [info]   All stages succeeded: YES
+[18:07:51.388] [info]   标定质量: 各阶段 RMS 均在阈值内
+[18:07:51.388] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[18:07:51.388] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=0.0000 time=2044.0ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=0.000000 px
+[18:07:51.388] [info]   [Manual-Refine-lidar_cam_extrin] success=true rms=0.0000 time=59867.1ms: LiDAR-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   lidar_front->camera_list:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[18:07:51.388] [info] ================================
+[18:07:51.388] [info] Pipeline report saved: ./results/pipeline_report_20260409_180649.yaml
+[18:07:51.388] [info] ====== Pipeline Report: pipeline_20260409_180649 ======
+[18:07:51.388] [info]   Total time: 61911.1 ms
+[18:07:51.388] [info]   All stages succeeded: YES
+[18:07:51.388] [info]   标定质量: 各阶段 RMS 均在阈值内
+[18:07:51.388] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[18:07:51.388] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=0.0000 time=2044.0ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=0.000000 px
+[18:07:51.388] [info]   [Manual-Refine-lidar_cam_extrin] success=true rms=0.0000 time=59867.1ms: LiDAR-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   lidar_front->camera_list:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[18:07:51.388] [info] ================================
+[18:07:51.388] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:07:51.388] [info] LiDAR-Camera 标定流程完成
+[18:07:51.388] [info] 结果目录: ./results
+[18:07:51.388] [info] 标定流程正常退出 exit_code=0
+[18:07:51.388] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

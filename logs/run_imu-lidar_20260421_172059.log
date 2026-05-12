@@ -1,0 +1,142 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — IMU-LiDAR 外参标定                       ║
+ ║   两阶段: L2Calib RL粗估 → B样条连续时间精化           ║
+ ║   手动校准: --manual 触发旋转可视化验证                 ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-21 17:21:00.044] [info] [IMU-LiDAR] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] 配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml | IMU: imu_0 | LiDAR: lidar_0
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] AI粗标定: false | 手动校准: true (阈值=0.50deg)
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] ▶ Stage 2: B样条连续时间精标定
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:]   IMU数据: (未设置)
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:]   LiDAR目录: (未设置)
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:]   B样条间距: 0.1s | 时间偏移优化: true
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] ▶ Stage 3 (手动校准): 旋转可视化验证 + 增量调整
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:]   阈值: 0.50deg | 使用 ManualCalibSession::run_imu_lidar()
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:]   可视化: IMU积分轨迹 vs LiDAR里程计对比
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] IMU 内参: 从 results 目录读取 (1 个)，路径示例: ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] [CalibPipeline] 初始化 ID=pipeline_20260421_172100
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] [CalibPipeline] 无目标优先: true
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] [CalibPipeline] 任务掩码: 0x04
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] 
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] ║   Pipeline ID: pipeline_20260421_172100       ║
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-21 17:21:00.045] [info] [IMU-LiDAR] [:] [Pipeline] 已从 results 加载 IMU 内参: imu_0 <- ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+[17:21:00.045] [info] 
+[17:21:00.045] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:21:00.045] [info] ▶ 开始阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[17:21:00.045] [info]   描述: 无目标优化
+[17:21:00.045] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:21:00.045] [info] [CALC] 精标定阶段开始 task=imu_lidar_extrin
+[17:21:00.045] [info] [Fine-Auto] 任务: imu_lidar_extrin | 无目标优先: true
+[17:21:00.045] [info] [Fine-Auto] 方法: B样条连续时间优化 (无目标)
+[17:21:00.045] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[17:21:00.045] [info]   Bag 文件: /root/calib_ws/data/Koide/ouster/rosbag2_2023_03_28-16_25_54_fixed
+[17:21:00.045] [info]   实时模式: false
+[17:21:00.045] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/Koide/ouster/rosbag2_2023_03_28-16_25_54_fixed
+[17:21:00.045] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/Koide/ouster/rosbag2_2023_03_28-16_25_54_fixed/metadata.yaml
+[17:21:00.045] [info] [Ros2BagDataSource] 使用配置的 LiDAR 话题 (来自 sensors): /points
+[17:21:00.045] [info] [Ros2BagDataSource] 自动检测相机话题: /camera_info
+[INFO] [1776763260.047460566] [rosbag2_storage]: Opened database '/root/calib_ws/data/Koide/ouster/rosbag2_2023_03_28-16_25_54_fixed/rosbag2_2023_03_28-16_25_54_fixed_0.db3' for READ_ONLY.
+[17:21:00.047] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[17:21:00.047] [info] [Ros2BagDataSource] 找到 3 个话题
+[17:21:00.047] [info] [Ros2BagDataSource]  话题: /camera_info  类型: sensor_msgs/msg/CameraInfo  消息数: 58
+[17:21:00.047] [info] [Ros2BagDataSource]  话题: /image  类型: sensor_msgs/msg/Image  消息数: 58
+[17:21:00.047] [info] [Ros2BagDataSource]  话题: /points  类型: sensor_msgs/msg/PointCloud2  消息数: 291
+[17:21:00.047] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[17:21:01.221] [info] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[17:21:01.221] [info]   LiDAR [/points]: 291 帧
+[17:21:01.221] [info]   相机 [/image]: 58 帧
+[17:21:01.221] [info]   选用 LiDAR  lidar_0 -> /points
+[17:21:01.221] [info]   选用 相机  camera_0 -> /image
+[17:21:01.221] [info]   时间范围: 1743.854 - 1772.955 秒
+[17:21:01.221] [info] [Ros2BagDataSource] 应用采样/帧数限制...
+[17:21:01.221] [warning] [Fine-Auto/IMU-LiDAR] 跳过 imu_0->lidar_front: IMU 0 帧, LiDAR 0 帧
+[17:21:01.221] [warning] [Fine-Auto/IMU-LiDAR] 跳过 imu_0->lidar_rear: IMU 0 帧, LiDAR 0 帧
+[17:21:01.221] [info] [Fine-Auto/IMU-LiDAR] IMU-LiDAR 标定完成: 0 对
+[17:21:01.242] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:21:01.242] [info] ■ 结束阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[17:21:01.242] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 1196 ms
+[17:21:01.242] [info]   消息: IMU-LiDAR 标定完成: 0 对
+[17:21:01.242] [info] [CALC] 阶段结束 stage=Fine-Auto task=imu_lidar_extrin success=false residual_rms=0.000000 elapsed_ms=1175.9 threshold=0.5000
+[17:21:01.242] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:21:01.242] [info] [Pipeline] 用户已启用手动校准 (--manual), 进入 6-DOF 调整
+[17:21:01.242] [info] 
+[17:21:01.242] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:21:01.242] [info] ▶ 开始阶段: [Manual-Refine] 任务: [imu_lidar_extrin]
+[17:21:01.242] [info]   描述: 手动校准: 6-DOF 交互式调整
+[17:21:01.242] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:21:01.242] [info] [Manual-Refine] 任务: imu_lidar_extrin
+[17:21:01.242] [info] [Manual-Refine] 操作说明: Q/A Roll  W/S Pitch  E/D Yaw  R/F Tx  T/G Ty  Y/H Tz  U Undo  Enter 接受  Esc 取消
+[17:21:01.242] [info] [ManualSession] 会话ID: session_2026-04-21_17-21-01
+[17:21:01.242] [info] [ManualSession] 保存目录: ./results/manual_sessions
+[17:21:01.242] [info] [ManualSession] 启动 IMU-LiDAR 手动校准
+[17:21:01.242] [info] [ManualSession] 自动标定旋转残差: 0.0000 deg
+[17:21:01.242] [info] [ManualSession] IMU-LiDAR 手动校准通过旋转增量验证
+[17:21:01.242] [info] [ManualSession] 可视化: 将 IMU 积分轨迹与 LiDAR 里程计对比
+[17:21:01.242] [debug] [ManualSession] 事件: imu_lidar_start | auto_rms=0.000000
+[17:21:01.242] [info] [ManualAdjust] 初始外参:
+[17:21:01.242] [info] [ManualAdjust] 当前外参 [→]:
+[17:21:01.242] [info]   旋转 RPY: (0.0000, 0.0000, 0.0000) deg
+[17:21:01.242] [info]   平移 XYZ: (0.0000, 0.0000, 0.0000) m
+[17:21:01.243] [debug] [ManualSession] 事件: imu_lidar_end | final_rms=0.000000
+[17:21:01.243] [info] [ManualSession] 会话已保存: ./results/manual_sessions/session_2026-04-21_17-21-01.yaml
+[17:21:01.243] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:21:01.243] [info] ■ 结束阶段: [Manual-Refine] 任务: [imu_lidar_extrin]
+[17:21:01.243] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 0 ms
+[17:21:01.243] [info]   消息: IMU-LiDAR 手动调整完成
+[17:21:01.243] [info] [CALC] 阶段结束 stage=Manual-Refine task=imu_lidar_extrin success=true residual_rms=0.000000 elapsed_ms=0.7 threshold=-1.0000
+[17:21:01.243] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:21:01.243] [info] ====== Pipeline Report: pipeline_20260421_172100 ======
+[17:21:01.243] [info]   Total time: 1176.6 ms
+[17:21:01.243] [info]   All stages succeeded: NO
+[17:21:01.243] [info]   标定质量: 各阶段 RMS 均在阈值内
+[17:21:01.243] [info]   [Fine-Auto-imu_lidar_extrin] success=false rms=0.0000 time=1175.9ms: IMU-LiDAR 标定完成: 0 对
+[17:21:01.243] [info]   [Manual-Refine-imu_lidar_extrin] success=true rms=0.0000 time=0.7ms: IMU-LiDAR 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ IMU 内参:
+║   imu_0:
+║     陀螺噪声: 1.136e-01 rad/s/√Hz
+║     加速计噪声: 4.906e-01 m/s²/√Hz
+║ 外参:
+║   imu_0->lidar_front:
+║     R(RPY°): [0.00, 0.00, 0.00]
+║     T(m):    [0.00, 0.00, 0.00]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[17:21:01.243] [info] ================================
+[17:21:01.243] [info] Pipeline report saved: ./results/pipeline_report_20260421_172100.yaml
+[17:21:01.243] [info] ====== Pipeline Report: pipeline_20260421_172100 ======
+[17:21:01.243] [info]   Total time: 1176.6 ms
+[17:21:01.243] [info]   All stages succeeded: NO
+[17:21:01.243] [info]   标定质量: 各阶段 RMS 均在阈值内
+[17:21:01.243] [info]   [Fine-Auto-imu_lidar_extrin] success=false rms=0.0000 time=1175.9ms: IMU-LiDAR 标定完成: 0 对
+[17:21:01.243] [info]   [Manual-Refine-imu_lidar_extrin] success=true rms=0.0000 time=0.7ms: IMU-LiDAR 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ IMU 内参:
+║   imu_0:
+║     陀螺噪声: 1.136e-01 rad/s/√Hz
+║     加速计噪声: 4.906e-01 m/s²/√Hz
+║ 外参:
+║   imu_0->lidar_front:
+║     R(RPY°): [0.00, 0.00, 0.00]
+║     T(m):    [0.00, 0.00, 0.00]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[17:21:01.243] [info] ================================
+[17:21:01.243] [info] IMU-LiDAR 标定完成 | 结果: ./results

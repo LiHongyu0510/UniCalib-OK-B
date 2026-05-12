@@ -1,0 +1,332 @@
+[0.145s] DEBUG:colcon:Command line arguments: ['/usr/bin/colcon', 'build', '--symlink-install', '--cmake-args', '-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm']
+[0.145s] DEBUG:colcon:Parsed command line arguments: Namespace(log_base=None, log_level=None, verb_name='build', build_base='build', install_base='install', merge_install=False, symlink_install=True, test_result_base=None, continue_on_error=False, executor='parallel', parallel_workers=28, event_handlers=None, ignore_user_meta=False, metas=['./colcon.meta'], base_paths=['.'], packages_ignore=None, packages_ignore_regex=None, paths=None, packages_up_to=None, packages_up_to_regex=None, packages_above=None, packages_above_and_dependencies=None, packages_above_depth=None, packages_select_by_dep=None, packages_skip_by_dep=None, packages_skip_up_to=None, packages_select_build_failed=False, packages_skip_build_finished=False, packages_select_test_failures=False, packages_skip_test_passed=False, packages_select=None, packages_skip=None, packages_select_regex=None, packages_skip_regex=None, packages_start=None, packages_end=None, cmake_args=['-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm'], cmake_target=None, cmake_target_skip_unavailable=False, cmake_clean_cache=False, cmake_clean_first=False, cmake_force_configure=False, ament_cmake_args=None, catkin_cmake_args=None, catkin_skip_building_tests=False, mixin_files=None, mixin=None, verb_parser=<colcon_mixin.mixin.mixin_argument.MixinArgumentDecorator object at 0x7a68969ae050>, verb_extension=<colcon_core.verb.build.BuildVerb object at 0x7a6896aa34f0>, main=<bound method BuildVerb.main of <colcon_core.verb.build.BuildVerb object at 0x7a6896aa34f0>>, mixin_verb=('build',))
+[0.194s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) check parameters
+[0.194s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) check parameters
+[0.194s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) check parameters
+[0.194s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) check parameters
+[0.194s] Level 1:colcon.colcon_core.package_discovery:discover_packages(colcon_meta) discover
+[0.194s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) discover
+[0.194s] INFO:colcon.colcon_core.package_discovery:Crawling recursively for packages in '/root/calib_ws'
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ignore', 'ignore_ament_install']
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore'
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ignore_ament_install'
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_pkg']
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_pkg'
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['colcon_meta']
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'colcon_meta'
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['ros']
+[0.194s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'ros'
+[0.204s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['cmake', 'python']
+[0.204s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'cmake'
+[0.204s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python'
+[0.204s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extensions ['python_setup_py']
+[0.204s] Level 1:colcon.colcon_core.package_identification:_identify(.) by extension 'python_setup_py'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extensions ['ignore', 'ignore_ament_install']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extension 'ignore'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extension 'ignore_ament_install'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extensions ['colcon_pkg']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extension 'colcon_pkg'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extensions ['colcon_meta']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extension 'colcon_meta'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extensions ['ros']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extension 'ros'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extensions ['cmake', 'python']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extension 'cmake'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extension 'python'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extensions ['python_setup_py']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(DM-Calib) by extension 'python_setup_py'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extensions ['ignore', 'ignore_ament_install']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extension 'ignore'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extension 'ignore_ament_install'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extensions ['colcon_pkg']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extension 'colcon_pkg'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extensions ['colcon_meta']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extension 'colcon_meta'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extensions ['ros']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extension 'ros'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extensions ['cmake', 'python']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extension 'cmake'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extension 'python'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extensions ['python_setup_py']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(MIAS-LCEC) by extension 'python_setup_py'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extensions ['ignore', 'ignore_ament_install']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extension 'ignore'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extension 'ignore_ament_install'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extensions ['colcon_pkg']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extension 'colcon_pkg'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extensions ['colcon_meta']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extension 'colcon_meta'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extensions ['ros']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extension 'ros'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extensions ['cmake', 'python']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extension 'cmake'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extension 'python'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extensions ['python_setup_py']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(Transformer-IMU-Calibrator) by extension 'python_setup_py'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(UniCalib) by extensions ['ignore', 'ignore_ament_install']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(UniCalib) by extension 'ignore'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(UniCalib) by extension 'ignore_ament_install'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(UniCalib) by extensions ['colcon_pkg']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(UniCalib) by extension 'colcon_pkg'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(UniCalib) by extensions ['colcon_meta']
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(UniCalib) by extension 'colcon_meta'
+[0.205s] Level 1:colcon.colcon_core.package_identification:_identify(UniCalib) by extensions ['ros']
+[0.206s] Level 1:colcon.colcon_core.package_identification:_identify(UniCalib) by extension 'ros'
+[0.208s] DEBUG:colcon.colcon_core.package_identification:Package 'UniCalib' with type 'ros.ament_python' and name 'unicalib'
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extensions ['ignore', 'ignore_ament_install']
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(build) by extension 'ignore'
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(build) ignored
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(calib_unified) by extensions ['ignore', 'ignore_ament_install']
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(calib_unified) by extension 'ignore'
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(calib_unified) by extension 'ignore_ament_install'
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(calib_unified) by extensions ['colcon_pkg']
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(calib_unified) by extension 'colcon_pkg'
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(calib_unified) by extensions ['colcon_meta']
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(calib_unified) by extension 'colcon_meta'
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(calib_unified) by extensions ['ros']
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(calib_unified) by extension 'ros'
+[0.208s] Level 1:colcon.colcon_core.package_identification:_identify(calib_unified) by extensions ['cmake', 'python']
+[0.209s] Level 1:colcon.colcon_core.package_identification:_identify(calib_unified) by extension 'cmake'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(calib_unified) by extension 'python'
+[0.225s] DEBUG:colcon.colcon_core.package_identification:Package 'calib_unified' with type 'cmake' and name 'UniCalib'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extensions ['ignore', 'ignore_ament_install']
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extension 'ignore'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extension 'ignore_ament_install'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extensions ['colcon_pkg']
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extension 'colcon_pkg'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extensions ['colcon_meta']
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extension 'colcon_meta'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extensions ['ros']
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extension 'ros'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extensions ['cmake', 'python']
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extension 'cmake'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extension 'python'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extensions ['python_setup_py']
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(click_calib) by extension 'python_setup_py'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extensions ['ignore', 'ignore_ament_install']
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extension 'ignore'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extension 'ignore_ament_install'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extensions ['colcon_pkg']
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extension 'colcon_pkg'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extensions ['colcon_meta']
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extension 'colcon_meta'
+[0.225s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extensions ['ros']
+[0.226s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extension 'ros'
+[0.226s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extensions ['cmake', 'python']
+[0.226s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extension 'cmake'
+[0.226s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extension 'python'
+[0.226s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extensions ['python_setup_py']
+[0.226s] Level 1:colcon.colcon_core.package_identification:_identify(data) by extension 'python_setup_py'
+[0.228s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extensions ['ignore', 'ignore_ament_install']
+[0.228s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extension 'ignore'
+[0.228s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extension 'ignore_ament_install'
+[0.228s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extensions ['colcon_pkg']
+[0.228s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extension 'colcon_pkg'
+[0.228s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extensions ['colcon_meta']
+[0.228s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extension 'colcon_meta'
+[0.228s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extensions ['ros']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extension 'ros'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extensions ['cmake', 'python']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extension 'cmake'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extension 'python'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extensions ['python_setup_py']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(data/nusc_cam_front_20000) by extension 'python_setup_py'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extensions ['ignore', 'ignore_ament_install']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extension 'ignore'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extension 'ignore_ament_install'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extensions ['colcon_pkg']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extension 'colcon_pkg'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extensions ['colcon_meta']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extension 'colcon_meta'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extensions ['ros']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extension 'ros'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extensions ['cmake', 'python']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extension 'cmake'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extension 'python'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extensions ['python_setup_py']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(deps) by extension 'python_setup_py'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extensions ['ignore', 'ignore_ament_install']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docker) by extension 'ignore'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docker) ignored
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extensions ['ignore', 'ignore_ament_install']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'ignore'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'ignore_ament_install'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extensions ['colcon_pkg']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'colcon_pkg'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extensions ['colcon_meta']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'colcon_meta'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extensions ['ros']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'ros'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extensions ['cmake', 'python']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'cmake'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'python'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extensions ['python_setup_py']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(docs) by extension 'python_setup_py'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(iKalibr) by extensions ['ignore', 'ignore_ament_install']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(iKalibr) by extension 'ignore'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(iKalibr) by extension 'ignore_ament_install'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(iKalibr) by extensions ['colcon_pkg']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(iKalibr) by extension 'colcon_pkg'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(iKalibr) by extensions ['colcon_meta']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(iKalibr) by extension 'colcon_meta'
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(iKalibr) by extensions ['ros']
+[0.229s] Level 1:colcon.colcon_core.package_identification:_identify(iKalibr) by extension 'ros'
+[0.230s] DEBUG:colcon.colcon_core.package_identification:Package 'iKalibr' with type 'ros.ament_cmake' and name 'ikalibr'
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extensions ['ignore', 'ignore_ament_install']
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(install) by extension 'ignore'
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(install) ignored
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extensions ['ignore', 'ignore_ament_install']
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extension 'ignore'
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extension 'ignore_ament_install'
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extensions ['colcon_pkg']
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extension 'colcon_pkg'
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extensions ['colcon_meta']
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extension 'colcon_meta'
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extensions ['ros']
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extension 'ros'
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extensions ['cmake', 'python']
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extension 'cmake'
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extension 'python'
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extensions ['python_setup_py']
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(learn-to-calibrate) by extension 'python_setup_py'
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extensions ['ignore', 'ignore_ament_install']
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(log) by extension 'ignore'
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(log) ignored
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extensions ['ignore', 'ignore_ament_install']
+[0.230s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'ignore'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'ignore_ament_install'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extensions ['colcon_pkg']
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'colcon_pkg'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extensions ['colcon_meta']
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'colcon_meta'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extensions ['ros']
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'ros'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extensions ['cmake', 'python']
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'cmake'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'python'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extensions ['python_setup_py']
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(scripts) by extension 'python_setup_py'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(thrid_party) by extensions ['ignore', 'ignore_ament_install']
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(thrid_party) by extension 'ignore'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(thrid_party) ignored
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(unicalib_C_plus_plus) by extensions ['ignore', 'ignore_ament_install']
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(unicalib_C_plus_plus) by extension 'ignore'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(unicalib_C_plus_plus) by extension 'ignore_ament_install'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(unicalib_C_plus_plus) by extensions ['colcon_pkg']
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(unicalib_C_plus_plus) by extension 'colcon_pkg'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(unicalib_C_plus_plus) by extensions ['colcon_meta']
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(unicalib_C_plus_plus) by extension 'colcon_meta'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(unicalib_C_plus_plus) by extensions ['ros']
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(unicalib_C_plus_plus) by extension 'ros'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(unicalib_C_plus_plus) by extensions ['cmake', 'python']
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(unicalib_C_plus_plus) by extension 'cmake'
+[0.231s] Level 1:colcon.colcon_core.package_identification:_identify(unicalib_C_plus_plus) by extension 'python'
+[0.231s] DEBUG:colcon.colcon_core.package_identification:Package 'unicalib_C_plus_plus' with type 'cmake' and name 'unicalib_cpp'
+[0.231s] Level 1:colcon.colcon_core.package_discovery:discover_packages(recursive) using defaults
+[0.231s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) discover
+[0.231s] Level 1:colcon.colcon_core.package_discovery:discover_packages(ignore) using defaults
+[0.231s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) discover
+[0.231s] Level 1:colcon.colcon_core.package_discovery:discover_packages(path) using defaults
+[0.254s] Level 5:colcon.colcon_core.verb:set package 'UniCalib' build argument 'cmake_args' from command line to '['-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm']'
+[0.254s] Level 5:colcon.colcon_core.verb:set package 'UniCalib' build argument 'cmake_target' from command line to 'None'
+[0.254s] Level 5:colcon.colcon_core.verb:set package 'UniCalib' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.254s] Level 5:colcon.colcon_core.verb:set package 'UniCalib' build argument 'cmake_clean_cache' from command line to 'False'
+[0.254s] Level 5:colcon.colcon_core.verb:set package 'UniCalib' build argument 'cmake_clean_first' from command line to 'False'
+[0.254s] Level 5:colcon.colcon_core.verb:set package 'UniCalib' build argument 'cmake_force_configure' from command line to 'False'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'UniCalib' build argument 'ament_cmake_args' from command line to 'None'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'UniCalib' build argument 'catkin_cmake_args' from command line to 'None'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'UniCalib' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.255s] DEBUG:colcon.colcon_core.verb:Building package 'UniCalib' with the following arguments: {'ament_cmake_args': None, 'build_base': '/root/calib_ws/build/UniCalib', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/root/calib_ws/install/UniCalib', 'merge_install': False, 'path': '/root/calib_ws/calib_unified', 'symlink_install': True, 'test_result_base': None}
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'ikalibr' build argument 'cmake_args' from command line to '['-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm']'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'ikalibr' build argument 'cmake_target' from command line to 'None'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'ikalibr' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'ikalibr' build argument 'cmake_clean_cache' from command line to 'False'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'ikalibr' build argument 'cmake_clean_first' from command line to 'False'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'ikalibr' build argument 'cmake_force_configure' from command line to 'False'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'ikalibr' build argument 'ament_cmake_args' from command line to 'None'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'ikalibr' build argument 'catkin_cmake_args' from command line to 'None'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'ikalibr' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.255s] DEBUG:colcon.colcon_core.verb:Building package 'ikalibr' with the following arguments: {'ament_cmake_args': None, 'build_base': '/root/calib_ws/build/ikalibr', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/root/calib_ws/install/ikalibr', 'merge_install': False, 'path': '/root/calib_ws/iKalibr', 'symlink_install': True, 'test_result_base': None}
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'unicalib' build argument 'cmake_args' from command line to '['-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm']'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'unicalib' build argument 'cmake_target' from command line to 'None'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'unicalib' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'unicalib' build argument 'cmake_clean_cache' from command line to 'False'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'unicalib' build argument 'cmake_clean_first' from command line to 'False'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'unicalib' build argument 'cmake_force_configure' from command line to 'False'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'unicalib' build argument 'ament_cmake_args' from command line to 'None'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'unicalib' build argument 'catkin_cmake_args' from command line to 'None'
+[0.255s] Level 5:colcon.colcon_core.verb:set package 'unicalib' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.255s] DEBUG:colcon.colcon_core.verb:Building package 'unicalib' with the following arguments: {'ament_cmake_args': None, 'build_base': '/root/calib_ws/build/unicalib', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/root/calib_ws/install/unicalib', 'merge_install': False, 'path': '/root/calib_ws/UniCalib', 'symlink_install': True, 'test_result_base': None}
+[0.256s] Level 5:colcon.colcon_core.verb:set package 'unicalib_cpp' build argument 'cmake_args' from command line to '['-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm']'
+[0.256s] Level 5:colcon.colcon_core.verb:set package 'unicalib_cpp' build argument 'cmake_target' from command line to 'None'
+[0.256s] Level 5:colcon.colcon_core.verb:set package 'unicalib_cpp' build argument 'cmake_target_skip_unavailable' from command line to 'False'
+[0.256s] Level 5:colcon.colcon_core.verb:set package 'unicalib_cpp' build argument 'cmake_clean_cache' from command line to 'False'
+[0.256s] Level 5:colcon.colcon_core.verb:set package 'unicalib_cpp' build argument 'cmake_clean_first' from command line to 'False'
+[0.256s] Level 5:colcon.colcon_core.verb:set package 'unicalib_cpp' build argument 'cmake_force_configure' from command line to 'False'
+[0.256s] Level 5:colcon.colcon_core.verb:set package 'unicalib_cpp' build argument 'ament_cmake_args' from command line to 'None'
+[0.256s] Level 5:colcon.colcon_core.verb:set package 'unicalib_cpp' build argument 'catkin_cmake_args' from command line to 'None'
+[0.256s] Level 5:colcon.colcon_core.verb:set package 'unicalib_cpp' build argument 'catkin_skip_building_tests' from command line to 'False'
+[0.256s] DEBUG:colcon.colcon_core.verb:Building package 'unicalib_cpp' with the following arguments: {'ament_cmake_args': None, 'build_base': '/root/calib_ws/build/unicalib_cpp', 'catkin_cmake_args': None, 'catkin_skip_building_tests': False, 'cmake_args': ['-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm'], 'cmake_clean_cache': False, 'cmake_clean_first': False, 'cmake_force_configure': False, 'cmake_target': None, 'cmake_target_skip_unavailable': False, 'install_base': '/root/calib_ws/install/unicalib_cpp', 'merge_install': False, 'path': '/root/calib_ws/unicalib_C_plus_plus', 'symlink_install': True, 'test_result_base': None}
+[0.256s] INFO:colcon.colcon_core.executor:Executing jobs using 'parallel' executor
+[0.257s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete
+[0.257s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/root/calib_ws/calib_unified'
+[0.260s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_core.shell.bat': Not used on non-Windows systems
+[0.261s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.261s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.265s] INFO:colcon.colcon_ros.task.ament_cmake.build:Building ROS package in '/root/calib_ws/iKalibr' with build type 'ament_cmake'
+[0.265s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/root/calib_ws/iKalibr'
+[0.265s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.265s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.268s] INFO:colcon.colcon_ros.task.ament_python.build:Building ROS package in '/root/calib_ws/UniCalib' with build type 'ament_python'
+[0.268s] Level 1:colcon.colcon_core.shell:create_environment_hook('unicalib', 'ament_prefix_path')
+[0.269s] INFO:colcon.colcon_core.shell:Creating environment hook '/root/calib_ws/install/unicalib/share/unicalib/hook/ament_prefix_path.ps1'
+[0.269s] INFO:colcon.colcon_core.shell:Creating environment descriptor '/root/calib_ws/install/unicalib/share/unicalib/hook/ament_prefix_path.dsv'
+[0.270s] INFO:colcon.colcon_core.shell:Creating environment hook '/root/calib_ws/install/unicalib/share/unicalib/hook/ament_prefix_path.sh'
+[0.270s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.270s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.273s] INFO:colcon.colcon_cmake.task.cmake.build:Building CMake package in '/root/calib_ws/unicalib_C_plus_plus'
+[0.273s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.273s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.277s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/root/calib_ws/build/UniCalib': /opt/cmake/bin/cmake /root/calib_ws/calib_unified -DCMAKE_BUILD_TYPE=Release -DUSE_THIRDPARTY_LIBS=ON -DUSE_VETA_STUB=ON -Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm -DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/UniCalib
+[0.278s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/root/calib_ws/build/ikalibr': CMAKE_PREFIX_PATH=/root/calib_ws/install/process_bag:/root/calib_ws/install/unicalib:/opt/ros/humble:/root/calib_ws/install/faster_lio /opt/cmake/bin/cmake /root/calib_ws/iKalibr -DCMAKE_BUILD_TYPE=Release -DUSE_THIRDPARTY_LIBS=ON -DUSE_VETA_STUB=ON -Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/ikalibr
+[0.449s] INFO:colcon.colcon_core.task.python.build:Building Python package in '/root/calib_ws/UniCalib'
+[0.449s] INFO:colcon.colcon_core.shell:Skip shell extension 'powershell' for command environment: Not usable outside of PowerShell
+[0.449s] DEBUG:colcon.colcon_core.shell:Skip shell extension 'dsv' for command environment
+[0.455s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/root/calib_ws/build/unicalib_cpp': /opt/cmake/bin/cmake /root/calib_ws/unicalib_C_plus_plus -DCMAKE_BUILD_TYPE=Release -DUSE_THIRDPARTY_LIBS=ON -DUSE_VETA_STUB=ON -Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm -DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/unicalib_cpp
+[0.651s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/root/calib_ws/build/unicalib_cpp' returned '0': /opt/cmake/bin/cmake /root/calib_ws/unicalib_C_plus_plus -DCMAKE_BUILD_TYPE=Release -DUSE_THIRDPARTY_LIBS=ON -DUSE_VETA_STUB=ON -Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm -DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/unicalib_cpp
+[0.652s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/root/calib_ws/build/unicalib_cpp': /opt/cmake/bin/cmake --build /root/calib_ws/build/unicalib_cpp -- -j28 -l28
+[0.889s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoking command in '/root/calib_ws/build/unicalib': PYTHONPATH=/root/calib_ws/build/unicalib/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/calib_ws/install/unicalib/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /root/calib_ws/build/unicalib/build --no-deps symlink_data
+[5.296s] DEBUG:colcon.colcon_core.event_handler.log_command:Invoked command in '/root/calib_ws/build/ikalibr' returned '1': CMAKE_PREFIX_PATH=/root/calib_ws/install/process_bag:/root/calib_ws/install/unicalib:/opt/ros/humble:/root/calib_ws/install/faster_lio /opt/cmake/bin/cmake /root/calib_ws/iKalibr -DCMAKE_BUILD_TYPE=Release -DUSE_THIRDPARTY_LIBS=ON -DUSE_VETA_STUB=ON -Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm -DAMENT_CMAKE_SYMLINK_INSTALL=1 -DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/ikalibr
+[5.301s] Level 1:colcon.colcon_core.environment:create_environment_scripts_only(ikalibr)
+[5.306s] Level 1:colcon.colcon_core.environment:checking '/root/calib_ws/install/ikalibr' for CMake module files
+[5.306s] Level 1:colcon.colcon_core.environment:checking '/root/calib_ws/install/ikalibr' for CMake config files
+[5.306s] Level 1:colcon.colcon_core.environment:checking '/root/calib_ws/install/ikalibr/bin'
+[5.306s] Level 1:colcon.colcon_core.environment:checking '/root/calib_ws/install/ikalibr/lib/pkgconfig/ikalibr.pc'
+[5.306s] Level 1:colcon.colcon_core.environment:checking '/root/calib_ws/install/ikalibr/lib/python3.10/site-packages'
+[5.307s] Level 1:colcon.colcon_core.environment:checking '/root/calib_ws/install/ikalibr/bin'
+[5.307s] INFO:colcon.colcon_core.shell:Creating package script '/root/calib_ws/install/ikalibr/share/ikalibr/package.ps1'
+[5.308s] INFO:colcon.colcon_core.shell:Creating package descriptor '/root/calib_ws/install/ikalibr/share/ikalibr/package.dsv'
+[5.308s] INFO:colcon.colcon_core.shell:Creating package script '/root/calib_ws/install/ikalibr/share/ikalibr/package.sh'
+[5.309s] INFO:colcon.colcon_core.shell:Creating package script '/root/calib_ws/install/ikalibr/share/ikalibr/package.bash'
+[5.310s] INFO:colcon.colcon_core.shell:Creating package script '/root/calib_ws/install/ikalibr/share/ikalibr/package.zsh'
+[5.310s] Level 1:colcon.colcon_core.environment:create_file_with_runtime_dependencies(/root/calib_ws/install/ikalibr/share/colcon-core/packages/ikalibr)
+[14.517s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:closing loop
+[14.518s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:loop closed
+[14.518s] DEBUG:colcon.colcon_parallel_executor.executor.parallel:run_until_complete finished with '1'
+[14.518s] DEBUG:colcon.colcon_core.event_reactor:joining thread
+[14.528s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.notify_send': Could not find 'notify-send'
+[14.528s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.terminal_notifier': Not used on non-Darwin systems
+[14.528s] INFO:colcon.colcon_core.plugin_system:Skipping extension 'colcon_notification.desktop_notification.win32': Not used on non-Windows systems
+[14.528s] INFO:colcon.colcon_notification.desktop_notification:Sending desktop notification using 'notify2'
+[14.531s] DEBUG:colcon.colcon_notification.desktop_notification.notify2:Failed to initialize notify2: org.freedesktop.DBus.Error.Spawn.ExecFailed: /usr/bin/dbus-launch terminated abnormally without any error message
+[14.531s] DEBUG:colcon.colcon_core.event_reactor:joined thread
+[14.532s] INFO:colcon.colcon_core.shell:Creating prefix script '/root/calib_ws/install/local_setup.ps1'
+[14.533s] INFO:colcon.colcon_core.shell:Creating prefix util module '/root/calib_ws/install/_local_setup_util_ps1.py'
+[14.534s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/root/calib_ws/install/setup.ps1'
+[14.535s] INFO:colcon.colcon_core.shell:Creating prefix script '/root/calib_ws/install/local_setup.sh'
+[14.536s] INFO:colcon.colcon_core.shell:Creating prefix util module '/root/calib_ws/install/_local_setup_util_sh.py'
+[14.536s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/root/calib_ws/install/setup.sh'
+[14.537s] INFO:colcon.colcon_core.shell:Creating prefix script '/root/calib_ws/install/local_setup.bash'
+[14.538s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/root/calib_ws/install/setup.bash'
+[14.539s] INFO:colcon.colcon_core.shell:Creating prefix script '/root/calib_ws/install/local_setup.zsh'
+[14.540s] INFO:colcon.colcon_core.shell:Creating prefix chain script '/root/calib_ws/install/setup.zsh'

@@ -1,0 +1,110 @@
+-- Eigen3 found: /usr/include/eigen3
+-- Sophus: found in system
+-- veta: using self-contained veta-impl at /root/calib_ws/calib_unified/thirdparty/veta-impl/include
+-- basalt-headers: ✓ Found at /root/calib_ws/calib_unified/thirdparty/basalt-headers/include
+--   • Features: Se3Spline, So3Spline, RdSpline, CeresHelper
+-- libpng Found and Enabled
+-- libjpeg Found and Enabled
+-- libtiff Found and Enabled
+-- libopenexr Found and Enabled
+-- liblz4 Found and Enabled
+-- libzstd Found and Enabled
+-- Found Eigen: '/usr/include/eigen3'
+-- Selected Python: '/usr/bin/python3.10'. cmake --build . -t pypangolin_pip_install to use pypangolin module.
+-- libdc1394 Found and Enabled
+-- V4L Found and Enabled
+-- ffmpeg Found and Enabled: /usr/include/x86_64-linux-gnu;/usr/include/x86_64-linux-gnu;/usr/include/x86_64-linux-gnu;/usr/include/x86_64-linux-gnu;/usr/include/x86_64-linux-gnu
+-- OpenNI Found and Enabled
+-- OpenNI2 Found and Enabled
+-- Pangolin: building from /root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0
+-- Pangolin include paths: /root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_core/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_display/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_windowing/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_vars/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_image/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_plot/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_video/include
+-- basalt-headers: using /root/calib_ws/calib_unified/thirdparty/basalt-headers/include
+-- ctraj: using basalt-headers + ctraj_basalt_compat (replacing ctraj_full)
+-- Found AMD headers in: /usr/include/suitesparse
+-- Found AMD library: /usr/lib/x86_64-linux-gnu/libamd.so
+-- Found CAMD headers in: /usr/include/suitesparse
+-- Found CAMD library: /usr/lib/x86_64-linux-gnu/libcamd.so
+-- Found CCOLAMD headers in: /usr/include/suitesparse
+-- Found CCOLAMD library: /usr/lib/x86_64-linux-gnu/libccolamd.so
+-- Found CHOLMOD headers in: /usr/include/suitesparse
+-- Found CHOLMOD library: /usr/lib/x86_64-linux-gnu/libcholmod.so
+-- Found COLAMD headers in: /usr/include/suitesparse
+-- Found COLAMD library: /usr/lib/x86_64-linux-gnu/libcolamd.so
+-- Found SPQR headers in: /usr/include/suitesparse
+-- Found SPQR library: /usr/lib/x86_64-linux-gnu/libspqr.so
+-- Found Config headers in: /usr/include/suitesparse
+-- Found Config library: /usr/lib/x86_64-linux-gnu/libsuitesparseconfig.so
+-- Found Intel Thread Building Blocks (TBB) library (2021.5 / ) include location: . Assuming SuiteSparseQR was compiled with TBB.
+-- Adding librt to SuiteSparse_config libraries (required on Linux & Unix [not OSX] if SuiteSparse is compiled with timing).
+-- Found required Ceres dependency: Eigen version 3.4.0 in /usr/share/eigen3/cmake
+-- Found required Ceres dependency: glog
+-- Found required Ceres dependency: gflags
+-- Found Ceres version: 2.1.0 installed in: /usr/local with components: [EigenSparse, SparseLinearAlgebraLibrary, LAPACK, SuiteSparse, CXSparse, SchurSpecializations, Multithreading]
+-- Ceres: 2.1.0
+-- OpenCV: 4.8.0
+-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)
+-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)
+** WARNING ** io features related to pcap will be disabled
+** WARNING ** io features related to png will be disabled
+-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)
+-- FLANN found (include: /usr/include, lib: /usr/lib/x86_64-linux-gnu/libflann_cpp.so)
+-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)
+-- looking for PCL_COMMON
+-- looking for PCL_OCTREE
+-- looking for PCL_IO
+-- looking for PCL_SAMPLE_CONSENSUS
+-- looking for PCL_FILTERS
+-- looking for PCL_KDTREE
+-- looking for PCL_SEARCH
+-- looking for PCL_GEOMETRY
+-- looking for PCL_ML
+-- looking for PCL_SEGMENTATION
+-- looking for PCL_REGISTRATION
+-- looking for PCL_2D
+-- looking for PCL_FEATURES
+-- looking for PCL_VISUALIZATION
+-- PCL: 1.12.1
+-- spdlog: 1.9.2
+-- fmt: 8.1.1
+-- yaml-cpp: 0.7.0
+-- OpenMP: found, version 4.5
+-- Found rosidl_generator_c: 3.1.8 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+-- Found rosidl_adapter: 3.1.8 (/opt/ros/humble/share/rosidl_adapter/cmake)
+-- Found rosidl_generator_cpp: 3.1.8 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+-- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+-- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+-- Using RMW implementation 'rmw_fastrtps_cpp' as default
+-- ROS2: found rclcpp, enabling full ROS2 integration
+-- ufomap: not found or outdated, LiDAR surfel map disabled
+-- opengv: using thirdparty/opengv at /root/calib_ws/calib_unified/thirdparty/opengv/include
+-- Python bridge: enabled (DM-Calib/MIAS-LCEC/Transformer-IMU/L2Calib)
+-- Visualization: ✓ Pangolin 3D backend (interactive OpenGL)
+-- iKalibr: ⚠ Disabled (lean mode)
+--   • Use -DUNICALIB_WITH_IKALIBR=ON to enable B-spline solver
+-- unicalib: ✓ Library configured (PANGOLIN backend)
+-- 
+-- ========= UniCalib v2.0.0 构建配置 =========
+--   Build type:    Release
+--   C++ standard:  17
+--   Eigen3:        3.4.0
+--   OpenCV:        4.5.4
+--   PCL:           1.12.1
+--   Ceres:         2.1.0
+--   spdlog:        1.9.2
+--   fmt:           8.1.1
+--   OpenMP:        TRUE
+--   opengv:        bundled headers (/root/calib_ws/calib_unified/thirdparty/opengv-stub)
+--   ufomap:        0
+--   veta:          self-contained (veta-impl)
+--   Pangolin:      ON
+--   ROS2:          ON
+--   Build apps:    ON
+--   PCL viz:       ON
+-- =======================================================
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /root/calib_ws/calib_unified/build

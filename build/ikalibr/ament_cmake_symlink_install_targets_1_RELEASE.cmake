@@ -1,0 +1,1 @@
+ament_cmake_symlink_install_targets("TARGET_FILES" "/root/calib_ws/build/ikalibr/ikalibr_prog" "/root/calib_ws/build/ikalibr/ikalibr_data_format_transformer" "/root/calib_ws/build/ikalibr/ikalibr_imu_intri_calib" "TARGETS" "ikalibr_prog" "ikalibr_data_format_transformer" "ikalibr_imu_intri_calib" "RUNTIME_DESTINATION" "lib/ikalibr")

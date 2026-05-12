@@ -1,0 +1,34 @@
+Consolidate compiler generated dependencies of target pango_core
+[  7%] Built target pango_core
+Consolidate compiler generated dependencies of target pango_vars
+Consolidate compiler generated dependencies of target pango_packetstream
+[  8%] Built target pango_vars
+[ 13%] Built target pango_packetstream
+Consolidate compiler generated dependencies of target pango_image
+[ 23%] Built target pango_image
+Consolidate compiler generated dependencies of target pango_opengl
+[ 31%] Built target pango_opengl
+Consolidate compiler generated dependencies of target pango_windowing
+[ 37%] Built target pango_windowing
+Consolidate compiler generated dependencies of target pango_video
+Consolidate compiler generated dependencies of target pango_display
+[ 60%] Built target pango_video
+[ 69%] Built target pango_display
+Consolidate compiler generated dependencies of target pango_plot
+[ 71%] Built target pango_plot
+Consolidate compiler generated dependencies of target unicalib
+[ 89%] Built target unicalib
+Consolidate compiler generated dependencies of target unicalib_cam_cam
+Consolidate compiler generated dependencies of target unicalib_joint
+Consolidate compiler generated dependencies of target unicalib_imu_lidar
+Consolidate compiler generated dependencies of target unicalib_imu_intrinsic
+Consolidate compiler generated dependencies of target unicalib_camera_intrinsic
+Consolidate compiler generated dependencies of target unicalib_lidar_lidar
+Consolidate compiler generated dependencies of target unicalib_lidar_camera
+[ 91%] Built target unicalib_cam_cam
+[ 92%] Built target unicalib_imu_lidar
+[ 94%] Built target unicalib_joint
+[ 95%] Built target unicalib_camera_intrinsic
+[ 97%] Built target unicalib_lidar_lidar
+[ 98%] Built target unicalib_imu_intrinsic
+[100%] Built target unicalib_lidar_camera

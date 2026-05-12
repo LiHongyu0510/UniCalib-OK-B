@@ -1,0 +1,31 @@
+# UniCalib 传感器配置示例 (与 Python UniCalib 兼容)
+# 深度融合：配置第三方工具路径后，Stage1/2/3 将调用对应可执行/脚本
+system:
+  output_dir: "./calib_results"
+
+# 可选：第三方标定工具根目录（未配置则用环境变量 UNICALIB_*）
+third_party:
+  dm_calib: "/home/wqs/Documents/github/calibration/DM-Calib"  # auto-detected
+  learn_to_calibrate: "/home/wqs/Documents/github/calibration/learn-to-calibrate"  # auto-detected
+  mias_lcec: "/home/wqs/Documents/github/calibration/MIAS-LCEC"  # auto-detected
+  ikalibr: "/home/wqs/Documents/github/calibration/iKalibr"  # auto-detected
+  click_calib: "/home/wqs/Documents/github/calibration/click_calib"  # auto-detected
+  transformer_imu: "/home/wqs/Documents/github/calibration/Transformer-IMU-Calibrator"  # auto-detected
+
+sensors:
+  - sensor_id: cam_front
+    sensor_type: camera_pinhole
+    topic: /camera/image_raw
+    frame_id: cam_front_optical
+    resolution: [1920, 1080]
+
+  - sensor_id: imu
+    sensor_type: imu
+    topic: /imu/data
+    frame_id: imu_link
+    rate: 200
+
+  - sensor_id: lidar
+    sensor_type: lidar
+    topic: /lidar/points
+    frame_id: lidar_link

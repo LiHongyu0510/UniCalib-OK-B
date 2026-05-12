@@ -1,0 +1,260 @@
+Consolidate compiler generated dependencies of target pango_core
+[  7%] Built target pango_core
+Consolidate compiler generated dependencies of target pango_vars
+Consolidate compiler generated dependencies of target pango_packetstream
+[ 10%] Built target pango_vars
+[ 13%] Built target pango_packetstream
+Consolidate compiler generated dependencies of target pango_image
+[ 23%] Built target pango_image
+Consolidate compiler generated dependencies of target pango_opengl
+[ 31%] Built target pango_opengl
+Consolidate compiler generated dependencies of target pango_windowing
+[ 37%] Built target pango_windowing
+Consolidate compiler generated dependencies of target pango_video
+[ 59%] Built target pango_video
+Consolidate compiler generated dependencies of target pango_display
+[ 68%] Built target pango_display
+Consolidate compiler generated dependencies of target pango_plot
+[ 71%] Built target pango_plot
+Consolidate compiler generated dependencies of target unicalib
+[ 72%] Building CXX object CMakeFiles/unicalib.dir/src/pipeline/calib_pipeline.cpp.o
+[ 73%] Building CXX object CMakeFiles/unicalib.dir/src/io/lidar_packet_reader.cpp.o
+[ 73%] Building CXX object CMakeFiles/unicalib.dir/src/io/new_format_data_source.cpp.o
+[ 73%] Building CXX object CMakeFiles/unicalib.dir/src/io/ros2_data_source.cpp.o
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+/root/calib_ws/calib_unified/src/io/lidar_packet_reader.cpp: In function ‘bool ns_unicalib::{anonymous}::decode_blindspot_aacc_stream(std::ifstream&, std::vector<ns_unicalib::DecodedLidarFrame>&, std::size_t, double)’:
+/root/calib_ws/calib_unified/src/io/lidar_packet_reader.cpp:733:72: warning: ISO C++ says that these are ambiguous, even though the worst conversion for the first is better than the worst conversion for the second:
+  733 |             ifs.seekg(pos - static_cast<std::streamoff>(sizeof(hdr)) - 3);
+      |                                                                        ^
+In file included from /usr/include/c++/11/iosfwd:40,
+                 from /usr/include/c++/11/ios:38,
+                 from /usr/include/c++/11/istream:38,
+                 from /usr/include/c++/11/sstream:38,
+                 from /usr/include/c++/11/complex:45,
+                 from /usr/include/eigen3/Eigen/Core:50,
+                 from /usr/include/eigen3/Eigen/StdVector:14,
+                 from /usr/include/pcl-1.12/pcl/point_cloud.h:45,
+                 from /root/calib_ws/calib_unified/include/unicalib/io/lidar_packet_reader.h:3,
+                 from /root/calib_ws/calib_unified/src/io/lidar_packet_reader.cpp:1:
+/usr/include/c++/11/bits/postypes.h:198:7: note: candidate 1: ‘std::fpos<_StateT> std::fpos<_StateT>::operator-(std::streamoff) const [with _StateT = __mbstate_t; std::streamoff = long int]’
+  198 |       operator-(streamoff __off) const
+      |       ^~~~~~~~
+/root/calib_ws/calib_unified/src/io/lidar_packet_reader.cpp:733:72: note: candidate 2: ‘operator-(std::streamoff {aka long int}, int)’ (built-in)
+  733 |             ifs.seekg(pos - static_cast<std::streamoff>(sizeof(hdr)) - 3);
+      |                                                                        ^
+[ 73%] Linking CXX shared library lib/libunicalib.so
+[ 89%] Built target unicalib
+Consolidate compiler generated dependencies of target unicalib_imu_lidar
+Consolidate compiler generated dependencies of target unicalib_cam_cam
+[ 89%] Building CXX object CMakeFiles/unicalib_imu_lidar.dir/apps/imu_lidar_extrin/main.cpp.o
+Consolidate compiler generated dependencies of target unicalib_joint
+Consolidate compiler generated dependencies of target unicalib_imu_intrinsic
+Consolidate compiler generated dependencies of target unicalib_camera_intrinsic
+Consolidate compiler generated dependencies of target unicalib_lidar_lidar
+Consolidate compiler generated dependencies of target unicalib_lidar_camera
+[ 91%] Building CXX object CMakeFiles/unicalib_cam_cam.dir/apps/cam_cam_extrin/main.cpp.o
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+[ 91%] Building CXX object CMakeFiles/unicalib_joint.dir/apps/joint_calib/main.cpp.o
+[ 92%] Building CXX object CMakeFiles/unicalib_camera_intrinsic.dir/apps/camera_intrinsic/main.cpp.o
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+[ 92%] Building CXX object CMakeFiles/unicalib_imu_intrinsic.dir/apps/imu_intrinsic/main.cpp.o
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+[ 92%] Building CXX object CMakeFiles/unicalib_lidar_lidar.dir/apps/lidar_lidar_extrin/main.cpp.o
+[ 92%] Building CXX object CMakeFiles/unicalib_lidar_camera.dir/apps/lidar_camera_extrin/main.cpp.o
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+/root/calib_ws/calib_unified/apps/lidar_lidar_extrin/main.cpp: In function ‘int main(int, char**)’:
+/root/calib_ws/calib_unified/apps/lidar_lidar_extrin/main.cpp:498:23: error: no matching function for call to ‘ns_unicalib::UnifiedDataLoader::UnifiedDataLoader()’
+  498 |     UnifiedDataLoader loader_new_format;
+      |                       ^~~~~~~~~~~~~~~~~
+In file included from /root/calib_ws/calib_unified/apps/lidar_lidar_extrin/main.cpp:17:
+/root/calib_ws/calib_unified/include/unicalib/io/ros2_data_source.h:374:14: note: candidate: ‘ns_unicalib::UnifiedDataLoader::UnifiedDataLoader(const ns_unicalib::UnifiedDataLoader::Config&)’
+  374 |     explicit UnifiedDataLoader(const Config& cfg);
+      |              ^~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/include/unicalib/io/ros2_data_source.h:374:14: note:   candidate expects 1 argument, 0 provided
+/root/calib_ws/calib_unified/include/unicalib/io/ros2_data_source.h:342:7: note: candidate: ‘ns_unicalib::UnifiedDataLoader::UnifiedDataLoader(const ns_unicalib::UnifiedDataLoader&)’
+  342 | class UnifiedDataLoader {
+      |       ^~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/include/unicalib/io/ros2_data_source.h:342:7: note:   candidate expects 1 argument, 0 provided
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp: In function ‘void fatal_signal_handler(int)’:
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:100:54: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  100 |     for (const char* p = prefix; *p; ++p) (void)write(STDERR_FILENO, p, 1);
+      |                                                 ~~~~~^~~~~~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:101:53: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  101 |     for (const char* p = sname; *p; ++p) (void)write(STDERR_FILENO, p, 1);
+      |                                                ~~~~~^~~~~~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:102:51: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  102 |     for (const char* p = mid; *p; ++p) (void)write(STDERR_FILENO, p, 1);
+      |                                              ~~~~~^~~~~~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:104:53: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  104 |     if (stage) { for (; *stage; ++stage) (void)write(STDERR_FILENO, stage, 1); }
+      |                                                ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:105:65: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  105 |     else { const char* n = "(null)"; for (; *n; ++n) (void)write(STDERR_FILENO, n, 1); }
+      |                                                            ~~~~~^~~~~~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:106:50: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  106 |     for (const char* p = nl; *p; ++p) (void)write(STDERR_FILENO, p, 1);
+      |                                             ~~~~~^~~~~~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:110:56: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+  110 |         for (const char* p = hint; *p; ++p) (void)write(STDERR_FILENO, p, 1);
+      |                                                   ~~~~~^~~~~~~~~~~~~~~~~~~~~
+gmake[2]: *** [CMakeFiles/unicalib_lidar_lidar.dir/build.make:76: CMakeFiles/unicalib_lidar_lidar.dir/apps/lidar_lidar_extrin/main.cpp.o] Error 1
+gmake[1]: *** [CMakeFiles/Makefile2:357: CMakeFiles/unicalib_lidar_lidar.dir/all] Error 2
+gmake[1]: *** Waiting for unfinished jobs....
+[ 92%] Linking CXX executable bin/unicalib_cam_cam
+/usr/bin/ld: warning: libopencv_core.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_core.so.408
+[ 94%] Linking CXX executable bin/unicalib_imu_lidar
+[ 95%] Linking CXX executable bin/unicalib_imu_intrinsic
+/usr/bin/ld: warning: libopencv_core.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_core.so.408
+[ 95%] Built target unicalib_cam_cam
+[ 95%] Built target unicalib_imu_lidar
+[ 95%] Built target unicalib_imu_intrinsic
+[ 95%] Linking CXX executable bin/unicalib_camera_intrinsic
+/usr/bin/ld: warning: libopencv_imgcodecs.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_imgcodecs.so.408
+/usr/bin/ld: warning: libopencv_core.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_core.so.408
+[ 95%] Built target unicalib_camera_intrinsic
+[ 97%] Linking CXX executable bin/unicalib_joint
+/usr/bin/ld: warning: libopencv_core.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_core.so.408
+[ 97%] Built target unicalib_joint
+[ 98%] Linking CXX executable bin/unicalib_lidar_camera
+/usr/bin/ld: warning: libopencv_imgcodecs.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_imgcodecs.so.408
+/usr/bin/ld: warning: libopencv_core.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_core.so.408
+[ 98%] Built target unicalib_lidar_camera
+gmake: *** [Makefile:146: all] Error 2

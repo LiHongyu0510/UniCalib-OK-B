@@ -1,0 +1,29 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from ikalibr/msg/DVSEventArray.msg
+// generated code does not contain a copyright notice
+
+#include "ikalibr/msg/DVSEvent.idl"
+#include "std_msgs/msg/Header.idl"
+
+module ikalibr {
+  module msg {
+    @verbatim (language="comment", text=
+      "This message contains an array of events" "\n"
+      "(0, 0) is at top-left corner of image")
+    struct DVSEventArray {
+      std_msgs::msg::Header header;
+
+      @verbatim (language="comment", text=
+        "image height, that is, number of rows")
+      uint32 height;
+
+      @verbatim (language="comment", text=
+        "image width, that is, number of columns")
+      uint32 width;
+
+      @verbatim (language="comment", text=
+        "an array of events")
+      sequence<ikalibr::msg::DVSEvent> events;
+    };
+  };
+};

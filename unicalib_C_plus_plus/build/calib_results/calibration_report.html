@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>UniCalib 标定报告</title>
+<style>
+  body { font-family: 'Arial', sans-serif; margin: 40px; background: #f5f5f5; }
+  h1 { color: #2c3e50; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+  h2 { color: #34495e; margin-top: 30px; }
+  table { border-collapse: collapse; width: 100%; background: white;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 20px; }
+  th { background: #3498db; color: white; padding: 10px; text-align: left; }
+  td { padding: 8px 10px; border-bottom: 1px solid #eee; }
+  tr:hover { background: #f8f9fa; }
+  .summary { background: green; color: white; padding: 15px 25px;
+              border-radius: 8px; font-size: 1.2em; display: inline-block; }
+  .meta { color: #7f8c8d; font-size: 0.9em; margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<h1>UniCalib 多传感器标定报告</h1>
+<p class="meta">生成时间: 2026-04-07 17:29:01</p>
+<div class="summary">总体结果: PASS</div>
+<h2>1. 内参标定结果</h2>
+<table>
+  <tr><th>传感器</th><th>模型</th><th>fx</th><th>fy</th><th>cx</th><th>cy</th><th>重投影误差(px)</th><th>方法</th></tr>
+<tr><td>imu</td><td>IMU</td><td colspan=4>ARW=0.000170 VRW=0.002000</td><td>-</td><td>default_mems</td></tr>
+
+</table>
+<h2>2. 外参标定结果</h2>
+<table>
+  <tr><th>传感器A</th><th>传感器B</th><th>旋转(ZYX欧拉角)</th><th>平移</th><th>时间偏移</th><th>重投影误差(px)</th><th>方法</th></tr>
+<tr><td>imu</td><td>lidar</td><td>[0.000000,-0.000000,0.000000]°</td><td>[0.000000,0.000000,0.000000]m</td><td>0.000000ms</td><td>inf</td><td>l2calib_rl_init_placeholder</td></tr>
+
+</table>
+<h2>3. 验证指标</h2>
+<table>
+  <tr><th>标定对</th><th>均值误差(px)</th><th>中值误差(px)</th><th>&lt;1px比例</th><th>状态</th></tr>
+
+</table>
+</body>
+</html>

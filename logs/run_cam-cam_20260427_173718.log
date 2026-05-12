@@ -1,0 +1,621 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — Camera-Camera 外参标定                   ║
+ ║   两阶段: 特征匹配初始化 → BA精化(无目标优先)          ║
+ ║   手动校准: --manual 触发 click-calib 对应点精化       ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-27 17:37:19.071] [info] [Cam-Cam] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] 配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] 精标定方法: ba | 无目标优先: true
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] 手动校准: true (阈值=1.50px)
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] [Cam-Cam] 已从配置读取 1 对标定对
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] [Cam-Cam] 数据源: ROS2 bag  path=/root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] [Cam-Cam]   相机 cam_left -> /left/image_raw
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] [Cam-Cam]   相机 cam_right -> /right/image_raw
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] [CalibPipeline] 初始化 ID=pipeline_20260427_173719
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] [CalibPipeline] 无目标优先: true
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] [CalibPipeline] 任务掩码: 0x20
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] ▶ Stage 1 (粗标定): 特征点匹配 + 本质矩阵
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:]   图像: 从 ROS2 bag 按 camera_topics / sensors 加载
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] ▶ Stage 2 (精标定): ba (无目标=true)
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] ▶ Stage 3 (手动校准): click-calib 双目对应点精化
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:]   阈值: 1.50px 超过则提示手动校准
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:]   使用 ManualClickRefiner::refine_cam_cam() 进行精化
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] 
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] ║   Pipeline ID: pipeline_20260427_173719       ║
+[2026-04-27 17:37:19.073] [info] [Cam-Cam] [:] ╚═══════════════════════════════════════════════╝
+[17:37:19.073] [info] 
+[17:37:19.073] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:37:19.073] [info] ▶ 开始阶段: [Fine-Auto] 任务: [cam_cam_extrin]
+[17:37:19.073] [info]   描述: 无目标优化
+[17:37:19.073] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:37:19.073] [info] [CALC] 精标定阶段开始 task=cam_cam_extrin
+[17:37:19.073] [info] [Fine-Auto] 任务: cam_cam_extrin | 无目标优先: true
+[17:37:19.073] [info] [Fine-Auto] 方法: 特征匹配 + Bundle Adjustment (无目标)
+[17:37:19.073] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[17:37:19.073] [info]   Bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[17:37:19.073] [info]   实时模式: false
+[17:37:19.074] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[17:37:19.074] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/metadata.yaml
+[17:37:19.074] [info] [Ros2BagDataSource] 自动检测 LiDAR 话题: /os1_cloud_node1/points
+[17:37:19.074] [info] [Ros2BagDataSource] 使用配置的相机话题 (来自 sensors): /left/image_raw
+[17:37:19.074] [info] [Ros2BagDataSource] 自动检测 IMU 话题: /dji_sdk/attitude
+[INFO] [1777282639.078895204] [rosbag2_storage]: Opened database '/root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/nya_02_ros2.db3' for READ_ONLY.
+[17:37:19.078] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[17:37:19.078] [info] [Ros2BagDataSource] 找到 19 个话题
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /dji_sdk/imu  类型: sensor_msgs/msg/Imu  消息数: 171462
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /dji_sdk/attitude  类型: geometry_msgs/msg/QuaternionStamped  消息数: 42866
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /imu/imu  类型: sensor_msgs/msg/Imu  消息数: 166428
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /imu/magnetic_field  类型: sensor_msgs/msg/MagneticField  消息数: 166428
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /imu/temperature  类型: sensor_msgs/msg/Temperature  消息数: 166428
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_position  类型: sensor_msgs/msg/NavSatFix  消息数: 21433
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /dji_sdk/height_above_takeoff  类型: std_msgs/msg/Float32  消息数: 21433
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_health  类型: std_msgs/msg/UInt8  消息数: 21433
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /uwb_endorange_info  类型: uwb_driver/msg/UwbRange  消息数: 25172
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /left/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /right/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4287
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4286
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /uwb_exorange_info  类型: uwb_driver/msg/UwbEcho  消息数: 2437
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /node_pos_marker_sc  类型: visualization_msgs/msg/Marker  消息数: 2437
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /node_pos_sc  类型: nav_msgs/msg/Path  消息数: 2437
+[17:37:19.078] [info] [Ros2BagDataSource]  话题: /leica/pose/relative  类型: geometry_msgs/msg/PoseStamped  消息数: 7679
+[17:37:19.078] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[17:37:36.609] [info] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[17:37:36.609] [info]   LiDAR [/os1_cloud_node1/points]: 4287 帧
+[17:37:36.609] [info]   LiDAR [/os1_cloud_node2/points]: 4286 帧
+[17:37:36.609] [info]   相机 [/left/image_raw]: 4285 帧
+[17:37:36.609] [info]   相机 [/right/image_raw]: 4285 帧
+[17:37:36.609] [info]   IMU [/dji_sdk/imu]: 171462 帧
+[17:37:36.609] [info]   IMU [/imu/imu]: 166428 帧
+[17:37:36.609] [info]   IMU [/os1_cloud_node1/imu]: 42862 帧
+[17:37:36.609] [info]   IMU [/os1_cloud_node2/imu]: 42862 帧
+[17:37:36.609] [info]   选用 LiDAR  lidar_0 -> /os1_cloud_node1/points
+[17:37:36.609] [info]   选用 相机  cam_left -> /left/image_raw
+[17:37:36.609] [info]   选用 相机  cam_right -> /right/image_raw
+[17:37:36.609] [info]   选用 IMU    imu_0 -> /dji_sdk/imu
+[17:37:36.609] [info]   时间范围: 1609045331.127 - 1609045759.771 秒
+[17:37:36.609] [info] [Ros2BagDataSource] 应用采样/帧数限制...
+[17:37:36.869] [info]   LiDAR /os1_cloud_node1/points 采样后: 800 帧
+[17:37:36.995] [info]   LiDAR /os1_cloud_node2/points 采样后: 800 帧
+[17:37:37.124] [info]   相机 /left/image_raw 采样后: 800 帧
+[17:37:37.175] [info]   相机 /right/image_raw 采样后: 800 帧
+[17:37:37.194] [info] [Fine-Auto/Cam-Cam] 相机数: 2，将依次标定相邻对: (0-1), (1-2), ...
+[17:37:37.197] [info] [CalibVisualizer] 初始化完成
+[17:37:37.198] [info] [Viz/Display] 已自动设置 XDG_RUNTIME_DIR=/tmp（原未设置，避免 GLFW 报错）
+[17:37:37.198] [info] [Viz/Display] 显示环境 DISPLAY=:1  XDG_RUNTIME_DIR=/tmp  WAYLAND_DISPLAY=(未设置)
+[17:37:37.198] [info] [PangolinRender] 正在创建窗口与 OpenGL 上下文: UniCalib Cam-Cam (1280x720)
+[17:37:37.869] [info] [PangolinRender] CreateWindowAndBind 已完成
+[17:37:37.869] [info] [PangolinRender] 初始化完成: UniCalib Cam-Cam (1280x720)  ShouldQuit=false (窗口内容: 网格+坐标轴，点云需后续推送)
+[17:37:37.869] [info] [Viz/Display] 首帧泵送: 开始 (共 12 帧)
+[17:37:37.869] [info] [Viz/Render] render_and_handle_input 第 1 次调用 即将调用 pangolin_render_->render()
+[17:37:37.869] [info] [PangolinRender] 首帧渲染 点云数=0  坐标系数=0 (无点云时仅显示网格与坐标轴)
+[17:37:37.869] [info] [PangolinRender] render 开始 帧=1
+[17:37:37.916] [info] [PangolinRender] render 步骤 glClear 完成
+[17:37:37.916] [info] [PangolinRender] render 步骤 Activate 完成
+[17:37:37.919] [info] [PangolinRender] render 步骤 grid+axis 完成
+[17:37:37.920] [info] [PangolinRender] render_point_clouds 本次完成 详细日志次数=1/5
+[17:37:37.920] [info] [PangolinRender] render 步骤 point_clouds 完成
+[17:37:37.920] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[17:37:37.927] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[17:37:37.927] [info] [Viz/Render] render_and_handle_input 第 1 次 render() 返回 continue_render=true
+[17:37:37.927] [info] [Viz/Display] 首帧泵送 第 1/12 帧 render_ok=true
+[17:37:37.947] [info] [Viz/Render] render_and_handle_input 第 2 次调用 即将调用 pangolin_render_->render()
+[17:37:37.947] [info] [PangolinRender] render 开始 帧=2
+[17:37:37.947] [info] [PangolinRender] render 步骤 glClear 完成
+[17:37:37.947] [info] [PangolinRender] render 步骤 Activate 完成
+[17:37:37.947] [info] [PangolinRender] render 步骤 grid+axis 完成
+[17:37:37.947] [info] [PangolinRender] render_point_clouds 本次完成 详细日志次数=2/5
+[17:37:37.947] [info] [PangolinRender] render 步骤 point_clouds 完成
+[17:37:37.947] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[17:37:37.948] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[17:37:37.948] [info] [Viz/Render] render_and_handle_input 第 2 次 render() 返回 continue_render=true
+[17:37:37.968] [info] [Viz/Render] render_and_handle_input 第 3 次调用 即将调用 pangolin_render_->render()
+[17:37:37.968] [info] [PangolinRender] render 开始 帧=3
+[17:37:37.968] [info] [PangolinRender] render 步骤 glClear 完成
+[17:37:37.968] [info] [PangolinRender] render 步骤 Activate 完成
+[17:37:37.968] [info] [PangolinRender] render 步骤 grid+axis 完成
+[17:37:37.968] [info] [PangolinRender] render_point_clouds 本次完成 详细日志次数=3/5
+[17:37:37.968] [info] [PangolinRender] render 步骤 point_clouds 完成
+[17:37:37.968] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[17:37:37.968] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[17:37:37.968] [info] [Viz/Render] render_and_handle_input 第 3 次 render() 返回 continue_render=true
+[17:37:37.988] [info] [Viz/Render] render_and_handle_input 第 4 次调用 即将调用 pangolin_render_->render()
+[17:37:37.988] [info] [PangolinRender] render 开始 帧=4
+[17:37:37.988] [info] [PangolinRender] render 步骤 glClear 完成
+[17:37:37.988] [info] [PangolinRender] render 步骤 Activate 完成
+[17:37:37.988] [info] [PangolinRender] render 步骤 grid+axis 完成
+[17:37:37.988] [info] [PangolinRender] render_point_clouds 本次完成 详细日志次数=4/5
+[17:37:37.988] [info] [PangolinRender] render 步骤 point_clouds 完成
+[17:37:37.988] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[17:37:37.988] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[17:37:37.988] [info] [Viz/Render] render_and_handle_input 第 4 次 render() 返回 continue_render=true
+[17:37:38.008] [info] [Viz/Render] render_and_handle_input 第 5 次调用 即将调用 pangolin_render_->render()
+[17:37:38.008] [info] [PangolinRender] render 开始 帧=5
+[17:37:38.008] [info] [PangolinRender] render 步骤 glClear 完成
+[17:37:38.008] [info] [PangolinRender] render 步骤 Activate 完成
+[17:37:38.009] [info] [PangolinRender] render 步骤 grid+axis 完成
+[17:37:38.009] [info] [PangolinRender] render_point_clouds 本次完成 详细日志次数=5/5
+[17:37:38.009] [info] [PangolinRender] render 步骤 point_clouds 完成
+[17:37:38.009] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[17:37:38.009] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[17:37:38.009] [info] [Viz/Render] render_and_handle_input 第 5 次 render() 返回 continue_render=true
+[17:37:38.029] [info] [Viz/Render] render_and_handle_input 第 6 次调用 即将调用 pangolin_render_->render()
+[17:37:38.029] [info] [PangolinRender] render 开始 帧=6
+[17:37:38.029] [info] [PangolinRender] render 步骤 glClear 完成
+[17:37:38.029] [info] [PangolinRender] render 步骤 Activate 完成
+[17:37:38.029] [info] [PangolinRender] render 步骤 grid+axis 完成
+[17:37:38.029] [info] [PangolinRender] render 步骤 point_clouds 完成
+[17:37:38.029] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[17:37:38.029] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[17:37:38.029] [info] [Viz/Render] render_and_handle_input 第 6 次 render() 返回 continue_render=true
+[17:37:38.049] [info] [Viz/Render] render_and_handle_input 第 7 次调用 即将调用 pangolin_render_->render()
+[17:37:38.049] [info] [PangolinRender] render 开始 帧=7
+[17:37:38.049] [info] [PangolinRender] render 步骤 glClear 完成
+[17:37:38.049] [info] [PangolinRender] render 步骤 Activate 完成
+[17:37:38.049] [info] [PangolinRender] render 步骤 grid+axis 完成
+[17:37:38.049] [info] [PangolinRender] render 步骤 point_clouds 完成
+[17:37:38.049] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[17:37:38.049] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[17:37:38.049] [info] [Viz/Render] render_and_handle_input 第 7 次 render() 返回 continue_render=true
+[17:37:38.069] [info] [Viz/Render] render_and_handle_input 第 8 次调用 即将调用 pangolin_render_->render()
+[17:37:38.069] [info] [PangolinRender] render 开始 帧=8
+[17:37:38.070] [info] [PangolinRender] render 步骤 glClear 完成
+[17:37:38.070] [info] [PangolinRender] render 步骤 Activate 完成
+[17:37:38.070] [info] [PangolinRender] render 步骤 grid+axis 完成
+[17:37:38.070] [info] [PangolinRender] render 步骤 point_clouds 完成
+[17:37:38.070] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[17:37:38.070] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[17:37:38.070] [info] [Viz/Render] render_and_handle_input 第 8 次 render() 返回 continue_render=true
+[17:37:38.090] [info] [Viz/Render] render_and_handle_input 第 9 次调用 即将调用 pangolin_render_->render()
+[17:37:38.090] [info] [PangolinRender] render 开始 帧=9
+[17:37:38.090] [info] [PangolinRender] render 步骤 glClear 完成
+[17:37:38.090] [info] [PangolinRender] render 步骤 Activate 完成
+[17:37:38.090] [info] [PangolinRender] render 步骤 grid+axis 完成
+[17:37:38.090] [info] [PangolinRender] render 步骤 point_clouds 完成
+[17:37:38.090] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[17:37:38.090] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[17:37:38.090] [info] [Viz/Render] render_and_handle_input 第 9 次 render() 返回 continue_render=true
+[17:37:38.110] [info] [Viz/Render] render_and_handle_input 第 10 次调用 即将调用 pangolin_render_->render()
+[17:37:38.110] [info] [PangolinRender] render 开始 帧=10
+[17:37:38.110] [info] [PangolinRender] render 步骤 glClear 完成
+[17:37:38.110] [info] [PangolinRender] render 步骤 Activate 完成
+[17:37:38.110] [info] [PangolinRender] render 步骤 grid+axis 完成
+[17:37:38.110] [info] [PangolinRender] render 步骤 point_clouds 完成
+[17:37:38.110] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[17:37:38.111] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[17:37:38.111] [info] [Viz/Render] render_and_handle_input 第 10 次 render() 返回 continue_render=true
+[17:37:38.131] [info] [PangolinRender] render 开始 帧=11
+[17:37:38.131] [info] [PangolinRender] render 步骤 glClear 完成
+[17:37:38.131] [info] [PangolinRender] render 步骤 Activate 完成
+[17:37:38.131] [info] [PangolinRender] render 步骤 grid+axis 完成
+[17:37:38.131] [info] [PangolinRender] render 步骤 point_clouds 完成
+[17:37:38.131] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[17:37:38.131] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[17:37:38.151] [info] [PangolinRender] render 开始 帧=12
+[17:37:38.151] [info] [PangolinRender] render 步骤 glClear 完成
+[17:37:38.151] [info] [PangolinRender] render 步骤 Activate 完成
+[17:37:38.152] [info] [PangolinRender] render 步骤 grid+axis 完成
+[17:37:38.152] [info] [PangolinRender] render 步骤 point_clouds 完成
+[17:37:38.152] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[17:37:38.153] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[17:37:38.153] [info] [Viz/Display] 首帧泵送 第 12/12 帧 render_ok=true
+[17:37:38.173] [info] [Viz/Display] 首帧泵送完成 共 12 帧 (窗口应已显示网格/坐标轴，尚未推送点云)；标定完成后请手动关闭窗口
+[17:37:38.173] [info] [Fine-Auto/Cam-Cam] 可视化已启用（默认）
+[17:37:38.173] [info] [Fine-Auto/Cam-Cam] 按配置 camera_align 标定 1 对
+[17:37:38.173] [info] 读取相机内参: results/camera_intrinsic/camera_intrinsic_cam_right.yaml
+[17:37:38.174] [info]   fx=384.00 fy=384.00 cx=376.00 cy=240.00 dist=4
+[17:37:38.174] [info] 读取相机内参: results/camera_intrinsic/camera_intrinsic_cam_left.yaml
+[17:37:38.175] [info]   fx=425.03 fy=426.80 cx=386.02 cy=241.91 dist=4
+[17:37:38.175] [info] === Camera-Camera 两阶段标定 ===
+[17:37:38.175] [info]   相机0 帧数: 800
+[17:37:38.175] [info]   相机1 帧数: 800
+[17:37:38.175] [info]   优先无目标: true
+[17:37:38.175] [info]   使用初值: false (skip_coarse=false)
+[17:37:38.175] [info] === Camera-Camera 本质矩阵法 ===
+[17:37:48.168] [info]   总匹配点: 598602
+[17:37:54.782] [info] [CALC] 本质矩阵 recover_pose 内点数=598602 总匹配=598602 内点比=1.000
+[17:37:56.410] [info] [Cam-Cam] 步骤: 本质矩阵恢复位姿完成 (内点 598602)
+[17:37:56.410] [info] [CALC] 本质矩阵法完成 平移 T=[0.0257,0.0083,0.9996] 匹配数=598602
+[17:37:56.410] [info] 本质矩阵法完成 T=[0.0257,0.0083,0.9996]
+[17:38:05.271] [info] [Fine] 匹配点数: 598602, 执行 Bundle Adjustment
+[17:38:05.271] [info] [Cam-Cam] 步骤: Bundle Adjustment 开始 (匹配点 598602)
+[17:38:07.038] [info]   BA: n_valid=582814 Ceres Solver Report: Iterations: 4, Initial cost: 2.658934e+05, Final cost: 2.572468e+05, Termination: CONVERGENCE
+[17:38:07.038] [info] [CALC] Cam-Cam BA Ceres n_valid=582814 initial_cost=265893.420313 final_cost=257246.831981 iter=4 converged=yes
+[17:38:07.038] [info] [CALC] Cam-Cam BA 完成 有效点=582814 converged=yes residual_rms=0.6644px
+[17:38:07.038] [info] [Cam-Cam] 步骤: Bundle Adjustment 完成 (有效点 582814 converged=yes rms=0.664px)
+[17:38:07.192] [info] [Fine] 标定完成: RMS=0.664px converged=yes
+[17:38:07.198] [info] [Fine-Auto/Cam-Cam] 结果已保存: ./results/camera_camera_extrinsic/cam_right_to_cam_left_extrinsic.yaml
+[17:38:07.198] [info] [Fine-Auto/Cam-Cam] cam_right -> cam_left 完成, rms=0.6644 px
+[17:38:07.198] [info] [Fine-Auto/Cam-Cam] Camera-Camera 标定完成: 1 对, 最大 RMS=0.664370 px
+[17:38:07.243] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:38:07.243] [info] ■ 结束阶段: [Fine-Auto] 任务: [cam_cam_extrin]
+[17:38:07.243] [info]   结果: ✓ 成功 | 残差RMS: 0.6644 | 耗时: 48169 ms
+[17:38:07.243] [info]   消息: Camera-Camera 标定完成: 1 对, 最大 RMS=0.664370 px
+[17:38:07.243] [info] [CALC] 阶段结束 stage=Fine-Auto task=cam_cam_extrin success=true residual_rms=0.664370 elapsed_ms=48124.5 threshold=1.5000
+[17:38:07.243] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:38:07.244] [info] [Pipeline] 用户已启用手动校准 (--manual), 进入 6-DOF 调整
+[17:38:07.244] [info] 
+[17:38:07.244] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:38:07.244] [info] ▶ 开始阶段: [Manual-Refine] 任务: [cam_cam_extrin]
+[17:38:07.244] [info]   描述: 手动校准: 6-DOF 交互式调整
+[17:38:07.244] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:38:07.244] [info] [Manual-Refine] 任务: cam_cam_extrin
+[17:38:07.244] [info] [Manual-Refine] 操作说明: Q/A Roll  W/S Pitch  E/D Yaw  R/F Tx  T/G Ty  Y/H Tz  U Undo  Enter 接受  Esc 取消
+[17:38:07.244] [info] [ManualSession] 会话ID: session_2026-04-27_17-38-07
+[17:38:07.244] [info] [ManualSession] 保存目录: ./results/manual_sessions
+[17:38:07.244] [info] [Manual-Refine] 已打开 6-DOF 可视化调整窗口，请在本窗口内按键微调后 Enter 接受或 Esc 取消
+[17:38:07.244] [info] [Manual-Refine] Camera-Camera 手动调整仅使用首帧匹配数据（双相机各第 0 帧）
+[17:38:07.244] [info] [ManualSession] 启动 Camera-Camera 手动校准
+[17:38:07.244] [info] [ManualSession] 自动标定 RMS: 0.6644 px
+[17:38:07.244] [debug] [ManualSession] 事件: cam_cam_start | auto_rms=0.664370
+[17:38:07.244] [info] [ManualAdjust] 初始外参:
+[17:38:07.244] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:07.244] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:07.244] [info]   平移 XYZ: (0.0318, 0.0062, 1.0048) m
+[17:38:07.244] [info] [ManualSession] 双目相机手动校准模式
+[17:38:07.244] [info] [ManualSession] 对极线可视化质量越好表示标定越准确
+
+(unicalib_cam_cam:102): dbind-WARNING **: 17:38:07.262: Couldn't connect to accessibility bus: Failed to connect to socket /run/user/1000/at-spi/bus_1: No such file or directory
+[17:38:07.294] [info] [ManualCalib][Cam-Cam] 调试日志开关 UNICALIB_MANUAL_CAMCAM_DEBUG=OFF
+[17:38:11.238] [info] [ManualCalib][Cam-Cam] 选中左图点: (521.00, 267.00)
+[17:38:21.429] [debug] [ManualAdjust] 旋转增量 RPY=(0.100, 0.000, 0.000)deg
+[17:38:21.429] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:21.429] [info]   旋转 RPY: (-1.9258, 4.8508, -0.5737) deg
+[17:38:21.429] [info]   平移 XYZ: (0.0318, 0.0062, 1.0048) m
+[17:38:23.220] [debug] [ManualAdjust] 旋转增量 RPY=(-0.100, 0.000, 0.000)deg
+[17:38:23.220] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:23.220] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:23.220] [info]   平移 XYZ: (0.0318, 0.0062, 1.0048) m
+[17:38:31.972] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, 0.100)deg
+[17:38:31.972] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:31.973] [info]   旋转 RPY: (-2.0173, 4.8543, -0.4734) deg
+[17:38:31.973] [info]   平移 XYZ: (0.0318, 0.0062, 1.0048) m
+[17:38:33.052] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[17:38:33.053] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:33.053] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:33.053] [info]   平移 XYZ: (0.0318, 0.0062, 1.0048) m
+[17:38:34.693] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:38:34.693] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:34.693] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:34.693] [info]   平移 XYZ: (0.0368, 0.0062, 1.0048) m
+[17:38:35.580] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:38:35.581] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:35.581] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:35.581] [info]   平移 XYZ: (0.0418, 0.0062, 1.0048) m
+[17:38:36.308] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:38:36.308] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:36.308] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:36.308] [info]   平移 XYZ: (0.0468, 0.0062, 1.0048) m
+[17:38:36.908] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:38:36.908] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:36.908] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:36.908] [info]   平移 XYZ: (0.0518, 0.0062, 1.0048) m
+[17:38:37.273] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:38:37.273] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:37.273] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:37.273] [info]   平移 XYZ: (0.0568, 0.0062, 1.0048) m
+[17:38:37.484] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:38:37.484] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:37.484] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:37.484] [info]   平移 XYZ: (0.0618, 0.0062, 1.0048) m
+[17:38:38.244] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:38:38.244] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:38.244] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:38.244] [info]   平移 XYZ: (0.0668, 0.0062, 1.0048) m
+[17:38:38.460] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:38:38.460] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:38.460] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:38.460] [info]   平移 XYZ: (0.0718, 0.0062, 1.0048) m
+[17:38:38.677] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:38:38.677] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:38.677] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:38.677] [info]   平移 XYZ: (0.0768, 0.0062, 1.0048) m
+[17:38:38.829] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:38:38.829] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:38.829] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:38.829] [info]   平移 XYZ: (0.0818, 0.0062, 1.0048) m
+[17:38:39.924] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:38:39.924] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:39.924] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:39.924] [info]   平移 XYZ: (0.0868, 0.0062, 1.0048) m
+[17:38:41.469] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0050, 0.0000)m
+[17:38:41.469] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:41.469] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:41.469] [info]   平移 XYZ: (0.0868, 0.0112, 1.0048) m
+[17:38:41.885] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0050, 0.0000)m
+[17:38:41.885] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:41.885] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:41.885] [info]   平移 XYZ: (0.0868, 0.0162, 1.0048) m
+[17:38:42.092] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0050, 0.0000)m
+[17:38:42.092] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:42.092] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:42.092] [info]   平移 XYZ: (0.0868, 0.0212, 1.0048) m
+[17:38:43.420] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0050, 0.0000)m
+[17:38:43.420] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:43.420] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:43.420] [info]   平移 XYZ: (0.0868, 0.0262, 1.0048) m
+[17:38:50.881] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:38:50.881] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:50.881] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:50.881] [info]   平移 XYZ: (0.0818, 0.0262, 1.0048) m
+[17:38:51.733] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:38:51.733] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:51.733] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:51.733] [info]   平移 XYZ: (0.0868, 0.0262, 1.0048) m
+[17:38:52.380] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, -0.0050, 0.0000)m
+[17:38:52.380] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:52.380] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:52.380] [info]   平移 XYZ: (0.0868, 0.0212, 1.0048) m
+[17:38:53.837] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0050, 0.0000)m
+[17:38:53.837] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:53.837] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:53.837] [info]   平移 XYZ: (0.0868, 0.0262, 1.0048) m
+[17:38:57.276] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0050, 0.0000)m
+[17:38:57.276] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:57.276] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:38:57.276] [info]   平移 XYZ: (0.0868, 0.0312, 1.0048) m
+[17:38:59.132] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.100, 0.000)deg
+[17:38:59.132] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:38:59.132] [info]   旋转 RPY: (-2.0261, 4.9507, -0.5772) deg
+[17:38:59.132] [info]   平移 XYZ: (0.0868, 0.0312, 1.0048) m
+[17:39:00.804] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[17:39:00.804] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:39:00.804] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:39:00.804] [info]   平移 XYZ: (0.0868, 0.0312, 1.0048) m
+[17:39:01.396] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, 0.100)deg
+[17:39:01.396] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:39:01.396] [info]   旋转 RPY: (-2.0173, 4.8543, -0.4734) deg
+[17:39:01.396] [info]   平移 XYZ: (0.0868, 0.0312, 1.0048) m
+[17:39:02.228] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[17:39:02.228] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:39:02.229] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:39:02.229] [info]   平移 XYZ: (0.0868, 0.0312, 1.0048) m
+[17:39:03.492] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[17:39:03.493] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:39:03.493] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:39:03.493] [info]   平移 XYZ: (0.0868, 0.0312, 1.0098) m
+[17:39:04.204] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, -0.0050)m
+[17:39:04.204] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:39:04.204] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:39:04.204] [info]   平移 XYZ: (0.0868, 0.0312, 1.0048) m
+[17:39:05.620] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:39:05.620] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:39:05.620] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:39:05.620] [info]   平移 XYZ: (0.0918, 0.0312, 1.0048) m
+[17:39:06.500] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:39:06.500] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:39:06.500] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:39:06.500] [info]   平移 XYZ: (0.0868, 0.0312, 1.0048) m
+[17:39:06.836] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:39:06.837] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:39:06.837] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:39:06.837] [info]   平移 XYZ: (0.0818, 0.0312, 1.0048) m
+[17:39:57.716] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0050, 0.0000)m
+[17:39:57.716] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:39:57.716] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:39:57.716] [info]   平移 XYZ: (0.0818, 0.0362, 1.0048) m
+[17:39:58.412] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, -0.0050, 0.0000)m
+[17:39:58.412] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:39:58.412] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:39:58.412] [info]   平移 XYZ: (0.0818, 0.0312, 1.0048) m
+[17:39:58.972] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:39:58.972] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:39:58.972] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:39:58.972] [info]   平移 XYZ: (0.0868, 0.0312, 1.0048) m
+[17:40:00.964] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:00.964] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:00.964] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:00.964] [info]   平移 XYZ: (0.0818, 0.0312, 1.0048) m
+[17:40:16.060] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:16.060] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:16.060] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:16.060] [info]   平移 XYZ: (0.0868, 0.0312, 1.0048) m
+[17:40:16.788] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:16.788] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:16.788] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:16.788] [info]   平移 XYZ: (0.0818, 0.0312, 1.0048) m
+[17:40:17.165] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:17.165] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:17.165] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:17.165] [info]   平移 XYZ: (0.0768, 0.0312, 1.0048) m
+[17:40:17.460] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:17.460] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:17.460] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:17.460] [info]   平移 XYZ: (0.0718, 0.0312, 1.0048) m
+[17:40:17.764] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:17.764] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:17.764] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:17.764] [info]   平移 XYZ: (0.0668, 0.0312, 1.0048) m
+[17:40:18.028] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:18.028] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:18.028] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:18.028] [info]   平移 XYZ: (0.0618, 0.0312, 1.0048) m
+[17:40:18.326] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:18.326] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:18.326] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:18.326] [info]   平移 XYZ: (0.0568, 0.0312, 1.0048) m
+[17:40:18.741] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:18.741] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:18.741] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:18.741] [info]   平移 XYZ: (0.0518, 0.0312, 1.0048) m
+[17:40:19.084] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:19.084] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:19.084] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:19.084] [info]   平移 XYZ: (0.0468, 0.0312, 1.0048) m
+[17:40:19.412] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:19.412] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:19.412] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:19.412] [info]   平移 XYZ: (0.0418, 0.0312, 1.0048) m
+[17:40:19.828] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:19.828] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:19.828] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:19.828] [info]   平移 XYZ: (0.0368, 0.0312, 1.0048) m
+[17:40:20.244] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:20.244] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:20.244] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:20.244] [info]   平移 XYZ: (0.0318, 0.0312, 1.0048) m
+[17:40:20.572] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:20.572] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:20.572] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:20.572] [info]   平移 XYZ: (0.0268, 0.0312, 1.0048) m
+[17:40:20.836] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:20.836] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:20.836] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:20.836] [info]   平移 XYZ: (0.0218, 0.0312, 1.0048) m
+[17:40:21.060] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:21.060] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:21.060] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:21.060] [info]   平移 XYZ: (0.0168, 0.0312, 1.0048) m
+[17:40:21.420] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:21.420] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:21.420] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:21.420] [info]   平移 XYZ: (0.0118, 0.0312, 1.0048) m
+[17:40:21.692] [debug] [ManualAdjust] 平移增量 dxyz=(-0.0050, 0.0000, 0.0000)m
+[17:40:21.692] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:21.692] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:21.692] [info]   平移 XYZ: (0.0068, 0.0312, 1.0048) m
+[17:40:22.814] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:22.814] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:22.814] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:22.814] [info]   平移 XYZ: (0.0118, 0.0312, 1.0048) m
+[17:40:23.060] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:23.060] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:23.060] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:23.060] [info]   平移 XYZ: (0.0168, 0.0312, 1.0048) m
+[17:40:23.262] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:23.262] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:23.262] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:23.262] [info]   平移 XYZ: (0.0218, 0.0312, 1.0048) m
+[17:40:23.468] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:23.468] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:23.468] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:23.468] [info]   平移 XYZ: (0.0268, 0.0312, 1.0048) m
+[17:40:23.692] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:23.692] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:23.692] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:23.692] [info]   平移 XYZ: (0.0318, 0.0312, 1.0048) m
+[17:40:23.892] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:23.892] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:23.892] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:23.892] [info]   平移 XYZ: (0.0368, 0.0312, 1.0048) m
+[17:40:24.100] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:24.100] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:24.100] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:24.100] [info]   平移 XYZ: (0.0418, 0.0312, 1.0048) m
+[17:40:24.316] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:24.316] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:24.316] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:24.316] [info]   平移 XYZ: (0.0468, 0.0312, 1.0048) m
+[17:40:24.532] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:24.532] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:24.532] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:24.532] [info]   平移 XYZ: (0.0518, 0.0312, 1.0048) m
+[17:40:24.780] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:24.781] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:24.781] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:24.781] [info]   平移 XYZ: (0.0568, 0.0312, 1.0048) m
+[17:40:25.028] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:25.028] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:25.028] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:25.028] [info]   平移 XYZ: (0.0618, 0.0312, 1.0048) m
+[17:40:25.284] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:25.284] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:25.284] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:25.284] [info]   平移 XYZ: (0.0668, 0.0312, 1.0048) m
+[17:40:25.564] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:25.564] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:25.564] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:25.564] [info]   平移 XYZ: (0.0718, 0.0312, 1.0048) m
+[17:40:27.065] [debug] [ManualAdjust] 平移增量 dxyz=(0.0050, 0.0000, 0.0000)m
+[17:40:27.065] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:27.065] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:27.065] [info]   平移 XYZ: (0.0768, 0.0312, 1.0048) m
+[17:40:29.068] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[17:40:29.068] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:29.068] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:29.068] [info]   平移 XYZ: (0.0768, 0.0312, 1.0098) m
+[17:40:29.652] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, -0.0050)m
+[17:40:29.652] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:29.652] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:29.652] [info]   平移 XYZ: (0.0768, 0.0312, 1.0048) m
+[17:40:30.781] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, 0.100)deg
+[17:40:30.781] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:30.781] [info]   旋转 RPY: (-2.0173, 4.8543, -0.4734) deg
+[17:40:30.781] [info]   平移 XYZ: (0.0768, 0.0312, 1.0048) m
+[17:40:31.250] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[17:40:31.250] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:31.250] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:31.250] [info]   平移 XYZ: (0.0768, 0.0312, 1.0048) m
+[17:40:32.132] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0050, 0.0000)m
+[17:40:32.132] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:32.132] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:32.132] [info]   平移 XYZ: (0.0768, 0.0362, 1.0048) m
+[17:40:32.636] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, -0.0050, 0.0000)m
+[17:40:32.636] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:32.636] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:32.636] [info]   平移 XYZ: (0.0768, 0.0312, 1.0048) m
+[17:40:34.084] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, -0.0050, 0.0000)m
+[17:40:34.084] [info] [ManualAdjust] 当前外参 [cam_right→cam_left]:
+[17:40:34.084] [info]   旋转 RPY: (-2.0258, 4.8508, -0.5737) deg
+[17:40:34.084] [info]   平移 XYZ: (0.0768, 0.0262, 1.0048) m
+[17:40:37.180] [warning] [ManualCalib] 点对不足: 0/10，无法求解
+[17:40:43.711] [info] [ManualCalib][Cam-Cam] 取消退出: click_solves=0 current_pairs=0 pending_left=false
+[17:40:43.712] [info] [ManualSession] 用户取消，保留自动标定结果
+[17:40:43.712] [debug] [ManualSession] 事件: cam_cam_end | final_rms=0.664370
+[17:40:43.713] [info] [ManualSession] 会话已保存: ./results/manual_sessions/session_2026-04-27_17-38-07.yaml
+[17:40:43.714] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:40:43.714] [info] ■ 结束阶段: [Manual-Refine] 任务: [cam_cam_extrin]
+[17:40:43.714] [info]   结果: ✓ 成功 | 残差RMS: 0.6644 | 耗时: 156469 ms
+[17:40:43.714] [info]   消息: Camera-Camera 手动调整完成
+[17:40:43.714] [info] [CALC] 阶段结束 stage=Manual-Refine task=cam_cam_extrin success=true residual_rms=0.664370 elapsed_ms=156469.9 threshold=-1.0000
+[17:40:43.714] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:40:43.714] [info] ====== Pipeline Report: pipeline_20260427_173719 ======
+[17:40:43.714] [info]   Total time: 204594.4 ms
+[17:40:43.714] [info]   All stages succeeded: YES
+[17:40:43.714] [info]   标定质量: 各阶段 RMS 均在阈值内
+[17:40:43.714] [info]   [Fine-Auto-cam_cam_extrin] success=true rms=0.6644 time=48124.5ms: Camera-Camera 标定完成: 1 对, 最大 RMS=0.664370 px
+[17:40:43.714] [info]   [Manual-Refine-cam_cam_extrin] success=true rms=0.6644 time=156469.9ms: Camera-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   cam_right->cam_left:
+║     R(RPY°): [-2.03, 4.85, -0.57]
+║     T(m):    [0.03, 0.01, 1.00]
+║     时偏(s): 0.00
+║     RMS:     0.66 ✓
+╚══════════════════════════════════════════════════════╝
+
+[17:40:43.714] [info] ================================
+[17:40:43.714] [info] Pipeline report saved: ./results/pipeline_report_20260427_173719.yaml
+[17:40:43.715] [info] ====== Pipeline Report: pipeline_20260427_173719 ======
+[17:40:43.715] [info]   Total time: 204594.4 ms
+[17:40:43.715] [info]   All stages succeeded: YES
+[17:40:43.715] [info]   标定质量: 各阶段 RMS 均在阈值内
+[17:40:43.715] [info]   [Fine-Auto-cam_cam_extrin] success=true rms=0.6644 time=48124.5ms: Camera-Camera 标定完成: 1 对, 最大 RMS=0.664370 px
+[17:40:43.715] [info]   [Manual-Refine-cam_cam_extrin] success=true rms=0.6644 time=156469.9ms: Camera-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   cam_right->cam_left:
+║     R(RPY°): [-2.03, 4.85, -0.57]
+║     T(m):    [0.03, 0.01, 1.00]
+║     时偏(s): 0.00
+║     RMS:     0.66 ✓
+╚══════════════════════════════════════════════════════╝
+
+[17:40:43.715] [info] ================================
+[17:40:43.715] [info] Cam-Cam 标定完成 | 结果: ./results

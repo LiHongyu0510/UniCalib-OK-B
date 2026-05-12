@@ -1,0 +1,400 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — IMU-LiDAR 外参标定                       ║
+ ║   两阶段: L2Calib RL粗估 → B样条连续时间精化           ║
+ ║   手动校准: --manual 触发旋转可视化验证                 ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:] 配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml | IMU: imu_0 | LiDAR: lidar_0
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:] AI粗标定: false | 手动校准: true (阈值=0.50deg)
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:] ▶ Stage 2: B样条连续时间精标定
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:]   IMU数据: (未设置)
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:]   LiDAR目录: (未设置)
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:]   B样条间距: 0.1s | 时间偏移优化: true
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:] ▶ Stage 3 (手动校准): 旋转可视化验证 + 增量调整
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:]   阈值: 0.50deg | 使用 ManualCalibSession::run_imu_lidar()
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:]   可视化: IMU积分轨迹 vs LiDAR里程计对比
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:] IMU 内参: 从 results 目录读取 (1 个)，路径示例: ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:] [CalibPipeline] 初始化 ID=pipeline_20260409_140626
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:] [CalibPipeline] 无目标优先: true
+[2026-04-09 14:06:26.084] [info] [IMU-LiDAR] [:] [CalibPipeline] 任务掩码: 0x04
+[2026-04-09 14:06:26.085] [info] [IMU-LiDAR] [:] 
+[2026-04-09 14:06:26.085] [info] [IMU-LiDAR] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-09 14:06:26.085] [info] [IMU-LiDAR] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-09 14:06:26.085] [info] [IMU-LiDAR] [:] ║   Pipeline ID: pipeline_20260409_140626       ║
+[2026-04-09 14:06:26.085] [info] [IMU-LiDAR] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-09 14:06:26.085] [info] [IMU-LiDAR] [:] [Pipeline] 已从 results 加载 IMU 内参: imu_0 <- ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+[14:06:26.085] [info] 
+[14:06:26.085] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[14:06:26.085] [info] ▶ 开始阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[14:06:26.085] [info]   描述: 无目标优化
+[14:06:26.085] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[14:06:26.085] [info] [CALC] 精标定阶段开始 task=imu_lidar_extrin
+[14:06:26.085] [info] [Fine-Auto] 任务: imu_lidar_extrin | 无目标优先: true
+[14:06:26.085] [info] [Fine-Auto] 方法: B样条连续时间优化 (无目标)
+[14:06:26.085] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[14:06:26.085] [info]   Bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[14:06:26.085] [info]   实时模式: false
+[14:06:26.085] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[14:06:26.085] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/metadata.yaml
+[14:06:26.086] [info] [Ros2BagDataSource] 使用配置的 LiDAR 话题 (来自 sensors): /os1_cloud_node1/points
+[14:06:26.086] [info] [Ros2BagDataSource] 自动检测相机话题: /left/image_raw
+[14:06:26.086] [info] [Ros2BagDataSource] 使用配置的 IMU 话题 (来自 sensors): /imu/imu
+[INFO] [1775714786.089814590] [rosbag2_storage]: Opened database '/root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/nya_02_ros2.db3' for READ_ONLY.
+[14:06:26.089] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[14:06:26.089] [info] [Ros2BagDataSource] 找到 19 个话题
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /dji_sdk/imu  类型: sensor_msgs/msg/Imu  消息数: 171462
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /dji_sdk/attitude  类型: geometry_msgs/msg/QuaternionStamped  消息数: 42866
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /imu/imu  类型: sensor_msgs/msg/Imu  消息数: 166428
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /imu/magnetic_field  类型: sensor_msgs/msg/MagneticField  消息数: 166428
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /imu/temperature  类型: sensor_msgs/msg/Temperature  消息数: 166428
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_position  类型: sensor_msgs/msg/NavSatFix  消息数: 21433
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /dji_sdk/height_above_takeoff  类型: std_msgs/msg/Float32  消息数: 21433
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_health  类型: std_msgs/msg/UInt8  消息数: 21433
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /uwb_endorange_info  类型: uwb_driver/msg/UwbRange  消息数: 25172
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /left/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /right/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4287
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4286
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /uwb_exorange_info  类型: uwb_driver/msg/UwbEcho  消息数: 2437
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /node_pos_marker_sc  类型: visualization_msgs/msg/Marker  消息数: 2437
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /node_pos_sc  类型: nav_msgs/msg/Path  消息数: 2437
+[14:06:26.089] [info] [Ros2BagDataSource]  话题: /leica/pose/relative  类型: geometry_msgs/msg/PoseStamped  消息数: 7679
+[14:06:26.089] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[14:06:43.629] [info] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[14:06:43.629] [info]   LiDAR [/os1_cloud_node1/points]: 4287 帧
+[14:06:43.629] [info]   LiDAR [/os1_cloud_node2/points]: 4286 帧
+[14:06:43.629] [info]   相机 [/left/image_raw]: 4285 帧
+[14:06:43.629] [info]   相机 [/right/image_raw]: 4285 帧
+[14:06:43.629] [info]   IMU [/dji_sdk/imu]: 171462 帧
+[14:06:43.629] [info]   IMU [/imu/imu]: 166428 帧
+[14:06:43.629] [info]   IMU [/os1_cloud_node1/imu]: 42862 帧
+[14:06:43.629] [info]   IMU [/os1_cloud_node2/imu]: 42862 帧
+[14:06:43.629] [info]   选用 LiDAR  lidar_front -> /os1_cloud_node1/points
+[14:06:43.629] [info]   选用 LiDAR  lidar_rear -> /os1_cloud_node2/points
+[14:06:43.629] [info]   选用 相机  camera_0 -> /left/image_raw
+[14:06:43.629] [info]   选用 IMU    imu_0 -> /imu/imu
+[14:06:43.630] [info]   时间范围: 1609045331.127 - 1609045759.771 秒
+[14:06:43.630] [info] [Ros2BagDataSource] 应用采样/帧数限制...
+[14:06:43.730] [info]   LiDAR /os1_cloud_node1/points 采样后: 800 帧
+[14:06:43.784] [info]   LiDAR /os1_cloud_node2/points 采样后: 800 帧
+[14:06:43.849] [info]   相机 /left/image_raw 采样后: 800 帧
+[14:06:43.910] [info]   相机 /right/image_raw 采样后: 800 帧
+[14:06:44.064] [info] [Fine-Auto/IMU-LiDAR] imu_0 使用已加载的 IMU 内参 (params)
+[14:06:44.067] [info] [Fine-Auto/IMU-LiDAR] imu_0->lidar_front 使用配置内联初值 (在初值基础上精化)
+[14:06:44.067] [info] [IMU-LiDAR] 粗标定以配置初值为先验开始 (手眼 180° 消解与平移回退)，得到粗标定结果后精标定
+[14:06:44.067] [info] [IMU-LiDAR] 开始两阶段标定
+[14:06:44.067] [info]   IMU 数据: 166428 帧
+[14:06:44.067] [info]   LiDAR 数据: 800 帧
+[14:06:44.067] [info] [Time-Align] IMU  时间范围: [1609045331.131, 1609045759.770] 跨度 428.64s
+[14:06:44.067] [info] [Time-Align] LiDAR 时间范围: [1609045331.148, 1609045730.640] 跨度 399.49s
+[14:06:44.067] [info] [Time-Align] 重叠区间: [1609045331.148, 1609045730.640] 跨度 399.49s
+[14:06:44.067] [info] [Time-Align] 重叠占比: 100.0% (相对较短流)
+[14:06:44.067] [warning] [Time-Align] IMU 与 LiDAR 首/末帧时间戳差异较大: 首帧差 0.017s 末帧差 29.130s — 若两者非同一时间基准（如不同 ROS 时钟），必须对齐后再标定
+[14:06:44.067] [warning] [Time-Align] 末帧差 >10s，旋转对可能系统性偏差，手眼标定易得 180° 歧义；建议确保同一时间基准或对齐后再标定
+[14:06:44.067] [info] [Time-Align] 结论: 请检查时间基准与对齐 (重叠>10s且首末差<1s为优)
+[14:06:44.068] [info] [LiDAR-Odom] 开始 LiDAR 里程计 (NDT 配准)
+[14:08:29.981] [info] [LiDAR-Odom] 完成, 处理 800 帧 (有效 800 帧)
+[14:08:29.981] [info] [LiDAR-Odom] 点云规模: 每帧点数 min=12412 med≈12794 max=13319
+[14:08:29.993] [info] [GyroBias] 估计零偏: [0.004315, 0.002453, 0.000880] rad/s (基于 50911 个静态样本)
+[14:08:29.993] [info] [Build-RotPairs] 构建旋转对
+[14:08:29.993] [info] [Build-RotPairs] 计算逻辑: 同一时间段 [t_begin,t_end] 内 — LiDAR 相对旋转 = (T_w_l0^{-1}*T_w_l1).so3().inverse() 即机体从 t_begin→t_end 的旋转；IMU 相对旋转 = 陀螺积分 R(t_begin→t_end)。二者同为机体旋转，应一致
+[14:08:29.993] [info] [Build-RotPairs] 时间基准要求: t_begin/t_end 使用 LiDAR 帧时间戳，IMU 积分区间与之一致；IMU 与 LiDAR 必须为同一时间基准（如 ROS bag 时间），未对齐会导致旋转对错误、标定偏差甚至约 180° 误差
+[14:08:29.994] [info] [Build-RotPairs] 首对积分统计: dt=0.516s 采样数=201 陀螺1σ漂移≈2.5365° (ARW)
+[14:08:29.994] [info] [Build-RotPairs] 首对时间对齐: LiDAR 区间 [t_begin,t_end]=[1609045331.1480, 1609045331.6643] | IMU 参与积分区间 [1609045331.1518, 1609045331.6623]
+[14:08:29.994] [info] [Build-RotPairs] 首对 IMU 积分计算: sum_dt=0.507818s 实际时间跨度=0.510516s 请求区间=0.516320s (sum_dt 应≈实际跨度)
+[*** LOG ERROR #0001 ***] [2026-04-09 14:08:29] [stage] {argument not found}
+[14:08:29.995] [warning] [Build-RotPairs] 存在过小时间戳间隔 dt_min=0.000106s（可能重复戳），已跳过 <0.1ms 的步；建议检查 bag 或 IMU 驱动
+[14:08:29.995] [info] [Build-RotPairs] 首对区间裁剪: 积分未覆盖 t_begin~t_first 约 0.0038s, t_last~t_end 约 0.0020s (可能导致 IMU 角略小于真实)
+[14:08:30.534] [info] [Build-RotPairs] 短时窗旋转对: dt_target=0.20s 步长=0.10s 新增 2909 对 (降低陀螺积分漂移)
+[14:08:30.534] [info] [Build-RotPairs] 短时窗首对积分: dt=0.200s 采样数=78 1σ漂移≈1.5787°
+[14:08:30.534] [info] [Build-RotPairs] 构建了 3265 个有效旋转对 (相邻帧 356 + 短时窗 2909, 最小激励 3.0 deg)
+[14:08:30.534] [info] [Build-RotPairs] IMU 相对旋转: 0.50 ~ 15.95 deg | LiDAR 相对旋转: 0.00 ~ 7.70 deg
+[14:08:30.534] [info] [Build-RotPairs] LiDAR 相对平移(相邻帧): min=0.000 med=0.138 max=0.520 m (平移过小且旋转过小则 NDT 可能退化)
+[14:08:30.534] [info] [Build-RotPairs] 旋转对时间跨度 dt_span(s): min=0.200 med=0.200 max=0.517 (大跨度会放大里程计漂移与时间不同步)
+[14:08:30.535] [info] [Build-RotPairs] LiDAR角/IMU角 比值: 均值=0.561 中位数=0.469 标准差=0.509 (理想≈1)
+[14:08:30.535] [info] [Build-RotPairs] 比值分位: P25=0.161 P50=0.469 P75=0.807
+[14:08:30.535] [info] [Build-RotPairs] 比值分布: ratio<0.5 共 1718 对, 0.5~0.8 共 716 对, 0.8~1.2 共 536 对, >1.2 共 295 对
+[14:08:30.535] [info] [Build-RotPairs] 旋转对质量: 差 (优=比值近1且多数在0.8~1.2)
+[14:08:30.535] [warning] [Build-RotPairs] 比值均值 0.561 系统性偏离 1，手眼易出现 180° 歧义；请检查时间对齐/帧间隔，或配置 handeye_prefer_identity_when_ambiguous: true
+[14:08:30.535] [info] [Build-RotPairs] 抽样 (前5对):
+[14:08:30.535] [info] [Build-RotPairs]   pair#0 dt=0.52s rot_imu=3.87° rot_lidar=2.88° ratio=0.745 trans=0.168m
+[14:08:30.535] [info] [Build-RotPairs]   pair#1 dt=0.48s rot_imu=6.07° rot_lidar=5.05° ratio=0.832 trans=0.239m
+[14:08:30.535] [info] [Build-RotPairs]   pair#2 dt=0.52s rot_imu=8.47° rot_lidar=6.69° ratio=0.790 trans=0.154m
+[14:08:30.535] [info] [Build-RotPairs]   pair#3 dt=0.48s rot_imu=6.43° rot_lidar=4.20° ratio=0.654 trans=0.269m
+[14:08:30.535] [info] [Build-RotPairs]   pair#4 dt=0.48s rot_imu=3.30° rot_lidar=3.60° ratio=1.091 trans=0.217m
+[14:08:30.535] [info] [Build-RotPairs] 抽样 (后5对):
+[14:08:30.535] [info] [Build-RotPairs]   pair#3260 dt=0.20s rot_imu=1.05° rot_lidar=0.13° ratio=0.121 trans=0.023m
+[14:08:30.535] [info] [Build-RotPairs]   pair#3261 dt=0.20s rot_imu=0.86° rot_lidar=0.17° ratio=0.196 trans=0.038m
+[14:08:30.535] [info] [Build-RotPairs]   pair#3262 dt=0.20s rot_imu=0.51° rot_lidar=0.21° ratio=0.407 trans=0.052m
+[14:08:30.535] [info] [Build-RotPairs]   pair#3263 dt=0.20s rot_imu=0.56° rot_lidar=0.23° ratio=0.405 trans=0.092m
+[14:08:30.535] [info] [Build-RotPairs]   pair#3264 dt=0.20s rot_imu=0.57° rot_lidar=0.23° ratio=0.400 trans=0.092m
+[14:08:30.535] [info] [Motion-Excitation] 运动激励: roll=4412.2° pitch=4458.8° yaw=1481.4° 轴多样性=0.492 z平移占比=0.247
+[14:08:30.535] [info] [Motion-Excitation] 结论: 运动较充分 | 运动较充分，可对全自由度标定
+[14:08:30.535] [info] [IMU-LiDAR] 步骤: 手眼旋转标定开始 — 旋转对 3265 个
+[14:08:30.535] [info] [Handeye] 方程: R_imu*X = X*R_lidar，X=R_LidarInImu。歧义时: decision=prefer_180 margin_deg=3.0°
+[14:08:30.535] [info] [Handeye] 质量权重: min=0.150 max=1.000 avg=0.868
+[14:08:30.535] [info] [Handeye] 约束矩阵 M (13060x4) 奇异值: 106.4906 106.4405 106.3657 1.0282 (最小过小表示病态)
+[14:08:30.535] [info] [Handeye] 奇异值比 sv_min/sv_max = 0.0097 (越接近0越病态，>0.05 较健康)
+[14:08:30.536] [info] [IMU-LiDAR] 步骤: 手眼旋转标定完成 — 平均误差: 2.4590 deg (min=0.0502 max=19.1432 std=2.0894)
+[14:08:30.536] [info] [Handeye] 残差分位: P50=1.872° P90=4.998°
+[14:08:30.536] [info] [Handeye] 残差最大 3 对 (用于定位异常时段):
+[14:08:30.536] [info]   pair#16 t=[1609045403.2,1609045403.6]s dt_span=0.48s 残差=19.14 deg
+[14:08:30.536] [info]   pair#235 t=[1609045609.1,1609045609.6]s dt_span=0.52s 残差=16.93 deg
+[14:08:30.536] [info]   pair#246 t=[1609045616.1,1609045616.6]s dt_span=0.48s 残差=16.69 deg
+[14:08:30.536] [info] [Handeye] SVD 初解: trace(R)=-1.0000 相对单位阵旋转角=179.969° (0°=单位阵 180°=歧义解)
+[14:08:30.536] [info] [Handeye] 180° 歧义两解: 180°侧 残差=2.4590° | 单位阵侧 残差=3.2828° (策略: prefer_180)
+[14:08:30.536] [info] [Handeye] 初值先验: 180°侧距初值 179.94° | 单位阵侧距初值 0.07° → 采用单位阵侧
+[14:08:30.536] [info] [Handeye] 最终解: 单位阵侧(已校正) (相对单位阵旋转角=0.044°)
+[14:08:30.536] [info] [Handeye] 旋转矩阵 R_Imu_Lidar (3x3):
+[14:08:30.536] [info]   [1.000000, -0.000440, -0.000316]
+[14:08:30.536] [info]   [0.000440, 1.000000, 0.000547]
+[14:08:30.536] [info]   [0.000316, -0.000547, 1.000000]
+[14:08:30.536] [info]   手眼旋转标定成功
+[14:08:30.536] [info] [CALC] IMU-LiDAR 手眼旋转 平均残差=3.2828 deg 旋转对数=3265
+[14:08:30.536] [info] [IMU-LiDAR] 步骤: 平移估计开始 (里程计 800 帧)
+[14:08:30.536] [info] [Trans-Est] 帧间 dt(s): min=0.480 med=0.514 max=0.520 (有效范围 [0.05, 2.0]); 总时间跨度 399.5s
+[14:08:30.605] [info] [Trans-Est] 共收集 522 个约束
+[14:08:30.605] [info] [Trans-Est] MAD 滤波: 522 -> 522 约束
+[14:08:30.605] [info] [CALC] IMU-LiDAR 平移估计 t=[0.0000,-0.0000,0.0000] m rms_m_s=0.0000 约束数=522
+[14:08:30.605] [info] [IMU-LiDAR] 步骤: 平移估计完成 — t=[0.000, -0.000, 0.000] m, RMS=0.0000 m/s
+[14:08:30.605] [info]   t = [0.000, -0.000, 0.000] m
+[14:08:30.605] [info]   RMS 误差 = 0.0000 m/s (基于 522 个约束)
+[14:08:30.605] [info] [IMU-LiDAR] 粗标定完成
+[14:08:30.605] [info] [IMU-LiDAR] 粗标定摘要: R(RPY°)=[-0.031, -0.018, 0.025] t(m)=[0.0000, -0.0000, 0.0000] 旋转对=3265
+[14:08:30.614] [info]   四元数 (xyzw): -0.000273365 -0.000157979   0.00021982            1
+[14:08:30.614] [info]   平移: [0.000000, -0.000000, 0.000000] m
+[14:08:30.614] [info] [IMU-LiDAR] 粗标定 4x4 T_Imu_Lidar:
+[14:08:30.614] [info]   [1.000000, -0.000440, -0.000316, 0.000000]
+[14:08:30.614] [info]   [0.000440, 1.000000, 0.000547, -0.000000]
+[14:08:30.614] [info]   [0.000316, -0.000547, 1.000000, 0.000000]
+[14:08:30.614] [info]   [0.000000, 0.000000, 0.000000, 1.000000]
+[14:08:30.614] [info] [IMU-LiDAR] 步骤: B样条精细优化开始 (LiDAR 800 帧)
+[14:08:30.614] [info] [LiDAR-Odom] 开始 LiDAR 里程计 (NDT 配准)
+[14:10:18.606] [info] [LiDAR-Odom] 完成, 处理 800 帧 (有效 800 帧)
+[14:10:18.606] [info] [LiDAR-Odom] 点云规模: 每帧点数 min=12412 med≈12794 max=13319
+[14:10:18.708] [info] [CALC] IMU-LiDAR B样条 Ceres initial_cost=1.735606 final_cost=1.734188 iter=14 time_offset_s=-0.0000 converged=yes
+[14:10:18.708] [info] [IMU-LiDAR] 步骤: B样条精细优化完成 — time_offset=-0.0000s converged=yes cost=1.734188 iter=14
+[14:10:18.708] [info] [B-spline] 代价: 初=1.735606 终=1.734188 (迭代14 次)
+[14:10:18.708] [info] [B-spline] 初值→精化: 旋转差 0.0079 deg, 平移差 0.000658 m
+[14:10:18.708] [info] [B-spline] 精标定 4x4 T_Imu_Lidar:
+[14:10:18.708] [info]   [1.000000, -0.000302, -0.000317, 0.000458]
+[14:10:18.708] [info]   [0.000302, 1.000000, 0.000549, 0.000070]
+[14:10:18.708] [info]   [0.000317, -0.000549, 1.000000, 0.000468]
+[14:10:18.708] [info]   [0.000000, 0.000000, 0.000000, 1.000000]
+[14:10:18.708] [info] [Fine-Auto/IMU-LiDAR] imu_0->lidar_front 最终 4x4 T_Imu_Lidar (p_imu = T * p_lidar):
+[14:10:18.708] [info]   [1.000000, -0.000302, -0.000317, 0.000458]
+[14:10:18.708] [info]   [0.000302, 1.000000, 0.000549, 0.000070]
+[14:10:18.708] [info]   [0.000317, -0.000549, 1.000000, 0.000468]
+[14:10:18.708] [info]   [0.000000, 0.000000, 0.000000, 1.000000]
+[14:10:18.710] [info] [Fine-Auto/IMU-LiDAR] imu_0->lidar_front 结果已写入: /root/calib_ws/./results/imu_lidar_extrinsic/imu_lidar_imu_0_lidar_front.yaml
+[14:10:18.710] [info] [Fine-Auto/IMU-LiDAR] imu_0->lidar_front 完成
+[14:10:18.717] [info] [Fine-Auto/IMU-LiDAR] imu_0 使用已加载的 IMU 内参 (params)
+[14:10:18.717] [info] [Fine-Auto/IMU-LiDAR] imu_0->lidar_rear 使用配置内联初值 (在初值基础上精化)
+[14:10:18.717] [info] [IMU-LiDAR] 粗标定以配置初值为先验开始 (手眼 180° 消解与平移回退)，得到粗标定结果后精标定
+[14:10:18.717] [info] [IMU-LiDAR] 开始两阶段标定
+[14:10:18.717] [info]   IMU 数据: 166428 帧
+[14:10:18.717] [info]   LiDAR 数据: 800 帧
+[14:10:18.717] [info] [Time-Align] IMU  时间范围: [1609045331.131, 1609045759.770] 跨度 428.64s
+[14:10:18.717] [info] [Time-Align] LiDAR 时间范围: [1609045331.197, 1609045730.660] 跨度 399.46s
+[14:10:18.717] [info] [Time-Align] 重叠区间: [1609045331.197, 1609045730.660] 跨度 399.46s
+[14:10:18.717] [info] [Time-Align] 重叠占比: 100.0% (相对较短流)
+[14:10:18.717] [warning] [Time-Align] IMU 与 LiDAR 首/末帧时间戳差异较大: 首帧差 0.066s 末帧差 29.110s — 若两者非同一时间基准（如不同 ROS 时钟），必须对齐后再标定
+[14:10:18.717] [warning] [Time-Align] 末帧差 >10s，旋转对可能系统性偏差，手眼标定易得 180° 歧义；建议确保同一时间基准或对齐后再标定
+[14:10:18.717] [info] [Time-Align] 结论: 请检查时间基准与对齐 (重叠>10s且首末差<1s为优)
+[14:10:18.717] [info] [LiDAR-Odom] 开始 LiDAR 里程计 (NDT 配准)
+[14:11:05.871] [info] [LiDAR-Odom] 完成, 处理 800 帧 (有效 800 帧)
+[14:11:05.871] [info] [LiDAR-Odom] 点云规模: 每帧点数 min=5950 med≈11308 max=12524
+[14:11:05.876] [info] [GyroBias] 估计零偏: [0.004315, 0.002453, 0.000880] rad/s (基于 50911 个静态样本)
+[14:11:05.876] [info] [Build-RotPairs] 构建旋转对
+[14:11:05.876] [info] [Build-RotPairs] 计算逻辑: 同一时间段 [t_begin,t_end] 内 — LiDAR 相对旋转 = (T_w_l0^{-1}*T_w_l1).so3().inverse() 即机体从 t_begin→t_end 的旋转；IMU 相对旋转 = 陀螺积分 R(t_begin→t_end)。二者同为机体旋转，应一致
+[14:11:05.876] [info] [Build-RotPairs] 时间基准要求: t_begin/t_end 使用 LiDAR 帧时间戳，IMU 积分区间与之一致；IMU 与 LiDAR 必须为同一时间基准（如 ROS bag 时间），未对齐会导致旋转对错误、标定偏差甚至约 180° 误差
+[14:11:05.877] [info] [Build-RotPairs] 首对积分统计: dt=0.514s 采样数=200 陀螺1σ漂移≈2.5305° (ARW)
+[14:11:05.877] [info] [Build-RotPairs] 首对时间对齐: LiDAR 区间 [t_begin,t_end]=[1609045331.1968, 1609045331.7107] | IMU 参与积分区间 [1609045331.1984, 1609045331.7083]
+[14:11:05.877] [info] [Build-RotPairs] 首对 IMU 积分计算: sum_dt=0.507112s 实际时间跨度=0.509914s 请求区间=0.513901s (sum_dt 应≈实际跨度)
+[*** LOG ERROR #0002 ***] [2026-04-09 14:11:05] [stage] {argument not found}
+[14:11:05.877] [warning] [Build-RotPairs] 存在过小时间戳间隔 dt_min=0.000106s（可能重复戳），已跳过 <0.1ms 的步；建议检查 bag 或 IMU 驱动
+[14:11:05.877] [info] [Build-RotPairs] 首对区间裁剪: 积分未覆盖 t_begin~t_first 约 0.0017s, t_last~t_end 约 0.0023s (可能导致 IMU 角略小于真实)
+[14:11:06.505] [info] [Build-RotPairs] 短时窗旋转对: dt_target=0.20s 步长=0.10s 新增 2886 对 (降低陀螺积分漂移)
+[14:11:06.505] [info] [Build-RotPairs] 短时窗首对积分: dt=0.200s 采样数=77 1σ漂移≈1.5787°
+[14:11:06.505] [info] [Build-RotPairs] 构建了 3257 个有效旋转对 (相邻帧 371 + 短时窗 2886, 最小激励 3.0 deg)
+[14:11:06.505] [info] [Build-RotPairs] IMU 相对旋转: 0.50 ~ 16.43 deg | LiDAR 相对旋转: 0.00 ~ 8.52 deg
+[14:11:06.505] [info] [Build-RotPairs] LiDAR 相对平移(相邻帧): min=0.000 med=0.108 max=0.519 m (平移过小且旋转过小则 NDT 可能退化)
+[14:11:06.505] [info] [Build-RotPairs] 旋转对时间跨度 dt_span(s): min=0.200 med=0.200 max=0.519 (大跨度会放大里程计漂移与时间不同步)
+[14:11:06.505] [info] [Build-RotPairs] LiDAR角/IMU角 比值: 均值=0.525 中位数=0.423 标准差=0.465 (理想≈1)
+[14:11:06.505] [info] [Build-RotPairs] 比值分位: P25=0.206 P50=0.423 P75=0.710
+[14:11:06.505] [info] [Build-RotPairs] 比值分布: ratio<0.5 共 1875 对, 0.5~0.8 共 747 对, 0.8~1.2 共 406 对, >1.2 共 229 对
+[14:11:06.505] [info] [Build-RotPairs] 旋转对质量: 差 (优=比值近1且多数在0.8~1.2)
+[14:11:06.505] [warning] [Build-RotPairs] 比值均值 0.525 系统性偏离 1，手眼易出现 180° 歧义；请检查时间对齐/帧间隔，或配置 handeye_prefer_identity_when_ambiguous: true
+[14:11:06.505] [info] [Build-RotPairs] 抽样 (前5对):
+[14:11:06.505] [info] [Build-RotPairs]   pair#0 dt=0.48s rot_imu=3.02° rot_lidar=0.42° ratio=0.140 trans=0.080m
+[14:11:06.505] [info] [Build-RotPairs]   pair#1 dt=0.48s rot_imu=3.35° rot_lidar=2.49° ratio=0.742 trans=0.401m
+[14:11:06.505] [info] [Build-RotPairs]   pair#2 dt=0.52s rot_imu=5.94° rot_lidar=3.57° ratio=0.602 trans=0.494m
+[14:11:06.505] [info] [Build-RotPairs]   pair#3 dt=0.48s rot_imu=8.72° rot_lidar=2.50° ratio=0.287 trans=0.494m
+[14:11:06.505] [info] [Build-RotPairs]   pair#4 dt=0.52s rot_imu=7.40° rot_lidar=2.10° ratio=0.284 trans=0.505m
+[14:11:06.505] [info] [Build-RotPairs] 抽样 (后5对):
+[14:11:06.505] [info] [Build-RotPairs]   pair#3252 dt=0.20s rot_imu=1.20° rot_lidar=0.63° ratio=0.523 trans=0.096m
+[14:11:06.505] [info] [Build-RotPairs]   pair#3253 dt=0.20s rot_imu=1.01° rot_lidar=0.54° ratio=0.538 trans=0.093m
+[14:11:06.505] [info] [Build-RotPairs]   pair#3254 dt=0.20s rot_imu=0.65° rot_lidar=0.28° ratio=0.437 trans=0.083m
+[14:11:06.505] [info] [Build-RotPairs]   pair#3255 dt=0.20s rot_imu=0.53° rot_lidar=0.46° ratio=0.875 trans=0.098m
+[14:11:06.505] [info] [Build-RotPairs]   pair#3256 dt=0.20s rot_imu=0.59° rot_lidar=0.46° ratio=0.777 trans=0.098m
+[14:11:06.505] [info] [Motion-Excitation] 运动激励: roll=4434.5° pitch=4460.9° yaw=1487.8° 轴多样性=0.493 z平移占比=0.400
+[14:11:06.505] [info] [Motion-Excitation] 结论: 运动较充分 | 运动较充分，可对全自由度标定
+[14:11:06.505] [info] [IMU-LiDAR] 步骤: 手眼旋转标定开始 — 旋转对 3257 个
+[14:11:06.505] [info] [Handeye] 方程: R_imu*X = X*R_lidar，X=R_LidarInImu。歧义时: decision=prefer_180 margin_deg=3.0°
+[14:11:06.505] [info] [Handeye] 质量权重: min=0.150 max=1.000 avg=0.856
+[14:11:06.505] [info] [Handeye] 约束矩阵 M (13028x4) 奇异值: 105.6055 105.5985 105.5609 1.5727 (最小过小表示病态)
+[14:11:06.505] [info] [Handeye] 奇异值比 sv_min/sv_max = 0.0149 (越接近0越病态，>0.05 较健康)
+[14:11:06.506] [info] [IMU-LiDAR] 步骤: 手眼旋转标定完成 — 平均误差: 2.3813 deg (min=0.1378 max=15.5788 std=1.8872)
+[14:11:06.506] [info] [Handeye] 残差分位: P50=1.832° P90=4.740°
+[14:11:06.506] [info] [Handeye] 残差最大 3 对 (用于定位异常时段):
+[14:11:06.506] [info]   pair#225 t=[1609045589.7,1609045590.2]s dt_span=0.48s 残差=15.58 deg
+[14:11:06.506] [info]   pair#256 t=[1609045616.2,1609045616.7]s dt_span=0.51s 残差=14.79 deg
+[14:11:06.506] [info]   pair#253 t=[1609045612.7,1609045613.2]s dt_span=0.48s 残差=13.50 deg
+[14:11:06.506] [info] [Handeye] SVD 初解: trace(R)=-1.0000 相对单位阵旋转角=179.988° (0°=单位阵 180°=歧义解)
+[14:11:06.506] [info] [Handeye] 180° 歧义两解: 180°侧 残差=2.3813° | 单位阵侧 残差=2.3657° (策略: prefer_180)
+[14:11:06.506] [info] [Handeye] 初值先验: 180°侧距初值 179.97° | 单位阵侧距初值 180.00° → 采用180°侧
+[14:11:06.506] [info] [Handeye] 最终解: 180°侧 (相对单位阵旋转角=179.988°)
+[14:11:06.506] [warning] [Handeye] 最终采用 180° 解。若 IMU 与 LiDAR 同向安装，请: (1) 检查 IMU/LiDAR 时间基准与对齐 (2) 设置 handeye_prefer_identity_when_ambiguous: true (3) 检查旋转对 LiDAR角/IMU角 比值是否系统性偏离 1
+[14:11:06.506] [info] [Handeye] 旋转矩阵 R_Imu_Lidar (3x3):
+[14:11:06.506] [info]   [1.000000, 0.000335, 0.000298]
+[14:11:06.506] [info]   [0.000335, -1.000000, 0.000207]
+[14:11:06.506] [info]   [0.000298, -0.000207, -1.000000]
+[14:11:06.506] [info]   手眼旋转标定成功
+[14:11:06.506] [info] [CALC] IMU-LiDAR 手眼旋转 平均残差=2.3813 deg 旋转对数=3257
+[14:11:06.506] [info] [IMU-LiDAR] 步骤: 平移估计开始 (里程计 800 帧)
+[14:11:06.506] [info] [Trans-Est] 帧间 dt(s): min=0.478 med=0.513 max=0.522 (有效范围 [0.05, 2.0]); 总时间跨度 399.5s
+[14:11:06.580] [info] [Trans-Est] 共收集 508 个约束
+[14:11:06.581] [info] [Trans-Est] MAD 滤波: 508 -> 508 约束
+[14:11:06.581] [info] [CALC] IMU-LiDAR 平移估计 t=[0.0000,0.0000,0.0000] m rms_m_s=0.0000 约束数=508
+[14:11:06.581] [info] [IMU-LiDAR] 步骤: 平移估计完成 — t=[0.000, 0.000, 0.000] m, RMS=0.0000 m/s
+[14:11:06.581] [info]   t = [0.000, 0.000, 0.000] m
+[14:11:06.581] [info]   RMS 误差 = 0.0000 m/s (基于 508 个约束)
+[14:11:06.581] [info] [IMU-LiDAR] 粗标定完成
+[14:11:06.581] [info] [IMU-LiDAR] 粗标定摘要: R(RPY°)=[-179.988, -0.017, 0.019] t(m)=[-0.2000, 0.0000, 0.2000] 旋转对=3257
+[14:11:06.581] [warning] [IMU-LiDAR] 粗标定结果约 180° (RPY≈±180°,0°,0°)。若 IMU 与 LiDAR 同向安装，请检查时间对齐或设置 handeye_prefer_identity_when_ambiguous: true
+[14:11:06.581] [info]   四元数 (xyzw):            1  0.000167652  0.000148912 -0.000103536
+[14:11:06.581] [info]   平移: [-0.200000, 0.000000, 0.200000] m
+[14:11:06.581] [info] [IMU-LiDAR] 粗标定 4x4 T_Imu_Lidar:
+[14:11:06.581] [info]   [1.000000, 0.000335, 0.000298, -0.200000]
+[14:11:06.581] [info]   [0.000335, -1.000000, 0.000207, 0.000000]
+[14:11:06.581] [info]   [0.000298, -0.000207, -1.000000, 0.200000]
+[14:11:06.581] [info]   [0.000000, 0.000000, 0.000000, 1.000000]
+[14:11:06.581] [warning] [IMU-LiDAR] 粗标定结果偏离初值过大 (旋转 180.0° 平移 0.000m)，粗结果采用初值，再精标定
+[14:11:06.581] [info] [IMU-LiDAR] 步骤: B样条精细优化开始 (LiDAR 800 帧)
+[14:11:06.581] [info] [LiDAR-Odom] 开始 LiDAR 里程计 (NDT 配准)
+[14:11:51.572] [info] [LiDAR-Odom] 完成, 处理 800 帧 (有效 800 帧)
+[14:11:51.572] [info] [LiDAR-Odom] 点云规模: 每帧点数 min=5950 med≈11308 max=12524
+[14:11:51.594] [info] [CALC] IMU-LiDAR B样条 Ceres initial_cost=1.329074 final_cost=1.328584 iter=10 time_offset_s=-0.0000 converged=yes
+[14:11:51.594] [info] [IMU-LiDAR] 步骤: B样条精细优化完成 — time_offset=-0.0000s converged=yes cost=1.328584 iter=10
+[14:11:51.594] [info] [B-spline] 代价: 初=1.329074 终=1.328584 (迭代10 次)
+[14:11:51.594] [info] [B-spline] 初值→精化: 旋转差 0.0001 deg, 平移差 0.000010 m
+[14:11:51.594] [info] [B-spline] 精标定 4x4 T_Imu_Lidar:
+[14:11:51.594] [info]   [-1.000000, 0.000001, -0.000001, -0.199999]
+[14:11:51.594] [info]   [-0.000001, 0.000001, 1.000000, -0.000000]
+[14:11:51.594] [info]   [0.000001, 1.000000, -0.000001, 0.200009]
+[14:11:51.594] [info]   [0.000000, 0.000000, 0.000000, 1.000000]
+[14:11:51.595] [info] [Fine-Auto/IMU-LiDAR] imu_0->lidar_rear 最终 4x4 T_Imu_Lidar (p_imu = T * p_lidar):
+[14:11:51.595] [info]   [-1.000000, 0.000001, -0.000001, -0.199999]
+[14:11:51.595] [info]   [-0.000001, 0.000001, 1.000000, -0.000000]
+[14:11:51.595] [info]   [0.000001, 1.000000, -0.000001, 0.200009]
+[14:11:51.595] [info]   [0.000000, 0.000000, 0.000000, 1.000000]
+[14:11:51.595] [info] [Fine-Auto/IMU-LiDAR] imu_0->lidar_rear 结果已写入: /root/calib_ws/./results/imu_lidar_extrinsic/imu_lidar_imu_0_lidar_rear.yaml
+[14:11:51.595] [info] [Fine-Auto/IMU-LiDAR] imu_0->lidar_rear 完成
+[14:11:51.595] [info] [Fine-Auto/IMU-LiDAR] IMU-LiDAR 标定完成: 2 对
+[14:11:51.729] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[14:11:51.729] [info] ■ 结束阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[14:11:51.729] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 325643 ms
+[14:11:51.729] [info]   消息: IMU-LiDAR 标定完成: 2 对
+[14:11:51.729] [info] [CALC] 阶段结束 stage=Fine-Auto task=imu_lidar_extrin success=true residual_rms=0.000000 elapsed_ms=325510.3 threshold=0.5000
+[14:11:51.729] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[14:11:51.730] [info] [Pipeline] 用户已启用手动校准 (--manual), 进入 6-DOF 调整
+[14:11:51.730] [info] 
+[14:11:51.730] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[14:11:51.730] [info] ▶ 开始阶段: [Manual-Refine] 任务: [imu_lidar_extrin]
+[14:11:51.730] [info]   描述: 手动校准: 6-DOF 交互式调整
+[14:11:51.730] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[14:11:51.730] [info] [Manual-Refine] 任务: imu_lidar_extrin
+[14:11:51.730] [info] [Manual-Refine] 操作说明: Q/A Roll  W/S Pitch  E/D Yaw  R/F Tx  T/G Ty  Y/H Tz  U Undo  Enter 接受  Esc 取消
+[14:11:51.730] [info] [ManualSession] 会话ID: session_2026-04-09_14-11-51
+[14:11:51.730] [info] [ManualSession] 保存目录: ./results/manual_sessions
+[14:11:51.730] [info] [ManualSession] 启动 IMU-LiDAR 手动校准
+[14:11:51.730] [info] [ManualSession] 自动标定旋转残差: 3.2828 deg
+[14:11:51.730] [info] [ManualSession] IMU-LiDAR 手动校准通过旋转增量验证
+[14:11:51.730] [info] [ManualSession] 可视化: 将 IMU 积分轨迹与 LiDAR 里程计对比
+[14:11:51.730] [debug] [ManualSession] 事件: imu_lidar_start | auto_rms=3.282788
+[14:11:51.730] [info] [ManualAdjust] 初始外参:
+[14:11:51.730] [info] [ManualAdjust] 当前外参 [imu_0→lidar_front]:
+[14:11:51.730] [info]   旋转 RPY: (-0.0315, -0.0181, 0.0173) deg
+[14:11:51.730] [info]   平移 XYZ: (0.0005, 0.0001, 0.0005) m
+[14:11:51.730] [debug] [ManualSession] 事件: imu_lidar_end | final_rms=0.000000
+[14:11:51.730] [info] [ManualSession] 会话已保存: ./results/manual_sessions/session_2026-04-09_14-11-51.yaml
+[14:11:51.730] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[14:11:51.730] [info] ■ 结束阶段: [Manual-Refine] 任务: [imu_lidar_extrin]
+[14:11:51.730] [info]   结果: ✓ 成功 | 残差RMS: 3.2828 | 耗时: 0 ms
+[14:11:51.730] [info]   消息: IMU-LiDAR 手动调整完成
+[14:11:51.730] [info] [CALC] 阶段结束 stage=Manual-Refine task=imu_lidar_extrin success=true residual_rms=3.282788 elapsed_ms=0.7 threshold=-1.0000
+[14:11:51.730] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[14:11:51.730] [info] ====== Pipeline Report: pipeline_20260409_140626 ======
+[14:11:51.730] [info]   Total time: 325511.1 ms
+[14:11:51.730] [info]   All stages succeeded: YES
+[14:11:51.730] [info]   标定质量: 各阶段 RMS 均在阈值内
+[14:11:51.730] [info]   [Fine-Auto-imu_lidar_extrin] success=true rms=0.0000 time=325510.3ms: IMU-LiDAR 标定完成: 2 对
+[14:11:51.730] [info]   [Manual-Refine-imu_lidar_extrin] success=true rms=3.2828 time=0.7ms: IMU-LiDAR 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ IMU 内参:
+║   imu_0:
+║     陀螺噪声: 6.161e-02 rad/s/√Hz
+║     加速计噪声: 7.484e-02 m/s²/√Hz
+║ 外参:
+║   imu_0->lidar_front:
+║     R(RPY°): [-0.03, -0.02, 0.02]
+║     T(m):    [0.00, 0.00, 0.00]
+║     时偏(s): -0.00
+║     RMS:     0.00 ✓
+║   imu_0->lidar_rear:
+║     R(RPY°): [90.00, -0.00, -180.00]
+║     T(m):    [-0.20, -0.00, 0.20]
+║     时偏(s): -0.00
+║     RMS:     0.00 ✓
+╚══════════════════════════════════════════════════════╝
+
+[14:11:51.731] [info] ================================
+[14:11:51.731] [info] Pipeline report saved: ./results/pipeline_report_20260409_140626.yaml
+[14:11:51.731] [info] ====== Pipeline Report: pipeline_20260409_140626 ======
+[14:11:51.731] [info]   Total time: 325511.1 ms
+[14:11:51.731] [info]   All stages succeeded: YES
+[14:11:51.731] [info]   标定质量: 各阶段 RMS 均在阈值内
+[14:11:51.731] [info]   [Fine-Auto-imu_lidar_extrin] success=true rms=0.0000 time=325510.3ms: IMU-LiDAR 标定完成: 2 对
+[14:11:51.731] [info]   [Manual-Refine-imu_lidar_extrin] success=true rms=3.2828 time=0.7ms: IMU-LiDAR 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ IMU 内参:
+║   imu_0:
+║     陀螺噪声: 6.161e-02 rad/s/√Hz
+║     加速计噪声: 7.484e-02 m/s²/√Hz
+║ 外参:
+║   imu_0->lidar_front:
+║     R(RPY°): [-0.03, -0.02, 0.02]
+║     T(m):    [0.00, 0.00, 0.00]
+║     时偏(s): -0.00
+║     RMS:     0.00 ✓
+║   imu_0->lidar_rear:
+║     R(RPY°): [90.00, -0.00, -180.00]
+║     T(m):    [-0.20, -0.00, 0.20]
+║     时偏(s): -0.00
+║     RMS:     0.00 ✓
+╚══════════════════════════════════════════════════════╝
+
+[14:11:51.731] [info] ================================
+[14:11:51.731] [info] IMU-LiDAR 标定完成 | 结果: ./results

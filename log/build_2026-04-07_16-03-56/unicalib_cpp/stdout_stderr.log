@@ -1,0 +1,70 @@
+-- The CXX compiler identification is GNU 11.4.0
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE  
+-- Found CUDA: /usr/local/cuda (found suitable exact version "11.8") 
+-- Configuring done
+-- Generating done
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    USE_THIRDPARTY_LIBS
+    USE_VETA_STUB
+    glm_DIR
+
+
+-- Build files have been written to: /root/calib_ws/build/unicalib_cpp
+[  2%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/sensor_config.cpp.o
+[  8%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/data_manager.cpp.o
+[ 11%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/imu_intrinsic.cpp.o
+[ 13%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/allan_variance.cpp.o
+[ 16%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/transforms.cpp.o
+[ 19%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/process_runner.cpp.o
+[ 19%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/calib_result.cpp.o
+[ 22%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/camera_fisheye.cpp.o
+[ 25%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/external_tools_config.cpp.o
+[ 30%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/dm_calib_wrapper.cpp.o
+[ 30%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/learn_to_calib_wrapper.cpp.o
+[ 33%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/mias_lcec_wrapper.cpp.o
+[ 38%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/ikalibr_wrapper.cpp.o
+[ 38%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/feature_matching.cpp.o
+[ 41%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/click_calib_wrapper.cpp.o
+[ 44%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/reprojection.cpp.o
+[ 50%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/visualization_v2.cpp.o
+[ 50%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/report_generator.cpp.o
+[ 52%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/interactive_report.cpp.o
+[ 58%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/exceptions.cpp.o
+[ 58%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/system.cpp.o
+[ 61%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/logger.cpp.o
+[ 63%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/realtime_visualizer.cpp.o
+[ 66%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/data_validator.cpp.o
+[ 69%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/calibration_quality.cpp.o
+[ 72%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/iterative_refinement.cpp.o
+[ 75%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/temporal_calibration.cpp.o
+/root/calib_ws/unicalib_C_plus_plus/src/interactive_report.cpp: In constructor ‘unicalib::InteractiveReportGenerator::InteractiveReportGenerator(const string&)’:
+/root/calib_ws/unicalib_C_plus_plus/src/interactive_report.cpp:20:9: warning: ignoring return value of ‘int system(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   20 |   system(mkdir_cmd.c_str());
+      |   ~~~~~~^~~~~~~~~~~~~~~~~~~
+/root/calib_ws/unicalib_C_plus_plus/src/visualization_v2.cpp: In constructor ‘unicalib::VisualizationV2::VisualizationV2(const string&)’:
+/root/calib_ws/unicalib_C_plus_plus/src/visualization_v2.cpp:24:9: warning: ignoring return value of ‘int system(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   24 |   system(mkdir_cmd.c_str());
+      |   ~~~~~~^~~~~~~~~~~~~~~~~~~
+[ 77%] Linking CXX static library libunicalib_cpp.a
+[ 77%] Built target unicalib_cpp
+[ 80%] Building CXX object CMakeFiles/unicalib_example.dir/examples/example_main.cpp.o
+[ 83%] Building CXX object CMakeFiles/unicalib_viz_example.dir/examples/visualization_example.cpp.o
+[ 88%] Building CXX object CMakeFiles/unicalib_realtime_example.dir/examples/realtime_visualization_example.cpp.o
+[ 88%] Building CXX object CMakeFiles/unicalib_optimization_example.dir/examples/optimization_example.cpp.o
+[ 91%] Linking CXX executable unicalib_example
+[ 91%] Built target unicalib_example
+[ 94%] Linking CXX executable unicalib_realtime_example
+[ 94%] Built target unicalib_realtime_example
+[ 97%] Linking CXX executable unicalib_optimization_example
+[ 97%] Built target unicalib_optimization_example
+[100%] Linking CXX executable unicalib_viz_example
+[100%] Built target unicalib_viz_example

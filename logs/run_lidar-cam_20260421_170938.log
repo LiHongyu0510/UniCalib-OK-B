@@ -1,0 +1,200 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-21 17:09:38.711] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-21 17:09:38.711] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-21 17:09:38.711] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-21 17:09:38.711] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-21 17:09:38.711] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-21 17:09:38.711] [info] [LiDAR-Camera] [:] AI粗标定: false | 手动校准: false
+[2026-04-21 17:09:38.711] [info] [LiDAR-Camera] [:]   粗标定未启用原因: 未传入 --coarse；启用粗标定请加 --coarse 并配置 coarse_pcd_file/coarse_image_file（或由 run.sh 传入 --coarse）
+[2026-04-21 17:09:38.711] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-21 17:09:38.712] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]   IMU: 0, LiDAR: 1, Camera: 1
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [数据路径] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]   数据路径来源: 统一格式 (data.lidar.<id> / data.camera.<id>.images_dir)
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]   配置原始值 — lidar:  null
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]   配置原始值 — camera: null
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]   base_data_dir:  /root/calib_ws/data
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]   base 来源: 命令行 --data-dir
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]   lidar_dir:      /root/calib_ws/data/null
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]   camera_dir:     /root/calib_ws/data/null
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]   【数据就绪】是 — 点云与图像目录均存在，将执行精标定
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:]   说明: 使用 --dataset 时请将 data.lidar/data.camera 设为相对 base 的路径（如 pcd、images），不要使用 /path/to/... 占位符
+[2026-04-21 17:09:38.713] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-21 17:09:38.714] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-21 17:09:38.715] [info] [LiDAR-Camera] [:]   IMU: 0, LiDAR: 1, Camera: 1
+[2026-04-21 17:09:38.715] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:]   IMU: 0, LiDAR: 1, Camera: 1
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] 配置: 使用 ROS2 bag 模式（离线标定）
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:]   Bag 路径: /root/calib_ws/data/Koide/ouster/rosbag2_2023_03_28-16_25_54_fixed
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:]   LiDAR 话题: /points
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:]   相机话题: /image
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:]   IMU 话题: (未设置)
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] [数据源] 类型=ROS2_BAG  path=/root/calib_ws/data/Koide/ouster/rosbag2_2023_03_28-16_25_54_fixed  lidar_topic=/points  camera_topic=/image
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] [CalibPipeline] 初始化 ID=pipeline_20260421_170938
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] [CalibPipeline] 无目标优先: true
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] [CalibPipeline] 任务掩码: 0x10
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] ▶ Stage 2: 精标定 (方法=edge)
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] 
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] ║   Pipeline ID: pipeline_20260421_170938       ║
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=false → do_coarse=false
+[2026-04-21 17:09:38.716] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] 跳过粗标定: 未启用 (请使用 --coarse 启用 MIAS-LCEC 粗标定)
+[17:09:38.716] [info] 
+[17:09:38.716] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:09:38.716] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[17:09:38.716] [info]   描述: 无目标优化
+[17:09:38.716] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:09:38.716] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[17:09:38.716] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[17:09:38.716] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[17:09:38.716] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[17:09:38.716] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[17:09:38.716] [info]   [精标定数据源] 类型=ROS2_BAG  lidar_id=lidar_0
+[17:09:38.716] [info]   ROS2 Bag: /root/calib_ws/data/Koide/ouster/rosbag2_2023_03_28-16_25_54_fixed  LiDAR 话题: /points  相机话题: /image
+[17:09:38.716] [info] [Fine-Auto/LiDAR-Cam] 从 ROS2 加载数据...
+[17:09:38.716] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[17:09:38.716] [info]   Bag 文件: /root/calib_ws/data/Koide/ouster/rosbag2_2023_03_28-16_25_54_fixed
+[17:09:38.716] [info]   实时模式: false
+[17:09:38.716] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/Koide/ouster/rosbag2_2023_03_28-16_25_54_fixed
+[17:09:38.716] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/Koide/ouster/rosbag2_2023_03_28-16_25_54_fixed/metadata.yaml
+[17:09:38.716] [info] [Ros2BagDataSource] 使用配置的 LiDAR 话题: /points
+[17:09:38.716] [info] [Ros2BagDataSource] 使用配置的相机话题: /image
+[INFO] [1776762578.717701045] [rosbag2_storage]: Opened database '/root/calib_ws/data/Koide/ouster/rosbag2_2023_03_28-16_25_54_fixed/rosbag2_2023_03_28-16_25_54_fixed_0.db3' for READ_ONLY.
+[17:09:38.717] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[17:09:38.717] [info] [Ros2BagDataSource] 找到 3 个话题
+[17:09:38.717] [info] [Ros2BagDataSource]  话题: /camera_info  类型: sensor_msgs/msg/CameraInfo  消息数: 58
+[17:09:38.717] [info] [Ros2BagDataSource]  话题: /image  类型: sensor_msgs/msg/Image  消息数: 58
+[17:09:38.717] [info] [Ros2BagDataSource]  话题: /points  类型: sensor_msgs/msg/PointCloud2  消息数: 291
+[17:09:38.717] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[17:09:39.586] [info] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[17:09:39.586] [info]   LiDAR [/points]: 291 帧
+[17:09:39.586] [info]   相机 [/image]: 58 帧
+[17:09:39.586] [info]   选用 LiDAR  lidar_0 -> /points
+[17:09:39.586] [info]   选用 相机  cam_0 -> /image
+[17:09:39.586] [info]   时间范围: 1743.854 - 1772.955 秒
+[17:09:39.586] [info] [Ros2BagDataSource] 应用采样/帧数限制...
+[17:09:39.586] [info] [Fine-Auto/LiDAR-Cam] LiDAR 加载完成: 291 帧 (将按相机逐路取帧)
+[17:09:39.586] [info] 读取相机内参: /root/calib_ws/data/Koide/ouster/camera_intrinsic_cam_0.yaml
+[17:09:39.586] [info]   fx=2242.45 fy=2242.69 cx=1579.98 cy=1172.42 dist=0
+[17:09:39.586] [info] [Fine-Auto/LiDAR-Cam] 步骤: LiDAR-Camera 标定 相机=cam_0 (方法: 边缘对齐)
+[17:09:39.588] [info] [CalibVisualizer] 初始化完成
+[17:09:39.588] [info] [Fine-Auto/LiDAR-Cam] 可视化已启用：仅标定结束后显示一帧「图像+点云投影」叠加，不创建 3D 窗口、不泵送其他帧
+[17:09:39.588] [info] [Fine-Auto/LiDAR-Cam] 执行标定 相机=cam_0: 点云 291 帧  图像 58 帧
+[17:09:39.588] [info] ╔══════════════════════════════════════════════════════════════════╗
+[17:09:39.588] [info] ║         LiDAR-Camera 两阶段标定 - 详细日志                  ║
+[17:09:39.588] [info] ╚══════════════════════════════════════════════════════════════════╝
+[17:09:39.588] [info] ┌────────────────────────────────────────────────────────────────┐
+[17:09:39.588] [info] │ 输入参数:
+[17:09:39.588] [info] │   - LiDAR ID: lidar_0  图像 ID: cam_0
+[17:09:39.588] [info] │   - 点云帧数: 291  图像帧数: 58
+[17:09:39.588] [info] │   - 图像尺寸: 0x0
+[17:09:39.588] [info] │   - 相机内参: fx=2242.45 fy=2242.69 cx=1579.98 cy=1172.42
+[17:09:39.588] [info] │   - 优先无目标方法: 是(边缘对齐)
+[17:09:39.588] [info] │   - 粗标定初值: 无(使用identity)
+[17:09:39.588] [info] └────────────────────────────────────────────────────────────────┘
+[17:09:39.588] [info] 
+[17:09:39.588] [info] ┌────────────────────────────────────────────────────────────────┐
+[17:09:39.588] [info] │ [Stage 1] 粗标定阶段
+[17:09:39.588] [info] └────────────────────────────────────────────────────────────────┘
+[17:09:39.588] [info] │ [Coarse] 使用 identity 作为初始值
+[17:09:39.588] [info] │   - 原因: 未配置或未成功运行 MIAS-LCEC 粗标定
+[17:09:39.588] [info] └────────────────────────────────────────────────────────────────┘
+[17:09:39.588] [info] 
+[17:09:39.588] [info] ┌────────────────────────────────────────────────────────────────┐
+[17:09:39.588] [info] │ [Stage 2] 精标定阶段
+[17:09:39.588] [info] └────────────────────────────────────────────────────────────────┘
+[17:09:39.588] [info] │ [Fine] 执行边缘对齐优化...
+[17:09:39.588] [info] │ 配置: NCC阈值=0.050 帧同步阈值=0.500s 时间偏移搜索范围=±0.500s
+[17:09:39.588] [info] ┌────────────────────────────────────────────────────────────────┐
+[17:09:39.588] [info] │ [精标定] 边缘对齐法 (Edge Alignment)                        │
+[17:09:39.588] [info] ├────────────────────────────────────────────────────────────────┤
+[17:09:39.588] [info] │ 初始值: identity (identity=true)
+[17:09:39.588] [info] │ 数据: 点云帧=291 图像帧=58 采样=30 尺寸=0x0
+[17:09:39.588] [info] │ 时间: 图像[1744.220-1772.722]s LiDAR[1743.854-1772.955]s
+[17:09:39.588] [info] │ 配置: 同步阈值=0.500s 边缘Canny(50, 150) NCC阈值=0.050
+[17:09:39.588] [info] │ 特征权重: edge=0.50 corner=0.30 intensity=0.20
+[17:09:39.588] [info] └────────────────────────────────────────────────────────────────┘
+[17:09:41.010] [info] │ [时间偏移搜索] 最佳偏移=+0.0000s 最佳NCC=-1000000000.0000
+[17:09:41.076] [info]   [精标定] 有效帧数=0 (<3)  当前阈值=0.050  候选帧最大NCC=-1000000000.0000
+[17:09:41.076] [info]   [精标定] 最大NCC=-1000000000.0000 未超过放宽阈值 0.000，不进行放宽重试
+[17:09:41.076] [warning]   [精标定] 检测到异常 NCC 值(占位 -1e9)，部分候选帧投影/边缘失败已排除；建议检查 LiDAR/相机 FOV、时间同步与内参
+[17:09:41.076] [info]   初值 NCC=N/A(无有效帧)  有效帧数=0  (候选帧数=30  NCC范围=[-1000000000.0000,-1000000000.0000] 均值=-1000000000.0000)
+[17:09:41.076] [warning]   [精标定] 有效帧不足  有效帧数=0  候选帧数=30  NCC阈值=0.050  最大NCC=-1000000000.0000  → 跳过 Ceres，返回初值
+[17:09:41.076] [warning]   诊断: 投影与图像边缘重叠不足(NCC 均<=阈值)。建议: 1) 查看 [MIAS-LCEC]/[PnP] 粗标定是否给出非 identity 2) 确认 LiDAR/相机 FOV 与时间同步 3) 检查内参 width/height 与图像一致
+[17:09:41.076] [info] │
+[17:09:41.076] [info] │ ★ 标定结果:
+[17:09:41.076] [info] │   - 平移: [0.0000, 0.0000, 0.0000] m
+[17:09:41.076] [info] │   - RMS: 1.0000 px
+[17:09:41.076] [info] │   - 收敛: 否
+[17:09:41.076] [info] └────────────────────────────────────────────────────────────────┘
+[17:09:41.077] [info] [Fine-Auto] 结果已保存: ./results/lidar_cam_cam_0_extrinsic.yaml
+[17:09:41.077] [info] [Viz] 即将生成投影图并保存到 ./results/lidar_cam_cam_0_projection.png
+[17:09:41.182] [info] 投影可视化保存: ./results/lidar_cam_cam_0_projection.png
+[17:09:41.182] [info] [Viz] 投影图已保存（当前未将结果点云回显到 3D 窗口，仅保存 PNG）
+[17:09:41.182] [info] [Fine-Auto/LiDAR-Cam] 相机 cam_0 完成, RMS=1.0000 px  收敛=否
+[17:09:41.182] [warning] [Fine-Auto/LiDAR-Cam] 精标定未收敛 (NCC 未达 0.3 或 RMS 偏高)，建议: 1) 确保粗标定提供非 identity 初值 2) 检查 LiDAR/相机 FOV 与时间同步 3) 查看上方 [精标定] 质量结论与 NCC 统计
+[17:09:41.182] [info] [Viz/Display] 即将关闭可视化窗口 原因=用户关闭或流程结束 pangolin_running=false
+[17:09:41.182] [info] [Fine-Auto/LiDAR-Cam] 精标定完成: 1 个相机  最大 RMS=1.0000 px
+[17:09:41.182] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 完成
+[17:09:41.182] [info] [Fine-Auto/LiDAR-Cam] RMS 阈值=2.00 px  最大 RMS=1.0000 px  在阈值内
+[17:09:41.189] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:09:41.189] [info] ■ 结束阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[17:09:41.189] [info]   结果: ✓ 成功 | 残差RMS: 1.0000 | 耗时: 2473 ms
+[17:09:41.189] [info]   消息: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=1.000000 px
+[17:09:41.189] [info] [CALC] 阶段结束 stage=Fine-Auto task=lidar_cam_extrin success=true residual_rms=1.000000 elapsed_ms=2466.4 threshold=2.0000
+[17:09:41.189] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:09:41.189] [info] ====== Pipeline Report: pipeline_20260421_170938 ======
+[17:09:41.189] [info]   Total time: 2466.4 ms
+[17:09:41.189] [info]   All stages succeeded: YES
+[17:09:41.189] [info]   标定质量: 各阶段 RMS 均在阈值内
+[17:09:41.189] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=1.0000 time=2466.4ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=1.000000 px
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   lidar_0->cam_0:
+║     R(RPY°): [0.00, 0.00, 0.00]
+║     T(m):    [0.00, 0.00, 0.00]
+║     时偏(s): 0.00
+║     RMS:     1.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[17:09:41.189] [info] ================================
+[17:09:41.189] [info] Pipeline report saved: ./results/pipeline_report_20260421_170938.yaml
+[17:09:41.189] [info] ====== Pipeline Report: pipeline_20260421_170938 ======
+[17:09:41.189] [info]   Total time: 2466.4 ms
+[17:09:41.189] [info]   All stages succeeded: YES
+[17:09:41.189] [info]   标定质量: 各阶段 RMS 均在阈值内
+[17:09:41.189] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=1.0000 time=2466.4ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=1.000000 px
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   lidar_0->cam_0:
+║     R(RPY°): [0.00, 0.00, 0.00]
+║     T(m):    [0.00, 0.00, 0.00]
+║     时偏(s): 0.00
+║     RMS:     1.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[17:09:41.189] [info] ================================
+[17:09:41.189] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[17:09:41.189] [info] LiDAR-Camera 标定流程完成
+[17:09:41.189] [info] 结果目录: ./results
+[17:09:41.189] [info] 标定流程正常退出 exit_code=0
+[17:09:41.189] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

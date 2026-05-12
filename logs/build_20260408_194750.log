@@ -1,0 +1,56 @@
+Consolidate compiler generated dependencies of target pango_core
+[  7%] Built target pango_core
+Consolidate compiler generated dependencies of target pango_vars
+Consolidate compiler generated dependencies of target pango_packetstream
+[  8%] Built target pango_vars
+[ 13%] Built target pango_packetstream
+Consolidate compiler generated dependencies of target pango_image
+[ 23%] Built target pango_image
+Consolidate compiler generated dependencies of target pango_opengl
+[ 31%] Built target pango_opengl
+Consolidate compiler generated dependencies of target pango_windowing
+[ 37%] Built target pango_windowing
+Consolidate compiler generated dependencies of target pango_display
+Consolidate compiler generated dependencies of target pango_video
+[ 46%] Built target pango_display
+Consolidate compiler generated dependencies of target pango_plot
+[ 69%] Built target pango_video
+[ 71%] Built target pango_plot
+Consolidate compiler generated dependencies of target unicalib
+[ 72%] Building CXX object CMakeFiles/unicalib.dir/src/pipeline/calib_pipeline.cpp.o
+[ 73%] Building CXX object CMakeFiles/unicalib.dir/src/io/yaml_io.cpp.o
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+/root/calib_ws/calib_unified/src/io/yaml_io.cpp: In static member function ‘static ns_unicalib::SystemConfig ns_unicalib::YamlIO::load_system_config(const string&)’:
+/root/calib_ws/calib_unified/src/io/yaml_io.cpp:163:25: error: ‘struct ns_unicalib::SystemConfig’ has no member named ‘lidar_camera_pairs’; did you mean ‘lidar_data_paths’?
+  163 |                     cfg.lidar_camera_pairs.push_back({p[0].as<std::string>(), p[1].as<std::string>()});
+      |                         ^~~~~~~~~~~~~~~~~~
+      |                         lidar_data_paths
+gmake[2]: *** [CMakeFiles/unicalib.dir/build.make:356: CMakeFiles/unicalib.dir/src/io/yaml_io.cpp.o] Error 1
+gmake[2]: *** Waiting for unfinished jobs....
+gmake[1]: *** [CMakeFiles/Makefile2:182: CMakeFiles/unicalib.dir/all] Error 2
+gmake: *** [Makefile:146: all] Error 2

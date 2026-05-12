@@ -1,0 +1,97 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Release-18013f7cedbe86b263c6.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.14"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "unicalib_cpp",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_cpp::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_cpp-Release-3b6504ec8c46245b3252.json",
+					"name" : "unicalib_cpp",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_example::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_example-Release-a923ea733947144e1768.json",
+					"name" : "unicalib_example",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_optimization_example::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_optimization_example-Release-5a9c3aa6e5250a324afb.json",
+					"name" : "unicalib_optimization_example",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_realtime_example::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_realtime_example-Release-ec6e5773649665c34d48.json",
+					"name" : "unicalib_realtime_example",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_viz_example::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_viz_example-Release-e3a63ba6f5da4d442bfd.json",
+					"name" : "unicalib_viz_example",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/root/calib_ws/build/unicalib_cpp",
+		"source" : "/root/calib_ws/unicalib_C_plus_plus"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

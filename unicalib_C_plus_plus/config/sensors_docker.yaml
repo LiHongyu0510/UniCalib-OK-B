@@ -1,0 +1,79 @@
+# UniCalib 传感器配置 - Docker 容器内使用
+# 此配置文件用于在 Docker 容器内运行标定流程
+# 容器内项目路径映射:
+#   - 宿主机项目根目录 -> /root/calib_ws
+#   - 宿主机数据目录 -> /root/calib_ws/data
+#   - 宿主机结果目录 -> /root/calib_ws/results
+
+system:
+  output_dir: "/root/calib_ws/results"
+
+# 第三方标定工具路径（容器内路径）
+# 注意：这些路径是 Docker 容器内的绝对路径
+third_party:
+  # DM-Calib: 针孔相机内参标定（深度学习）
+  dm_calib: "/root/calib_ws/DM-Calib"
+  
+  # learn-to-calibrate: IMU-LiDAR 粗外参（强化学习）
+  learn_to_calibrate: "/root/calib_ws/learn-to-calibrate"
+  
+  # MIAS-LCEC: LiDAR-Camera 外参标定
+  mias_lcec: "/root/calib_ws/MIAS-LCEC"
+  
+  # iKalibr: 时空联合优化（B-spline）
+  ikalibr: "/root/calib_ws/iKalibr"
+  
+  # click_calib: Camera-Camera 全局 BA
+  click_calib: "/root/calib_ws/click_calib"
+  
+  # Transformer-IMU-Calibrator: IMU 内参备选
+  transformer_imu: "/root/calib_ws/Transformer-IMU-Calibrator"
+
+# 传感器配置
+sensors:
+  # 针孔相机示例
+  - sensor_id: cam_front
+    sensor_type: camera_pinhole
+    topic: /camera/front/image_raw
+    frame_id: cam_front_optical
+    resolution: [1920, 1080]
+
+  # 鱼眼相机示例（可选）
+  # - sensor_id: cam_fisheye
+  #   sensor_type: camera_fisheye
+  #   topic: /camera/fisheye/image_raw
+  #   frame_id: cam_fisheye_optical
+  #   resolution: [1920, 1080]
+
+  # IMU 示例
+  - sensor_id: imu
+    sensor_type: imu
+    topic: /imu/data
+    frame_id: imu_link
+    rate: 200
+
+  # 机械式 LiDAR 示例（如 Velodyne）
+  - sensor_id: lidar
+    sensor_type: lidar
+    topic: /lidar/points
+    frame_id: lidar_link
+
+  # 固态 LiDAR 示例（如 Livox）
+  # - sensor_id: livox
+  #   sensor_type: lidar
+  #   topic: /livox/lidar
+  #   frame_id: livox_frame
+  #   lidar_type: solid_state
+
+# 标定对配置（可选，不配置则自动推断）
+# calibration_pairs:
+#   - sensor_a: imu
+#     sensor_b: lidar
+#     method_coarse: l2calib_rl_init
+#     method_fine: ikalibr_bspline
+#     priority: 1
+#   - sensor_a: lidar
+#     sensor_b: cam_front
+#     method_coarse: mias_lcec_coarse
+#     method_fine: mias_lcec_fine
+#     priority: 2

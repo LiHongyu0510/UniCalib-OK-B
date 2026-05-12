@@ -1,0 +1,30 @@
+# ctraj CMakeLists.txt 修复补丁
+# 目的：完全移除对 tiny-viewer 的所有依赖
+# 使用方法：将此补丁应用到 CMakeLists.txt
+
+# ============== 修复 1：移除 find_dependency ==============
+# 查找并删除 find_dependency(tiny-viewer REQUIRED)
+# 改为：# find_dependency(tiny-viewer REQUIRED) # 已禁用
+
+# ============== 修复 2：移除 set(tiny-viewer_DIR) ==============
+# 查找并删除 set(tiny-viewer_DIR ${CMAKE_SOURCE_DIR}/thirdparty/tiny-viewer-install/lib/cmake/tiny-viewer)
+# 改为：# set(tiny-viewer_DIR ...) # 已禁用
+
+# ============== 修复 3：移除 add_subdirectory ==============
+# 查找并删除 add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/tiny-viewer)
+# 改为：# add_subdirectory(...) # 已禁用
+
+# ============== 修复 4：移除 find_package(tiny-viewer) ==============
+# 查找并删除 find_package(tiny-viewer)
+# 改为：# find_package(tiny-viewer) # 已禁用
+
+# ============== 修复 5：移除 target_link_libraries ==============
+# 查找并删除 target_link_libraries(ctraj PUBLIC tiny-viewer)
+# 改为：# target_link_libraries(ctraj PUBLIC tiny-viewer) # 已禁用
+
+# ============== 使用方法 ==============
+# 手动编辑 iKalibr/thirdparty/ctraj/CMakeLists.txt
+# 或者使用以下命令：
+#
+# cd iKalibr/thirdparty/ctraj
+# cat fix_ctraj_patch.txt | patch -p1 CMakeLists.txt

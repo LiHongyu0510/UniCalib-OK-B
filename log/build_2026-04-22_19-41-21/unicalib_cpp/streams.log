@@ -1,0 +1,19 @@
+[0.143s] Invoking command in '/root/calib_ws/build/unicalib_cpp': /opt/cmake/bin/cmake --build /root/calib_ws/build/unicalib_cpp -- -j28 -l28
+[0.178s] Consolidate compiler generated dependencies of target unicalib_cpp
+[0.189s] [  2%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/imu_intrinsic.cpp.o
+[0.195s] [  5%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/system.cpp.o
+[0.195s] [  8%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/data_validator.cpp.o
+[2.713s] [ 11%] Linking CXX static library libunicalib_cpp.a
+[2.755s] [ 77%] Built target unicalib_cpp
+[2.762s] Consolidate compiler generated dependencies of target unicalib_optimization_example
+[2.763s] Consolidate compiler generated dependencies of target unicalib_example
+[2.763s] Consolidate compiler generated dependencies of target unicalib_realtime_example
+[2.763s] Consolidate compiler generated dependencies of target unicalib_viz_example
+[2.769s] [ 80%] Linking CXX executable unicalib_realtime_example
+[2.771s] [ 83%] Linking CXX executable unicalib_optimization_example
+[2.771s] [ 86%] Linking CXX executable unicalib_example
+[2.771s] [ 88%] Linking CXX executable unicalib_viz_example
+[2.885s] [ 91%] Built target unicalib_realtime_example
+[2.901s] [ 94%] Built target unicalib_optimization_example
+[2.922s] [ 97%] Built target unicalib_viz_example
+[2.944s] [100%] Built target unicalib_example

@@ -1,0 +1,66 @@
+
+ ╔══════════════════════════════════════════════╗
+ ║    UniCalib — IMU 内参标定 (Allan + 六面法)  ║
+ ╚══════════════════════════════════════════════╝
+
+[2026-04-14 20:09:10.877] [info] [UniCalib-IMU-Intrinsic] [:] 日志文件: ./results/logs/imu_intrinsic_20260414_200910.log
+[2026-04-14 20:09:10.877] [info] [UniCalib-IMU-Intrinsic] [:] Loading IMU data from: /root/calib_ws/data/imu.csv
+[2026-04-14 20:09:10.924] [info] [UniCalib-IMU-Intrinsic] [:] Loaded 60611 IMU frames from /root/calib_ws/data/imu.csv
+[2026-04-14 20:09:10.924] [info] [UniCalib-IMU-Intrinsic] [:] Duration: 606.1 s | Frames: 60611
+  [starting]   [starting] [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0%[2026-04-14 20:09:10.924] [info] [UniCalib-IMU-Intrinsic] [:] === IMU 内参标定开始 ===
+[2026-04-14 20:09:10.924] [info] [UniCalib-IMU-Intrinsic] [:]   数据帧数: 60611
+[2026-04-14 20:09:10.924] [info] [UniCalib-IMU-Intrinsic] [:]   数据时长: 606.1 s
+[2026-04-14 20:09:10.924] [info] [UniCalib-IMU-Intrinsic] [:] [IMU-Intrin] Step 1/2: Allan 方差分析 ...
+  [allan_variance]   [allan_variance] [███░░░░░░░░░░░░░░░░░░░░░░░░░░░] 10%[2026-04-14 20:09:10.924] [info] [UniCalib-IMU-Intrinsic] [:] Allan: sample_rate=100.0 Hz, N=60611 frames
+[2026-04-14 20:09:10.925] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing gyro axis X ...
+[2026-04-14 20:09:10.926] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing accel axis X ...
+[2026-04-14 20:09:10.927] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing gyro axis Y ...
+[2026-04-14 20:09:10.928] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing accel axis Y ...
+[2026-04-14 20:09:10.929] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing gyro axis Z ...
+[2026-04-14 20:09:10.930] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing accel axis Z ...
+[2026-04-14 20:09:10.931] [info] [UniCalib-IMU-Intrinsic] [:] [IMU-Intrin] Step 2/2: 六面法加速度计标定 ...
+  [six_position]   [six_position] [█████████████████████░░░░░░░░░] 70%[2026-04-14 20:09:10.931] [info] [UniCalib-IMU-Intrinsic] [:] Static segments detected: 0
+[2026-04-14 20:09:10.931] [warning] [UniCalib-IMU-Intrinsic] [:] Six-position: only 0 static segments found (need ≥6)
+[2026-04-14 20:09:10.931] [info] [UniCalib-IMU-Intrinsic] [:] [CALC] IMU内参(legacy) 标定完成 帧数=60611 allan_fit_rms=0.000000 noise_gyro=6.9722e-01 noise_acce=1.1038e-01
+  [done]   [done] [██████████████████████████████] 100%[2026-04-14 20:09:10.931] [info] [UniCalib-IMU-Intrinsic] [:] === IMU 内参标定完成 ===
+[2026-04-14 20:09:10.931] [info] [UniCalib-IMU-Intrinsic] [:]   陀螺噪声:     6.9722e-01 rad/s/√Hz
+[2026-04-14 20:09:10.931] [info] [UniCalib-IMU-Intrinsic] [:]   陀螺零偏不稳: 4.7902e-02 rad/s
+[2026-04-14 20:09:10.931] [info] [UniCalib-IMU-Intrinsic] [:]   加速度计噪声: 1.1038e-01 m/s²/√Hz
+[2026-04-14 20:09:10.931] [info] [UniCalib-IMU-Intrinsic] [:]   加速度计零偏不稳: 8.3261e-03 m/s²
+
+[2026-04-14 20:09:10.931] [info] [UniCalib-IMU-Intrinsic] [:] Calibration took 0.0 s
+[2026-04-14 20:09:10.932] [info] [UniCalib-IMU-Intrinsic] [:] Static segments detected: 0
+[2026-04-14 20:09:10.933] [info] [UniCalib-IMU-Intrinsic] [:] [UniCalib-IMU-Intrinsic] Transformer-IMU 路径: /root/calib_ws/Transformer-IMU-Calibrator
+[2026-04-14 20:09:10.933] [info] [UniCalib-IMU-Intrinsic] [:] [TransformerIMU] 不可用: 脚本不存在 script=/root/calib_ws/Transformer-IMU-Calibrator/eval_unicalib.py
+[2026-04-14 20:09:10.933] [info] [UniCalib-IMU-Intrinsic] [:] [TransformerIMU] Transformer-IMU 不可用，使用 C++ 原生零偏估计（上方已打印具体原因）
+[2026-04-14 20:09:10.933] [info] [UniCalib-IMU-Intrinsic] [:] [TransformerIMU] 原生零偏: 重力自检 g=(-0.0606,-0.3734,9.8027)
+[2026-04-14 20:09:10.933] [info] [UniCalib-IMU-Intrinsic] [:] [TransformerIMU] 使用 C++ 原生零偏估计 (无 Python/无模型推理) mean_accel‖=9.8822 ‖ba‖=0.0722 m/s²
+[2026-04-14 20:09:10.933] [info] [UniCalib-IMU-Intrinsic] [:] 六面法静态段不足 (0 < 6)，零偏来源: Transformer-IMU-Calibrator(native) (备选路径)
+[2026-04-14 20:09:10.933] [info] [UniCalib-IMU-Intrinsic] [:]   bias_gyro=[-0.137588, 0.073588, -0.083514] (陀螺零偏为均值/模型粗估，可作初值)
+[2026-04-14 20:09:10.933] [info] [UniCalib-IMU-Intrinsic] [:]   bias_acce=[-0.000446, -0.002748, 0.072138] ‖ba‖=0.0722 m/s²
+[2026-04-14 20:09:10.933] [info] [UniCalib-IMU-Intrinsic] [:] Allan: sample_rate=100.0 Hz, N=60611 frames
+[2026-04-14 20:09:10.934] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing gyro axis X ...
+[2026-04-14 20:09:10.935] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing accel axis X ...
+[2026-04-14 20:09:10.936] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing gyro axis Y ...
+[2026-04-14 20:09:10.937] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing accel axis Y ...
+[2026-04-14 20:09:10.938] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing gyro axis Z ...
+[2026-04-14 20:09:10.939] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing accel axis Z ...
+[2026-04-14 20:09:10.942] [info] [UniCalib-IMU-Intrinsic] [:] Allan plot saved: ./results/allan_gyro.png
+[2026-04-14 20:09:10.942] [info] [UniCalib-IMU-Intrinsic] [:] Results saved to: ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+
+┌────────────────────────────────────────────────────┐
+│              IMU 内参标定结果                      │
+├──────────────────────┬─────────────────────────────┤
+│ 传感器 ID            │                       imu_0 │
+│ 数据帧数             │                       60611 │
+│ 数据时长 (s)         │                       606.1 │
+├──────────────────────┼─────────────────────────────┤
+│ 陀螺噪声 (rad/s/√Hz) │                  6.9722e-01 │
+│ 陀螺零偏不稳 (rad/s) │                  4.7902e-02 │
+│ 加速计噪声 (m/s²/√Hz)│                  1.1038e-01 │
+│ 加速计零偏不稳 (m/s²)│                  8.3261e-03 │
+│ 加速计零偏 ‖ba‖(m/s²)│                  7.2192e-02 │
+└──────────────────────┴─────────────────────────────┘
+
+结果保存至: ./results
+

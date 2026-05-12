@@ -1,0 +1,589 @@
+
+ ╔═══════════════════════════════════════════════════════════════╗
+ ║   UniCalib v2.0 — 多传感器联合标定系统                        ║
+ ║                                                               ║
+ ║   支持: IMU内参 / 相机内参 / IMU-LiDAR外参 /                  ║
+ ║         LiDAR-Camera外参 / Camera-Camera外参                  ║
+ ║                                                               ║
+ ║   两阶段: AI粗标定 → 无目标精标定 → 手动校准                  ║
+ ║   AI模型: DM-Calib / MIAS-LCEC / Transformer-IMU / L2Calib   ║
+ ╚═══════════════════════════════════════════════════════════════╝
+
+[2026-04-10 18:40:09.885] [info] [Joint-Calib] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:]   IMU: 1, LiDAR: 2, Camera: 2
+
+  标定任务:
+    ✓ IMU 内参
+    ✓ 相机内参
+    ✓ IMU-LiDAR 外参
+    ✓ LiDAR-Camera 外参
+    ✗ Camera-Camera 外参
+
+  选项:
+    AI粗标定:    禁用
+    手动校准:    禁用
+    无目标优先:  是
+
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] 配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] 输出: ./results
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] 配置: 读取到 2 对 IMU-LiDAR 标定对
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] 配置: 读取到 1 对 LiDAR-LiDAR 标定对
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] 配置: 读取到 4 对 LiDAR-Camera 标定对
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] 配置: 读取到 1 对 Camera-Camera 标定对 (from pairs)
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] [CalibPipeline] 初始化 ID=pipeline_20260410_184009
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] [CalibPipeline] 无目标优先: true
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] [CalibPipeline] 任务掩码: 0x17
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] ▶ 开始联合标定流水线...
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] 
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] ║   Pipeline ID: pipeline_20260410_184009       ║
+[2026-04-10 18:40:09.887] [info] [Joint-Calib] [:] ╚═══════════════════════════════════════════════╝
+[18:40:09.887] [info] 
+[18:40:09.887] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:40:09.887] [info] ▶ 开始阶段: [Fine-Auto] 任务: [imu_intrinsic]
+[18:40:09.887] [info]   描述: 无目标优化
+[18:40:09.887] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:40:09.887] [info] [CALC] 精标定阶段开始 task=imu_intrinsic
+[18:40:09.887] [info] [Fine-Auto] 任务: imu_intrinsic | 无目标优先: true
+[18:40:09.887] [info] [Fine-Auto] 方法: Allan方差分析
+[18:40:09.887] [info] [Fine-Auto/IMU-Intrin] 开始执行IMU内参标定...
+[18:40:09.887] [info]   数据源类型: ROS2 Bag 文件
+[18:40:09.887] [info]   ROS2 Bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[18:40:09.887] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[18:40:09.887] [info]   Bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[18:40:09.887] [info]   实时模式: false
+[18:40:09.887] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[18:40:09.887] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/metadata.yaml
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/imu (类型: sensor_msgs/msg/Imu, 消息数: 171462)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/attitude (类型: geometry_msgs/msg/QuaternionStamped, 消息数: 42866)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /os1_cloud_node2/imu (类型: sensor_msgs/msg/Imu, 消息数: 42862)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /os1_cloud_node1/imu (类型: sensor_msgs/msg/Imu, 消息数: 42862)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /imu/imu (类型: sensor_msgs/msg/Imu, 消息数: 166428)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /imu/magnetic_field (类型: sensor_msgs/msg/MagneticField, 消息数: 166428)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /imu/temperature (类型: sensor_msgs/msg/Temperature, 消息数: 166428)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/gps_position (类型: sensor_msgs/msg/NavSatFix, 消息数: 21433)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/height_above_takeoff (类型: std_msgs/msg/Float32, 消息数: 21433)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/gps_health (类型: std_msgs/msg/UInt8, 消息数: 21433)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /uwb_endorange_info (类型: uwb_driver/msg/UwbRange, 消息数: 25172)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /left/image_raw (类型: sensor_msgs/msg/Image, 消息数: 4285)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /right/image_raw (类型: sensor_msgs/msg/Image, 消息数: 4285)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /os1_cloud_node1/points (类型: sensor_msgs/msg/PointCloud2, 消息数: 4287)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /os1_cloud_node2/points (类型: sensor_msgs/msg/PointCloud2, 消息数: 4286)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /uwb_exorange_info (类型: uwb_driver/msg/UwbEcho, 消息数: 2437)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /node_pos_marker_sc (类型: visualization_msgs/msg/Marker, 消息数: 2437)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /node_pos_sc (类型: nav_msgs/msg/Path, 消息数: 2437)
+[18:40:09.888] [debug] [Ros2BagDataSource] 找到话题: /leica/pose/relative (类型: geometry_msgs/msg/PoseStamped, 消息数: 7679)
+[18:40:09.888] [debug] [Ros2BagDataSource] 匹配 LiDAR 话题: /os1_cloud_node1/points (关键词: points)
+[18:40:09.888] [info] [Ros2BagDataSource] 自动检测 LiDAR 话题: /os1_cloud_node1/points
+[18:40:09.888] [debug] [Ros2BagDataSource] 匹配高优先级左相机话题: /left/image_raw (关键词: left/image_raw)
+[18:40:09.888] [info] [Ros2BagDataSource] 自动检测相机话题: /left/image_raw
+[18:40:09.888] [info] [Ros2BagDataSource] 使用配置的 IMU 话题: /imu/imu
+[INFO] [1775817609.892550544] [rosbag2_storage]: Opened database '/root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/nya_02_ros2.db3' for READ_ONLY.
+[18:40:09.892] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[18:40:09.892] [info] [Ros2BagDataSource] 找到 19 个话题
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /dji_sdk/imu  类型: sensor_msgs/msg/Imu  消息数: 171462
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /dji_sdk/attitude  类型: geometry_msgs/msg/QuaternionStamped  消息数: 42866
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /imu/imu  类型: sensor_msgs/msg/Imu  消息数: 166428
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /imu/magnetic_field  类型: sensor_msgs/msg/MagneticField  消息数: 166428
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /imu/temperature  类型: sensor_msgs/msg/Temperature  消息数: 166428
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_position  类型: sensor_msgs/msg/NavSatFix  消息数: 21433
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /dji_sdk/height_above_takeoff  类型: std_msgs/msg/Float32  消息数: 21433
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_health  类型: std_msgs/msg/UInt8  消息数: 21433
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /uwb_endorange_info  类型: uwb_driver/msg/UwbRange  消息数: 25172
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /left/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /right/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4287
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4286
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /uwb_exorange_info  类型: uwb_driver/msg/UwbEcho  消息数: 2437
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /node_pos_marker_sc  类型: visualization_msgs/msg/Marker  消息数: 2437
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /node_pos_sc  类型: nav_msgs/msg/Path  消息数: 2437
+[18:40:09.892] [info] [Ros2BagDataSource]  话题: /leica/pose/relative  类型: geometry_msgs/msg/PoseStamped  消息数: 7679
+[18:40:09.892] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[18:40:10.302] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 5000
+[18:40:10.326] [debug]   收集 IMU [/imu/imu] 帧数: 5000
+[18:40:10.701] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 10000
+[18:40:10.767] [debug]   收集 IMU [/imu/imu] 帧数: 10000
+[18:40:11.145] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 15000
+[18:40:11.222] [debug]   收集 IMU [/imu/imu] 帧数: 15000
+[18:40:11.591] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 500
+[18:40:11.591] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 500
+[18:40:11.592] [debug]   收集相机 [/left/image_raw] 帧数: 500
+[18:40:11.592] [debug]   收集相机 [/right/image_raw] 帧数: 500
+[18:40:11.593] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 20000
+[18:40:11.593] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 5000
+[18:40:11.593] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 5000
+[18:40:11.665] [debug]   收集 IMU [/imu/imu] 帧数: 20000
+[18:40:12.009] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 25000
+[18:40:12.100] [debug]   收集 IMU [/imu/imu] 帧数: 25000
+[18:40:12.426] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 30000
+[18:40:12.523] [debug]   收集 IMU [/imu/imu] 帧数: 30000
+[18:40:12.853] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 35000
+[18:40:12.957] [debug]   收集 IMU [/imu/imu] 帧数: 35000
+[18:40:13.258] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 1000
+[18:40:13.259] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 1000
+[18:40:13.260] [debug]   收集相机 [/left/image_raw] 帧数: 1000
+[18:40:13.261] [debug]   收集相机 [/right/image_raw] 帧数: 1000
+[18:40:13.261] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 40000
+[18:40:13.261] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 10000
+[18:40:13.261] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 10000
+[18:40:13.385] [debug]   收集 IMU [/imu/imu] 帧数: 40000
+[18:40:13.702] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 45000
+[18:40:13.877] [debug]   收集 IMU [/imu/imu] 帧数: 45000
+[18:40:14.167] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 50000
+[18:40:14.305] [debug]   收集 IMU [/imu/imu] 帧数: 50000
+[18:40:14.591] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 55000
+[18:40:14.743] [debug]   收集 IMU [/imu/imu] 帧数: 55000
+[18:40:15.022] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 1500
+[18:40:15.023] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 1500
+[18:40:15.023] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 60000
+[18:40:15.024] [debug]   收集相机 [/left/image_raw] 帧数: 1500
+[18:40:15.024] [debug]   收集相机 [/right/image_raw] 帧数: 1500
+[18:40:15.024] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 15000
+[18:40:15.024] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 15000
+[18:40:15.227] [debug]   收集 IMU [/imu/imu] 帧数: 60000
+[18:40:15.497] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 65000
+[18:40:15.677] [debug]   收集 IMU [/imu/imu] 帧数: 65000
+[18:40:15.922] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 70000
+[18:40:16.131] [debug]   收集 IMU [/imu/imu] 帧数: 70000
+[18:40:16.385] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 75000
+[18:40:16.593] [debug]   收集 IMU [/imu/imu] 帧数: 75000
+[18:40:16.805] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 2000
+[18:40:16.807] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 2000
+[18:40:16.807] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 80000
+[18:40:16.807] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 20000
+[18:40:16.807] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 20000
+[18:40:16.809] [debug]   收集相机 [/left/image_raw] 帧数: 2000
+[18:40:16.809] [debug]   收集相机 [/right/image_raw] 帧数: 2000
+[18:40:17.015] [debug]   收集 IMU [/imu/imu] 帧数: 80000
+[18:40:17.218] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 85000
+[18:40:17.452] [debug]   收集 IMU [/imu/imu] 帧数: 85000
+[18:40:17.647] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 90000
+[18:40:17.883] [debug]   收集 IMU [/imu/imu] 帧数: 90000
+[18:40:18.058] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 95000
+[18:40:18.301] [debug]   收集 IMU [/imu/imu] 帧数: 95000
+[18:40:18.462] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 2500
+[18:40:18.464] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 2500
+[18:40:18.464] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 100000
+[18:40:18.464] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 25000
+[18:40:18.464] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 25000
+[18:40:18.466] [debug]   收集相机 [/left/image_raw] 帧数: 2500
+[18:40:18.466] [debug]   收集相机 [/right/image_raw] 帧数: 2500
+[18:40:18.724] [debug]   收集 IMU [/imu/imu] 帧数: 100000
+[18:40:18.885] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 105000
+[18:40:19.153] [debug]   收集 IMU [/imu/imu] 帧数: 105000
+[18:40:19.297] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 110000
+[18:40:19.592] [debug]   收集 IMU [/imu/imu] 帧数: 110000
+[18:40:19.759] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 115000
+[18:40:20.094] [debug]   收集 IMU [/imu/imu] 帧数: 115000
+[18:40:20.249] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 3000
+[18:40:20.252] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 3000
+[18:40:20.252] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 120000
+[18:40:20.253] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 30000
+[18:40:20.253] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 30000
+[18:40:20.254] [debug]   收集相机 [/left/image_raw] 帧数: 3000
+[18:40:20.254] [debug]   收集相机 [/right/image_raw] 帧数: 3000
+[18:40:20.743] [debug]   收集 IMU [/imu/imu] 帧数: 120000
+[18:40:20.872] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 125000
+[18:40:21.223] [debug]   收集 IMU [/imu/imu] 帧数: 125000
+[18:40:21.346] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 130000
+[18:40:21.691] [debug]   收集 IMU [/imu/imu] 帧数: 130000
+[18:40:21.789] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 135000
+[18:40:22.199] [debug]   收集 IMU [/imu/imu] 帧数: 135000
+[18:40:22.305] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 3500
+[18:40:22.306] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 3500
+[18:40:22.307] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 140000
+[18:40:22.308] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 35000
+[18:40:22.308] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 35000
+[18:40:22.310] [debug]   收集相机 [/left/image_raw] 帧数: 3500
+[18:40:22.311] [debug]   收集相机 [/right/image_raw] 帧数: 3500
+[18:40:22.829] [debug]   收集 IMU [/imu/imu] 帧数: 140000
+[18:40:22.936] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 145000
+[18:40:23.525] [debug]   收集 IMU [/imu/imu] 帧数: 145000
+[18:40:23.600] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 150000
+[18:40:24.183] [debug]   收集 IMU [/imu/imu] 帧数: 150000
+[18:40:24.233] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 155000
+[18:40:24.898] [debug]   收集 IMU [/imu/imu] 帧数: 155000
+[18:40:24.924] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 4000
+[18:40:24.925] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 4000
+[18:40:24.926] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 160000
+[18:40:24.927] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 40000
+[18:40:24.927] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 40000
+[18:40:24.930] [debug]   收集相机 [/left/image_raw] 帧数: 4000
+[18:40:24.930] [debug]   收集相机 [/right/image_raw] 帧数: 4000
+[18:40:25.592] [debug]   收集 IMU [/imu/imu] 帧数: 160000
+[18:40:25.604] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 165000
+[18:40:26.281] [debug]   收集 IMU [/imu/imu] 帧数: 165000
+[18:40:26.283] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 170000
+[18:40:26.478] [info] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[18:40:26.478] [info]   LiDAR [/os1_cloud_node1/points]: 4287 帧
+[18:40:26.478] [info]   LiDAR [/os1_cloud_node2/points]: 4286 帧
+[18:40:26.478] [info]   相机 [/left/image_raw]: 4285 帧
+[18:40:26.478] [info]   相机 [/right/image_raw]: 4285 帧
+[18:40:26.478] [info]   IMU [/dji_sdk/imu]: 171462 帧
+[18:40:26.478] [info]   IMU [/imu/imu]: 166428 帧
+[18:40:26.478] [info]   IMU [/os1_cloud_node1/imu]: 42862 帧
+[18:40:26.478] [info]   IMU [/os1_cloud_node2/imu]: 42862 帧
+[18:40:26.478] [info]   选用 LiDAR  lidar_0 -> /os1_cloud_node1/points
+[18:40:26.478] [info]   选用 相机  camera_0 -> /left/image_raw
+[18:40:26.478] [info]   选用 IMU    imu_0 -> /imu/imu
+[18:40:26.478] [info]   时间范围: 1609045331.127 - 1609045759.771 秒
+[18:40:26.492] [info]   加载IMU数据: 166428 帧 (sensor_id=imu_0)
+[18:40:27.071] [info] [IMU-Intrin] Step 1: Allan 方差分析...
+[18:40:27.072] [info]   [Fine-Auto-Allan方差分析: starting] 10.0%
+[18:40:27.072] [info] === IMU 内参标定开始 ===
+[18:40:27.072] [info]   数据帧数: 166428
+[18:40:27.072] [info]   数据时长: 428.6 s
+[18:40:27.072] [info] [IMU-Intrin] Step 1/2: Allan 方差分析 ...
+[18:40:27.072] [info]   [Fine-Auto-Allan方差分析: allan_variance] 16.0%
+[18:40:27.072] [info] Allan: sample_rate=378.5 Hz, N=166428 frames
+[18:40:27.103] [info] Allan: analyzing gyro axis X ...
+[18:40:27.111] [debug] Allan axis: ARW=7.6496e-02, BI=9.7257e-04, RRW=2.2814e-02
+[18:40:27.111] [info] Allan: analyzing accel axis X ...
+[18:40:27.114] [debug] Allan axis: ARW=4.0353e-02, BI=3.4020e-02, RRW=3.2049e-02
+[18:40:27.114] [info] Allan: analyzing gyro axis Y ...
+[18:40:27.117] [debug] Allan axis: ARW=7.6261e-02, BI=8.4073e-04, RRW=2.3151e-02
+[18:40:27.117] [info] Allan: analyzing accel axis Y ...
+[18:40:27.120] [debug] Allan axis: ARW=4.7510e-02, BI=2.1647e-02, RRW=3.0272e-02
+[18:40:27.120] [info] Allan: analyzing gyro axis Z ...
+[18:40:27.123] [debug] Allan axis: ARW=3.2073e-02, BI=3.6671e-03, RRW=1.6248e-02
+[18:40:27.123] [info] Allan: analyzing accel axis Z ...
+[18:40:27.126] [debug] Allan axis: ARW=1.3667e-01, BI=1.9013e-02, RRW=4.2081e-02
+[18:40:27.126] [info] [IMU-Intrin] Step 2/2: 六面法加速度计标定 ...
+[18:40:27.126] [info]   [Fine-Auto-Allan方差分析: six_position] 52.0%
+[18:40:27.127] [info] Static segments detected: 0
+[18:40:27.127] [warning] Six-position: only 0 static segments found (need ≥6)
+[18:40:27.127] [info] [CALC] IMU内参(legacy) 标定完成 帧数=166428 allan_fit_rms=0.000000 noise_gyro=6.1610e-02 noise_acce=7.4843e-02
+[18:40:27.127] [info]   [Fine-Auto-Allan方差分析: done] 70.0%
+[18:40:27.127] [info] === IMU 内参标定完成 ===
+[18:40:27.127] [info]   陀螺噪声:     6.1610e-02 rad/s/√Hz
+[18:40:27.127] [info]   陀螺零偏不稳: 1.8268e-03 rad/s
+[18:40:27.127] [info]   加速度计噪声: 7.4843e-02 m/s²/√Hz
+[18:40:27.127] [info]   加速度计零偏不稳: 2.4894e-02 m/s²
+[18:40:27.127] [info] [IMU-Intrin] Step 2: 保存标定结果...
+[18:40:27.130] [info] [Fine-Auto] IMU内参已保存: ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+[18:40:27.130] [info] Allan: sample_rate=378.5 Hz, N=166428 frames
+[18:40:27.133] [info] Allan: analyzing gyro axis X ...
+[18:40:27.136] [debug] Allan axis: ARW=7.6496e-02, BI=9.7257e-04, RRW=2.2814e-02
+[18:40:27.136] [info] Allan: analyzing accel axis X ...
+[18:40:27.140] [debug] Allan axis: ARW=4.0353e-02, BI=3.4020e-02, RRW=3.2049e-02
+[18:40:27.140] [info] Allan: analyzing gyro axis Y ...
+[18:40:27.145] [debug] Allan axis: ARW=7.6261e-02, BI=8.4073e-04, RRW=2.3151e-02
+[18:40:27.145] [info] Allan: analyzing accel axis Y ...
+[18:40:27.149] [debug] Allan axis: ARW=4.7510e-02, BI=2.1647e-02, RRW=3.0272e-02
+[18:40:27.149] [info] Allan: analyzing gyro axis Z ...
+[18:40:27.153] [debug] Allan axis: ARW=3.2073e-02, BI=3.6671e-03, RRW=1.6248e-02
+[18:40:27.153] [info] Allan: analyzing accel axis Z ...
+[18:40:27.159] [debug] Allan axis: ARW=1.3667e-01, BI=1.9013e-02, RRW=4.2081e-02
+[18:40:27.174] [info] Allan plot saved: ./results/imu_allan_variance.png
+[18:40:27.174] [info] [Fine-Auto/IMU-Intrin] 标定完成: RMS=0.0000 | 耗时: 17286.6 ms
+[18:40:27.174] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:40:27.174] [info] ■ 结束阶段: [Fine-Auto] 任务: [imu_intrinsic]
+[18:40:27.174] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 17287 ms
+[18:40:27.174] [info]   消息: IMU内参标定完成: gyro_noise=0.0616097 rad/s/√Hz, gyro_bias=0.00182679 rad/s, accel_noise=0.0748429 m/s²/√Hz, accel_bias=0.0248936 m/s²
+[18:40:27.174] [info] [CALC] 阶段结束 stage=Fine-Auto task=imu_intrinsic success=true residual_rms=0.000000 elapsed_ms=17286.6 threshold=0.1000
+[18:40:27.174] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:40:27.176] [info] 
+[18:40:27.176] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:40:27.176] [info] ▶ 开始阶段: [Fine-Auto] 任务: [cam_intrinsic]
+[18:40:27.176] [info]   描述: 无目标优化
+[18:40:27.176] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:40:27.176] [info] [CALC] 精标定阶段开始 task=cam_intrinsic
+[18:40:27.176] [info] [Fine-Auto] 任务: cam_intrinsic | 无目标优先: true
+[18:40:27.176] [info] [Fine-Auto] 方法: DM-Calib精化 + RANSAC
+[18:40:27.176] [warning] [Fine-Auto] 任务 cam_intrinsic 当前为占位实现
+[18:40:27.176] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:40:27.176] [info] ■ 结束阶段: [Fine-Auto] 任务: [cam_intrinsic]
+[18:40:27.176] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 0 ms
+[18:40:27.176] [info]   消息: 精标定占位 — 请通过具体标定器实现
+[18:40:27.176] [info] [CALC] 阶段结束 stage=Fine-Auto task=cam_intrinsic success=true residual_rms=0.000000 elapsed_ms=0.0 threshold=-1.0000
+[18:40:27.176] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:40:27.177] [info] 
+[18:40:27.177] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:40:27.177] [info] ▶ 开始阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[18:40:27.177] [info]   描述: 无目标优化
+[18:40:27.177] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:40:27.177] [info] [CALC] 精标定阶段开始 task=imu_lidar_extrin
+[18:40:27.177] [info] [Fine-Auto] 任务: imu_lidar_extrin | 无目标优先: true
+[18:40:27.177] [info] [Fine-Auto] 方法: B样条连续时间优化 (无目标)
+[18:40:27.177] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[18:40:27.177] [info]   Bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[18:40:27.177] [info]   实时模式: false
+[18:40:27.177] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[18:40:27.177] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/metadata.yaml
+[18:40:27.178] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/imu (类型: sensor_msgs/msg/Imu, 消息数: 171462)
+[18:40:27.178] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/attitude (类型: geometry_msgs/msg/QuaternionStamped, 消息数: 42866)
+[18:40:27.178] [debug] [Ros2BagDataSource] 找到话题: /os1_cloud_node2/imu (类型: sensor_msgs/msg/Imu, 消息数: 42862)
+[18:40:27.178] [debug] [Ros2BagDataSource] 找到话题: /os1_cloud_node1/imu (类型: sensor_msgs/msg/Imu, 消息数: 42862)
+[18:40:27.178] [debug] [Ros2BagDataSource] 找到话题: /imu/imu (类型: sensor_msgs/msg/Imu, 消息数: 166428)
+[18:40:27.178] [debug] [Ros2BagDataSource] 找到话题: /imu/magnetic_field (类型: sensor_msgs/msg/MagneticField, 消息数: 166428)
+[18:40:27.178] [debug] [Ros2BagDataSource] 找到话题: /imu/temperature (类型: sensor_msgs/msg/Temperature, 消息数: 166428)
+[18:40:27.178] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/gps_position (类型: sensor_msgs/msg/NavSatFix, 消息数: 21433)
+[18:40:27.179] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/height_above_takeoff (类型: std_msgs/msg/Float32, 消息数: 21433)
+[18:40:27.179] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/gps_health (类型: std_msgs/msg/UInt8, 消息数: 21433)
+[18:40:27.179] [debug] [Ros2BagDataSource] 找到话题: /uwb_endorange_info (类型: uwb_driver/msg/UwbRange, 消息数: 25172)
+[18:40:27.179] [debug] [Ros2BagDataSource] 找到话题: /left/image_raw (类型: sensor_msgs/msg/Image, 消息数: 4285)
+[18:40:27.179] [debug] [Ros2BagDataSource] 找到话题: /right/image_raw (类型: sensor_msgs/msg/Image, 消息数: 4285)
+[18:40:27.179] [debug] [Ros2BagDataSource] 找到话题: /os1_cloud_node1/points (类型: sensor_msgs/msg/PointCloud2, 消息数: 4287)
+[18:40:27.179] [debug] [Ros2BagDataSource] 找到话题: /os1_cloud_node2/points (类型: sensor_msgs/msg/PointCloud2, 消息数: 4286)
+[18:40:27.179] [debug] [Ros2BagDataSource] 找到话题: /uwb_exorange_info (类型: uwb_driver/msg/UwbEcho, 消息数: 2437)
+[18:40:27.179] [debug] [Ros2BagDataSource] 找到话题: /node_pos_marker_sc (类型: visualization_msgs/msg/Marker, 消息数: 2437)
+[18:40:27.179] [debug] [Ros2BagDataSource] 找到话题: /node_pos_sc (类型: nav_msgs/msg/Path, 消息数: 2437)
+[18:40:27.179] [debug] [Ros2BagDataSource] 找到话题: /leica/pose/relative (类型: geometry_msgs/msg/PoseStamped, 消息数: 7679)
+[18:40:27.179] [info] [Ros2BagDataSource] 使用配置的 LiDAR 话题 (来自 sensors): /os1_cloud_node1/points
+[18:40:27.179] [debug] [Ros2BagDataSource] 匹配高优先级左相机话题: /left/image_raw (关键词: left/image_raw)
+[18:40:27.179] [info] [Ros2BagDataSource] 自动检测相机话题: /left/image_raw
+[18:40:27.179] [info] [Ros2BagDataSource] 使用配置的 IMU 话题 (来自 sensors): /imu/imu
+[INFO] [1775817627.189750235] [rosbag2_storage]: Opened database '/root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/nya_02_ros2.db3' for READ_ONLY.
+[18:40:27.189] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[18:40:27.189] [info] [Ros2BagDataSource] 找到 19 个话题
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /dji_sdk/imu  类型: sensor_msgs/msg/Imu  消息数: 171462
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /dji_sdk/attitude  类型: geometry_msgs/msg/QuaternionStamped  消息数: 42866
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /imu/imu  类型: sensor_msgs/msg/Imu  消息数: 166428
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /imu/magnetic_field  类型: sensor_msgs/msg/MagneticField  消息数: 166428
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /imu/temperature  类型: sensor_msgs/msg/Temperature  消息数: 166428
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_position  类型: sensor_msgs/msg/NavSatFix  消息数: 21433
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /dji_sdk/height_above_takeoff  类型: std_msgs/msg/Float32  消息数: 21433
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_health  类型: std_msgs/msg/UInt8  消息数: 21433
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /uwb_endorange_info  类型: uwb_driver/msg/UwbRange  消息数: 25172
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /left/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /right/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4287
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4286
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /uwb_exorange_info  类型: uwb_driver/msg/UwbEcho  消息数: 2437
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /node_pos_marker_sc  类型: visualization_msgs/msg/Marker  消息数: 2437
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /node_pos_sc  类型: nav_msgs/msg/Path  消息数: 2437
+[18:40:27.189] [info] [Ros2BagDataSource]  话题: /leica/pose/relative  类型: geometry_msgs/msg/PoseStamped  消息数: 7679
+[18:40:27.189] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[18:40:28.669] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 5000
+[18:40:28.792] [debug]   收集 IMU [/imu/imu] 帧数: 5000
+[18:40:30.009] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 10000
+[18:40:30.142] [debug]   收集 IMU [/imu/imu] 帧数: 10000
+[18:40:31.582] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 15000
+[18:40:31.789] [debug]   收集 IMU [/imu/imu] 帧数: 15000
+[18:40:33.109] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 500
+[18:40:33.110] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 500
+[18:40:33.115] [debug]   收集相机 [/left/image_raw] 帧数: 500
+[18:40:33.118] [debug]   收集相机 [/right/image_raw] 帧数: 500
+[18:40:33.119] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 20000
+[18:40:33.119] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 5000
+[18:40:33.119] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 5000
+[18:40:33.370] [debug]   收集 IMU [/imu/imu] 帧数: 20000
+[18:40:34.568] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 25000
+[18:40:34.826] [debug]   收集 IMU [/imu/imu] 帧数: 25000
+[18:40:35.909] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 30000
+[18:40:36.223] [debug]   收集 IMU [/imu/imu] 帧数: 30000
+[18:40:37.442] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 35000
+[18:40:37.936] [debug]   收集 IMU [/imu/imu] 帧数: 35000
+[18:40:38.812] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 1000
+[18:40:38.814] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 1000
+[18:40:38.814] [debug]   收集相机 [/left/image_raw] 帧数: 1000
+[18:40:38.814] [debug]   收集相机 [/right/image_raw] 帧数: 1000
+[18:40:38.814] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 40000
+[18:40:38.814] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 10000
+[18:40:38.814] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 10000
+[18:40:38.961] [debug]   收集 IMU [/imu/imu] 帧数: 40000
+[18:40:39.259] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 45000
+[18:40:39.402] [debug]   收集 IMU [/imu/imu] 帧数: 45000
+[18:40:39.701] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 50000
+[18:40:39.854] [debug]   收集 IMU [/imu/imu] 帧数: 50000
+[18:40:40.133] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 55000
+[18:40:40.301] [debug]   收集 IMU [/imu/imu] 帧数: 55000
+[18:40:40.574] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 1500
+[18:40:40.575] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 1500
+[18:40:40.575] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 60000
+[18:40:40.576] [debug]   收集相机 [/left/image_raw] 帧数: 1500
+[18:40:40.577] [debug]   收集相机 [/right/image_raw] 帧数: 1500
+[18:40:40.577] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 15000
+[18:40:40.577] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 15000
+[18:40:40.751] [debug]   收集 IMU [/imu/imu] 帧数: 60000
+[18:40:41.015] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 65000
+[18:40:41.221] [debug]   收集 IMU [/imu/imu] 帧数: 65000
+[18:40:41.512] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 70000
+[18:40:41.703] [debug]   收集 IMU [/imu/imu] 帧数: 70000
+[18:40:41.959] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 75000
+[18:40:42.176] [debug]   收集 IMU [/imu/imu] 帧数: 75000
+[18:40:42.427] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 2000
+[18:40:42.430] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 2000
+[18:40:42.430] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 80000
+[18:40:42.430] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 20000
+[18:40:42.430] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 20000
+[18:40:42.432] [debug]   收集相机 [/left/image_raw] 帧数: 2000
+[18:40:42.432] [debug]   收集相机 [/right/image_raw] 帧数: 2000
+[18:40:42.690] [debug]   收集 IMU [/imu/imu] 帧数: 80000
+[18:40:42.912] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 85000
+[18:40:43.154] [debug]   收集 IMU [/imu/imu] 帧数: 85000
+[18:40:43.348] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 90000
+[18:40:43.607] [debug]   收集 IMU [/imu/imu] 帧数: 90000
+[18:40:43.810] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 95000
+[18:40:44.086] [debug]   收集 IMU [/imu/imu] 帧数: 95000
+[18:40:44.262] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 2500
+[18:40:44.264] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 2500
+[18:40:44.265] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 100000
+[18:40:44.265] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 25000
+[18:40:44.265] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 25000
+[18:40:44.267] [debug]   收集相机 [/left/image_raw] 帧数: 2500
+[18:40:44.268] [debug]   收集相机 [/right/image_raw] 帧数: 2500
+[18:40:44.585] [debug]   收集 IMU [/imu/imu] 帧数: 100000
+[18:40:44.755] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 105000
+[18:40:45.077] [debug]   收集 IMU [/imu/imu] 帧数: 105000
+[18:40:45.234] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 110000
+[18:40:45.538] [debug]   收集 IMU [/imu/imu] 帧数: 110000
+[18:40:45.680] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 115000
+[18:40:45.982] [debug]   收集 IMU [/imu/imu] 帧数: 115000
+[18:40:46.107] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 3000
+[18:40:46.110] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 3000
+[18:40:46.111] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 120000
+[18:40:46.111] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 30000
+[18:40:46.111] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 30000
+[18:40:46.112] [debug]   收集相机 [/left/image_raw] 帧数: 3000
+[18:40:46.113] [debug]   收集相机 [/right/image_raw] 帧数: 3000
+[18:40:46.420] [debug]   收集 IMU [/imu/imu] 帧数: 120000
+[18:40:46.540] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 125000
+[18:40:46.860] [debug]   收集 IMU [/imu/imu] 帧数: 125000
+[18:40:46.967] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 130000
+[18:40:47.313] [debug]   收集 IMU [/imu/imu] 帧数: 130000
+[18:40:47.414] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 135000
+[18:40:47.829] [debug]   收集 IMU [/imu/imu] 帧数: 135000
+[18:40:47.908] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 3500
+[18:40:47.909] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 3500
+[18:40:47.911] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 140000
+[18:40:47.912] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 35000
+[18:40:47.912] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 35000
+[18:40:47.914] [debug]   收集相机 [/left/image_raw] 帧数: 3500
+[18:40:47.915] [debug]   收集相机 [/right/image_raw] 帧数: 3500
+[18:40:48.332] [debug]   收集 IMU [/imu/imu] 帧数: 140000
+[18:40:48.415] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 145000
+[18:40:48.807] [debug]   收集 IMU [/imu/imu] 帧数: 145000
+[18:40:48.879] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 150000
+[18:40:49.410] [debug]   收集 IMU [/imu/imu] 帧数: 150000
+[18:40:49.456] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 155000
+[18:40:49.994] [debug]   收集 IMU [/imu/imu] 帧数: 155000
+[18:40:50.022] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 4000
+[18:40:50.023] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 4000
+[18:40:50.024] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 160000
+[18:40:50.026] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 40000
+[18:40:50.026] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 40000
+[18:40:50.028] [debug]   收集相机 [/left/image_raw] 帧数: 4000
+[18:40:50.029] [debug]   收集相机 [/right/image_raw] 帧数: 4000
+[18:40:50.613] [debug]   收集 IMU [/imu/imu] 帧数: 160000
+[18:40:50.662] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 165000
+[18:40:51.359] [debug]   收集 IMU [/imu/imu] 帧数: 165000
+[18:40:51.362] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 170000
+[18:40:51.560] [info] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[18:40:51.560] [info]   LiDAR [/os1_cloud_node1/points]: 4287 帧
+[18:40:51.560] [info]   LiDAR [/os1_cloud_node2/points]: 4286 帧
+[18:40:51.560] [info]   相机 [/left/image_raw]: 4285 帧
+[18:40:51.560] [info]   相机 [/right/image_raw]: 4285 帧
+[18:40:51.560] [info]   IMU [/dji_sdk/imu]: 171462 帧
+[18:40:51.560] [info]   IMU [/imu/imu]: 166428 帧
+[18:40:51.560] [info]   IMU [/os1_cloud_node1/imu]: 42862 帧
+[18:40:51.560] [info]   IMU [/os1_cloud_node2/imu]: 42862 帧
+[18:40:51.560] [info]   选用 LiDAR  lidar_front -> /os1_cloud_node1/points
+[18:40:51.560] [info]   选用 LiDAR  lidar_rear -> /os1_cloud_node2/points
+[18:40:51.560] [info]   选用 相机  camera_0 -> /left/image_raw
+[18:40:51.560] [info]   选用 IMU    imu_0 -> /imu/imu
+[18:40:51.561] [info]   时间范围: 1609045331.127 - 1609045759.771 秒
+[18:40:51.561] [info] [Ros2BagDataSource] 应用采样/帧数限制...
+[18:40:51.585] [info]   LiDAR /os1_cloud_node1/points 采样后: 800 帧
+[18:40:51.603] [info]   LiDAR /os1_cloud_node2/points 采样后: 800 帧
+[18:40:51.619] [info]   相机 /left/image_raw 采样后: 800 帧
+[18:40:51.658] [info]   相机 /right/image_raw 采样后: 800 帧
+[18:40:51.678] [info] [Fine-Auto/IMU-LiDAR] imu_0 从内参标定结果文件加载: ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+[18:40:51.679] [info] [Fine-Auto/IMU-LiDAR] imu_0->lidar_front 使用配置内联初值 (在初值基础上精化)
+[18:40:51.679] [info] [IMU-LiDAR] 粗标定以配置初值为先验开始 (手眼 180° 消解与平移回退)，得到粗标定结果后精标定
+[18:40:51.679] [info] [IMU-LiDAR] 开始两阶段标定
+[18:40:51.679] [info]   IMU 数据: 166428 帧
+[18:40:51.679] [info]   LiDAR 数据: 800 帧
+[18:40:51.679] [info] [Time-Align] IMU  时间范围: [1609045331.131, 1609045759.770] 跨度 428.64s
+[18:40:51.679] [info] [Time-Align] LiDAR 时间范围: [1609045331.148, 1609045730.640] 跨度 399.49s
+[18:40:51.679] [info] [Time-Align] 重叠区间: [1609045331.148, 1609045730.640] 跨度 399.49s
+[18:40:51.679] [info] [Time-Align] 重叠占比: 100.0% (相对较短流)
+[18:40:51.679] [warning] [Time-Align] IMU 与 LiDAR 首/末帧时间戳差异较大: 首帧差 0.017s 末帧差 29.130s — 若两者非同一时间基准（如不同 ROS 时钟），必须对齐后再标定
+[18:40:51.679] [warning] [Time-Align] 末帧差 >10s，旋转对可能系统性偏差，手眼标定易得 180° 歧义；建议确保同一时间基准或对齐后再标定
+[18:40:51.679] [info] [Time-Align] 结论: 请检查时间基准与对齐 (重叠>10s且首末差<1s为优)
+[18:40:51.679] [info] [LiDAR-Odom] 开始 LiDAR 里程计 (NDT 配准)
+[18:42:36.450] [info] [LiDAR-Odom] 完成, 处理 800 帧 (有效 800 帧)
+[18:42:36.450] [info] [LiDAR-Odom] 点云规模: 每帧点数 min=12412 med≈12794 max=13319
+[18:42:36.461] [info] [GyroBias] 估计零偏: [0.004315, 0.002453, 0.000880] rad/s (基于 50911 个静态样本)
+[18:42:36.461] [info] [Build-RotPairs] 构建旋转对
+[18:42:36.461] [info] [Build-RotPairs] 计算逻辑: 同一时间段 [t_begin,t_end] 内 — LiDAR 相对旋转 = (T_w_l0^{-1}*T_w_l1).so3().inverse() 即机体从 t_begin→t_end 的旋转；IMU 相对旋转 = 陀螺积分 R(t_begin→t_end)。二者同为机体旋转，应一致
+[18:42:36.461] [info] [Build-RotPairs] 时间基准要求: t_begin/t_end 使用 LiDAR 帧时间戳，IMU 积分区间与之一致；IMU 与 LiDAR 必须为同一时间基准（如 ROS bag 时间），未对齐会导致旋转对错误、标定偏差甚至约 180° 误差
+[18:42:36.462] [info] [Build-RotPairs] 首对积分统计: dt=0.516s 采样数=201 陀螺1σ漂移≈2.5365° (ARW)
+[18:42:36.462] [info] [Build-RotPairs] 首对时间对齐: LiDAR 区间 [t_begin,t_end]=[1609045331.1480, 1609045331.6643] | IMU 参与积分区间 [1609045331.1518, 1609045331.6623]
+[18:42:36.462] [info] [Build-RotPairs] 首对 IMU 积分计算: sum_dt=0.507818s 实际时间跨度=0.510516s 请求区间=0.516320s (sum_dt 应≈实际跨度)
+[*** LOG ERROR #0001 ***] [2026-04-10 18:42:36] [stage] {argument not found}
+[18:42:36.464] [warning] [Build-RotPairs] 存在过小时间戳间隔 dt_min=0.000106s（可能重复戳），已跳过 <0.1ms 的步；建议检查 bag 或 IMU 驱动
+[18:42:36.464] [info] [Build-RotPairs] 首对区间裁剪: 积分未覆盖 t_begin~t_first 约 0.0038s, t_last~t_end 约 0.0020s (可能导致 IMU 角略小于真实)
+[18:42:36.962] [info] [Build-RotPairs] 短时窗旋转对: dt_target=0.20s 步长=0.10s 新增 2888 对 (降低陀螺积分漂移)
+[18:42:36.962] [info] [Build-RotPairs] 短时窗首对积分: dt=0.200s 采样数=78 1σ漂移≈1.5787°
+[18:42:36.962] [info] [Build-RotPairs] 构建了 3242 个有效旋转对 (相邻帧 354 + 短时窗 2888, 最小激励 3.0 deg)
+[18:42:36.962] [info] [Build-RotPairs] IMU 相对旋转: 0.50 ~ 16.08 deg | LiDAR 相对旋转: 0.00 ~ 7.70 deg
+[18:42:36.962] [info] [Build-RotPairs] LiDAR 相对平移(相邻帧): min=0.000 med=0.138 max=0.520 m (平移过小且旋转过小则 NDT 可能退化)
+[18:42:36.962] [info] [Build-RotPairs] 旋转对时间跨度 dt_span(s): min=0.200 med=0.200 max=0.517 (大跨度会放大里程计漂移与时间不同步)
+[18:42:36.962] [info] [Build-RotPairs] LiDAR角/IMU角 比值: 均值=0.555 中位数=0.462 标准差=0.499 (理想≈1)
+[18:42:36.962] [info] [Build-RotPairs] 比值分位: P25=0.161 P50=0.462 P75=0.804
+[18:42:36.962] [info] [Build-RotPairs] 比值分布: ratio<0.5 共 1717 对, 0.5~0.8 共 709 对, 0.8~1.2 共 543 对, >1.2 共 273 对
+[18:42:36.962] [info] [Build-RotPairs] 旋转对质量: 差 (优=比值近1且多数在0.8~1.2)
+[18:42:36.962] [warning] [Build-RotPairs] 比值均值 0.555 系统性偏离 1，手眼易出现 180° 歧义；请检查时间对齐/帧间隔，或配置 handeye_prefer_identity_when_ambiguous: true
+[18:42:36.962] [info] [Build-RotPairs] 抽样 (前5对):
+[18:42:36.962] [info] [Build-RotPairs]   pair#0 dt=0.52s rot_imu=3.76° rot_lidar=2.88° ratio=0.767 trans=0.168m
+[18:42:36.962] [info] [Build-RotPairs]   pair#1 dt=0.48s rot_imu=6.13° rot_lidar=5.05° ratio=0.823 trans=0.239m
+[18:42:36.962] [info] [Build-RotPairs]   pair#2 dt=0.52s rot_imu=8.30° rot_lidar=6.69° ratio=0.806 trans=0.154m
+[18:42:36.962] [info] [Build-RotPairs]   pair#3 dt=0.48s rot_imu=6.58° rot_lidar=4.20° ratio=0.639 trans=0.269m
+[18:42:36.962] [info] [Build-RotPairs]   pair#4 dt=0.48s rot_imu=3.13° rot_lidar=3.60° ratio=1.152 trans=0.217m
+[18:42:36.962] [info] [Build-RotPairs] 抽样 (后5对):
+[18:42:36.962] [info] [Build-RotPairs]   pair#3237 dt=0.20s rot_imu=1.19° rot_lidar=0.13° ratio=0.105 trans=0.023m
+[18:42:36.962] [info] [Build-RotPairs]   pair#3238 dt=0.20s rot_imu=0.99° rot_lidar=0.13° ratio=0.128 trans=0.023m
+[18:42:36.962] [info] [Build-RotPairs]   pair#3239 dt=0.20s rot_imu=0.80° rot_lidar=0.17° ratio=0.210 trans=0.038m
+[18:42:36.962] [info] [Build-RotPairs]   pair#3240 dt=0.20s rot_imu=0.55° rot_lidar=0.23° ratio=0.413 trans=0.092m
+[18:42:36.962] [info] [Build-RotPairs]   pair#3241 dt=0.20s rot_imu=0.55° rot_lidar=0.23° ratio=0.417 trans=0.092m
+[18:42:36.963] [info] [Motion-Excitation] 运动激励: roll=4397.1° pitch=4445.8° yaw=1305.9° 轴多样性=0.490 z平移占比=0.247
+[18:42:36.963] [info] [Motion-Excitation] 结论: 运动较充分 | 运动较充分，可对全自由度标定
+[18:42:36.963] [info] [IMU-LiDAR] 步骤: 手眼旋转标定开始 — 旋转对 3242 个
+[18:42:36.963] [info] [Handeye] 方程: R_imu*X = X*R_lidar，X=R_LidarInImu。歧义时: decision=prefer_180 margin_deg=3.0°
+[18:42:36.963] [info] [Handeye] 质量权重: min=0.150 max=1.000 avg=0.867
+[18:42:36.963] [info] [Handeye] 约束矩阵 M (12968x4) 奇异值: 106.1167 106.0434 105.9055 1.0279 (最小过小表示病态)
+[18:42:36.963] [info] [Handeye] 奇异值比 sv_min/sv_max = 0.0097 (越接近0越病态，>0.05 较健康)
+[18:42:36.964] [info] [IMU-LiDAR] 步骤: 手眼旋转标定完成 — 平均误差: 2.4626 deg (min=0.0459 max=19.0182 std=2.0925)
+[18:42:36.964] [info] [Handeye] 残差分位: P50=1.888° P90=4.992°
+[18:42:36.964] [info] [Handeye] 残差最大 3 对 (用于定位异常时段):
+[18:42:36.964] [info]   pair#15 t=[1609045403.2,1609045403.6]s dt_span=0.48s 残差=19.02 deg
+[18:42:36.964] [info]   pair#242 t=[1609045616.1,1609045616.6]s dt_span=0.48s 残差=16.83 deg
+[18:42:36.964] [info]   pair#232 t=[1609045609.1,1609045609.6]s dt_span=0.52s 残差=16.73 deg
+[18:42:36.964] [info] [Handeye] SVD 初解: trace(R)=-1.0000 相对单位阵旋转角=179.974° (0°=单位阵 180°=歧义解)
+[18:42:36.964] [info] [Handeye] 180° 歧义两解: 180°侧 残差=2.4626° | 单位阵侧 残差=3.2964° (策略: prefer_180)
+[18:42:36.964] [info] [Handeye] 初值先验: 180°侧距初值 179.99° | 单位阵侧距初值 0.02° → 采用单位阵侧
+[18:42:36.964] [info] [Handeye] 最终解: 单位阵侧(已校正) (相对单位阵旋转角=0.032°)
+[18:42:36.964] [info] [Handeye] 旋转矩阵 R_Imu_Lidar (3x3):
+[18:42:36.964] [info]   [1.000000, 0.000320, 0.000040]
+[18:42:36.964] [info]   [-0.000320, 1.000000, -0.000455]
+[18:42:36.964] [info]   [-0.000041, 0.000455, 1.000000]
+[18:42:36.964] [info]   手眼旋转标定成功
+[18:42:36.964] [info] [CALC] IMU-LiDAR 手眼旋转 平均残差=3.2964 deg 旋转对数=3242
+[18:42:36.964] [info] [IMU-LiDAR] 步骤: 平移估计开始 (里程计 800 帧)
+[18:42:36.964] [info] [Trans-Est] 帧间 dt(s): min=0.480 med=0.514 max=0.520 (有效范围 [0.05, 2.0]); 总时间跨度 399.5s
+[18:42:37.035] [info] [Trans-Est] 共收集 522 个约束
+[18:42:37.036] [info] [Trans-Est] MAD 滤波: 522 -> 522 约束
+[18:42:37.036] [info] [CALC] IMU-LiDAR 平移估计 t=[-0.0000,-0.0000,0.0000] m rms_m_s=0.0000 约束数=522
+[18:42:37.036] [info] [IMU-LiDAR] 步骤: 平移估计完成 — t=[-0.000, -0.000, 0.000] m, RMS=0.0000 m/s
+[18:42:37.036] [info]   t = [-0.000, -0.000, 0.000] m
+[18:42:37.036] [info]   RMS 误差 = 0.0000 m/s (基于 522 个约束)
+[18:42:37.036] [info] [IMU-LiDAR] 粗标定完成
+[18:42:37.036] [info] [IMU-LiDAR] 粗标定摘要: R(RPY°)=[0.026, 0.002, -0.018] t(m)=[-0.0000, -0.0000, 0.0000] 旋转对=3242
+[18:42:37.037] [info]   四元数 (xyzw):  0.000227599  2.02474e-05 -0.000160075            1
+[18:42:37.037] [info]   平移: [-0.000000, -0.000000, 0.000000] m
+[18:42:37.037] [info] [IMU-LiDAR] 粗标定 4x4 T_Imu_Lidar:
+[18:42:37.037] [info]   [1.000000, 0.000320, 0.000040, -0.000000]
+[18:42:37.037] [info]   [-0.000320, 1.000000, -0.000455, -0.000000]
+[18:42:37.037] [info]   [-0.000041, 0.000455, 1.000000, 0.000000]
+[18:42:37.037] [info]   [0.000000, 0.000000, 0.000000, 1.000000]
+[18:42:37.037] [info] [IMU-LiDAR] 步骤: B样条精细优化开始 (LiDAR 800 帧)
+[18:42:37.037] [info] [LiDAR-Odom] 开始 LiDAR 里程计 (NDT 配准)

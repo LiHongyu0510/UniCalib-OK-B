@@ -1,0 +1,77 @@
+Consolidate compiler generated dependencies of target pango_core
+[  7%] Built target pango_core
+Consolidate compiler generated dependencies of target pango_vars
+Consolidate compiler generated dependencies of target pango_packetstream
+[  8%] Built target pango_vars
+[ 12%] Built target pango_packetstream
+Consolidate compiler generated dependencies of target pango_image
+[ 24%] Built target pango_image
+Consolidate compiler generated dependencies of target pango_opengl
+[ 31%] Built target pango_opengl
+Consolidate compiler generated dependencies of target pango_windowing
+[ 37%] Built target pango_windowing
+Consolidate compiler generated dependencies of target pango_video
+[ 58%] Built target pango_video
+Consolidate compiler generated dependencies of target pango_display
+[ 67%] Built target pango_display
+Consolidate compiler generated dependencies of target pango_plot
+[ 70%] Built target pango_plot
+Consolidate compiler generated dependencies of target unicalib
+[ 71%] Building CXX object CMakeFiles/unicalib.dir/src/io/unified_data_loader.cpp.o
+[ 71%] Building CXX object CMakeFiles/unicalib.dir/src/io/new_format_data_source.cpp.o
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+[ 71%] Linking CXX shared library lib/libunicalib.so
+[ 90%] Built target unicalib
+Consolidate compiler generated dependencies of target unicalib_imu_lidar
+Consolidate compiler generated dependencies of target unicalib_cam_cam
+Consolidate compiler generated dependencies of target unicalib_joint
+Consolidate compiler generated dependencies of target unicalib_camera_intrinsic
+Consolidate compiler generated dependencies of target unicalib_imu_intrinsic
+[ 91%] Linking CXX executable bin/unicalib_imu_lidar
+Consolidate compiler generated dependencies of target unicalib_lidar_camera
+Consolidate compiler generated dependencies of target unicalib_lidar_lidar
+[ 92%] Linking CXX executable bin/unicalib_imu_intrinsic
+[ 92%] Linking CXX executable bin/unicalib_cam_cam
+[ 92%] Linking CXX executable bin/unicalib_camera_intrinsic
+[ 94%] Linking CXX executable bin/unicalib_joint
+[ 97%] Linking CXX executable bin/unicalib_lidar_lidar
+[ 97%] Linking CXX executable bin/unicalib_lidar_camera
+/usr/bin/ld: warning: libopencv_core.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_core.so.408
+/usr/bin/ld: warning: libopencv_core.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_core.so.408
+/usr/bin/ld: warning: libopencv_imgcodecs.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_imgcodecs.so.408
+/usr/bin/ld: warning: libopencv_core.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_core.so.408
+/usr/bin/ld: warning: libopencv_imgcodecs.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_imgcodecs.so.408
+/usr/bin/ld: warning: libopencv_core.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_core.so.408
+/usr/bin/ld: warning: libopencv_core.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_core.so.408
+[ 97%] Built target unicalib_imu_lidar
+[ 97%] Built target unicalib_joint
+[ 98%] Built target unicalib_cam_cam
+[ 98%] Built target unicalib_lidar_camera
+[ 98%] Built target unicalib_imu_intrinsic
+[ 98%] Built target unicalib_lidar_lidar
+[100%] Built target unicalib_camera_intrinsic

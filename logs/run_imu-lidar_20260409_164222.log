@@ -1,0 +1,79 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — IMU-LiDAR 外参标定                       ║
+ ║   两阶段: L2Calib RL粗估 → B样条连续时间精化           ║
+ ║   手动校准: --manual 触发旋转可视化验证                 ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-09 16:42:22.500] [info] [IMU-LiDAR] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] 配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml | IMU: imu_0 | LiDAR: lidar_0
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] AI粗标定: false | 手动校准: false (阈值=0.50deg)
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] ▶ Stage 2: B样条连续时间精标定
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:]   IMU数据: (未设置)
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:]   LiDAR目录: (未设置)
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:]   B样条间距: 0.1s | 时间偏移优化: true
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] IMU 内参: 从 results 目录读取 (1 个)，路径示例: ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] [CalibPipeline] 初始化 ID=pipeline_20260409_164222
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] [CalibPipeline] 无目标优先: true
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] [CalibPipeline] 任务掩码: 0x04
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] 
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] ║   Pipeline ID: pipeline_20260409_164222       ║
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-09 16:42:22.501] [info] [IMU-LiDAR] [:] [Pipeline] 已从 results 加载 IMU 内参: imu_0 <- ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+[16:42:22.501] [info] 
+[16:42:22.501] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:42:22.501] [info] ▶ 开始阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[16:42:22.501] [info]   描述: 无目标优化
+[16:42:22.501] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:42:22.501] [info] [CALC] 精标定阶段开始 task=imu_lidar_extrin
+[16:42:22.501] [info] [Fine-Auto] 任务: imu_lidar_extrin | 无目标优先: true
+[16:42:22.501] [info] [Fine-Auto] 方法: B样条连续时间优化 (无目标)
+[16:42:22.501] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[16:42:22.501] [info]   Bag 文件: /root/calib_ws/data/my_dataset
+[16:42:22.501] [info]   实时模式: false
+[16:42:22.501] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/my_dataset
+[16:42:22.501] [info] [Ros2BagDataSource] 未找到 metadata.yaml: /root/calib_ws/data/my_dataset/metadata.yaml
+[16:42:22.501] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:42:22.501] [info] ■ 结束阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[16:42:22.501] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 0 ms
+[16:42:22.501] [info]   消息: ROS2 数据加载失败: 读取 metadata.yaml 失败
+[16:42:22.501] [info] [CALC] 阶段结束 stage=Fine-Auto task=imu_lidar_extrin success=false residual_rms=0.000000 elapsed_ms=0.0 threshold=0.5000
+[16:42:22.501] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:42:22.501] [info] ====== Pipeline Report: pipeline_20260409_164222 ======
+[16:42:22.501] [info]   Total time: 0.0 ms
+[16:42:22.501] [info]   All stages succeeded: NO
+[16:42:22.501] [info]   标定质量: 各阶段 RMS 均在阈值内
+[16:42:22.501] [info]   [Fine-Auto-imu_lidar_extrin] success=false rms=0.0000 time=0.0ms: ROS2 数据加载失败: 读取 metadata.yaml 失败
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ IMU 内参:
+║   imu_0:
+║     陀螺噪声: 6.161e-02 rad/s/√Hz
+║     加速计噪声: 7.484e-02 m/s²/√Hz
+╚══════════════════════════════════════════════════════╝
+
+[16:42:22.501] [info] ================================
+[16:42:22.501] [info] Pipeline report saved: ./results/pipeline_report_20260409_164222.yaml
+[16:42:22.501] [info] ====== Pipeline Report: pipeline_20260409_164222 ======
+[16:42:22.501] [info]   Total time: 0.0 ms
+[16:42:22.501] [info]   All stages succeeded: NO
+[16:42:22.501] [info]   标定质量: 各阶段 RMS 均在阈值内
+[16:42:22.501] [info]   [Fine-Auto-imu_lidar_extrin] success=false rms=0.0000 time=0.0ms: ROS2 数据加载失败: 读取 metadata.yaml 失败
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ IMU 内参:
+║   imu_0:
+║     陀螺噪声: 6.161e-02 rad/s/√Hz
+║     加速计噪声: 7.484e-02 m/s²/√Hz
+╚══════════════════════════════════════════════════════╝
+
+[16:42:22.501] [info] ================================
+[16:42:22.501] [info] IMU-LiDAR 标定完成 | 结果: ./results

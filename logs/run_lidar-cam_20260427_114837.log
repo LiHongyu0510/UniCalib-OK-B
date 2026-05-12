@@ -1,0 +1,188 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-27 11:48:37.969] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-27 11:48:37.970] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-27 11:48:37.970] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-27 11:48:37.970] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-27 11:48:37.970] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-27 11:48:37.970] [info] [LiDAR-Camera] [:] AI粗标定: true | 手动校准: true
+[2026-04-27 11:48:37.970] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-27 11:48:37.971] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-27 11:48:37.972] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 1, Camera: 4
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [数据路径] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]   数据路径来源: 统一格式 (data.lidar.<id> / data.camera.<id>.images_dir)
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]   配置原始值 — lidar:  nya_02_slam_imu_to_lidar/lidar_horz.yaml
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]   配置原始值 — camera: lidar_camera_calibration-master/calibration_data/camera_calibration
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]   base_data_dir:  /root/calib_ws/data
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]   base 来源: 命令行 --data-dir
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]   lidar_dir:      /root/calib_ws/data/nya_02_slam_imu_to_lidar/lidar_horz.yaml
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]   camera_dir:     /root/calib_ws/data/lidar_camera_calibration-master/calibration_data/camera_calibration
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]   【数据就绪】是 — 点云与图像目录均存在，将执行精标定
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:]   说明: 使用 --dataset 时请将 data.lidar/data.camera 设为相对 base 的路径（如 pcd、images），不要使用 /path/to/... 占位符
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:] [LiDAR-Cam] use_config_extrinsic_only=true：跳过 AI 粗标定，将使用配置 initial_extrinsic 直接进入精标定/手动微调
+[2026-04-27 11:48:37.973] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-27 11:48:37.974] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 1, Camera: 4
+[2026-04-27 11:48:37.974] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 1, Camera: 4
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] 配置: 使用 ROS2 bag 模式（离线标定）
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]   Bag 路径: /root/calib_ws/data/park
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]   LiDAR 话题: /os_cloud_node/points
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]   相机话题: /alphasense_driver_ros/cam0/compressed
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]   IMU 话题: /os_cloud_node/imu
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] [数据源] 类型=ROS2_BAG  path=/root/calib_ws/data/park  lidar_topic=/os_cloud_node/points  camera_topic=/alphasense_driver_ros/cam0/compressed
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]   内参将从相机标定结果读取: ./results/camera_intrinsic/camera_intrinsic_cam_left.yaml (camera_id=cam_left)
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]   内参将从相机标定结果读取: ./results/camera_intrinsic/camera_intrinsic_cam_right.yaml (camera_id=cam_right)
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] [CalibPipeline] 初始化 ID=pipeline_20260427_114837
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] [CalibPipeline] 无目标优先: true
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] [CalibPipeline] 任务掩码: 0x10
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] ▶ Stage 2: 精标定 (方法=edge)
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] ▶ Stage 3: 手动校准 (manual_threshold=2.00px)
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]   使用 ManualCalibSession 进行 6-DOF 交互式调整
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]   调用示例:
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]     ManualCalibSession::SessionConfig sess_cfg;
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]     sess_cfg.save_dir = "./results/manual_sessions";
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]     ManualCalibSession session(sess_cfg);
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:]     auto result = session.run_lidar_cam(scan, image, intrin, auto_result, auto_rms);
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] 
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] ║   Pipeline ID: pipeline_20260427_114837       ║
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-27 11:48:37.975] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=true → do_coarse=true
+[11:48:37.975] [info] 
+[11:48:37.975] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:37.975] [info] ▶ 开始阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[11:48:37.975] [info]   描述: AI模型提供初始估计值
+[11:48:37.975] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:37.975] [info] [CALC] 粗标定阶段开始 task=lidar_cam_extrin
+[11:48:37.975] [info] [Coarse-AI/LiDAR-Cam] 使用配置粗标定初值作为粗标定结果 t=[0.123,0.040,-0.058]m，精标定将以此起步
+[11:48:37.975] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:37.975] [info] ■ 结束阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[11:48:37.975] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 0 ms
+[11:48:37.975] [info]   消息: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[11:48:37.975] [info] [CALC] 阶段结束 stage=Coarse-AI task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=0.0 threshold=-1.0000
+[11:48:37.975] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:37.975] [info] 
+[11:48:37.975] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:37.975] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[11:48:37.975] [info]   描述: 无目标优化
+[11:48:37.975] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:37.975] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[11:48:37.975] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[11:48:37.975] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[11:48:37.975] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[11:48:37.975] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[11:48:37.975] [info]   [精标定数据源] 类型=ROS2_BAG  lidar_id=lidar_0
+[11:48:37.975] [info]   ROS2 Bag: /root/calib_ws/data/park  LiDAR 话题: /os_cloud_node/points  相机话题: /alphasense_driver_ros/cam0/compressed
+[11:48:37.975] [info] [Fine-Auto/LiDAR-Cam] 从 ROS2 加载数据...
+[11:48:37.975] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[11:48:37.975] [info]   Bag 文件: /root/calib_ws/data/park
+[11:48:37.975] [info]   实时模式: false
+[11:48:37.975] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/park
+[11:48:37.975] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/park/metadata.yaml
+[11:48:37.976] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam3/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4733)
+[11:48:37.976] [debug] [Ros2BagDataSource] 找到话题: /os_node/lidar_packets (类型: ouster_ros/msg/PacketMsg, 消息数: 100958)
+[11:48:37.976] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam4/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4733)
+[11:48:37.976] [debug] [Ros2BagDataSource] 找到话题: /os_node/imu_packets (类型: ouster_ros/msg/PacketMsg, 消息数: 15772)
+[11:48:37.976] [debug] [Ros2BagDataSource] 找到话题: /os_cloud_node/imu (类型: sensor_msgs/msg/Imu, 消息数: 15772)
+[11:48:37.976] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/imu (类型: sensor_msgs/msg/Imu, 消息数: 31515)
+[11:48:37.976] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam0/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4732)
+[11:48:37.976] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam1/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4732)
+[11:48:37.976] [debug] [Ros2BagDataSource] 找到话题: /os_cloud_node/points (类型: sensor_msgs/msg/PointCloud2, 消息数: 1577)
+[11:48:37.976] [info] [Ros2BagDataSource] 使用配置的 LiDAR 话题: /os_cloud_node/points
+[11:48:37.976] [info] [Ros2BagDataSource] 使用配置的相机话题: /alphasense_driver_ros/cam0/compressed
+[11:48:37.976] [info] [Ros2BagDataSource] 使用配置的 IMU 话题: /os_cloud_node/imu
+[INFO] [1777261717.980587771] [rosbag2_storage]: Opened database '/root/calib_ws/data/park/park.db3' for READ_ONLY.
+[11:48:37.980] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[11:48:37.980] [info] [Ros2BagDataSource] 找到 9 个话题
+[11:48:37.980] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam3/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4733
+[11:48:37.980] [info] [Ros2BagDataSource]  话题: /os_node/lidar_packets  类型: ouster_ros/msg/PacketMsg  消息数: 100958
+[11:48:37.980] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam4/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4733
+[11:48:37.980] [info] [Ros2BagDataSource]  话题: /os_node/imu_packets  类型: ouster_ros/msg/PacketMsg  消息数: 15772
+[11:48:37.980] [info] [Ros2BagDataSource]  话题: /os_cloud_node/imu  类型: sensor_msgs/msg/Imu  消息数: 15772
+[11:48:37.980] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/imu  类型: sensor_msgs/msg/Imu  消息数: 31515
+[11:48:37.980] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam0/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4732
+[11:48:37.980] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam1/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4732
+[11:48:37.980] [info] [Ros2BagDataSource]  话题: /os_cloud_node/points  类型: sensor_msgs/msg/PointCloud2  消息数: 1577
+[11:48:37.980] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[11:48:40.594] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 5000
+[11:48:43.175] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 500
+[11:48:43.175] [debug]   收集 IMU [/os_cloud_node/imu] 帧数: 5000
+[11:48:43.176] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 10000
+[11:48:46.093] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 15000
+[11:48:48.787] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 1000
+[11:48:48.788] [debug]   收集 IMU [/os_cloud_node/imu] 帧数: 10000
+[11:48:48.799] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 20000
+[11:48:51.394] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 25000
+[11:48:53.974] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 1500
+[11:48:53.974] [debug]   收集 IMU [/os_cloud_node/imu] 帧数: 15000
+[11:48:53.985] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 30000
+[11:48:54.756] [error] [Ros2BagDataSource] 以配置文件为准：以下配置话题在 bag 中无数据，请使配置与 bag 一致（或设置 ros2.strict_topic_match: false 允许自动回退）。 相机[cam_0: /alphasense_driver_ros/cam0/compressed]
+[11:48:54.903] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:54.903] [info] ■ 结束阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[11:48:54.903] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 16927 ms
+[11:48:54.903] [info]   消息: ROS2 数据加载失败: [Ros2BagDataSource] 以配置文件为准：以下配置话题在 bag 中无数据，请使配置与 bag 一致（或设置 ros2.strict_topic_match: false 允许自动回退）。 相机[cam_0: /alphasense_driver_ros/cam0/compressed]
+[11:48:54.903] [info] [CALC] 阶段结束 stage=Fine-Auto task=lidar_cam_extrin success=false residual_rms=0.000000 elapsed_ms=16781.1 threshold=2.0000
+[11:48:54.903] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:54.904] [info] [Pipeline] 用户已启用手动校准 (--manual), 进入 6-DOF 调整
+[11:48:54.904] [info] 
+[11:48:54.904] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:54.904] [info] ▶ 开始阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[11:48:54.904] [info]   描述: 手动校准: 6-DOF 交互式调整
+[11:48:54.904] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:54.904] [info] [Manual-Refine] 任务: lidar_cam_extrin
+[11:48:54.904] [info] [Manual-Refine] 操作说明: Q/A Roll  W/S Pitch  E/D Yaw  R/F Tx  T/G Ty  Y/H Tz  U Undo  Enter 接受  Esc 取消
+[11:48:54.904] [info] [ManualSession] 会话ID: session_2026-04-27_11-48-54
+[11:48:54.904] [info] [ManualSession] 保存目录: ./results/manual_sessions
+[11:48:54.904] [warning] [Manual-Refine] 无 LiDAR-Camera 精标定缓存数据，无法启用手动调整（请先完成精标定）
+[11:48:54.904] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:54.904] [info] ■ 结束阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[11:48:54.904] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 0 ms
+[11:48:54.904] [info]   消息: 无 LiDAR-Camera 精标定缓存数据，无法启用手动调整（请先完成精标定）
+[11:48:54.904] [info] [CALC] 阶段结束 stage=Manual-Refine task=lidar_cam_extrin success=false residual_rms=0.000000 elapsed_ms=0.2 threshold=-1.0000
+[11:48:54.904] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:54.904] [info] ====== Pipeline Report: pipeline_20260427_114837 ======
+[11:48:54.904] [info]   Total time: 16781.4 ms
+[11:48:54.904] [info]   All stages succeeded: NO
+[11:48:54.904] [info]   标定质量: 各阶段 RMS 均在阈值内
+[11:48:54.904] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[11:48:54.904] [info]   [Fine-Auto-lidar_cam_extrin] success=false rms=0.0000 time=16781.1ms: ROS2 数据加载失败: [Ros2BagDataSource] 以配置文件为准：以下配置话题在 bag 中无数据，请使配置与 bag 一致（或设置 ros2.strict_topic_match: false 允许自动回退）。 相机[cam_0: /alphasense_driver_ros/cam0/compressed]
+[11:48:54.904] [info]   [Manual-Refine-lidar_cam_extrin] success=false rms=0.0000 time=0.2ms: 无 LiDAR-Camera 精标定缓存数据，无法启用手动调整（请先完成精标定）
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+╚══════════════════════════════════════════════════════╝
+
+[11:48:54.904] [info] ================================
+[11:48:54.905] [info] Pipeline report saved: ./results/pipeline_report_20260427_114837.yaml
+[11:48:54.905] [info] ====== Pipeline Report: pipeline_20260427_114837 ======
+[11:48:54.905] [info]   Total time: 16781.4 ms
+[11:48:54.905] [info]   All stages succeeded: NO
+[11:48:54.905] [info]   标定质量: 各阶段 RMS 均在阈值内
+[11:48:54.905] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[11:48:54.905] [info]   [Fine-Auto-lidar_cam_extrin] success=false rms=0.0000 time=16781.1ms: ROS2 数据加载失败: [Ros2BagDataSource] 以配置文件为准：以下配置话题在 bag 中无数据，请使配置与 bag 一致（或设置 ros2.strict_topic_match: false 允许自动回退）。 相机[cam_0: /alphasense_driver_ros/cam0/compressed]
+[11:48:54.905] [info]   [Manual-Refine-lidar_cam_extrin] success=false rms=0.0000 time=0.2ms: 无 LiDAR-Camera 精标定缓存数据，无法启用手动调整（请先完成精标定）
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+╚══════════════════════════════════════════════════════╝
+
+[11:48:54.905] [info] ================================
+[11:48:54.905] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:48:54.905] [info] LiDAR-Camera 标定流程完成
+[11:48:54.905] [info] 结果目录: ./results
+[11:48:54.905] [info] 标定流程正常退出 exit_code=0
+[11:48:54.905] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

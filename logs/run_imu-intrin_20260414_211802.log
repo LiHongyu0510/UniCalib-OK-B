@@ -1,0 +1,9 @@
+
+ ╔══════════════════════════════════════════════╗
+ ║    UniCalib — IMU 内参标定 (Allan + 六面法)  ║
+ ╚══════════════════════════════════════════════╝
+
+[2026-04-14 21:18:03.053] [info] [UniCalib-IMU-Intrinsic] [:] 日志文件: ./results/logs/imu_intrinsic_20260414_211803.log
+[2026-04-14 21:18:03.053] [info] [UniCalib-IMU-Intrinsic] [:] Loading IMU data from: imu.csv
+[2026-04-14 21:18:03.053] [error] [UniCalib-IMU-Intrinsic] [:] Cannot open IMU data file: imu.csv
+[2026-04-14 21:18:03.053] [error] [UniCalib-IMU-Intrinsic] [:] Insufficient IMU data: 0 frames (need ≥ 1000)

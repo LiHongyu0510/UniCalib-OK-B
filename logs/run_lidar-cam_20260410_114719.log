@@ -1,0 +1,766 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-10 11:47:19.971] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-10 11:47:19.971] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-10 11:47:19.971] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-10 11:47:19.971] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-10 11:47:19.971] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-10 11:47:19.971] [info] [LiDAR-Camera] [:] AI粗标定: true | 手动校准: true
+[2026-04-10 11:47:19.971] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-10 11:47:19.973] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-10 11:47:19.974] [info] [LiDAR-Camera] [:]   IMU: 0, LiDAR: 1, Camera: 3
+[2026-04-10 11:47:19.974] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [数据路径] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-10 11:47:19.974] [info] [LiDAR-Camera] [:]   数据路径来源: 统一格式 (data.lidar.<id> / data.camera.<id>.images_dir)
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:]   配置原始值 — lidar:  drive_dusk/lidar
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:]   配置原始值 — camera: drive_dusk/front
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:]   base_data_dir:  /root/calib_ws/data
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:]   base 来源: 命令行 --data-dir
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:]   lidar_dir:      /root/calib_ws/data/drive_dusk/lidar
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:]   camera_dir:     /root/calib_ws/data/drive_dusk/front
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:]   【数据就绪】是 — 点云与图像目录均存在，将执行精标定
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:]   说明: 使用 --dataset 时请将 data.lidar/data.camera 设为相对 base 的路径（如 pcd、images），不要使用 /path/to/... 占位符
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-10 11:47:19.975] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-10 11:47:19.976] [info] [LiDAR-Camera] [:]   IMU: 0, LiDAR: 1, Camera: 3
+[2026-04-10 11:47:19.976] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-10 11:47:19.977] [info] [LiDAR-Camera] [:]   IMU: 0, LiDAR: 1, Camera: 3
+[2026-04-10 11:47:19.977] [info] [LiDAR-Camera] [:] [数据源] 类型=FILES  lidar_dir=/root/calib_ws/data/drive_dusk/lidar  camera_dir=/root/calib_ws/data/drive_dusk/front
+[2026-04-10 11:47:19.977] [info] [LiDAR-Camera] [:] [CalibPipeline] 初始化 ID=pipeline_20260410_114719
+[2026-04-10 11:47:19.977] [info] [LiDAR-Camera] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-10 11:47:19.977] [info] [LiDAR-Camera] [:] [CalibPipeline] 无目标优先: true
+[2026-04-10 11:47:19.977] [info] [LiDAR-Camera] [:] [CalibPipeline] 任务掩码: 0x10
+[2026-04-10 11:47:19.977] [info] [LiDAR-Camera] [:] ▶ Stage 1: AI 粗标定 (MIAS-LCEC)
+[2026-04-10 11:47:19.977] [info] [LiDAR-Camera] [:]   模型路径: /root/calib_ws/MIAS-LCEC (粗标定使用 pretrained_overlap_transformer.pth.tar)
+[2026-04-10 11:47:20.836] [info] [LiDAR-Camera] [:] [AI-Calib] DM-Calib 配置的 Python 无 torch，改用已装 torch 的 Python: python3
+[2026-04-10 11:47:20.836] [info] [LiDAR-Camera] [:] [AI-Calib] ===== AI 模型可用性检查 =====
+[2026-04-10 11:47:20.836] [info] [LiDAR-Camera] [:] [DM-Calib] 可用性检查 失败 原因=推理脚本不存在 路径=/root/calib_ws/DM-Calib/DMCalib/tools/infer_unicalib.py
+[2026-04-10 11:47:20.836] [info] [LiDAR-Camera] [:]   DM-Calib (相机内参):      ✗ 不可用
+[2026-04-10 11:47:20.836] [info] [LiDAR-Camera] [:]   MIAS-LCEC (LiDAR-Cam):   ✓ 可用
+[2026-04-10 11:47:20.836] [info] [LiDAR-Camera] [:] [TransformerIMU] 不可用: 脚本不存在 script=/root/calib_ws/Transformer-IMU-Calibrator/eval_unicalib.py
+[2026-04-10 11:47:20.836] [info] [LiDAR-Camera] [:]   Transformer-IMU (IMU内参): ✗ 不可用
+[2026-04-10 11:47:20.836] [info] [LiDAR-Camera] [:]   L2Calib (IMU-LiDAR):     ✗ 不可用
+[2026-04-10 11:47:20.836] [info] [LiDAR-Camera] [:] [AI-Calib] ================================
+[2026-04-10 11:47:20.836] [info] [LiDAR-Camera] [:]   [Stage 1] MIAS-LCEC 可用: 是 (粗标定支持: 1) 指定 coarse_pcd_file/coarse_image_file 2) 从当前数据源取首帧，同相机内参)
+[2026-04-10 11:47:20.853] [info] [LiDAR-Camera] [:]   [Stage 1] 粗标定输入来源: 文件目录首帧  PCD=/root/calib_ws/data/drive_dusk/lidar/00000000.pcd  图像=/root/calib_ws/data/drive_dusk/front/00000000.png
+[2026-04-10 11:47:20.854] [warning] [LiDAR-Camera] [:]   [Stage 1] 粗标定前内参仍为 0，Python 端可能无法正确投影；请配置 camera_intrinsic_file 或确保从 ROS2 首帧已推断
+[2026-04-10 11:47:20.854] [info] [LiDAR-Camera] [:]   [Stage 1] 标定对: lidar_id=imu_0  camera_id=cam_front
+[2026-04-10 11:47:20.854] [info] [LiDAR-Camera] [:]   [Stage 1] 调用粗标定: pcd=/root/calib_ws/data/drive_dusk/lidar/00000000.pcd  image=/root/calib_ws/data/drive_dusk/front/00000000.png 内参: fx=0.0 尺寸=0x0
+[2026-04-10 11:47:20.854] [info] [LiDAR-Camera] [:] [AI-Calib] LiDAR-Cam 粗估 (MIAS-LCEC) lidar_0→cam_0
+[2026-04-10 11:47:20.854] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 仓库: /root/calib_ws/calib_unified 脚本: scripts/run_lidar_cam_coarse.py 实际传入模型路径: /root/calib_ws/MIAS-LCEC/model/mobile_sam.pt
+[2026-04-10 11:47:20.854] [warning] [LiDAR-Camera] [:] [MIAS-LCEC] sensor_config 内参无效 (width=0 height=0 fx=0 fy=0)，Python 端将无法正确投影；请配置 camera_intrinsic_file 或从首帧推断
+[2026-04-10 11:47:20.854] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程 Python: python3 (已绕过 wrapper)
+[2026-04-10 11:47:20.854] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 粗标定尝试 1/2  (首次), 超时=180s
+[2026-04-10 11:47:20.854] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 执行命令 (python3+PYTHONPATH): python3 /root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py --pcd /root/calib_ws/data/drive_dusk/lidar/00000000.pcd --image /root/calib_ws/data/drive_dusk/front/00000000.png --sensor_config /tmp/mias_work/sensor_config.yaml --output_dir /tmp/mias_work/output --quality-ncc-good 0.300000 --quality-ncc-acceptable 0.200000 --quality-rms-good-px 2.000000 --quality-rms-acceptable-px 5.000000 --quality-inlier-ratio-good 0.600000 --quality-inlier-ratio-acceptable 0.400000 --model_path /root/calib_ws/MIAS-LCEC/model/mobile_sam.pt --mias_repo /root/calib_ws/calib_unified --no-require-model
+[2026-04-10 11:47:20.962] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:20.962] [INFO] 环境: numpy=2.2.6
+[2026-04-10 11:47:20.962] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:20.962] [INFO] ======== 粗标定开始 ========
+[2026-04-10 11:47:20.962] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:20.962] [INFO] 输入: pcd=/root/calib_ws/data/drive_dusk/lidar/00000000.pcd  image=/root/calib_ws/data/drive_dusk/front/00000000.png  sensor_config=/tmp/mias_work/sensor_config.yaml  output_dir=/tmp/mias_work/output
+[2026-04-10 11:47:20.962] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:20.962] [INFO] [步骤 1/4] 读取 sensor_config...
+[2026-04-10 11:47:20.972] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:20.971] [INFO] 读取 sensor_config: /tmp/mias_work/sensor_config.yaml
+[2026-04-10 11:47:20.972] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:20.972] [INFO] 相机内参: fx=0.00 fy=0.00 cx=0.00 cy=0.00 width=0 height=0
+[2026-04-10 11:47:20.973] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:20.972] [WARNING] sensor_config 内参为 0 或尺寸无效，将导致投影失败；请确保 C++ 端配置 camera_intrinsic_file 或从首帧推断内参
+[2026-04-10 11:47:20.973] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:20.973] [INFO] [步骤 2/4] 读取 PCD...
+[2026-04-10 11:47:21.777] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:21.777] [WARNING] Open3D/NumPy 二进制不兼容，回退 ASCII 读 PCD: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject
+[2026-04-10 11:47:21.791] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:21.790] [ERROR] ASCII 读 PCD 失败: could not convert string to float: '\x00\x00\x00'
+[2026-04-10 11:47:21.791] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:21.791] [ERROR] PCD 可能为二进制格式；C++ 端应使用 savePCDFile(path, cloud, false) 写 ASCII，便于 Python 无 Open3D 时解析
+[2026-04-10 11:47:21.791] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:21.791] [ERROR] 读取 PCD 失败: could not convert string to float: '\x00\x00\x00'
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-10 11:47:21.795] [ERROR] traceback: Traceback (most recent call last):
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 120, in load_pcd_points
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     import open3d as o3d
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/open3d/__init__.py", line 163, in <module>
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     import open3d.ml
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/open3d/ml/__init__.py", line 16, in <module>
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from . import datasets
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/open3d/ml/datasets.py", line 15, in <module>
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from open3d._ml3d.datasets import *
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/open3d/_ml3d/datasets/__init__.py", line 3, in <module>
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from .semantickitti import SemanticKITTI
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/open3d/_ml3d/datasets/semantickitti.py", line 6, in <module>
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from sklearn.neighbors import KDTree
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/lib/python3/dist-packages/sklearn/__init__.py", line 80, in <module>
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from .base import clone
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/lib/python3/dist-packages/sklearn/base.py", line 21, in <module>
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from .utils import _IS_32BIT
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/lib/python3/dist-packages/sklearn/utils/__init__.py", line 22, in <module>
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from .murmurhash import murmurhash3_32
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "sklearn/utils/murmurhash.pyx", line 1, in init sklearn.utils.murmurhash
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: ValueError: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: During handling of the above exception, another exception occurred:
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: Traceback (most recent call last):
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 506, in main
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     pts = load_pcd_points(args.pcd)
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 134, in load_pcd_points
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     pts = _read_pcd_ascii(pcd_path)
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 207, in _read_pcd_ascii
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     rows.append([float(parts[0]), float(parts[1]), float(parts[2])])
+[2026-04-10 11:47:21.796] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: ValueError: could not convert string to float: '\x00\x00\x00'
+[2026-04-10 11:47:22.857] [info] [LiDAR-Camera] [:] [AI-Exec] 子进程完整输出已保存到: /tmp/mias_work/subprocess_1775792840.log
+[2026-04-10 11:47:22.857] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程结束  exit_code=1  elapsed_ms=2001  output_exists=no
+[2026-04-10 11:47:22.858] [error] [LiDAR-Camera] [:] [MIAS-LCEC] MIAS-LCEC 失败 (exit=1)
+[2026-04-10 11:47:22.858] [warning] [LiDAR-Camera] [:] [MIAS-LCEC] 可能原因: 1) sensor_config 内参为 0 → 配置 camera_intrinsic_file 或确保 C++ 从首帧推断 2) PCD/图像读取失败 3) Python 环境 NumPy/OpenCV 版本不兼容(见下方) 4) 见下方子进程完整输出
+[2026-04-10 11:47:22.858] [error] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程 stdout/stderr (完整):
+[2026-04-10 11:47:20.962] [INFO] 环境: numpy=2.2.6
+[2026-04-10 11:47:20.962] [INFO] ======== 粗标定开始 ========
+[2026-04-10 11:47:20.962] [INFO] 输入: pcd=/root/calib_ws/data/drive_dusk/lidar/00000000.pcd  image=/root/calib_ws/data/drive_dusk/front/00000000.png  sensor_config=/tmp/mias_work/sensor_config.yaml  output_dir=/tmp/mias_work/output
+[2026-04-10 11:47:20.962] [INFO] [步骤 1/4] 读取 sensor_config...
+[2026-04-10 11:47:20.971] [INFO] 读取 sensor_config: /tmp/mias_work/sensor_config.yaml
+[2026-04-10 11:47:20.972] [INFO] 相机内参: fx=0.00 fy=0.00 cx=0.00 cy=0.00 width=0 height=0
+[2026-04-10 11:47:20.972] [WARNING] sensor_config 内参为 0 或尺寸无效，将导致投影失败；请确保 C++ 端配置 camera_intrinsic_file 或从首帧推断内参
+[2026-04-10 11:47:20.973] [INFO] [步骤 2/4] 读取 PCD...
+[2026-04-10 11:47:21.777] [WARNING] Open3D/NumPy 二进制不兼容，回退 ASCII 读 PCD: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject
+[2026-04-10 11:47:21.790] [ERROR] ASCII 读 PCD 失败: could not convert string to float: '\x00\x00\x00'
+[2026-04-10 11:47:21.791] [ERROR] PCD 可能为二进制格式；C++ 端应使用 savePCDFile(path, cloud, false) 写 ASCII，便于 Python 无 Open3D 时解析
+[2026-04-10 11:47:21.791] [ERROR] 读取 PCD 失败: could not convert string to float: '\x00\x00\x00'
+[2026-04-10 11:47:21.795] [ERROR] traceback: Traceback (most recent call last):
+  File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 120, in load_pcd_points
+    import open3d as o3d
+  File "/usr/local/lib/python3.10/dist-packages/open3d/__init__.py", line 163, in <module>
+    import open3d.ml
+  File "/usr/local/lib/python3.10/dist-packages/open3d/ml/__init__.py", line 16, in <module>
+    from . import datasets
+  File "/usr/local/lib/python3.10/dist-packages/open3d/ml/datasets.py", line 15, in <module>
+    from open3d._ml3d.datasets import *
+  File "/usr/local/lib/python3.10/dist-packages/open3d/_ml3d/datasets/__init__.py", line 3, in <module>
+    from .semantickitti import SemanticKITTI
+  File "/usr/local/lib/python3.10/dist-packages/open3d/_ml3d/datasets/semantickitti.py", line 6, in <module>
+    from sklearn.neighbors import KDTree
+  File "/usr/lib/python3/dist-packages/sklearn/__init__.py", line 80, in <module>
+    from .base import clone
+  File "/usr/lib/python3/dist-packages/sklearn/base.py", line 21, in <module>
+    from .utils import _IS_32BIT
+  File "/usr/lib/python3/dist-packages/sklearn/utils/__init__.py", line 22, in <module>
+    from .murmurhash import murmurhash3_32
+  File "sklearn/utils/murmurhash.pyx", line 1, in init sklearn.utils.murmurhash
+ValueError: numpy.dtype size changed, may indicate binary incompatibility. Expected 96 from C header, got 88 from PyObject
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 506, in main
+    pts = load_pcd_points(args.pcd)
+  File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 134, in load_pcd_points
+    pts = _read_pcd_ascii(pcd_path)
+  File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 207, in _read_pcd_ascii
+    rows.append([float(parts[0]), float(parts[1]), float(parts[2])])
+ValueError: could not convert string to float: '\x00\x00\x00'
+
+
+[2026-04-10 11:47:22.858] [warning] [LiDAR-Camera] [:] [AI-Calib] MIAS-LCEC 置信度不足
+[2026-04-10 11:47:22.858] [warning] [LiDAR-Camera] [:]   ✗ AI粗标定失败, 使用 identity 初始化
+[2026-04-10 11:47:22.858] [info] [LiDAR-Camera] [:]   [Stage 1] 结果: 失败 (MIAS-LCEC 返回空，见上方错误)
+[2026-04-10 11:47:22.858] [warning] [LiDAR-Camera] [:] 【粗标定未执行】精标定将使用 identity 初值。原因: (1) MIAS-LCEC 可用=是 (2) 粗标定输入已就绪=是
+[2026-04-10 11:47:22.858] [info] [LiDAR-Camera] [:]   [Stage 1] 结果: 跳过 (详见上方原因)
+[2026-04-10 11:47:22.858] [info] [LiDAR-Camera] [:] ▶ Stage 2: 精标定 (方法=edge)
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:] ▶ Stage 3: 手动校准 (manual_threshold=2.00px)
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:]   使用 ManualCalibSession 进行 6-DOF 交互式调整
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:]   调用示例:
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:]     ManualCalibSession::SessionConfig sess_cfg;
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:]     sess_cfg.save_dir = "./results/manual_sessions";
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:]     ManualCalibSession session(sess_cfg);
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:]     auto result = session.run_lidar_cam(scan, image, intrin, auto_result, auto_rms);
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:] 
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:] ║   Pipeline ID: pipeline_20260410_114719       ║
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-10 11:47:22.859] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=true → do_coarse=true
+[11:47:22.859] [info] 
+[11:47:22.859] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:22.859] [info] ▶ 开始阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[11:47:22.859] [info]   描述: AI模型提供初始估计值
+[11:47:22.859] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:22.859] [info] [CALC] 粗标定阶段开始 task=lidar_cam_extrin
+[11:47:22.859] [info] [Coarse-AI/LiDAR-Cam] 使用配置粗标定初值作为粗标定结果 t=[0.123,0.040,-0.058]m，精标定将以此起步
+[11:47:22.859] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:22.859] [info] ■ 结束阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[11:47:22.859] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 0 ms
+[11:47:22.859] [info]   消息: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[11:47:22.859] [info] [CALC] 阶段结束 stage=Coarse-AI task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=0.0 threshold=-1.0000
+[11:47:22.859] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:22.859] [info] 
+[11:47:22.860] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:22.860] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[11:47:22.860] [info]   描述: 无目标优化
+[11:47:22.860] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:22.860] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[11:47:22.860] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[11:47:22.860] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[11:47:22.860] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[11:47:22.860] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[11:47:22.860] [info]   [精标定数据源] 类型=FILES  lidar_id=imu_0
+[11:47:22.860] [info]   文件目录: lidar=/root/calib_ws/data/drive_dusk/lidar  camera=/root/calib_ws/data/drive_dusk/front
+[11:47:22.860] [info] [Fine-Auto/LiDAR-Cam] 步骤: 从文件加载点云
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+[11:47:23.205] [info] [Fine-Auto/LiDAR-Cam] 点云加载完成 — 100 帧
+[11:47:24.158] [info] [Fine-Auto] 推断内参: 1280x720 fx=1152.0 fy=1152.0
+[11:47:24.158] [info] [Fine-Auto/LiDAR-Cam] 步骤: LiDAR-Camera 标定 相机=cam_front (方法: 边缘对齐)
+[11:47:24.160] [info] [CalibVisualizer] 初始化完成
+[11:47:24.160] [info] [Fine-Auto/LiDAR-Cam] 可视化已启用：仅标定结束后显示一帧「图像+点云投影」叠加，不创建 3D 窗口、不泵送其他帧
+[11:47:24.160] [info] [Fine-Auto/LiDAR-Cam] 使用粗标定初值 t=[0.123,0.040,-0.058]m
+[11:47:24.160] [info] [Fine-Auto/LiDAR-Cam] 执行标定 相机=cam_front: 点云 100 帧  图像 100 帧
+[11:47:24.160] [info] ╔══════════════════════════════════════════════════════════════════╗
+[11:47:24.160] [info] ║         LiDAR-Camera 两阶段标定 - 详细日志                  ║
+[11:47:24.160] [info] ╚══════════════════════════════════════════════════════════════════╝
+[11:47:24.160] [info] ┌────────────────────────────────────────────────────────────────┐
+[11:47:24.160] [info] │ 输入参数:
+[11:47:24.160] [info] │   - LiDAR ID: imu_0  图像 ID: cam_front
+[11:47:24.161] [info] │   - 点云帧数: 100  图像帧数: 100
+[11:47:24.161] [info] │   - 图像尺寸: 1280x720
+[11:47:24.161] [info] │   - 相机内参: fx=1152.00 fy=1152.00 cx=640.00 cy=360.00
+[11:47:24.161] [info] │   - 优先无目标方法: 是(边缘对齐)
+[11:47:24.161] [info] │   - 粗标定初值: 已提供
+[11:47:24.161] [info] │   - 初始平移: [0.1230, 0.0399, -0.0577] m
+[11:47:24.161] [info] └────────────────────────────────────────────────────────────────┘
+[11:47:24.161] [info] 
+[11:47:24.161] [info] ┌────────────────────────────────────────────────────────────────┐
+[11:47:24.161] [info] │ [Stage 1] 粗标定阶段
+[11:47:24.161] [info] └────────────────────────────────────────────────────────────────┘
+[11:47:24.161] [info] │ [Coarse] 使用提供的初始值:
+[11:47:24.161] [info] │   - 平移向量: [0.1230, 0.0399, -0.0577] m
+[11:47:24.161] [info] │   - 旋转角度: [90.75, -179.88, 91.25] deg (RPY)
+[11:47:24.161] [info] │   - 变换范数: 0.1416
+[11:47:24.161] [info] └────────────────────────────────────────────────────────────────┘
+[11:47:24.161] [info] 
+[11:47:24.161] [info] ┌────────────────────────────────────────────────────────────────┐
+[11:47:24.161] [info] │ [Stage 2] 精标定阶段
+[11:47:24.161] [info] └────────────────────────────────────────────────────────────────┘
+[11:47:24.161] [info] │ [Fine] 执行边缘对齐优化...
+[11:47:24.161] [info] │ 配置: NCC阈值=0.050 帧同步阈值=0.500s 时间偏移搜索范围=±0.500s
+[11:47:24.161] [info] ┌────────────────────────────────────────────────────────────────┐
+[11:47:24.161] [info] │ [精标定] 边缘对齐法 (Edge Alignment)                        │
+[11:47:24.161] [info] ├────────────────────────────────────────────────────────────────┤
+[11:47:24.161] [info] │ 初始值: 粗标定提供 (identity=false)
+[11:47:24.161] [info] │   平移: [0.1230, 0.0399, -0.0577] m
+[11:47:24.161] [info] │   旋转: [90.75, -179.88, 91.25] deg
+[11:47:24.161] [info] │ 数据: 点云帧=100 图像帧=100 采样=30 尺寸=1280x720
+[11:47:24.161] [info] │ 时间: 图像[0.000-4851.000]s LiDAR[0.000-4851.000]s
+[11:47:24.161] [info] │ 配置: 同步阈值=0.500s 边缘Canny(50, 150) NCC阈值=0.050
+[11:47:24.161] [info] │ 特征权重: edge=0.50 corner=0.30 intensity=0.20
+[11:47:24.161] [info] └────────────────────────────────────────────────────────────────┘
+[11:47:24.885] [info] │ [时间偏移搜索] 最佳偏移=+0.0000s 最佳NCC=-1000000000.0000
+[11:47:24.923] [info]   [精标定] 有效帧数=0 (<3)  当前阈值=0.050  候选帧最大NCC=-1000000000.0000
+[11:47:24.923] [info]   [精标定] 最大NCC=-1000000000.0000 未超过放宽阈值 0.000，不进行放宽重试
+[11:47:24.923] [warning]   [精标定] 检测到异常 NCC 值(占位 -1e9)，部分候选帧投影/边缘失败已排除；建议检查 LiDAR/相机 FOV、时间同步与内参
+[11:47:24.923] [info]   初值 NCC=N/A(无有效帧)  有效帧数=0  (候选帧数=30  NCC范围=[-1000000000.0000,-1000000000.0000] 均值=-1000000000.0000)
+[11:47:24.923] [warning]   [精标定] 有效帧不足  有效帧数=0  候选帧数=30  NCC阈值=0.050  最大NCC=-1000000000.0000  → 跳过 Ceres，返回初值
+[11:47:24.923] [warning]   诊断: 投影与图像边缘重叠不足(NCC 均<=阈值)。建议: 1) 查看 [MIAS-LCEC]/[PnP] 粗标定是否给出非 identity 2) 确认 LiDAR/相机 FOV 与时间同步 3) 检查内参 width/height 与图像一致
+[11:47:24.923] [info] │
+[11:47:24.923] [info] │ ★ 标定结果:
+[11:47:24.923] [info] │   - 平移: [0.1230, 0.0399, -0.0577] m
+[11:47:24.923] [info] │   - RMS: 1.0000 px
+[11:47:24.923] [info] │   - 收敛: 否
+[11:47:24.923] [info] └────────────────────────────────────────────────────────────────┘
+[11:47:24.924] [info] [Fine-Auto] 结果已保存: ./results/lidar_cam_cam_front_extrinsic.yaml
+[11:47:24.924] [info] [Viz] 即将生成投影图并保存到 ./results/lidar_cam_cam_front_projection.png
+[11:47:24.925] [info] [Viz] 投影图已保存（当前未将结果点云回显到 3D 窗口，仅保存 PNG）
+[11:47:24.925] [info] [Fine-Auto/LiDAR-Cam] 相机 cam_front 完成, RMS=1.0000 px  收敛=否
+[11:47:24.925] [warning] [Fine-Auto/LiDAR-Cam] 精标定未收敛 (NCC 未达 0.3 或 RMS 偏高)，建议: 1) 确保粗标定提供非 identity 初值 2) 检查 LiDAR/相机 FOV 与时间同步 3) 查看上方 [精标定] 质量结论与 NCC 统计
+[11:47:24.925] [info] [Viz/Display] 即将关闭可视化窗口 原因=用户关闭或流程结束 pangolin_running=false
+[11:47:24.934] [info] [Fine-Auto/LiDAR-Cam] 精标定完成: 1 个相机  最大 RMS=1.0000 px
+[11:47:24.934] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 完成
+[11:47:24.934] [info] [Fine-Auto/LiDAR-Cam] RMS 阈值=2.00 px  最大 RMS=1.0000 px  在阈值内
+[11:47:24.934] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:24.934] [info] ■ 结束阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[11:47:24.934] [info]   结果: ✓ 成功 | 残差RMS: 1.0000 | 耗时: 2074 ms
+[11:47:24.934] [info]   消息: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=1.000000 px
+[11:47:24.934] [info] [CALC] 阶段结束 stage=Fine-Auto task=lidar_cam_extrin success=true residual_rms=1.000000 elapsed_ms=2074.3 threshold=2.0000
+[11:47:24.934] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:24.935] [info] [Pipeline] 用户已启用手动校准 (--manual), 进入 6-DOF 调整
+[11:47:24.935] [info] 
+[11:47:24.935] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:24.935] [info] ▶ 开始阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[11:47:24.935] [info]   描述: 手动校准: 6-DOF 交互式调整
+[11:47:24.935] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:24.935] [info] [Manual-Refine] 任务: lidar_cam_extrin
+[11:47:24.935] [info] [Manual-Refine] 操作说明: Q/A Roll  W/S Pitch  E/D Yaw  R/F Tx  T/G Ty  Y/H Tz  U Undo  Enter 接受  Esc 取消
+[11:47:24.935] [info] [ManualSession] 会话ID: session_2026-04-10_11-47-24
+[11:47:24.935] [info] [ManualSession] 保存目录: ./results/manual_sessions
+[11:47:24.935] [info] [Manual-Refine] 已打开 6-DOF 可视化调整窗口，请在本窗口内按键微调后 Enter 接受或 Esc 取消
+[11:47:24.935] [info] [Manual-Refine] LiDAR-Camera 手动调整仅使用首帧匹配数据（第 0 帧点云 + 第 0 帧图像）
+[11:47:24.935] [info] [ManualSession] 启动 LiDAR-Camera 手动校准
+[11:47:24.935] [info] [ManualSession] 自动标定 RMS: 1.0000 px (阈值建议 < 2.0px)
+[11:47:24.935] [debug] [ManualSession] 事件: lidar_cam_start | auto_rms=1.000000
+[11:47:24.935] [info] [ManualAdjust] 初始外参:
+[11:47:24.935] [info] [ManualAdjust] 当前外参 [imu_0→cam_front]:
+[11:47:24.935] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:47:24.935] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[11:47:24.935] [info] [ManualSession] ===== 手动校准操作说明 =====
+[11:47:24.935] [info]   Q/A: Roll ±0.1deg   W/S: Pitch ±0.1deg   E/D: Yaw ±0.1deg
+[11:47:24.935] [info]   R/F: Tx ±0.5cm   T/G: Ty ±0.5cm   Y/H: Tz ±0.5cm
+[11:47:24.935] [info]   Shift+键: 10倍步长
+[11:47:24.935] [info]   P: 进入点击精化模式  U: 撤销  Z: 重做
+[11:47:24.935] [info]   S: 保存  ESC: 接受并退出
+[11:47:24.935] [info]   点云投影质量越高 (边缘对齐越好) 表示标定越准确
+[11:47:24.952] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260410_114724_initial.yaml
+[11:47:24.952] [info] [ManualCalib] 交互窗口启动前已自动保存初始状态快照（备用）:
+[11:47:24.952] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260410_114724_initial.png
+[11:47:24.952] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260410_114724_initial.pcd
+[11:47:24.952] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260410_114724_initial.yaml
+
+(unicalib_lidar_camera:100): dbind-WARNING **: 11:47:24.962: Couldn't connect to accessibility bus: Failed to connect to socket /run/user/1000/at-spi/bus: No such file or directory
+[11:47:24.989] [info] [ManualCalib] 3D 点云窗口已禁用（避免 VTK 闪退），请在 2D 投影窗口进行微调。按下 'S' 键可手动保存当前微调结果图片和点云。
+[11:47:24.989] [info] [ManualCalib] 初始位姿 T_lidar_to_cam:
+[11:47:24.989] [info]   - Translation: 0.1230, 0.0399, -0.0577
+[11:47:24.989] [info]   - RPY (deg):   90.7545, -179.8846, 91.2509
+[11:47:44.951] [info] [ManualSession] 用户取消，保留自动标定结果
+[11:47:44.951] [debug] [ManualSession] 事件: lidar_cam_end | final_rms=1.000000
+[11:47:44.951] [info] [ManualSession] 会话已保存: ./results/manual_sessions/session_2026-04-10_11-47-24.yaml
+[11:47:44.951] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:44.951] [info] ■ 结束阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[11:47:44.951] [info]   结果: ✓ 成功 | 残差RMS: 1.0000 | 耗时: 20016 ms
+[11:47:44.951] [info]   消息: LiDAR-Camera 手动调整完成
+[11:47:44.951] [info] [CALC] 阶段结束 stage=Manual-Refine task=lidar_cam_extrin success=true residual_rms=1.000000 elapsed_ms=20016.3 threshold=-1.0000
+[11:47:44.951] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:44.951] [info] ====== Pipeline Report: pipeline_20260410_114719 ======
+[11:47:44.951] [info]   Total time: 22090.7 ms
+[11:47:44.951] [info]   All stages succeeded: YES
+[11:47:44.951] [info]   标定质量: 各阶段 RMS 均在阈值内
+[11:47:44.951] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[11:47:44.951] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=1.0000 time=2074.3ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=1.000000 px
+[11:47:44.951] [info]   [Manual-Refine-lidar_cam_extrin] success=true rms=1.0000 time=20016.3ms: LiDAR-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   imu_0->cam_front:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     1.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[11:47:44.951] [info] ================================
+[11:47:44.951] [info] Pipeline report saved: ./results/pipeline_report_20260410_114719.yaml
+[11:47:44.951] [info] ====== Pipeline Report: pipeline_20260410_114719 ======
+[11:47:44.951] [info]   Total time: 22090.7 ms
+[11:47:44.951] [info]   All stages succeeded: YES
+[11:47:44.951] [info]   标定质量: 各阶段 RMS 均在阈值内
+[11:47:44.951] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[11:47:44.951] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=1.0000 time=2074.3ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=1.000000 px
+[11:47:44.951] [info]   [Manual-Refine-lidar_cam_extrin] success=true rms=1.0000 time=20016.3ms: LiDAR-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   imu_0->cam_front:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     1.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[11:47:44.951] [info] ================================
+[11:47:44.951] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:47:44.951] [info] LiDAR-Camera 标定流程完成
+[11:47:44.951] [info] 结果目录: ./results
+[11:47:44.951] [info] 标定流程正常退出 exit_code=0
+[11:47:44.951] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -1,0 +1,1049 @@
+[0.000000] (-) TimerEvent: {}
+[0.000350] (UniCalib) JobQueued: {'identifier': 'UniCalib', 'dependencies': OrderedDict()}
+[0.000377] (ikalibr) JobQueued: {'identifier': 'ikalibr', 'dependencies': OrderedDict()}
+[0.000392] (mpl_calibration_toolbox) JobQueued: {'identifier': 'mpl_calibration_toolbox', 'dependencies': OrderedDict()}
+[0.000407] (unicalib) JobQueued: {'identifier': 'unicalib', 'dependencies': OrderedDict()}
+[0.000420] (unicalib_cpp) JobQueued: {'identifier': 'unicalib_cpp', 'dependencies': OrderedDict()}
+[0.000526] (UniCalib) JobStarted: {'identifier': 'UniCalib'}
+[0.005742] (ikalibr) JobStarted: {'identifier': 'ikalibr'}
+[0.007666] (mpl_calibration_toolbox) JobStarted: {'identifier': 'mpl_calibration_toolbox'}
+[0.009319] (unicalib) JobStarted: {'identifier': 'unicalib'}
+[0.012480] (unicalib_cpp) JobStarted: {'identifier': 'unicalib_cpp'}
+[0.014563] (UniCalib) JobProgress: {'identifier': 'UniCalib', 'progress': 'cmake'}
+[0.016698] (UniCalib) JobProgress: {'identifier': 'UniCalib', 'progress': 'build'}
+[0.016743] (UniCalib) Command: {'cmd': ['/opt/cmake/bin/cmake', '--build', '/root/calib_ws/build/UniCalib', '--', '-j28', '-l28'], 'cwd': '/root/calib_ws/build/UniCalib', 'env': OrderedDict([('LIBRARY_PATH', '/usr/local/cuda/lib64/stubs'), ('NVIDIA_CTK_LIBCUDA_DIR', '/usr/lib/x86_64-linux-gnu'), ('NV_LIBCUBLAS_VERSION', '11.11.3.6-1'), ('NV_NVPROF_DEV_PACKAGE', 'cuda-nvprof-11-8=11.8.87-1'), ('NV_CUDA_COMPAT_PACKAGE', 'cuda-compat-11-8'), ('NV_CUDA_NSIGHT_COMPUTE_VERSION', '11.8.0-1'), ('HOSTNAME', '4c0512a2f0d1'), ('ROS_PACKAGE_PATH', '/root/calib_ws/install/iridescence/share'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/root/calib_ws/install/iridescence/lib:/root/calib_ws/install/faster_lio/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/local/cuda/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64'), ('NV_LIBNCCL_PACKAGE_VERSION', '2.15.5-1'), ('HOME', '/root'), ('OLDPWD', '/root/calib_ws/iKalibr'), ('NV_CUDNN_PACKAGE_NAME', 'libcudnn8'), ('NV_LIBCUBLAS_DEV_VERSION', '11.11.3.6-1'), ('CALIB_DATA_DIR', '/root/calib_ws/data'), ('UNICALIB_DM_CALIB_MODEL', '/root/calib_ws/DM-Calib/model'), ('ROS_PYTHON_VERSION', '3'), ('THIRDPARTY_WS', '/root/thirdparty'), ('NV_LIBNCCL_DEV_PACKAGE_VERSION', '2.15.5-1'), ('NV_LIBNPP_PACKAGE', 'libnpp-11-8=11.8.0.86-1'), ('WORKSPACE', '/root/calib_ws'), ('UNICALIB_DM_CALIB', '/root/calib_ws/DM-Calib'), ('NV_CUDNN_PACKAGE', 'libcudnn8=8.9.6.50-1+cuda11.8'), ('CUDA_VERSION', '11.8.0'), ('COLCON_PREFIX_PATH', '/root/calib_ws/install:/opt/ros/humble'), ('NV_NVPROF_VERSION', '11.8.87-1'), ('ROS_DISTRO', 'humble'), ('CALIB_RESULTS_DIR', '/root/calib_ws/results'), ('NV_LIBCUBLAS_PACKAGE_NAME', 'libcublas-11-8'), ('NVIDIA_REQUIRE_CUDA', 'cuda>=11.8 brand=tesla,driver>=470,driver<471 brand=unknown,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=geforce,driver>=470,driver<471 brand=geforcertx,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=titan,driver>=470,driver<471 brand=titanrtx,driver>=470,driver<471'), ('ctraj_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ctraj-install/lib/cmake/ctraj'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('PKG_CONFIG_PATH', '/root/calib_ws/install/iridescence/lib/x86_64-linux-gnu/pkgconfig:/root/calib_ws/install/iridescence/lib/pkgconfig'), ('NV_LIBCUSPARSE_VERSION', '11.7.5.86-1'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('ufomap_INCLUDE_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/include'), ('NV_CUDA_LIB_VERSION', '11.8.0-1'), ('NV_LIBNCCL_PACKAGE_NAME', 'libnccl2'), ('NV_NVML_DEV_VERSION', '11.8.86-1'), ('NV_LIBNPP_DEV_PACKAGE', 'libnpp-dev-11-8=11.8.0.86-1'), ('NV_CUDA_CUDART_VERSION', '11.8.89-1'), ('NV_CUDNN_PACKAGE_DEV', 'libcudnn8-dev=8.9.6.50-1+cuda11.8'), ('ROS_LOCALHOST_ONLY', '0'), ('opengv_DIR', '/root/calib_ws/iKalibr/thirdparty-install/opengv-install/lib/cmake/opengv-1.0'), ('PATH', '/root/calib_ws/install/unicalib/bin:/opt/ros/humble/bin:/opt/cmake/bin:/usr/local/cuda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('UNICALIB_TRANSFORMER_IMU', '/root/calib_ws/Transformer-IMU-Calibrator'), ('NV_LIBCUBLAS_DEV_PACKAGE_NAME', 'libcublas-dev-11-8'), ('NV_LIBCUBLAS_PACKAGE', 'libcublas-11-8=11.11.3.6-1'), ('NVARCH', 'x86_64'), ('THIRDPARTY_DEPS', '/root/thirdparty/deps'), ('NV_LIBNCCL_DEV_PACKAGE_NAME', 'libnccl-dev'), ('NV_LIBCUSPARSE_DEV_VERSION', '11.7.5.86-1'), ('DISPLAY', ':1'), ('NV_LIBNCCL_PACKAGE', 'libnccl2=2.15.5-1+cuda11.8'), ('NVIDIA_PRODUCT_NAME', 'CUDA'), ('LANG', 'C.UTF-8'), ('glm_DIR', '/root/calib_ws/docker/deps/glm/cmake/glm'), ('NV_CUDA_CUDART_DEV_VERSION', '11.8.89-1'), ('veta_DIR', '/root/calib_ws/iKalibr/thirdparty-install/veta-install/lib/cmake/veta'), ('AMENT_PREFIX_PATH', '/root/calib_ws/install/unicalib:/opt/ros/humble'), ('DEBIAN_FRONTEND', 'noninteractive'), ('NV_LIBCUBLAS_DEV_PACKAGE', 'libcublas-dev-11-8=11.11.3.6-1'), ('NV_CUDA_NSIGHT_COMPUTE_DEV_PACKAGE', 'cuda-nsight-compute-11-8=11.8.0-1'), ('NV_LIBNCCL_DEV_PACKAGE', 'libnccl-dev=2.15.5-1+cuda11.8'), ('ufomap_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/lib/cmake/ufomap'), ('NV_NVTX_VERSION', '11.8.86-1'), ('NV_LIBNPP_VERSION', '11.8.0.86-1'), ('NV_CUDNN_VERSION', '8.9.6.50'), ('PWD', '/root/calib_ws/build/UniCalib'), ('LC_ALL', 'C.UTF-8'), ('CUDA_HOME', '/usr/local/cuda'), ('CALIB_LOGS_DIR', '/root/calib_ws/logs'), ('PYTHONPATH', '/root/calib_ws/install/unicalib/lib/python3.10/site-packages:/root/calib_ws/install/mobile_sam/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages:/root/calib_ws/DM-Calib:/root/calib_ws/learn-to-calibrate:/root/calib_ws/learn-to-calibrate/rl_solver:/root/calib_ws/MIAS-LCEC:/root/calib_ws/Transformer-IMU-Calibrator'), ('NVIDIA_VISIBLE_DEVICES', 'void'), ('NCCL_VERSION', '2.15.5-1'), ('TZ', 'Asia/Shanghai'), ('COLCON', '1'), ('NV_LIBNPP_DEV_VERSION', '11.8.0.86-1'), ('AI_ROOT', '/root/calib_ws'), ('CMAKE_PREFIX_PATH', '/root/calib_ws/install/process_bag:/root/calib_ws/install/faster_lio')]), 'shell': False}
+[0.017480] (ikalibr) JobProgress: {'identifier': 'ikalibr', 'progress': 'cmake'}
+[0.018137] (ikalibr) Command: {'cmd': ['/opt/cmake/bin/cmake', '/root/calib_ws/iKalibr', '-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm', '-DAMENT_CMAKE_SYMLINK_INSTALL=1', '-DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/ikalibr'], 'cwd': '/root/calib_ws/build/ikalibr', 'env': OrderedDict([('LIBRARY_PATH', '/usr/local/cuda/lib64/stubs'), ('NVIDIA_CTK_LIBCUDA_DIR', '/usr/lib/x86_64-linux-gnu'), ('NV_LIBCUBLAS_VERSION', '11.11.3.6-1'), ('NV_NVPROF_DEV_PACKAGE', 'cuda-nvprof-11-8=11.8.87-1'), ('NV_CUDA_COMPAT_PACKAGE', 'cuda-compat-11-8'), ('NV_CUDA_NSIGHT_COMPUTE_VERSION', '11.8.0-1'), ('HOSTNAME', '4c0512a2f0d1'), ('ROS_PACKAGE_PATH', '/root/calib_ws/install/iridescence/share'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/root/calib_ws/install/iridescence/lib:/root/calib_ws/install/faster_lio/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/local/cuda/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64'), ('NV_LIBNCCL_PACKAGE_VERSION', '2.15.5-1'), ('HOME', '/root'), ('OLDPWD', '/root/calib_ws/iKalibr'), ('NV_CUDNN_PACKAGE_NAME', 'libcudnn8'), ('NV_LIBCUBLAS_DEV_VERSION', '11.11.3.6-1'), ('CALIB_DATA_DIR', '/root/calib_ws/data'), ('UNICALIB_DM_CALIB_MODEL', '/root/calib_ws/DM-Calib/model'), ('ROS_PYTHON_VERSION', '3'), ('THIRDPARTY_WS', '/root/thirdparty'), ('NV_LIBNCCL_DEV_PACKAGE_VERSION', '2.15.5-1'), ('NV_LIBNPP_PACKAGE', 'libnpp-11-8=11.8.0.86-1'), ('WORKSPACE', '/root/calib_ws'), ('UNICALIB_DM_CALIB', '/root/calib_ws/DM-Calib'), ('NV_CUDNN_PACKAGE', 'libcudnn8=8.9.6.50-1+cuda11.8'), ('CUDA_VERSION', '11.8.0'), ('COLCON_PREFIX_PATH', '/root/calib_ws/install:/opt/ros/humble'), ('NV_NVPROF_VERSION', '11.8.87-1'), ('ROS_DISTRO', 'humble'), ('CALIB_RESULTS_DIR', '/root/calib_ws/results'), ('NV_LIBCUBLAS_PACKAGE_NAME', 'libcublas-11-8'), ('NVIDIA_REQUIRE_CUDA', 'cuda>=11.8 brand=tesla,driver>=470,driver<471 brand=unknown,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=geforce,driver>=470,driver<471 brand=geforcertx,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=titan,driver>=470,driver<471 brand=titanrtx,driver>=470,driver<471'), ('ctraj_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ctraj-install/lib/cmake/ctraj'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('PKG_CONFIG_PATH', '/root/calib_ws/install/iridescence/lib/x86_64-linux-gnu/pkgconfig:/root/calib_ws/install/iridescence/lib/pkgconfig'), ('NV_LIBCUSPARSE_VERSION', '11.7.5.86-1'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('ufomap_INCLUDE_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/include'), ('NV_CUDA_LIB_VERSION', '11.8.0-1'), ('NV_LIBNCCL_PACKAGE_NAME', 'libnccl2'), ('NV_NVML_DEV_VERSION', '11.8.86-1'), ('NV_LIBNPP_DEV_PACKAGE', 'libnpp-dev-11-8=11.8.0.86-1'), ('NV_CUDA_CUDART_VERSION', '11.8.89-1'), ('NV_CUDNN_PACKAGE_DEV', 'libcudnn8-dev=8.9.6.50-1+cuda11.8'), ('ROS_LOCALHOST_ONLY', '0'), ('opengv_DIR', '/root/calib_ws/iKalibr/thirdparty-install/opengv-install/lib/cmake/opengv-1.0'), ('PATH', '/root/calib_ws/install/unicalib/bin:/opt/ros/humble/bin:/opt/cmake/bin:/usr/local/cuda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('UNICALIB_TRANSFORMER_IMU', '/root/calib_ws/Transformer-IMU-Calibrator'), ('NV_LIBCUBLAS_DEV_PACKAGE_NAME', 'libcublas-dev-11-8'), ('NV_LIBCUBLAS_PACKAGE', 'libcublas-11-8=11.11.3.6-1'), ('NVARCH', 'x86_64'), ('THIRDPARTY_DEPS', '/root/thirdparty/deps'), ('NV_LIBNCCL_DEV_PACKAGE_NAME', 'libnccl-dev'), ('NV_LIBCUSPARSE_DEV_VERSION', '11.7.5.86-1'), ('DISPLAY', ':1'), ('NV_LIBNCCL_PACKAGE', 'libnccl2=2.15.5-1+cuda11.8'), ('NVIDIA_PRODUCT_NAME', 'CUDA'), ('LANG', 'C.UTF-8'), ('glm_DIR', '/root/calib_ws/docker/deps/glm/cmake/glm'), ('NV_CUDA_CUDART_DEV_VERSION', '11.8.89-1'), ('veta_DIR', '/root/calib_ws/iKalibr/thirdparty-install/veta-install/lib/cmake/veta'), ('AMENT_PREFIX_PATH', '/root/calib_ws/install/unicalib:/opt/ros/humble'), ('DEBIAN_FRONTEND', 'noninteractive'), ('NV_LIBCUBLAS_DEV_PACKAGE', 'libcublas-dev-11-8=11.11.3.6-1'), ('NV_CUDA_NSIGHT_COMPUTE_DEV_PACKAGE', 'cuda-nsight-compute-11-8=11.8.0-1'), ('NV_LIBNCCL_DEV_PACKAGE', 'libnccl-dev=2.15.5-1+cuda11.8'), ('ufomap_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/lib/cmake/ufomap'), ('NV_NVTX_VERSION', '11.8.86-1'), ('NV_LIBNPP_VERSION', '11.8.0.86-1'), ('NV_CUDNN_VERSION', '8.9.6.50'), ('PWD', '/root/calib_ws/build/ikalibr'), ('LC_ALL', 'C.UTF-8'), ('CUDA_HOME', '/usr/local/cuda'), ('CALIB_LOGS_DIR', '/root/calib_ws/logs'), ('PYTHONPATH', '/root/calib_ws/install/unicalib/lib/python3.10/site-packages:/root/calib_ws/install/mobile_sam/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages:/root/calib_ws/DM-Calib:/root/calib_ws/learn-to-calibrate:/root/calib_ws/learn-to-calibrate/rl_solver:/root/calib_ws/MIAS-LCEC:/root/calib_ws/Transformer-IMU-Calibrator'), ('NVIDIA_VISIBLE_DEVICES', 'void'), ('NCCL_VERSION', '2.15.5-1'), ('TZ', 'Asia/Shanghai'), ('COLCON', '1'), ('NV_LIBNPP_DEV_VERSION', '11.8.0.86-1'), ('AI_ROOT', '/root/calib_ws'), ('CMAKE_PREFIX_PATH', '/root/calib_ws/install/process_bag:/root/calib_ws/install/unicalib:/opt/ros/humble:/root/calib_ws/install/faster_lio')]), 'shell': False}
+[0.018957] (mpl_calibration_toolbox) JobProgress: {'identifier': 'mpl_calibration_toolbox', 'progress': 'cmake'}
+[0.019033] (mpl_calibration_toolbox) Command: {'cmd': ['/opt/cmake/bin/cmake', '/root/calib_ws/data/school_scooter/results/mpl_calibration_toolbox', '-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm', '-DCATKIN_INSTALL_INTO_PREFIX_ROOT=0', '-DCATKIN_SYMLINK_INSTALL=ON', '-DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/mpl_calibration_toolbox'], 'cwd': '/root/calib_ws/build/mpl_calibration_toolbox', 'env': OrderedDict([('LIBRARY_PATH', '/usr/local/cuda/lib64/stubs'), ('NVIDIA_CTK_LIBCUDA_DIR', '/usr/lib/x86_64-linux-gnu'), ('NV_LIBCUBLAS_VERSION', '11.11.3.6-1'), ('NV_NVPROF_DEV_PACKAGE', 'cuda-nvprof-11-8=11.8.87-1'), ('NV_CUDA_COMPAT_PACKAGE', 'cuda-compat-11-8'), ('NV_CUDA_NSIGHT_COMPUTE_VERSION', '11.8.0-1'), ('HOSTNAME', '4c0512a2f0d1'), ('ROS_PACKAGE_PATH', '/root/calib_ws/install/iridescence/share'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/root/calib_ws/install/iridescence/lib:/root/calib_ws/install/faster_lio/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/local/cuda/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64'), ('NV_LIBNCCL_PACKAGE_VERSION', '2.15.5-1'), ('HOME', '/root'), ('OLDPWD', '/root/calib_ws/iKalibr'), ('NV_CUDNN_PACKAGE_NAME', 'libcudnn8'), ('NV_LIBCUBLAS_DEV_VERSION', '11.11.3.6-1'), ('CALIB_DATA_DIR', '/root/calib_ws/data'), ('UNICALIB_DM_CALIB_MODEL', '/root/calib_ws/DM-Calib/model'), ('ROS_PYTHON_VERSION', '3'), ('THIRDPARTY_WS', '/root/thirdparty'), ('NV_LIBNCCL_DEV_PACKAGE_VERSION', '2.15.5-1'), ('NV_LIBNPP_PACKAGE', 'libnpp-11-8=11.8.0.86-1'), ('WORKSPACE', '/root/calib_ws'), ('UNICALIB_DM_CALIB', '/root/calib_ws/DM-Calib'), ('NV_CUDNN_PACKAGE', 'libcudnn8=8.9.6.50-1+cuda11.8'), ('CUDA_VERSION', '11.8.0'), ('COLCON_PREFIX_PATH', '/root/calib_ws/install:/opt/ros/humble'), ('NV_NVPROF_VERSION', '11.8.87-1'), ('ROS_DISTRO', 'humble'), ('CALIB_RESULTS_DIR', '/root/calib_ws/results'), ('NV_LIBCUBLAS_PACKAGE_NAME', 'libcublas-11-8'), ('NVIDIA_REQUIRE_CUDA', 'cuda>=11.8 brand=tesla,driver>=470,driver<471 brand=unknown,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=geforce,driver>=470,driver<471 brand=geforcertx,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=titan,driver>=470,driver<471 brand=titanrtx,driver>=470,driver<471'), ('ctraj_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ctraj-install/lib/cmake/ctraj'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('PKG_CONFIG_PATH', '/root/calib_ws/install/iridescence/lib/x86_64-linux-gnu/pkgconfig:/root/calib_ws/install/iridescence/lib/pkgconfig'), ('NV_LIBCUSPARSE_VERSION', '11.7.5.86-1'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('ufomap_INCLUDE_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/include'), ('NV_CUDA_LIB_VERSION', '11.8.0-1'), ('NV_LIBNCCL_PACKAGE_NAME', 'libnccl2'), ('NV_NVML_DEV_VERSION', '11.8.86-1'), ('NV_LIBNPP_DEV_PACKAGE', 'libnpp-dev-11-8=11.8.0.86-1'), ('NV_CUDA_CUDART_VERSION', '11.8.89-1'), ('NV_CUDNN_PACKAGE_DEV', 'libcudnn8-dev=8.9.6.50-1+cuda11.8'), ('ROS_LOCALHOST_ONLY', '0'), ('opengv_DIR', '/root/calib_ws/iKalibr/thirdparty-install/opengv-install/lib/cmake/opengv-1.0'), ('PATH', '/root/calib_ws/install/unicalib/bin:/opt/ros/humble/bin:/opt/cmake/bin:/usr/local/cuda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('UNICALIB_TRANSFORMER_IMU', '/root/calib_ws/Transformer-IMU-Calibrator'), ('NV_LIBCUBLAS_DEV_PACKAGE_NAME', 'libcublas-dev-11-8'), ('NV_LIBCUBLAS_PACKAGE', 'libcublas-11-8=11.11.3.6-1'), ('NVARCH', 'x86_64'), ('THIRDPARTY_DEPS', '/root/thirdparty/deps'), ('NV_LIBNCCL_DEV_PACKAGE_NAME', 'libnccl-dev'), ('NV_LIBCUSPARSE_DEV_VERSION', '11.7.5.86-1'), ('DISPLAY', ':1'), ('NV_LIBNCCL_PACKAGE', 'libnccl2=2.15.5-1+cuda11.8'), ('NVIDIA_PRODUCT_NAME', 'CUDA'), ('LANG', 'C.UTF-8'), ('glm_DIR', '/root/calib_ws/docker/deps/glm/cmake/glm'), ('NV_CUDA_CUDART_DEV_VERSION', '11.8.89-1'), ('veta_DIR', '/root/calib_ws/iKalibr/thirdparty-install/veta-install/lib/cmake/veta'), ('AMENT_PREFIX_PATH', '/root/calib_ws/install/unicalib:/opt/ros/humble'), ('DEBIAN_FRONTEND', 'noninteractive'), ('NV_LIBCUBLAS_DEV_PACKAGE', 'libcublas-dev-11-8=11.11.3.6-1'), ('NV_CUDA_NSIGHT_COMPUTE_DEV_PACKAGE', 'cuda-nsight-compute-11-8=11.8.0-1'), ('NV_LIBNCCL_DEV_PACKAGE', 'libnccl-dev=2.15.5-1+cuda11.8'), ('ufomap_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/lib/cmake/ufomap'), ('NV_NVTX_VERSION', '11.8.86-1'), ('NV_LIBNPP_VERSION', '11.8.0.86-1'), ('NV_CUDNN_VERSION', '8.9.6.50'), ('PWD', '/root/calib_ws/build/mpl_calibration_toolbox'), ('LC_ALL', 'C.UTF-8'), ('CUDA_HOME', '/usr/local/cuda'), ('CALIB_LOGS_DIR', '/root/calib_ws/logs'), ('PYTHONPATH', '/root/calib_ws/install/unicalib/lib/python3.10/site-packages:/root/calib_ws/install/mobile_sam/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages:/root/calib_ws/DM-Calib:/root/calib_ws/learn-to-calibrate:/root/calib_ws/learn-to-calibrate/rl_solver:/root/calib_ws/MIAS-LCEC:/root/calib_ws/Transformer-IMU-Calibrator'), ('NVIDIA_VISIBLE_DEVICES', 'void'), ('NCCL_VERSION', '2.15.5-1'), ('TZ', 'Asia/Shanghai'), ('COLCON', '1'), ('NV_LIBNPP_DEV_VERSION', '11.8.0.86-1'), ('AI_ROOT', '/root/calib_ws'), ('CMAKE_PREFIX_PATH', '/root/calib_ws/install/process_bag:/root/calib_ws/install/faster_lio')]), 'shell': False}
+[0.099908] (-) TimerEvent: {}
+[0.151462] (UniCalib) StdoutLine: {'line': b'[  0%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_core.dir/components/pango_core/src/file_extension.cpp.o\n'}
+[0.151706] (UniCalib) StdoutLine: {'line': b'[  0%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_core.dir/components/pango_core/src/file_utils.cpp.o\n'}
+[0.151775] (UniCalib) StdoutLine: {'line': b'[  1%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_core.dir/components/pango_core/src/avx_math.cpp.o\n'}
+[0.151823] (UniCalib) StdoutLine: {'line': b'[  1%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_core.dir/components/pango_core/src/uri.cpp.o\n'}
+[0.151870] (UniCalib) StdoutLine: {'line': b'[  2%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_core.dir/components/pango_core/src/sigstate.cpp.o\n'}
+[0.151915] (UniCalib) StdoutLine: {'line': b'[  2%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_core.dir/components/pango_core/src/param_set.cpp.o\n'}
+[0.151995] (UniCalib) StdoutLine: {'line': b'[  2%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_core.dir/components/pango_core/src/threadedfilebuf.cpp.o\n'}
+[0.152181] (UniCalib) StdoutLine: {'line': b'[  2%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_core.dir/components/pango_core/src/posix/condition_variable.cpp.o\n'}
+[0.152316] (UniCalib) StdoutLine: {'line': b'[  2%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_core.dir/components/pango_core/src/posix/semaphore.cpp.o\n'}
+[0.152395] (UniCalib) StdoutLine: {'line': b'[  2%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_core.dir/components/pango_core/src/factory/factory_registry.cpp.o\n'}
+[0.152447] (UniCalib) StdoutLine: {'line': b'[  3%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_core.dir/components/pango_core/src/factory/factory_help.cpp.o\n'}
+[0.152495] (UniCalib) StdoutLine: {'line': b'[  5%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_core.dir/components/pango_core/src/posix/shared_memory_buffer.cpp.o\n'}
+[0.152543] (ikalibr) StdoutLine: {'line': b"-- do not use 'CMAKE_UNITY_BUILD' in building!\n"}
+[0.152681] (ikalibr) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.13 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[0.152731] (ikalibr) StdoutLine: {'line': b'-- Override CMake install command with custom implementation using symlinks instead of copying resources\n'}
+[0.152780] (ikalibr) StdoutLine: {'line': b'-- Found rclcpp: 16.0.18 (/opt/ros/humble/share/rclcpp/cmake)\n'}
+[0.152829] (ikalibr) StdoutLine: {'line': b'-- Found rosidl_generator_c: 3.1.8 (/opt/ros/humble/share/rosidl_generator_c/cmake)\n'}
+[0.152877] (ikalibr) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.8 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[0.152926] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[0.153014] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[0.153110] (unicalib_cpp) JobProgress: {'identifier': 'unicalib_cpp', 'progress': 'cmake'}
+[0.153237] (unicalib_cpp) JobProgress: {'identifier': 'unicalib_cpp', 'progress': 'build'}
+[0.153474] (unicalib_cpp) Command: {'cmd': ['/opt/cmake/bin/cmake', '--build', '/root/calib_ws/build/unicalib_cpp', '--', '-j28', '-l28'], 'cwd': '/root/calib_ws/build/unicalib_cpp', 'env': OrderedDict([('LIBRARY_PATH', '/usr/local/cuda/lib64/stubs'), ('NVIDIA_CTK_LIBCUDA_DIR', '/usr/lib/x86_64-linux-gnu'), ('NV_LIBCUBLAS_VERSION', '11.11.3.6-1'), ('NV_NVPROF_DEV_PACKAGE', 'cuda-nvprof-11-8=11.8.87-1'), ('NV_CUDA_COMPAT_PACKAGE', 'cuda-compat-11-8'), ('NV_CUDA_NSIGHT_COMPUTE_VERSION', '11.8.0-1'), ('HOSTNAME', '4c0512a2f0d1'), ('ROS_PACKAGE_PATH', '/root/calib_ws/install/iridescence/share'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/root/calib_ws/install/iridescence/lib:/root/calib_ws/install/faster_lio/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/local/cuda/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64'), ('NV_LIBNCCL_PACKAGE_VERSION', '2.15.5-1'), ('HOME', '/root'), ('OLDPWD', '/root/calib_ws/iKalibr'), ('NV_CUDNN_PACKAGE_NAME', 'libcudnn8'), ('NV_LIBCUBLAS_DEV_VERSION', '11.11.3.6-1'), ('CALIB_DATA_DIR', '/root/calib_ws/data'), ('UNICALIB_DM_CALIB_MODEL', '/root/calib_ws/DM-Calib/model'), ('ROS_PYTHON_VERSION', '3'), ('THIRDPARTY_WS', '/root/thirdparty'), ('NV_LIBNCCL_DEV_PACKAGE_VERSION', '2.15.5-1'), ('NV_LIBNPP_PACKAGE', 'libnpp-11-8=11.8.0.86-1'), ('WORKSPACE', '/root/calib_ws'), ('UNICALIB_DM_CALIB', '/root/calib_ws/DM-Calib'), ('NV_CUDNN_PACKAGE', 'libcudnn8=8.9.6.50-1+cuda11.8'), ('CUDA_VERSION', '11.8.0'), ('COLCON_PREFIX_PATH', '/root/calib_ws/install:/opt/ros/humble'), ('NV_NVPROF_VERSION', '11.8.87-1'), ('ROS_DISTRO', 'humble'), ('CALIB_RESULTS_DIR', '/root/calib_ws/results'), ('NV_LIBCUBLAS_PACKAGE_NAME', 'libcublas-11-8'), ('NVIDIA_REQUIRE_CUDA', 'cuda>=11.8 brand=tesla,driver>=470,driver<471 brand=unknown,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=geforce,driver>=470,driver<471 brand=geforcertx,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=titan,driver>=470,driver<471 brand=titanrtx,driver>=470,driver<471'), ('ctraj_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ctraj-install/lib/cmake/ctraj'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('PKG_CONFIG_PATH', '/root/calib_ws/install/iridescence/lib/x86_64-linux-gnu/pkgconfig:/root/calib_ws/install/iridescence/lib/pkgconfig'), ('NV_LIBCUSPARSE_VERSION', '11.7.5.86-1'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('ufomap_INCLUDE_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/include'), ('NV_CUDA_LIB_VERSION', '11.8.0-1'), ('NV_LIBNCCL_PACKAGE_NAME', 'libnccl2'), ('NV_NVML_DEV_VERSION', '11.8.86-1'), ('NV_LIBNPP_DEV_PACKAGE', 'libnpp-dev-11-8=11.8.0.86-1'), ('NV_CUDA_CUDART_VERSION', '11.8.89-1'), ('NV_CUDNN_PACKAGE_DEV', 'libcudnn8-dev=8.9.6.50-1+cuda11.8'), ('ROS_LOCALHOST_ONLY', '0'), ('opengv_DIR', '/root/calib_ws/iKalibr/thirdparty-install/opengv-install/lib/cmake/opengv-1.0'), ('PATH', '/root/calib_ws/install/unicalib/bin:/opt/ros/humble/bin:/opt/cmake/bin:/usr/local/cuda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('UNICALIB_TRANSFORMER_IMU', '/root/calib_ws/Transformer-IMU-Calibrator'), ('NV_LIBCUBLAS_DEV_PACKAGE_NAME', 'libcublas-dev-11-8'), ('NV_LIBCUBLAS_PACKAGE', 'libcublas-11-8=11.11.3.6-1'), ('NVARCH', 'x86_64'), ('THIRDPARTY_DEPS', '/root/thirdparty/deps'), ('NV_LIBNCCL_DEV_PACKAGE_NAME', 'libnccl-dev'), ('NV_LIBCUSPARSE_DEV_VERSION', '11.7.5.86-1'), ('DISPLAY', ':1'), ('NV_LIBNCCL_PACKAGE', 'libnccl2=2.15.5-1+cuda11.8'), ('NVIDIA_PRODUCT_NAME', 'CUDA'), ('LANG', 'C.UTF-8'), ('glm_DIR', '/root/calib_ws/docker/deps/glm/cmake/glm'), ('NV_CUDA_CUDART_DEV_VERSION', '11.8.89-1'), ('veta_DIR', '/root/calib_ws/iKalibr/thirdparty-install/veta-install/lib/cmake/veta'), ('AMENT_PREFIX_PATH', '/root/calib_ws/install/unicalib:/opt/ros/humble'), ('DEBIAN_FRONTEND', 'noninteractive'), ('NV_LIBCUBLAS_DEV_PACKAGE', 'libcublas-dev-11-8=11.11.3.6-1'), ('NV_CUDA_NSIGHT_COMPUTE_DEV_PACKAGE', 'cuda-nsight-compute-11-8=11.8.0-1'), ('NV_LIBNCCL_DEV_PACKAGE', 'libnccl-dev=2.15.5-1+cuda11.8'), ('ufomap_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/lib/cmake/ufomap'), ('NV_NVTX_VERSION', '11.8.86-1'), ('NV_LIBNPP_VERSION', '11.8.0.86-1'), ('NV_CUDNN_VERSION', '8.9.6.50'), ('PWD', '/root/calib_ws/build/unicalib_cpp'), ('LC_ALL', 'C.UTF-8'), ('CUDA_HOME', '/usr/local/cuda'), ('CALIB_LOGS_DIR', '/root/calib_ws/logs'), ('PYTHONPATH', '/root/calib_ws/install/unicalib/lib/python3.10/site-packages:/root/calib_ws/install/mobile_sam/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages:/root/calib_ws/DM-Calib:/root/calib_ws/learn-to-calibrate:/root/calib_ws/learn-to-calibrate/rl_solver:/root/calib_ws/MIAS-LCEC:/root/calib_ws/Transformer-IMU-Calibrator'), ('NVIDIA_VISIBLE_DEVICES', 'void'), ('NCCL_VERSION', '2.15.5-1'), ('TZ', 'Asia/Shanghai'), ('COLCON', '1'), ('NV_LIBNPP_DEV_VERSION', '11.8.0.86-1'), ('AI_ROOT', '/root/calib_ws'), ('CMAKE_PREFIX_PATH', '/root/calib_ws/install/process_bag:/root/calib_ws/install/faster_lio')]), 'shell': False}
+[0.157113] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[0.159643] (ikalibr) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 3.1.8 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)\n'}
+[0.174037] (ikalibr) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[0.190383] (unicalib_cpp) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target unicalib_cpp\n'}
+[0.190626] (ikalibr) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[0.196916] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[0.200007] (-) TimerEvent: {}
+[0.201622] (unicalib_cpp) StdoutLine: {'line': b'[  2%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/imu_intrinsic.cpp.o\n'}
+[0.205397] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[0.205797] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[0.206458] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[0.207079] (unicalib_cpp) StdoutLine: {'line': b'[  5%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/system.cpp.o\n'}
+[0.207803] (unicalib_cpp) StdoutLine: {'line': b'[  8%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/data_validator.cpp.o\n'}
+[0.210030] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[0.235601] (ikalibr) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)\n'}
+[0.237759] (ikalibr) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)\n'}
+[0.264614] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[0.273836] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[0.274074] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[0.274484] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[0.288661] (mpl_calibration_toolbox) StderrLine: {'line': b'CMake Error at CMakeLists.txt:6 (find_package):\n'}
+[0.288866] (mpl_calibration_toolbox) StderrLine: {'line': b'  By not providing "Findcatkin.cmake" in CMAKE_MODULE_PATH this project has\n'}
+[0.288924] (mpl_calibration_toolbox) StderrLine: {'line': b'  asked CMake to find a package configuration file provided by "catkin", but\n'}
+[0.288975] (mpl_calibration_toolbox) StderrLine: {'line': b'  CMake did not find one.\n'}
+[0.289035] (mpl_calibration_toolbox) StderrLine: {'line': b'\n'}
+[0.289083] (mpl_calibration_toolbox) StderrLine: {'line': b'  Could not find a package configuration file provided by "catkin" with any\n'}
+[0.289129] (mpl_calibration_toolbox) StderrLine: {'line': b'  of the following names:\n'}
+[0.289174] (mpl_calibration_toolbox) StderrLine: {'line': b'\n'}
+[0.289217] (mpl_calibration_toolbox) StderrLine: {'line': b'    catkinConfig.cmake\n'}
+[0.289262] (mpl_calibration_toolbox) StderrLine: {'line': b'    catkin-config.cmake\n'}
+[0.289307] (mpl_calibration_toolbox) StderrLine: {'line': b'\n'}
+[0.289352] (mpl_calibration_toolbox) StderrLine: {'line': b'  Add the installation prefix of "catkin" to CMAKE_PREFIX_PATH or set\n'}
+[0.289397] (mpl_calibration_toolbox) StderrLine: {'line': b'  "catkin_DIR" to a directory containing one of the above files.  If "catkin"\n'}
+[0.289442] (mpl_calibration_toolbox) StderrLine: {'line': b'  provides a separate development package or SDK, be sure it has been\n'}
+[0.289487] (mpl_calibration_toolbox) StderrLine: {'line': b'  installed.\n'}
+[0.289533] (mpl_calibration_toolbox) StderrLine: {'line': b'\n'}
+[0.289578] (mpl_calibration_toolbox) StderrLine: {'line': b'\n'}
+[0.289625] (mpl_calibration_toolbox) StdoutLine: {'line': b'-- Configuring incomplete, errors occurred!\n'}
+[0.289677] (mpl_calibration_toolbox) StdoutLine: {'line': b'See also "/root/calib_ws/build/mpl_calibration_toolbox/CMakeFiles/CMakeOutput.log".\n'}
+[0.291778] (mpl_calibration_toolbox) CommandEnded: {'returncode': 1}
+[0.300236] (-) TimerEvent: {}
+[0.305569] (mpl_calibration_toolbox) JobEnded: {'identifier': 'mpl_calibration_toolbox', 'rc': 1}
+[0.346913] (ikalibr) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[0.400330] (-) TimerEvent: {}
+[0.402643] (ikalibr) StdoutLine: {'line': b'-- Found rclpy: 3.3.20 (/opt/ros/humble/share/rclpy/cmake)\n'}
+[0.403019] (ikalibr) StdoutLine: {'line': b'-- Found geometry_msgs: 4.9.1 (/opt/ros/humble/share/geometry_msgs/cmake)\n'}
+[0.412882] (ikalibr) StdoutLine: {'line': b'-- Found sensor_msgs: 4.9.1 (/opt/ros/humble/share/sensor_msgs/cmake)\n'}
+[0.431469] (ikalibr) StdoutLine: {'line': b'-- Found cv_bridge: 3.2.1 (/opt/ros/humble/share/cv_bridge/cmake)\n'}
+[0.467379] (ikalibr) StdoutLine: {'line': b'-- Found rosbag2_cpp: 0.15.16 (/opt/ros/humble/share/rosbag2_cpp/cmake)\n'}
+[0.477869] (unicalib) JobEnded: {'identifier': 'unicalib', 'rc': 'SIGINT'}
+[0.500453] (-) TimerEvent: {}
+[0.503075] (ikalibr) StdoutLine: {'line': b'-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)\n'}
+[0.541871] (ikalibr) StdoutLine: {'line': b'-- FLANN found (include: /usr/include, lib: /usr/lib/x86_64-linux-gnu/libflann_cpp.so)\n'}
+[0.600553] (-) TimerEvent: {}
+[0.700740] (-) TimerEvent: {}
+[0.800910] (-) TimerEvent: {}
+[0.838746] (ikalibr) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[0.844788] (ikalibr) StdoutLine: {'line': b'-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)\n'}
+[0.844981] (ikalibr) StderrLine: {'line': b'** WARNING ** io features related to pcap will be disabled\n'}
+[0.901071] (-) TimerEvent: {}
+[0.970503] (ikalibr) StdoutLine: {'line': b'-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)\n'}
+[0.975098] (ikalibr) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[0.980214] (ikalibr) StdoutLine: {'line': b'-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)\n'}
+[1.001177] (-) TimerEvent: {}
+[1.091121] (ikalibr) StdoutLine: {'line': b'-- Found Qhull version 8.0.2\n'}
+[1.101237] (-) TimerEvent: {}
+[1.201352] (-) TimerEvent: {}
+[1.203048] (ikalibr) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[1.301436] (-) TimerEvent: {}
+[1.308457] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_COMMON\n'}
+[1.308610] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_KDTREE\n'}
+[1.308795] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_OCTREE\n'}
+[1.308974] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_SEARCH\n'}
+[1.309177] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_SAMPLE_CONSENSUS\n'}
+[1.309351] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_FILTERS\n'}
+[1.309554] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_2D\n'}
+[1.309641] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_GEOMETRY\n'}
+[1.309776] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_IO\n'}
+[1.310004] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_FEATURES\n'}
+[1.310211] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_ML\n'}
+[1.310375] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_SEGMENTATION\n'}
+[1.310604] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_VISUALIZATION\n'}
+[1.310840] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_SURFACE\n'}
+[1.311071] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_REGISTRATION\n'}
+[1.311293] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_KEYPOINTS\n'}
+[1.311507] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_TRACKING\n'}
+[1.311706] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_RECOGNITION\n'}
+[1.311960] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_STEREO\n'}
+[1.312145] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_APPS\n'}
+[1.312555] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_IN_HAND_SCANNER\n'}
+[1.312702] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_MODELER\n'}
+[1.312842] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_POINT_CLOUD_EDITOR\n'}
+[1.312981] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_OUTOFCORE\n'}
+[1.313310] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_PEOPLE\n'}
+[1.315125] (ikalibr) StdoutLine: {'line': b'-- Found pcl_conversions: 2.4.5 (/opt/ros/humble/share/pcl_conversions/cmake)\n'}
+[1.334184] (ikalibr) StdoutLine: {'line': b'-- Trying to find third-party libraries...\n'}
+[1.334289] (ikalibr) StdoutLine: {'line': b'--   Found basalt-headers at /root/calib_ws/iKalibr/thirdparty/basalt-headers/include\n'}
+[1.334315] (ikalibr) StdoutLine: {'line': b'--   Using ctraj-compat (basalt-headers backend) at /root/calib_ws/iKalibr/thirdparty/ctraj_basalt_compat/include\n'}
+[1.334343] (ikalibr) StdoutLine: {'line': b'--   Using cereal from thirdparty/cereal/include\n'}
+[1.335479] (ikalibr) StdoutLine: {'line': b'--   Found Sophus (cmake)\n'}
+[1.339478] (ikalibr) StdoutLine: {'line': b'--   Found aslam_cv2 at /root/calib_ws/iKalibr/thirdparty/aslam_cv2 (distortion math inlined in veta-stub)\n'}
+[1.343885] (ikalibr) StdoutLine: {'line': b'--   Using veta-stub (aslam_cv2 math backend)\n'}
+[1.345047] (ikalibr) StdoutLine: {'line': b'--   Found ufomap (surfel)\n'}
+[1.345099] (ikalibr) StdoutLine: {'line': b'--   Found opengv\n'}
+[1.365035] (ikalibr) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.12.15 (/opt/ros/humble/share/ament_lint_auto/cmake)\n'}
+[1.401516] (-) TimerEvent: {}
+[1.501648] (-) TimerEvent: {}
+[1.575039] (ikalibr) StdoutLine: {'line': b'-- Found ament_cmake_ros: 0.10.0 (/opt/ros/humble/share/ament_cmake_ros/cmake)\n'}
+[1.601734] (-) TimerEvent: {}
+[1.701972] (-) TimerEvent: {}
+[1.780278] (ikalibr) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[1.802085] (-) TimerEvent: {}
+[1.863982] (ikalibr) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[1.876500] (ikalibr) StdoutLine: {'line': b'-- Configuring done\n'}
+[1.902174] (-) TimerEvent: {}
+[2.002341] (-) TimerEvent: {}
+[2.026331] (ikalibr) StderrLine: {'line': b'CMake Error in thirdparty/veta-stub/CMakeLists.txt:\n'}
+[2.026426] (ikalibr) StderrLine: {'line': b'  Target "veta" INTERFACE_INCLUDE_DIRECTORIES property contains path:\n'}
+[2.026456] (ikalibr) StderrLine: {'line': b'\n'}
+[2.026477] (ikalibr) StderrLine: {'line': b'    "/root/calib_ws/iKalibr/thirdparty/veta-stub/../cereal/include"\n'}
+[2.026498] (ikalibr) StderrLine: {'line': b'\n'}
+[2.026516] (ikalibr) StderrLine: {'line': b'  which is prefixed in the source directory.\n'}
+[2.026535] (ikalibr) StderrLine: {'line': b'\n'}
+[2.026553] (ikalibr) StderrLine: {'line': b'\n'}
+[2.026964] (ikalibr) StdoutLine: {'line': b'-- Generating done\n'}
+[2.028817] (ikalibr) StderrLine: {'line': b'CMake Generate step failed.  Build files cannot be regenerated correctly.\n'}
+[2.039577] (ikalibr) JobEnded: {'identifier': 'ikalibr', 'rc': 'SIGINT'}
+[2.045851] (UniCalib) StdoutLine: {'line': b'[  5%] Linking CXX shared library ../../lib/libpango_core.so\n'}
+[2.082667] (UniCalib) StdoutLine: {'line': b'[  5%] Built target pango_core\n'}
+[2.089126] (UniCalib) StdoutLine: {'line': b'[  5%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_vars.dir/components/pango_vars/src/vars.cpp.o\n'}
+[2.089284] (UniCalib) StdoutLine: {'line': b'[  6%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_vars.dir/components/pango_vars/src/varstate.cpp.o\n'}
+[2.089522] (UniCalib) StdoutLine: {'line': b'[  6%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io.cpp.o\n'}
+[2.089593] (UniCalib) StdoutLine: {'line': b'[  6%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_exr.cpp.o\n'}
+[2.090684] (UniCalib) StdoutLine: {'line': b'[  6%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_packetstream.dir/components/pango_packetstream/src/packetstream.cpp.o\n'}
+[2.090834] (UniCalib) StdoutLine: {'line': b'[ 10%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/pixel_format.cpp.o\n'}
+[2.090905] (UniCalib) StdoutLine: {'line': b'[  9%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_jpg.cpp.o\n'}
+[2.090960] (UniCalib) StdoutLine: {'line': b'[ 10%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_packetstream.dir/components/pango_packetstream/src/packet.cpp.o\n'}
+[2.091010] (UniCalib) StdoutLine: {'line': b'[ 11%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_packetstream.dir/components/pango_packetstream/src/packetstream_reader.cpp.o\n'}
+[2.091243] (UniCalib) StdoutLine: {'line': b'[ 11%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_lz4.cpp.o\n'}
+[2.091294] (UniCalib) StdoutLine: {'line': b'[ 11%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_packed12bit.cpp.o\n'}
+[2.091329] (UniCalib) StdoutLine: {'line': b'[ 11%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_packetstream.dir/components/pango_packetstream/src/packetstream_writer.cpp.o\n'}
+[2.091362] (UniCalib) StdoutLine: {'line': b'[ 11%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_png.cpp.o\n'}
+[2.091487] (UniCalib) StdoutLine: {'line': b'[ 11%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_packetstream.dir/components/pango_packetstream/src/playback_session.cpp.o\n'}
+[2.091539] (UniCalib) StdoutLine: {'line': b'[ 12%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_pango.cpp.o\n'}
+[2.091577] (UniCalib) StdoutLine: {'line': b'[ 12%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_ppm.cpp.o\n'}
+[2.091616] (UniCalib) StdoutLine: {'line': b'[ 14%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_raw.cpp.o\n'}
+[2.091649] (UniCalib) StdoutLine: {'line': b'[ 14%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_tga.cpp.o\n'}
+[2.091680] (UniCalib) StdoutLine: {'line': b'[ 15%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_zstd.cpp.o\n'}
+[2.091715] (UniCalib) StdoutLine: {'line': b'[ 15%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_bmp.cpp.o\n'}
+[2.091868] (UniCalib) StdoutLine: {'line': b'[ 15%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_libraw.cpp.o\n'}
+[2.092092] (UniCalib) StdoutLine: {'line': b'[ 16%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_image.dir/components/pango_image/src/image_io_tiff.cpp.o\n'}
+[2.102449] (-) TimerEvent: {}
+[2.202646] (-) TimerEvent: {}
+[2.302918] (-) TimerEvent: {}
+[2.403228] (-) TimerEvent: {}
+[2.503466] (-) TimerEvent: {}
+[2.603704] (-) TimerEvent: {}
+[2.703936] (-) TimerEvent: {}
+[2.725672] (unicalib_cpp) StdoutLine: {'line': b'[ 11%] Linking CXX static library libunicalib_cpp.a\n'}
+[2.767785] (unicalib_cpp) StdoutLine: {'line': b'[ 77%] Built target unicalib_cpp\n'}
+[2.774750] (unicalib_cpp) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target unicalib_optimization_example\n'}
+[2.774952] (unicalib_cpp) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target unicalib_example\n'}
+[2.775011] (unicalib_cpp) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target unicalib_realtime_example\n'}
+[2.775319] (unicalib_cpp) StdoutLine: {'line': b'Consolidate compiler generated dependencies of target unicalib_viz_example\n'}
+[2.781087] (unicalib_cpp) StdoutLine: {'line': b'[ 80%] Linking CXX executable unicalib_realtime_example\n'}
+[2.783457] (unicalib_cpp) StdoutLine: {'line': b'[ 83%] Linking CXX executable unicalib_optimization_example\n'}
+[2.783701] (unicalib_cpp) StdoutLine: {'line': b'[ 86%] Linking CXX executable unicalib_example\n'}
+[2.783856] (unicalib_cpp) StdoutLine: {'line': b'[ 88%] Linking CXX executable unicalib_viz_example\n'}
+[2.804086] (-) TimerEvent: {}
+[2.896998] (unicalib_cpp) StdoutLine: {'line': b'[ 91%] Built target unicalib_realtime_example\n'}
+[2.904286] (-) TimerEvent: {}
+[2.913371] (unicalib_cpp) StdoutLine: {'line': b'[ 94%] Built target unicalib_optimization_example\n'}
+[2.934379] (unicalib_cpp) StdoutLine: {'line': b'[ 97%] Built target unicalib_viz_example\n'}
+[2.956181] (unicalib_cpp) StdoutLine: {'line': b'[100%] Built target unicalib_example\n'}
+[2.959576] (unicalib_cpp) JobEnded: {'identifier': 'unicalib_cpp', 'rc': 'SIGINT'}
+[3.004381] (-) TimerEvent: {}
+[3.104604] (-) TimerEvent: {}
+[3.204839] (-) TimerEvent: {}
+[3.305067] (-) TimerEvent: {}
+[3.405239] (-) TimerEvent: {}
+[3.424472] (UniCalib) StdoutLine: {'line': b'[ 16%] Linking CXX shared library ../../lib/libpango_image.so\n'}
+[3.467506] (UniCalib) StdoutLine: {'line': b'[ 16%] Built target pango_image\n'}
+[3.471141] (UniCalib) StdoutLine: {'line': b'[ 18%] Embedding /root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/shaders/colormaps.glsl.h;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/shaders/font.glsl.h;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/shaders/main_experiments.glsl;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/shaders/main_text.glsl;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/shaders/main_widgets.glsl;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/shaders/matcap.glsl.h;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/shaders/noise.glsl.h;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/shaders/sdf.glsl.h;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/shaders/utils.glsl.h into shaders.cpp\n'}
+[3.471377] (UniCalib) StdoutLine: {'line': b'[ 18%] Embedding /root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/src/fonts/AnonymousPro.ttf into fonts.cpp\n'}
+[3.505386] (-) TimerEvent: {}
+[3.576945] (UniCalib) StdoutLine: {'line': b'[ 18%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_opengl.dir/components/pango_opengl/src/glchar.cpp.o\n'}
+[3.577183] (UniCalib) StdoutLine: {'line': b'[ 18%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_opengl.dir/components/pango_opengl/src/gldraw.cpp.o\n'}
+[3.577356] (UniCalib) StdoutLine: {'line': b'[ 19%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_opengl.dir/components/pango_opengl/src/glfont.cpp.o\n'}
+[3.577500] (UniCalib) StdoutLine: {'line': b'[ 19%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_opengl.dir/components/pango_opengl/src/gltext.cpp.o\n'}
+[3.577600] (UniCalib) StdoutLine: {'line': b'[ 20%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_opengl.dir/components/pango_opengl/src/gltexturecache.cpp.o\n'}
+[3.577655] (UniCalib) StdoutLine: {'line': b'[ 20%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_opengl.dir/components/pango_opengl/src/viewport.cpp.o\n'}
+[3.577705] (UniCalib) StdoutLine: {'line': b'[ 20%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_opengl.dir/components/pango_opengl/src/glpangoglu.cpp.o\n'}
+[3.577754] (UniCalib) StdoutLine: {'line': b'[ 20%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_opengl.dir/components/pango_opengl/src/opengl_render_state.cpp.o\n'}
+[3.578170] (UniCalib) StdoutLine: {'line': b'[ 22%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_opengl.dir/fonts.cpp.o\n'}
+[3.578500] (UniCalib) StdoutLine: {'line': b'[ 22%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_opengl.dir/shaders.cpp.o\n'}
+[3.605511] (-) TimerEvent: {}
+[3.705745] (-) TimerEvent: {}
+[3.805938] (-) TimerEvent: {}
+[3.880468] (UniCalib) StdoutLine: {'line': b'[ 22%] Linking CXX shared library ../../lib/libpango_vars.so\n'}
+[3.906052] (-) TimerEvent: {}
+[3.916390] (UniCalib) StdoutLine: {'line': b'[ 22%] Built target pango_vars\n'}
+[4.006185] (-) TimerEvent: {}
+[4.010760] (UniCalib) StdoutLine: {'line': b'[ 23%] Linking CXX shared library ../../lib/libpango_packetstream.so\n'}
+[4.053236] (UniCalib) StdoutLine: {'line': b'[ 23%] Built target pango_packetstream\n'}
+[4.057850] (UniCalib) StdoutLine: {'line': b'[ 24%] Creating /root/calib_ws/build/UniCalib/thirdparty_build/Pangolin/include/pangolin/factory/RegisterFactoriesVideoInterface.h factory registry header\n'}
+[4.057949] (UniCalib) StdoutLine: {'line': b'[ 24%] Creating /root/calib_ws/build/UniCalib/thirdparty_build/Pangolin/include/pangolin/factory/RegisterFactoriesVideoOutputInterface.h factory registry header\n'}
+[4.067098] (UniCalib) StdoutLine: {'line': b'[ 24%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/video_input.cpp.o\n'}
+[4.067200] (UniCalib) StdoutLine: {'line': b'[ 24%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/stream_encoder_factory.cpp.o\n'}
+[4.067466] (UniCalib) StdoutLine: {'line': b'[ 25%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/video_output.cpp.o\n'}
+[4.067541] (UniCalib) StdoutLine: {'line': b'[ 25%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/video.cpp.o\n'}
+[4.067660] (UniCalib) StdoutLine: {'line': b'[ 25%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/video_help.cpp.o\n'}
+[4.067838] (UniCalib) StdoutLine: {'line': b'[ 25%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/images.cpp.o\n'}
+[4.067923] (UniCalib) StdoutLine: {'line': b'[ 27%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/test.cpp.o\n'}
+[4.068322] (UniCalib) StdoutLine: {'line': b'[ 27%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/images_out.cpp.o\n'}
+[4.068496] (UniCalib) StdoutLine: {'line': b'[ 28%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/split.cpp.o\n'}
+[4.068654] (UniCalib) StdoutLine: {'line': b'[ 28%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/truncate.cpp.o\n'}
+[4.069313] (UniCalib) StdoutLine: {'line': b'[ 28%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/pango.cpp.o\n'}
+[4.070486] (UniCalib) StdoutLine: {'line': b'[ 29%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/pango_video_output.cpp.o\n'}
+[4.070934] (UniCalib) StdoutLine: {'line': b'[ 29%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/debayer.cpp.o\n'}
+[4.071017] (UniCalib) StdoutLine: {'line': b'[ 29%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/shift.cpp.o\n'}
+[4.071404] (UniCalib) StdoutLine: {'line': b'[ 31%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/transform.cpp.o\n'}
+[4.071469] (UniCalib) StdoutLine: {'line': b'[ 31%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/join.cpp.o\n'}
+[4.071508] (UniCalib) StdoutLine: {'line': b'[ 31%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/unpack.cpp.o\n'}
+[4.071895] (UniCalib) StdoutLine: {'line': b'[ 31%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/merge.cpp.o\n'}
+[4.071978] (UniCalib) StdoutLine: {'line': b'[ 32%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/json.cpp.o\n'}
+[4.072161] (UniCalib) StdoutLine: {'line': b'[ 33%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/pack.cpp.o\n'}
+[4.073113] (UniCalib) StdoutLine: {'line': b'[ 33%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/thread.cpp.o\n'}
+[4.073456] (UniCalib) StdoutLine: {'line': b'[ 33%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/mjpeg.cpp.o\n'}
+[4.107084] (-) TimerEvent: {}
+[4.207604] (-) TimerEvent: {}
+[4.308122] (-) TimerEvent: {}
+[4.409154] (-) TimerEvent: {}
+[4.509462] (-) TimerEvent: {}
+[4.584978] (UniCalib) StdoutLine: {'line': b'[ 35%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/shared_memory.cpp.o\n'}
+[4.610124] (-) TimerEvent: {}
+[4.666808] (UniCalib) StdoutLine: {'line': b'[ 35%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/firewire.cpp.o\n'}
+[4.687929] (UniCalib) StdoutLine: {'line': b'[ 35%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/deinterlace.cpp.o\n'}
+[4.696357] (UniCalib) StdoutLine: {'line': b'[ 36%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/v4l.cpp.o\n'}
+[4.711139] (-) TimerEvent: {}
+[4.811419] (-) TimerEvent: {}
+[4.911846] (-) TimerEvent: {}
+[4.962614] (UniCalib) StdoutLine: {'line': b'[ 36%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/ffmpeg.cpp.o\n'}
+[5.012000] (-) TimerEvent: {}
+[5.112483] (-) TimerEvent: {}
+[5.212912] (-) TimerEvent: {}
+[5.313400] (-) TimerEvent: {}
+[5.413864] (-) TimerEvent: {}
+[5.476684] (UniCalib) StdoutLine: {'line': b'[ 36%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/ffmpeg_convert.cpp.o\n'}
+[5.514022] (-) TimerEvent: {}
+[5.615122] (-) TimerEvent: {}
+[5.715390] (-) TimerEvent: {}
+[5.815646] (-) TimerEvent: {}
+[5.902557] (UniCalib) StdoutLine: {'line': b'[ 37%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/ffmpeg_output.cpp.o\n'}
+[5.916535] (-) TimerEvent: {}
+[5.974950] (UniCalib) StdoutLine: {'line': b'[ 37%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/openni.cpp.o\n'}
+[6.016686] (-) TimerEvent: {}
+[6.117130] (-) TimerEvent: {}
+[6.218127] (-) TimerEvent: {}
+[6.318470] (-) TimerEvent: {}
+[6.418884] (-) TimerEvent: {}
+[6.488140] (UniCalib) StdoutLine: {'line': b'[ 37%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_video.dir/components/pango_video/src/drivers/openni2.cpp.o\n'}
+[6.518999] (-) TimerEvent: {}
+[6.619275] (-) TimerEvent: {}
+[6.719542] (-) TimerEvent: {}
+[6.819852] (-) TimerEvent: {}
+[6.920117] (-) TimerEvent: {}
+[7.020375] (-) TimerEvent: {}
+[7.120622] (-) TimerEvent: {}
+[7.220821] (-) TimerEvent: {}
+[7.321084] (-) TimerEvent: {}
+[7.352323] (UniCalib) StdoutLine: {'line': b'[ 37%] Linking CXX shared library ../../lib/libpango_opengl.so\n'}
+[7.421210] (-) TimerEvent: {}
+[7.435519] (UniCalib) StdoutLine: {'line': b'[ 37%] Built target pango_opengl\n'}
+[7.439423] (UniCalib) StdoutLine: {'line': b'[ 38%] Generating xdg-shell-client-protocol.h\n'}
+[7.439726] (UniCalib) StdoutLine: {'line': b'[ 38%] Creating /root/calib_ws/build/UniCalib/thirdparty_build/Pangolin/include/pangolin/factory/RegisterFactoriesWindowInterface.h factory registry header\n'}
+[7.452760] (UniCalib) StdoutLine: {'line': b'[ 38%] Generating xdg-shell-protocol.c\n'}
+[7.460665] (UniCalib) StdoutLine: {'line': b'[ 38%] Building C object thirdparty_build/Pangolin/CMakeFiles/pango_windowing.dir/xdg-shell-protocol.c.o\n'}
+[7.460864] (UniCalib) StdoutLine: {'line': b'[ 38%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_windowing.dir/components/pango_windowing/src/display_x11.cpp.o\n'}
+[7.460911] (UniCalib) StdoutLine: {'line': b'[ 40%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_windowing.dir/components/pango_windowing/src/window.cpp.o\n'}
+[7.460947] (UniCalib) StdoutLine: {'line': b'[ 41%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_windowing.dir/components/pango_windowing/src/display_wayland.cpp.o\n'}
+[7.460981] (UniCalib) StdoutLine: {'line': b'[ 41%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_windowing.dir/components/pango_windowing/src/display_headless.cpp.o\n'}
+[7.521352] (-) TimerEvent: {}
+[7.621617] (-) TimerEvent: {}
+[7.721850] (-) TimerEvent: {}
+[7.822070] (-) TimerEvent: {}
+[7.922284] (-) TimerEvent: {}
+[8.022530] (-) TimerEvent: {}
+[8.122767] (-) TimerEvent: {}
+[8.222974] (-) TimerEvent: {}
+[8.323291] (-) TimerEvent: {}
+[8.423473] (-) TimerEvent: {}
+[8.523655] (-) TimerEvent: {}
+[8.623837] (-) TimerEvent: {}
+[8.724004] (-) TimerEvent: {}
+[8.824228] (-) TimerEvent: {}
+[8.924404] (-) TimerEvent: {}
+[9.024579] (-) TimerEvent: {}
+[9.124763] (-) TimerEvent: {}
+[9.224923] (-) TimerEvent: {}
+[9.325074] (-) TimerEvent: {}
+[9.389383] (UniCalib) StdoutLine: {'line': b'[ 42%] Linking CXX shared library ../../lib/libpango_video.so\n'}
+[9.425147] (-) TimerEvent: {}
+[9.459831] (UniCalib) StdoutLine: {'line': b'[ 42%] Built target pango_video\n'}
+[9.525221] (-) TimerEvent: {}
+[9.625343] (-) TimerEvent: {}
+[9.725522] (-) TimerEvent: {}
+[9.825668] (-) TimerEvent: {}
+[9.925809] (-) TimerEvent: {}
+[10.025987] (-) TimerEvent: {}
+[10.077467] (UniCalib) StdoutLine: {'line': b'[ 42%] Linking CXX shared library ../../lib/libpango_windowing.so\n'}
+[10.126128] (-) TimerEvent: {}
+[10.136275] (UniCalib) StdoutLine: {'line': b'[ 42%] Built target pango_windowing\n'}
+[10.143521] (UniCalib) StdoutLine: {'line': b'[ 42%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_display.dir/components/pango_display/src/display.cpp.o\n'}
+[10.143782] (UniCalib) StdoutLine: {'line': b'[ 44%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_display.dir/components/pango_display/src/process.cpp.o\n'}
+[10.143969] (UniCalib) StdoutLine: {'line': b'[ 44%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_display.dir/components/pango_display/src/pangolin_gl.cpp.o\n'}
+[10.144291] (UniCalib) StdoutLine: {'line': b'[ 44%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_display.dir/components/pango_display/src/handler_glbuffer.cpp.o\n'}
+[10.144370] (UniCalib) StdoutLine: {'line': b'[ 44%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_display.dir/components/pango_display/src/handler.cpp.o\n'}
+[10.144437] (UniCalib) StdoutLine: {'line': b'[ 45%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_display.dir/components/pango_display/src/handler_image.cpp.o\n'}
+[10.144674] (UniCalib) StdoutLine: {'line': b'[ 45%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_display.dir/components/pango_display/src/view.cpp.o\n'}
+[10.144785] (UniCalib) StdoutLine: {'line': b'[ 45%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_display.dir/components/pango_display/src/image_view.cpp.o\n'}
+[10.144992] (UniCalib) StdoutLine: {'line': b'[ 46%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_display.dir/components/pango_display/src/widgets.cpp.o\n'}
+[10.145608] (UniCalib) StdoutLine: {'line': b'[ 46%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_display.dir/components/pango_display/src/default_font.cpp.o\n'}
+[10.145734] (UniCalib) StdoutLine: {'line': b'[ 48%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_display.dir/components/pango_display/src/ConsoleView.cpp.o\n'}
+[10.226244] (-) TimerEvent: {}
+[10.326451] (-) TimerEvent: {}
+[10.426686] (-) TimerEvent: {}
+[10.526914] (-) TimerEvent: {}
+[10.627096] (-) TimerEvent: {}
+[10.727302] (-) TimerEvent: {}
+[10.827504] (-) TimerEvent: {}
+[10.927711] (-) TimerEvent: {}
+[11.027938] (-) TimerEvent: {}
+[11.128180] (-) TimerEvent: {}
+[11.228397] (-) TimerEvent: {}
+[11.328601] (-) TimerEvent: {}
+[11.428801] (-) TimerEvent: {}
+[11.528998] (-) TimerEvent: {}
+[11.629192] (-) TimerEvent: {}
+[11.729382] (-) TimerEvent: {}
+[11.829581] (-) TimerEvent: {}
+[11.929753] (-) TimerEvent: {}
+[12.029954] (-) TimerEvent: {}
+[12.130149] (-) TimerEvent: {}
+[12.230395] (-) TimerEvent: {}
+[12.330566] (-) TimerEvent: {}
+[12.430733] (-) TimerEvent: {}
+[12.530930] (-) TimerEvent: {}
+[12.631154] (-) TimerEvent: {}
+[12.731320] (-) TimerEvent: {}
+[12.831485] (-) TimerEvent: {}
+[12.931686] (-) TimerEvent: {}
+[13.024485] (UniCalib) StdoutLine: {'line': b'[ 48%] Linking CXX shared library ../../lib/libpango_display.so\n'}
+[13.031849] (-) TimerEvent: {}
+[13.103071] (UniCalib) StdoutLine: {'line': b'[ 48%] Built target pango_display\n'}
+[13.109762] (UniCalib) StdoutLine: {'line': b'[ 48%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_plot.dir/components/pango_plot/src/datalog.cpp.o\n'}
+[13.110019] (UniCalib) StdoutLine: {'line': b'[ 48%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_plot.dir/components/pango_plot/src/plotter.cpp.o\n'}
+[13.110097] (UniCalib) StdoutLine: {'line': b'[ 49%] Building CXX object thirdparty_build/Pangolin/CMakeFiles/pango_plot.dir/components/pango_plot/src/loaders/csv_table_loader.cpp.o\n'}
+[13.132003] (-) TimerEvent: {}
+[13.232223] (-) TimerEvent: {}
+[13.332361] (-) TimerEvent: {}
+[13.432493] (-) TimerEvent: {}
+[13.532638] (-) TimerEvent: {}
+[13.632783] (-) TimerEvent: {}
+[13.732960] (-) TimerEvent: {}
+[13.833100] (-) TimerEvent: {}
+[13.933252] (-) TimerEvent: {}
+[14.033398] (-) TimerEvent: {}
+[14.133555] (-) TimerEvent: {}
+[14.233817] (-) TimerEvent: {}
+[14.333968] (-) TimerEvent: {}
+[14.434067] (-) TimerEvent: {}
+[14.534203] (-) TimerEvent: {}
+[14.634367] (-) TimerEvent: {}
+[14.734506] (-) TimerEvent: {}
+[14.834646] (-) TimerEvent: {}
+[14.934787] (-) TimerEvent: {}
+[14.987545] (UniCalib) StdoutLine: {'line': b'[ 49%] Linking CXX shared library ../../lib/libpango_plot.so\n'}
+[15.034870] (-) TimerEvent: {}
+[15.036525] (UniCalib) StdoutLine: {'line': b'[ 49%] Built target pango_plot\n'}
+[15.047224] (UniCalib) StdoutLine: {'line': b'[ 50%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/util/utils.cpp.o\n'}
+[15.047560] (UniCalib) StdoutLine: {'line': b'[ 50%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/util/circlesgrid.cpp.o\n'}
+[15.047686] (UniCalib) StdoutLine: {'line': b'[ 50%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/sensor/imu.cpp.o\n'}
+[15.047751] (UniCalib) StdoutLine: {'line': b'[ 53%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/sensor/rgbd.cpp.o\n'}
+[15.047942] (UniCalib) StdoutLine: {'line': b'[ 53%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/sensor/lidar.cpp.o\n'}
+[15.047997] (UniCalib) StdoutLine: {'line': b'[ 53%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/sensor/camera.cpp.o\n'}
+[15.048069] (UniCalib) StdoutLine: {'line': b'[ 53%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/sensor/radar.cpp.o\n'}
+[15.048126] (UniCalib) StdoutLine: {'line': b'[ 53%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/sensor/event.cpp.o\n'}
+[15.048177] (UniCalib) StdoutLine: {'line': b'[ 54%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/sensor/sensor_model.cpp.o\n'}
+[15.048495] (UniCalib) StdoutLine: {'line': b'[ 54%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/config/configor.cpp.o\n'}
+[15.048859] (UniCalib) StdoutLine: {'line': b'[ 54%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/calib/calib_param_manager.cpp.o\n'}
+[15.053707] (UniCalib) StdoutLine: {'line': b'[ 54%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/calib/estimator.cpp.o\n'}
+[15.054260] (UniCalib) StdoutLine: {'line': b'[ 55%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/calib/calib_data_manager.cpp.o\n'}
+[15.054361] (UniCalib) StdoutLine: {'line': b'[ 55%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/calib/ceres_callback.cpp.o\n'}
+[15.054884] (UniCalib) StdoutLine: {'line': b'[ 55%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/rotation_estimator.cpp.o\n'}
+[15.055167] (UniCalib) StdoutLine: {'line': b'[ 57%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/calib/spat_temp_priori.cpp.o\n'}
+[15.055222] (UniCalib) StdoutLine: {'line': b'[ 57%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/lidar_odometer.cpp.o\n'}
+[15.055392] (UniCalib) StdoutLine: {'line': b'[ 58%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/pts_association.cpp.o\n'}
+[15.055487] (UniCalib) StdoutLine: {'line': b'[ 58%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/scan_undistortion.cpp.o\n'}
+[15.055564] (UniCalib) StdoutLine: {'line': b'[ 58%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/feature_tracking.cpp.o\n'}
+[15.056585] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.057544] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.057587] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.057765] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.057842] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.057901] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.057955] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.058010] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.058065] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.058115] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.058174] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.059310] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.059369] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.059398] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.059418] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.059438] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.059458] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.059479] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.059508] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.059532] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.059625] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.059664] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.059760] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.059823] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.063465] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.063604] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.063647] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.063677] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.063698] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.063721] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.063741] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.063762] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.063782] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.063866] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.064514] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.064547] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.064569] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.064656] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.064696] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.064718] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.064746] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.064766] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.064785] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.064807] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.064828] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.064847] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.064865] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.064891] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.064909] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.064927] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.064945] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.064962] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.064980] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.065084] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.065135] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.065156] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.065175] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.065194] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.065219] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.065316] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.065362] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.065443] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.065479] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.065504] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.065532] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.065558] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.065580] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.065599] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.065618] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.065636] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.065654] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.065672] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.065692] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.065717] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.065738] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.065756] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.065774] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.065793] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.065811] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.065829] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.065850] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.065947] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.066017] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.066096] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.066151] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.066228] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.066267] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.066295] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.066317] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.066338] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.066358] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.066377] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.066402] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.066427] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.066447] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.066467] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.066486] (UniCalib) StdoutLine: {'line': b'[ 59%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/optical_flow_trace.cpp.o\n'}
+[15.066507] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.066526] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.066545] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.066564] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.066587] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.066637] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.066698] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.066769] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.066817] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.066846] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.066874] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.066897] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.066922] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.066941] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.066960] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.066978] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.066997] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.067015] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.067040] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.067066] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.067089] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.067107] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.067125] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.067144] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.067162] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.067186] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.067210] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.067228] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.067246] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.067264] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.067282] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.067304] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.067327] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.067350] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.067376] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.067401] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.067438] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.067456] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.067474] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.067491] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.067511] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.067535] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.067555] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.067580] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.067601] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.067626] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.067657] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.067676] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.067694] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.067712] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.067728] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.067748] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.067773] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.067856] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.067891] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.067916] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.067952] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.067990] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.068011] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.068034] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.068053] (UniCalib) StdoutLine: {'line': b'[ 59%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/visual_distortion.cpp.o\n'}
+[15.068087] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.068146] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.068198] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.068221] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.068247] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.068272] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.068294] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.068320] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.068340] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.068359] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.068377] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.068395] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.068414] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.068433] (UniCalib) StdoutLine: {'line': b'[ 61%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/visual_velocity_estimator.cpp.o\n'}
+[15.068455] (UniCalib) StdoutLine: {'line': b'[ 61%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/visual_reproj_association.cpp.o\n'}
+[15.068490] (UniCalib) StdoutLine: {'line': b'[ 61%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/visual_velocity_sac.cpp.o\n'}
+[15.068515] (UniCalib) StdoutLine: {'line': b'[ 62%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/colmap_data_io.cpp.o\n'}
+[15.068535] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.068555] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.068581] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.068605] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.068627] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.068645] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.068664] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.068684] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.068705] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.068729] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.068752] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.068770] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.068788] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.068806] (UniCalib) StdoutLine: {'line': b'[ 62%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/rot_only_vo.cpp.o\n'}
+[15.068824] (UniCalib) StdoutLine: {'line': b'[ 62%] Building CXX object CMakeFiles/unicalib.dir/src/ikalibr/core/radar_velocity_sac.cpp.o\n'}
+[15.068857] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.068892] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.068919] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.068947] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.068982] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.069020] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.069055] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.069082] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.069117] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.069149] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.069187] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.069216] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.069244] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.069282] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.069318] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.069354] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.069384] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.069411] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.069441] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.069477] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.069511] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.069538] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.069564] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.069590] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.069623] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.069659] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.069686] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.069713] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.069738] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.069764] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.069793] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.069831] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.069856] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.069881] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.069908] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.069932] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.069965] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.069998] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.070027] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.070052] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.070077] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.070102] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.070137] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.070258] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.070356] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.070393] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.070436] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.070471] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.070497] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.070523] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.070548] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.070575] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.070605] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.070638] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.070671] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.070702] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.070729] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.070755] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.070779] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.070806] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.070839] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.070869] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.070889] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.070906] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.070923] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.070940] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.070959] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.070983] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.071045] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.071082] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.071111] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.071139] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.071164] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.071190] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.071210] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.071229] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.071248] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.071268] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.071288] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.071313] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.071337] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.071357] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.071375] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.071394] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.071412] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.071431] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.071453] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.071478] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.071497] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.071517] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.071534] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.071553] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.071572] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.071596] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.071684] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.071735] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.071760] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.071786] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.071813] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.071833] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.071853] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.071873] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.071896] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.071920] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.071945] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.071970] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.071997] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.072021] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.072044] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.072066] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.072088] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.072115] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.072137] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.072158] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.072178] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.072198] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.072222] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.072249] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.072269] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.072288] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.072309] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.072330] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.072357] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.072380] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.072399] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.072420] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.072440] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.072459] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.072479] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.072499] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.072527] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.072549] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.072568] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.072588] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.072608] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.072629] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.072653] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.072735] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.072821] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.072904] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.072945] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.072971] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.073031] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.073109] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.073166] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.073214] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.073240] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.073267] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.073295] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.073322] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.073351] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.073373] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.073394] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.073415] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.073437] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.073466] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.073488] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.073516] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.073541] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.073569] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.073609] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.073630] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.073651] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.073672] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.073696] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.073724] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.073745] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.073766] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.073786] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.073808] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory\n'}
+[15.073836] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory\n'}
+[15.073859] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory\n'}
+[15.073888] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory\n'}
+[15.073907] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory\n'}
+[15.073926] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory\n'}
+[15.073944] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory\n'}
+[15.073961] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory\n'}
+[15.073979] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory\n'}
+[15.074000] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory\n'}
+[15.074036] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory\n'}
+[15.074061] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory\n'}
+[15.074080] (UniCalib) StderrLine: {'line': b'cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory\n'}
+[15.134966] (-) TimerEvent: {}
+[15.236193] (-) TimerEvent: {}
+[15.337211] (-) TimerEvent: {}
+[15.438132] (-) TimerEvent: {}
+[15.540209] (-) TimerEvent: {}
+[15.640514] (-) TimerEvent: {}
+[15.740794] (-) TimerEvent: {}
+[15.841234] (-) TimerEvent: {}
+[15.943177] (-) TimerEvent: {}
+[16.043799] (-) TimerEvent: {}
+[16.144449] (-) TimerEvent: {}
+[16.245134] (-) TimerEvent: {}
+[16.345581] (-) TimerEvent: {}
+[16.446291] (-) TimerEvent: {}
+[16.547538] (-) TimerEvent: {}
+[16.648047] (-) TimerEvent: {}
+[16.748456] (-) TimerEvent: {}
+[16.851112] (-) TimerEvent: {}
+[16.951526] (-) TimerEvent: {}
+[17.051882] (-) TimerEvent: {}
+[17.152304] (-) TimerEvent: {}
+[17.252762] (-) TimerEvent: {}
+[17.353250] (-) TimerEvent: {}
+[17.453695] (-) TimerEvent: {}
+[17.554171] (-) TimerEvent: {}
+[17.655216] (-) TimerEvent: {}
+[17.755545] (-) TimerEvent: {}
+[17.856051] (-) TimerEvent: {}
+[17.960303] (-) TimerEvent: {}
+[18.060576] (-) TimerEvent: {}
+[18.161080] (-) TimerEvent: {}
+[18.262152] (-) TimerEvent: {}
+[18.362406] (-) TimerEvent: {}
+[18.471068] (-) TimerEvent: {}
+[18.576230] (-) TimerEvent: {}
+[18.688277] (-) TimerEvent: {}
+[19.385602] (-) TimerEvent: {}
+[28.878828] (-) TimerEvent: {}
+[41.019081] (-) TimerEvent: {}
+[50.047801] (-) TimerEvent: {}
+[64.520337] (-) TimerEvent: {}
+[72.380825] (-) TimerEvent: {}
+[84.015059] (-) TimerEvent: {}
+[100.648478] (-) TimerEvent: {}
+[117.345163] (-) TimerEvent: {}
+[134.231245] (-) TimerEvent: {}
+[134.340332] (-) TimerEvent: {}
+[134.440508] (-) TimerEvent: {}
+[134.540754] (-) TimerEvent: {}
+[134.694729] (-) TimerEvent: {}
+[134.806093] (-) TimerEvent: {}
+[134.907201] (-) TimerEvent: {}
+[135.007521] (-) TimerEvent: {}
+[135.109827] (-) TimerEvent: {}
+[135.221745] (-) TimerEvent: {}
+[137.066085] (-) TimerEvent: {}
+[149.294676] (-) TimerEvent: {}
+[164.004040] (-) TimerEvent: {}
+[185.581437] (-) TimerEvent: {}
+[185.758313] (-) TimerEvent: {}
+[185.858600] (-) TimerEvent: {}
+[185.958914] (-) TimerEvent: {}
+[186.059225] (-) TimerEvent: {}
+[186.159529] (-) TimerEvent: {}
+[186.259758] (-) TimerEvent: {}
+[186.360110] (-) TimerEvent: {}
+[186.460456] (-) TimerEvent: {}
+[186.560770] (-) TimerEvent: {}
+[186.661108] (-) TimerEvent: {}
+[186.761441] (-) TimerEvent: {}
+[186.861773] (-) TimerEvent: {}
+[186.962043] (-) TimerEvent: {}
+[187.062267] (-) TimerEvent: {}
+[187.162461] (-) TimerEvent: {}
+[187.262771] (-) TimerEvent: {}
+[187.363179] (-) TimerEvent: {}
+[187.463464] (-) TimerEvent: {}
+[187.563755] (-) TimerEvent: {}
+[187.664047] (-) TimerEvent: {}
+[187.764377] (-) TimerEvent: {}
+[187.864860] (-) TimerEvent: {}
+[187.965365] (-) TimerEvent: {}
+[188.065762] (-) TimerEvent: {}
+[188.166184] (-) TimerEvent: {}
+[188.266659] (-) TimerEvent: {}
+[188.367065] (-) TimerEvent: {}
+[188.467548] (-) TimerEvent: {}
+[188.567985] (-) TimerEvent: {}
+[188.668377] (-) TimerEvent: {}
+[188.768834] (-) TimerEvent: {}
+[188.869273] (-) TimerEvent: {}
+[188.969597] (-) TimerEvent: {}
+[189.069834] (-) TimerEvent: {}
+[189.170134] (-) TimerEvent: {}
+[189.270410] (-) TimerEvent: {}
+[189.370670] (-) TimerEvent: {}
+[189.470964] (-) TimerEvent: {}
+[189.571345] (-) TimerEvent: {}
+[189.671666] (-) TimerEvent: {}
+[189.772016] (-) TimerEvent: {}
+[189.872321] (-) TimerEvent: {}
+[189.972565] (-) TimerEvent: {}
+[190.072901] (-) TimerEvent: {}
+[190.173091] (-) TimerEvent: {}
+[190.273350] (-) TimerEvent: {}
+[190.373617] (-) TimerEvent: {}
+[190.473902] (-) TimerEvent: {}
+[190.574213] (-) TimerEvent: {}
+[190.674567] (-) TimerEvent: {}
+[190.774906] (-) TimerEvent: {}
+[190.875211] (-) TimerEvent: {}
+[190.975458] (-) TimerEvent: {}
+[191.075746] (-) TimerEvent: {}
+[191.176007] (-) TimerEvent: {}
+[191.276272] (-) TimerEvent: {}
+[191.376549] (-) TimerEvent: {}
+[191.476809] (-) TimerEvent: {}
+[191.577219] (-) TimerEvent: {}
+[191.677612] (-) TimerEvent: {}
+[191.777934] (-) TimerEvent: {}
+[191.878232] (-) TimerEvent: {}
+[191.978493] (-) TimerEvent: {}
+[192.078721] (-) TimerEvent: {}
+[192.178942] (-) TimerEvent: {}
+[192.279184] (-) TimerEvent: {}
+[192.379335] (-) TimerEvent: {}
+[192.479515] (-) TimerEvent: {}
+[192.579859] (-) TimerEvent: {}
+[192.680113] (-) TimerEvent: {}
+[192.780343] (-) TimerEvent: {}
+[192.880561] (-) TimerEvent: {}
+[192.980785] (-) TimerEvent: {}
+[193.081073] (-) TimerEvent: {}
+[193.181314] (-) TimerEvent: {}
+[193.281579] (-) TimerEvent: {}
+[193.381934] (-) TimerEvent: {}
+[193.482276] (-) TimerEvent: {}
+[193.582611] (-) TimerEvent: {}
+[193.682918] (-) TimerEvent: {}
+[193.783225] (-) TimerEvent: {}
+[193.883549] (-) TimerEvent: {}
+[193.983786] (-) TimerEvent: {}
+[194.084125] (-) TimerEvent: {}
+[194.184384] (-) TimerEvent: {}
+[194.284660] (-) TimerEvent: {}
+[194.384921] (-) TimerEvent: {}
+[194.485398] (-) TimerEvent: {}
+[194.585756] (-) TimerEvent: {}
+[194.686227] (-) TimerEvent: {}
+[194.786614] (-) TimerEvent: {}
+[195.297111] (-) TimerEvent: {}
+[195.397433] (-) TimerEvent: {}
+[195.497738] (-) TimerEvent: {}
+[195.598117] (-) TimerEvent: {}
+[195.698544] (-) TimerEvent: {}
+[195.798792] (-) TimerEvent: {}
+[195.899333] (-) TimerEvent: {}
+[195.999632] (-) TimerEvent: {}
+[196.099858] (-) TimerEvent: {}
+[196.200149] (-) TimerEvent: {}
+[196.300422] (-) TimerEvent: {}
+[196.400675] (-) TimerEvent: {}
+[196.581695] (-) TimerEvent: {}
+[196.682022] (-) TimerEvent: {}
+[196.782361] (-) TimerEvent: {}
+[196.882545] (-) TimerEvent: {}
+[196.982726] (-) TimerEvent: {}
+[197.082949] (-) TimerEvent: {}
+[197.183266] (-) TimerEvent: {}
+[197.283482] (-) TimerEvent: {}
+[197.383740] (-) TimerEvent: {}
+[197.484041] (-) TimerEvent: {}
+[197.584403] (-) TimerEvent: {}
+[197.684741] (-) TimerEvent: {}
+[197.785069] (-) TimerEvent: {}
+[197.885299] (-) TimerEvent: {}
+[197.985604] (-) TimerEvent: {}
+[198.085823] (-) TimerEvent: {}
+[198.186120] (-) TimerEvent: {}
+[198.286349] (-) TimerEvent: {}
+[198.386574] (-) TimerEvent: {}
+[198.486920] (-) TimerEvent: {}
+[198.587198] (-) TimerEvent: {}
+[199.130175] (-) TimerEvent: {}
+[199.230458] (-) TimerEvent: {}
+[199.330611] (-) TimerEvent: {}
+[199.430783] (-) TimerEvent: {}
+[199.531001] (-) TimerEvent: {}
+[199.631223] (-) TimerEvent: {}
+[199.732127] (-) TimerEvent: {}
+[199.832484] (-) TimerEvent: {}
+[199.933568] (-) TimerEvent: {}
+[200.033855] (-) TimerEvent: {}
+[200.134205] (-) TimerEvent: {}
+[200.257120] (-) TimerEvent: {}
+[200.378316] (-) TimerEvent: {}
+[200.478604] (-) TimerEvent: {}
+[200.553750] (UniCalib) StderrLine: {'line': b'/root/calib_ws/calib_unified/src/ikalibr/core/rotation_estimator.cpp: In static member function \xe2\x80\x98static std::vector<Eigen::Matrix<double, 4, 4> > ns_ikalibr::RotationEstimator::OrganizeCoeffMatSeq(const So3SplineType&, const RelRotationSequence&)\xe2\x80\x99:\n'}
+[200.561637] (UniCalib) StderrLine: {'line': b'/root/calib_ws/calib_unified/src/ikalibr/core/rotation_estimator.cpp:112:21: error: \xe2\x80\x98const So3SplineType\xe2\x80\x99 {aka \xe2\x80\x98const class ns_ctraj::So3SplineWrapper<4>\xe2\x80\x99} has no member named \xe2\x80\x98TimeStampInRange\xe2\x80\x99\n'}
+[200.584921] (-) TimerEvent: {}
+[200.584940] (UniCalib) StderrLine: {'line': b'  112 |         if (!spline.TimeStampInRange(curTime) || !spline.TimeStampInRange(lastTime)) {\n'}
+[200.584976] (UniCalib) StderrLine: {'line': b'      |                     ^~~~~~~~~~~~~~~~\n'}
+[200.584998] (UniCalib) StderrLine: {'line': b'/root/calib_ws/calib_unified/src/ikalibr/core/rotation_estimator.cpp:112:58: error: \xe2\x80\x98const So3SplineType\xe2\x80\x99 {aka \xe2\x80\x98const class ns_ctraj::So3SplineWrapper<4>\xe2\x80\x99} has no member named \xe2\x80\x98TimeStampInRange\xe2\x80\x99\n'}
+[200.585020] (UniCalib) StderrLine: {'line': b'  112 |         if (!spline.TimeStampInRange(curTime) || !spline.TimeStampInRange(lastTime)) {\n'}
+[200.585046] (UniCalib) StderrLine: {'line': b'      |                                                          ^~~~~~~~~~~~~~~~\n'}
+[200.833932] (-) TimerEvent: {}
+[201.309330] (-) TimerEvent: {}
+[202.321284] (-) TimerEvent: {}
+[207.597586] (-) TimerEvent: {}
+[219.623389] (-) TimerEvent: {}
+[231.088281] (-) TimerEvent: {}
+[243.753925] (-) TimerEvent: {}
+[253.097693] (-) TimerEvent: {}
+[264.717047] (-) TimerEvent: {}
+[277.033055] (-) TimerEvent: {}
+[282.987534] (-) TimerEvent: {}
+[292.334842] (-) TimerEvent: {}
+[302.559866] (-) TimerEvent: {}
+[315.738776] (-) TimerEvent: {}
+[335.832356] (-) TimerEvent: {}
+[350.329920] (-) TimerEvent: {}
+[350.473686] (-) TimerEvent: {}
+[350.573874] (-) TimerEvent: {}
+[350.674270] (-) TimerEvent: {}
+[350.774547] (-) TimerEvent: {}
+[350.874858] (-) TimerEvent: {}
+[350.975115] (-) TimerEvent: {}
+[351.075360] (-) TimerEvent: {}
+[351.175610] (-) TimerEvent: {}
+[351.275831] (-) TimerEvent: {}
+[351.399798] (-) TimerEvent: {}
+[351.514306] (-) TimerEvent: {}
+[351.713284] (-) TimerEvent: {}
+[352.605903] (-) TimerEvent: {}
+[357.143806] (-) TimerEvent: {}
+[368.804773] (-) TimerEvent: {}

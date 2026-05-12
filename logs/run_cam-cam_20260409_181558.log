@@ -1,0 +1,92 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — Camera-Camera 外参标定                   ║
+ ║   两阶段: 特征匹配初始化 → BA精化(无目标优先)          ║
+ ║   手动校准: --manual 触发 click-calib 对应点精化       ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-09 18:15:58.902] [info] [Cam-Cam] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] 配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] 精标定方法: ba | 无目标优先: true
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] 手动校准: true (阈值=1.50px)
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] [Cam-Cam] 已从配置读取 1 对标定对
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] [Cam-Cam] 数据源: 非 ROS2 bag（未同时满足 use_ros2_bag 与有效 bag 路径）
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] [CalibPipeline] 初始化 ID=pipeline_20260409_181558
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] [CalibPipeline] 无目标优先: true
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] [CalibPipeline] 任务掩码: 0x20
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] ▶ Stage 1 (粗标定): 特征点匹配 + 本质矩阵
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:]   相机0 图像: (未设置)
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:]   相机1 图像: (未设置)
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] ▶ Stage 2 (精标定): ba (无目标=true)
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] ▶ Stage 3 (手动校准): click-calib 双目对应点精化
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:]   阈值: 1.50px 超过则提示手动校准
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:]   使用 ManualClickRefiner::refine_cam_cam() 进行精化
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] 
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] ║   Pipeline ID: pipeline_20260409_181558       ║
+[2026-04-09 18:15:58.903] [info] [Cam-Cam] [:] ╚═══════════════════════════════════════════════╝
+[18:15:58.903] [info] 
+[18:15:58.903] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:15:58.903] [info] ▶ 开始阶段: [Fine-Auto] 任务: [cam_cam_extrin]
+[18:15:58.903] [info]   描述: 无目标优化
+[18:15:58.903] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:15:58.903] [info] [CALC] 精标定阶段开始 task=cam_cam_extrin
+[18:15:58.903] [info] [Fine-Auto] 任务: cam_cam_extrin | 无目标优先: true
+[18:15:58.903] [info] [Fine-Auto] 方法: 特征匹配 + Bundle Adjustment (无目标)
+[18:15:58.903] [warning] [Fine-Auto/Cam-Cam] Camera-Camera 多目标定当前需使用 ROS2 bag（use_ros2_bag: true 且 ros2_bag_file 已配置）
+[18:15:58.903] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:15:58.903] [info] ■ 结束阶段: [Fine-Auto] 任务: [cam_cam_extrin]
+[18:15:58.903] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 0 ms
+[18:15:58.903] [info]   消息: Camera-Camera 多目标定当前需使用 ROS2 bag（use_ros2_bag: true 且 ros2_bag_file 已配置）
+[18:15:58.903] [info] [CALC] 阶段结束 stage=Fine-Auto task=cam_cam_extrin success=false residual_rms=0.000000 elapsed_ms=0.0 threshold=1.5000
+[18:15:58.903] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:15:58.903] [info] [Pipeline] 用户已启用手动校准 (--manual), 进入 6-DOF 调整
+[18:15:58.903] [info] 
+[18:15:58.903] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:15:58.903] [info] ▶ 开始阶段: [Manual-Refine] 任务: [cam_cam_extrin]
+[18:15:58.903] [info]   描述: 手动校准: 6-DOF 交互式调整
+[18:15:58.903] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:15:58.903] [info] [Manual-Refine] 任务: cam_cam_extrin
+[18:15:58.903] [info] [Manual-Refine] 操作说明: Q/A Roll  W/S Pitch  E/D Yaw  R/F Tx  T/G Ty  Y/H Tz  U Undo  Enter 接受  Esc 取消
+[18:15:58.903] [info] [ManualSession] 会话ID: session_2026-04-09_18-15-58
+[18:15:58.903] [info] [ManualSession] 保存目录: ./results/manual_sessions
+[18:15:58.903] [warning] [Manual-Refine] 无 Camera-Camera 精标定缓存数据，无法启用手动调整
+[18:15:58.903] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:15:58.903] [info] ■ 结束阶段: [Manual-Refine] 任务: [cam_cam_extrin]
+[18:15:58.903] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 0 ms
+[18:15:58.903] [info]   消息: 无 Camera-Camera 精标定缓存数据，无法启用手动调整
+[18:15:58.903] [info] [CALC] 阶段结束 stage=Manual-Refine task=cam_cam_extrin success=false residual_rms=0.000000 elapsed_ms=0.0 threshold=-1.0000
+[18:15:58.903] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:15:58.903] [info] ====== Pipeline Report: pipeline_20260409_181558 ======
+[18:15:58.903] [info]   Total time: 0.0 ms
+[18:15:58.903] [info]   All stages succeeded: NO
+[18:15:58.903] [info]   标定质量: 各阶段 RMS 均在阈值内
+[18:15:58.903] [info]   [Fine-Auto-cam_cam_extrin] success=false rms=0.0000 time=0.0ms: Camera-Camera 多目标定当前需使用 ROS2 bag（use_ros2_bag: true 且 ros2_bag_file 已配置）
+[18:15:58.903] [info]   [Manual-Refine-cam_cam_extrin] success=false rms=0.0000 time=0.0ms: 无 Camera-Camera 精标定缓存数据，无法启用手动调整
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+╚══════════════════════════════════════════════════════╝
+
+[18:15:58.903] [info] ================================
+[18:15:58.903] [info] Pipeline report saved: ./results/pipeline_report_20260409_181558.yaml
+[18:15:58.904] [info] ====== Pipeline Report: pipeline_20260409_181558 ======
+[18:15:58.904] [info]   Total time: 0.0 ms
+[18:15:58.904] [info]   All stages succeeded: NO
+[18:15:58.904] [info]   标定质量: 各阶段 RMS 均在阈值内
+[18:15:58.904] [info]   [Fine-Auto-cam_cam_extrin] success=false rms=0.0000 time=0.0ms: Camera-Camera 多目标定当前需使用 ROS2 bag（use_ros2_bag: true 且 ros2_bag_file 已配置）
+[18:15:58.904] [info]   [Manual-Refine-cam_cam_extrin] success=false rms=0.0000 time=0.0ms: 无 Camera-Camera 精标定缓存数据，无法启用手动调整
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+╚══════════════════════════════════════════════════════╝
+
+[18:15:58.904] [info] ================================
+[18:15:58.904] [info] Cam-Cam 标定完成 | 结果: ./results

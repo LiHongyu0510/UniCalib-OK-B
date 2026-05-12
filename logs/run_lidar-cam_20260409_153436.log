@@ -1,0 +1,443 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-09 15:34:36.515] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 15:34:36.515] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 15:34:36.515] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-09 15:34:36.515] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-09 15:34:36.515] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-09 15:34:36.515] [info] [LiDAR-Camera] [:] AI粗标定: true | 手动校准: true
+[2026-04-09 15:34:36.515] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 15:34:36.516] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [数据路径] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]   数据路径来源: 统一格式 (data.lidar.<id> / data.camera.<id>.images_dir)
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]   配置原始值 — lidar:  lidar_pcd
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]   配置原始值 — camera: Image/cam_left
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]   base_data_dir:  /root/calib_ws/data
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]   base 来源: 命令行 --data-dir
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]   lidar_dir:      /root/calib_ws/data/lidar_pcd
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]   camera_dir:     /root/calib_ws/data/Image/cam_left
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]   【数据就绪】是 — 点云与图像目录均存在，将执行精标定
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:]   说明: 使用 --dataset 时请将 data.lidar/data.camera 设为相对 base 的路径（如 pcd、images），不要使用 /path/to/... 占位符
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:] [LiDAR-Cam] use_config_extrinsic_only=true：跳过 AI 粗标定，将使用配置 initial_extrinsic 直接进入精标定/手动微调
+[2026-04-09 15:34:36.518] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 15:34:36.519] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-09 15:34:36.519] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] [数据源] 类型=FILES  lidar_dir=/root/calib_ws/data/lidar_pcd  camera_dir=/root/calib_ws/data/Image/cam_left
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:]   内参将从相机标定结果读取: ./results/camera_intrinsic/camera_intrinsic_cam_left.yaml (camera_id=cam_left)
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] [CalibPipeline] 初始化 ID=pipeline_20260409_153436
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] [CalibPipeline] 无目标优先: true
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] [CalibPipeline] 任务掩码: 0x10
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] ▶ Stage 2: 精标定 (方法=edge)
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] ▶ Stage 3: 手动校准 (manual_threshold=2.00px)
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:]   使用 ManualCalibSession 进行 6-DOF 交互式调整
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:]   调用示例:
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:]     ManualCalibSession::SessionConfig sess_cfg;
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:]     sess_cfg.save_dir = "./results/manual_sessions";
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:]     ManualCalibSession session(sess_cfg);
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:]     auto result = session.run_lidar_cam(scan, image, intrin, auto_result, auto_rms);
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] 
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] ║   Pipeline ID: pipeline_20260409_153436       ║
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-09 15:34:36.520] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=true → do_coarse=true
+[15:34:36.520] [info] 
+[15:34:36.520] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:36.520] [info] ▶ 开始阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[15:34:36.520] [info]   描述: AI模型提供初始估计值
+[15:34:36.520] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:36.520] [info] [CALC] 粗标定阶段开始 task=lidar_cam_extrin
+[15:34:37.316] [info] [AI-Calib] DM-Calib 配置的 Python 无 torch，改用已装 torch 的 Python: python3
+[15:34:37.341] [info] [Coarse-AI/LiDAR-Cam] 输入摘要  pcd=/root/calib_ws/data/lidar_pcd/0000000000.pcd  image=/root/calib_ws/data/Image/cam_left/1603764571900000000.jpg  内参 fx=819.2 fy=819.2 cx=512.0 cy=384.0  size=1024x768
+[15:34:37.341] [info] [AI-Calib] LiDAR-Cam 粗估 (MIAS-LCEC) lidar_front→cam_left
+[15:34:37.341] [info] [MIAS-LCEC] 仓库: /root/calib_ws/calib_unified 脚本: scripts/run_lidar_cam_coarse.py 实际传入模型路径: /root/calib_ws/MIAS-LCEC/model/mobile_sam.pt
+[15:34:37.342] [info] [MIAS-LCEC] 子进程 Python: python3 (已绕过 wrapper)
+[15:34:37.342] [info] [MIAS-LCEC] 粗标定尝试 1/2  (首次), 超时=180s
+[15:34:37.342] [info] [MIAS-LCEC] 执行命令 (python3+PYTHONPATH): python3 /root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py --pcd /root/calib_ws/data/lidar_pcd/0000000000.pcd --image /root/calib_ws/data/Image/cam_left/1603764571900000000.jpg --sensor_config /tmp/mias_work/sensor_config.yaml --output_dir /tmp/mias_work/output --c3m-iter-max 3 --c3m-iter-thresh 0.010000 --quality-ncc-good 0.300000 --quality-ncc-acceptable 0.200000 --quality-rms-good-px 2.000000 --quality-rms-acceptable-px 5.000000 --quality-inlier-ratio-good 0.600000 --quality-inlier-ratio-acceptable 0.400000 --model_path /root/calib_ws/MIAS-LCEC/model/mobile_sam.pt --mias_repo /root/calib_ws/calib_unified --no-require-model
+[15:34:37.445] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.444] [INFO] 环境: numpy=2.2.6
+[15:34:37.445] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.444] [INFO] ======== 粗标定开始 ========
+[15:34:37.445] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.444] [INFO] 输入: pcd=/root/calib_ws/data/lidar_pcd/0000000000.pcd  image=/root/calib_ws/data/Image/cam_left/1603764571900000000.jpg  sensor_config=/tmp/mias_work/sensor_config.yaml  output_dir=/tmp/mias_work/output
+[15:34:37.445] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.444] [INFO] [步骤 1/4] 读取 sensor_config...
+[15:34:37.452] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.452] [INFO] 读取 sensor_config: /tmp/mias_work/sensor_config.yaml
+[15:34:37.453] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.453] [INFO] 相机内参: fx=819.20 fy=819.20 cx=512.00 cy=384.00 width=1024 height=768
+[15:34:37.453] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.453] [INFO] [步骤 2/4] 读取 PCD...
+[15:34:37.581] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.580] [INFO] PCD 加载方式: ASCII (优先，避免 Open3D/NumPy 2.x 兼容问题)  路径=/root/calib_ws/data/lidar_pcd/0000000000.pcd
+[15:34:37.581] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.581] [INFO] 点云规模: 119977 点  范围 X[-78.29, 79.92] Y[-26.08, 35.68] Z[-28.35, 2.91]
+[15:34:37.581] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.581] [INFO] [步骤 2/4] PCD 读取完成  点数=119977
+[15:34:37.581] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.581] [INFO] [步骤 3/4] 读取图像 (优先 Pillow，避免 NumPy 2.x 下 cv2 崩溃)...
+[15:34:37.602] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.602] [INFO] 图像加载: Pillow  路径=/root/calib_ws/data/Image/cam_left/1603764571900000000.jpg  尺寸=1024x768 (避免 NumPy 2.x 下 cv2 崩溃)
+[15:34:37.602] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.602] [INFO] [步骤 3/4] 图像读取完成  尺寸=1024x768
+[15:34:37.602] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.602] [INFO] [粗标定] ===== 尝试深度模型推理 =====
+[15:34:37.602] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.602] [INFO] [粗标定] 配置: model_path=/root/calib_ws/MIAS-LCEC/model/mobile_sam.pt
+[15:34:37.602] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.602] [INFO] [粗标定] 配置: mias_repo=/root/calib_ws/calib_unified
+[15:34:37.602] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.602] [INFO] [粗标定] require_model=False
+[15:34:37.603] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.603] [INFO] [粗标定] mias_lcec_infer 导入成功
+[15:34:37.603] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.603] [INFO] [粗标定] 开始调用深度模型推理...
+[15:34:37.603] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.603] [INFO] [粗标定] 输入: pcd=/root/calib_ws/data/lidar_pcd/0000000000.pcd image=/root/calib_ws/data/Image/cam_left/1603764571900000000.jpg
+[15:34:37.603] [info] [MIAS-LCEC] 子进程: [MIAS_LCEC_INFER 2026-04-09 15:34:37.603] [WARNING] [MIAS-LCEC 推理] 未使用深度模型: 模型文件不存在或未配置 model_path=/root/calib_ws/MIAS-LCEC/model/mobile_sam.pt
+[15:34:37.603] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.603] [INFO] [粗标定] 推理完成，返回值类型: None
+[15:34:37.603] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.603] [WARNING] [粗标定] 深度模型未返回结果 (require_model=false)，将回退 PnP 几何初值；请检查: 1) MIAS-LCEC 仓库是否有 infer_unicalib.py 或 LcMatch_CApi 2) Python 版本是否为 3.10 (LcMatch_CApi 需要) 3) model_path 是否正确
+[15:34:37.603] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.603] [WARNING] [粗标定] ★ 结论: 未使用深度模型，将回退 PnP；原因见上方 [MIAS_LCEC_INFER] 错误日志（如 Read-only file system、ImportError 等）
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: A module that was compiled using NumPy 1.x cannot be run in
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: NumPy 2.2.6 as it may crash. To support both 1.x and 2.x
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: versions of NumPy, modules must be compiled with NumPy 2.0.
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: If you are a user of the module, the easiest solution will be to
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: downgrade to 'numpy<2' or try to upgrade the affected module.
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: We expect that some modules will need time to support NumPy 2.
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: Traceback (most recent call last):  File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 698, in <module>
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:     sys.exit(main_with_traceback())
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 689, in main_with_traceback
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:     return main()
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 567, in main
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:     if not _check_cv2_available():
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 259, in _check_cv2_available
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:     import cv2  # noqa: F401
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/cv2/__init__.py", line 181, in <module>
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:     bootstrap()
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/cv2/__init__.py", line 153, in bootstrap
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:     native_module = importlib.import_module("cv2")
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+[15:34:37.704] [info] [MIAS-LCEC] 子进程:     return _bootstrap._gcd_import(name[level:], package, level)
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: AttributeError: _ARRAY_API not found
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.704] [WARNING] [粗标定] cv2 不可用 (ImportError)，跳过 PnP，将输出 identity。原因: numpy.core.multiarray failed to import
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.704] [WARNING] [粗标定] cv2 不可用，不调用 PnP，输出 identity；精标定可能无法收敛，建议修复环境后重试
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.704] [INFO] [粗标定] 方法=identity  输出 t=[0, 0, 0]  (精标定可能无法收敛，建议检查 PnP 或深度模型)
+[15:34:37.704] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.704] [INFO] [步骤 4/5] 写入 extrinsic_result.yaml...
+[15:34:37.705] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.705] [INFO] 已写出 extrinsic_result.yaml: /tmp/mias_work/output/extrinsic_result.yaml  translation=[0.0000, 0.0000, 0.0000]
+[15:34:37.705] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:37.705] [INFO] [步骤 5/5] 生成 quality_report.yaml...
+[15:34:37.931] [info] [MIAS-LCEC] 子进程: A module that was compiled using NumPy 1.x cannot be run in
+[15:34:37.931] [info] [MIAS-LCEC] 子进程: NumPy 2.2.6 as it may crash. To support both 1.x and 2.x
+[15:34:37.931] [info] [MIAS-LCEC] 子进程: versions of NumPy, modules must be compiled with NumPy 2.0.
+[15:34:37.931] [info] [MIAS-LCEC] 子进程: Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+[15:34:37.931] [info] [MIAS-LCEC] 子进程: If you are a user of the module, the easiest solution will be to
+[15:34:37.931] [info] [MIAS-LCEC] 子进程: downgrade to 'numpy<2' or try to upgrade the affected module.
+[15:34:37.931] [info] [MIAS-LCEC] 子进程: We expect that some modules will need time to support NumPy 2.
+[15:34:37.931] [info] [MIAS-LCEC] 子进程: Traceback (most recent call last):  File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 698, in <module>
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:     sys.exit(main_with_traceback())
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 689, in main_with_traceback
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:     return main()
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 636, in main
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:     from mias_lcec_pytorch.quality_assessment import assess_calibration_quality
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/mias_lcec_pytorch/__init__.py", line 17, in <module>
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:     from .coarse_calib import MIASLCECCoarseCalib
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/mias_lcec_pytorch/coarse_calib.py", line 26, in <module>
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:     import torch
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/__init__.py", line 1382, in <module>
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:     from .functional import *  # noqa: F403
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/functional.py", line 7, in <module>
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:     import torch.nn.functional as F
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/__init__.py", line 1, in <module>
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:     from .modules import *  # noqa: F403
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/__init__.py", line 35, in <module>
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:     from .transformer import TransformerEncoder, TransformerDecoder, \
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/transformer.py", line 20, in <module>
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:     device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+[15:34:37.931] [info] [MIAS-LCEC] 子进程: /usr/local/lib/python3.10/dist-packages/torch/nn/modules/transformer.py:20: UserWarning: Failed to initialize NumPy: _ARRAY_API not found (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:84.)
+[15:34:37.931] [info] [MIAS-LCEC] 子进程:   device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+[15:34:38.986] [info] [MIAS-LCEC] 子进程: /usr/local/lib/python3.10/dist-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+[15:34:38.986] [info] [MIAS-LCEC] 子进程:   warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[15:34:38.986] [info] [MIAS-LCEC] 子进程: /usr/local/lib/python3.10/dist-packages/timm/models/registry.py:4: FutureWarning: Importing from timm.models.registry is deprecated, please import via timm.models
+[15:34:38.986] [info] [MIAS-LCEC] 子进程:   warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.models", FutureWarning)
+[15:34:38.987] [info] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_5m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_5m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[15:34:38.987] [info] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[15:34:38.987] [info] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_11m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_11m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[15:34:38.987] [info] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[15:34:38.987] [info] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[15:34:38.987] [info] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[15:34:38.987] [info] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_384 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_384. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[15:34:38.987] [info] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[15:34:38.987] [info] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_512 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_512. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[15:34:38.987] [info] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[15:34:38.991] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:38.991] [INFO] 已写出 quality_report.yaml: /tmp/mias_work/output/quality_report.yaml
+[15:34:38.991] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:38.991] [INFO] 粗标定完成  方法=identity  耗时=1.59s  输出=/tmp/mias_work/output/extrinsic_result.yaml
+[15:34:38.991] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:38.991] [INFO] [粗标定] ★ 最终: 使用恒等外参 (identity)，未使用深度模型
+[15:34:38.991] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:38.991] [INFO] ======== 粗标定结束 ========
+[15:34:38.991] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:38.991] [WARNING] [粗标定] 诊断摘要: 未使用深度模型 (method=identity)，详见上方 [MIAS_LCEC_INFER] 错误与修复建议
+[15:34:38.991] [info] [MIAS-LCEC] 子进程: [run_lidar_cam_coarse] OK  method=identity  output=/tmp/mias_work/output/extrinsic_result.yaml  elapsed_s=1.59
+[15:34:39.345] [info] [AI-Exec] 子进程完整输出已保存到: /tmp/mias_work/subprocess_1775720077.log
+[15:34:39.345] [info] [MIAS-LCEC] 子进程结束  exit_code=0  elapsed_ms=2002  output_exists=yes
+[15:34:39.345] [info] [MIAS-LCEC] 粗标定方法: identity)，详见上方 (由子进程 stdout 解析)
+[15:34:39.345] [warning] [MIAS-LCEC] ★ 粗标定未使用深度模型，结果来自几何回退(identity)，详见上方)；原因见上方子进程日志或 子进程完整输出
+[15:34:39.346] [info] [MIAS-LCEC] 解析结果  t=[0.0000, 0.0000, 0.0000]  is_identity=true
+[15:34:39.346] [warning] [MIAS-LCEC] 粗标定结果为 identity，重试  attempt=2/2  显式附加 --use_pnp
+[15:34:39.346] [info] [MIAS-LCEC] 粗标定尝试 2/2  (identity 后重试), 超时=180s
+[15:34:39.346] [info] [MIAS-LCEC] 执行命令 (python3+PYTHONPATH): python3 /root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py --pcd /root/calib_ws/data/lidar_pcd/0000000000.pcd --image /root/calib_ws/data/Image/cam_left/1603764571900000000.jpg --sensor_config /tmp/mias_work/sensor_config.yaml --output_dir /tmp/mias_work/output --c3m-iter-max 3 --c3m-iter-thresh 0.010000 --quality-ncc-good 0.300000 --quality-ncc-acceptable 0.200000 --quality-rms-good-px 2.000000 --quality-rms-acceptable-px 5.000000 --quality-inlier-ratio-good 0.600000 --quality-inlier-ratio-acceptable 0.400000 --model_path /root/calib_ws/MIAS-LCEC/model/mobile_sam.pt --mias_repo /root/calib_ws/calib_unified --no-require-model --use_pnp
+[15:34:39.444] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.443] [INFO] 环境: numpy=2.2.6
+[15:34:39.444] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.443] [INFO] ======== 粗标定开始 ========
+[15:34:39.444] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.443] [INFO] 输入: pcd=/root/calib_ws/data/lidar_pcd/0000000000.pcd  image=/root/calib_ws/data/Image/cam_left/1603764571900000000.jpg  sensor_config=/tmp/mias_work/sensor_config.yaml  output_dir=/tmp/mias_work/output
+[15:34:39.444] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.443] [INFO] [步骤 1/4] 读取 sensor_config...
+[15:34:39.451] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.451] [INFO] 读取 sensor_config: /tmp/mias_work/sensor_config.yaml
+[15:34:39.452] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.452] [INFO] 相机内参: fx=819.20 fy=819.20 cx=512.00 cy=384.00 width=1024 height=768
+[15:34:39.452] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.452] [INFO] [步骤 2/4] 读取 PCD...
+[15:34:39.574] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.574] [INFO] PCD 加载方式: ASCII (优先，避免 Open3D/NumPy 2.x 兼容问题)  路径=/root/calib_ws/data/lidar_pcd/0000000000.pcd
+[15:34:39.574] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.574] [INFO] 点云规模: 119977 点  范围 X[-78.29, 79.92] Y[-26.08, 35.68] Z[-28.35, 2.91]
+[15:34:39.574] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.574] [INFO] [步骤 2/4] PCD 读取完成  点数=119977
+[15:34:39.574] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.574] [INFO] [步骤 3/4] 读取图像 (优先 Pillow，避免 NumPy 2.x 下 cv2 崩溃)...
+[15:34:39.595] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.595] [INFO] 图像加载: Pillow  路径=/root/calib_ws/data/Image/cam_left/1603764571900000000.jpg  尺寸=1024x768 (避免 NumPy 2.x 下 cv2 崩溃)
+[15:34:39.595] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.595] [INFO] [步骤 3/4] 图像读取完成  尺寸=1024x768
+[15:34:39.595] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.595] [INFO] [粗标定] ===== 尝试深度模型推理 =====
+[15:34:39.595] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.595] [INFO] [粗标定] 配置: model_path=/root/calib_ws/MIAS-LCEC/model/mobile_sam.pt
+[15:34:39.595] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.595] [INFO] [粗标定] 配置: mias_repo=/root/calib_ws/calib_unified
+[15:34:39.595] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.595] [INFO] [粗标定] require_model=False
+[15:34:39.596] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.596] [INFO] [粗标定] mias_lcec_infer 导入成功
+[15:34:39.596] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.596] [INFO] [粗标定] 开始调用深度模型推理...
+[15:34:39.596] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.596] [INFO] [粗标定] 输入: pcd=/root/calib_ws/data/lidar_pcd/0000000000.pcd image=/root/calib_ws/data/Image/cam_left/1603764571900000000.jpg
+[15:34:39.596] [info] [MIAS-LCEC] 子进程: [MIAS_LCEC_INFER 2026-04-09 15:34:39.596] [WARNING] [MIAS-LCEC 推理] 未使用深度模型: 模型文件不存在或未配置 model_path=/root/calib_ws/MIAS-LCEC/model/mobile_sam.pt
+[15:34:39.596] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.596] [INFO] [粗标定] 推理完成，返回值类型: None
+[15:34:39.596] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.596] [WARNING] [粗标定] 深度模型未返回结果 (require_model=false)，将回退 PnP 几何初值；请检查: 1) MIAS-LCEC 仓库是否有 infer_unicalib.py 或 LcMatch_CApi 2) Python 版本是否为 3.10 (LcMatch_CApi 需要) 3) model_path 是否正确
+[15:34:39.596] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.596] [WARNING] [粗标定] ★ 结论: 未使用深度模型，将回退 PnP；原因见上方 [MIAS_LCEC_INFER] 错误日志（如 Read-only file system、ImportError 等）
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: A module that was compiled using NumPy 1.x cannot be run in
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: NumPy 2.2.6 as it may crash. To support both 1.x and 2.x
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: versions of NumPy, modules must be compiled with NumPy 2.0.
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: If you are a user of the module, the easiest solution will be to
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: downgrade to 'numpy<2' or try to upgrade the affected module.
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: We expect that some modules will need time to support NumPy 2.
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: Traceback (most recent call last):  File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 698, in <module>
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:     sys.exit(main_with_traceback())
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 689, in main_with_traceback
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:     return main()
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 567, in main
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:     if not _check_cv2_available():
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 259, in _check_cv2_available
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:     import cv2  # noqa: F401
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/cv2/__init__.py", line 181, in <module>
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:     bootstrap()
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/cv2/__init__.py", line 153, in bootstrap
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:     native_module = importlib.import_module("cv2")
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+[15:34:39.703] [info] [MIAS-LCEC] 子进程:     return _bootstrap._gcd_import(name[level:], package, level)
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: AttributeError: _ARRAY_API not found
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.703] [WARNING] [粗标定] cv2 不可用 (ImportError)，跳过 PnP，将输出 identity。原因: numpy.core.multiarray failed to import
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.703] [WARNING] [粗标定] cv2 不可用，不调用 PnP，输出 identity；精标定可能无法收敛，建议修复环境后重试
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.703] [INFO] [粗标定] 方法=identity  输出 t=[0, 0, 0]  (精标定可能无法收敛，建议检查 PnP 或深度模型)
+[15:34:39.703] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.703] [INFO] [步骤 4/5] 写入 extrinsic_result.yaml...
+[15:34:39.704] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.704] [INFO] 已写出 extrinsic_result.yaml: /tmp/mias_work/output/extrinsic_result.yaml  translation=[0.0000, 0.0000, 0.0000]
+[15:34:39.704] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:39.704] [INFO] [步骤 5/5] 生成 quality_report.yaml...
+[15:34:39.937] [info] [MIAS-LCEC] 子进程: A module that was compiled using NumPy 1.x cannot be run in
+[15:34:39.937] [info] [MIAS-LCEC] 子进程: NumPy 2.2.6 as it may crash. To support both 1.x and 2.x
+[15:34:39.937] [info] [MIAS-LCEC] 子进程: versions of NumPy, modules must be compiled with NumPy 2.0.
+[15:34:39.937] [info] [MIAS-LCEC] 子进程: Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+[15:34:39.937] [info] [MIAS-LCEC] 子进程: If you are a user of the module, the easiest solution will be to
+[15:34:39.937] [info] [MIAS-LCEC] 子进程: downgrade to 'numpy<2' or try to upgrade the affected module.
+[15:34:39.937] [info] [MIAS-LCEC] 子进程: We expect that some modules will need time to support NumPy 2.
+[15:34:39.937] [info] [MIAS-LCEC] 子进程: Traceback (most recent call last):  File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 698, in <module>
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:     sys.exit(main_with_traceback())
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 689, in main_with_traceback
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:     return main()
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 636, in main
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:     from mias_lcec_pytorch.quality_assessment import assess_calibration_quality
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/mias_lcec_pytorch/__init__.py", line 17, in <module>
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:     from .coarse_calib import MIASLCECCoarseCalib
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/mias_lcec_pytorch/coarse_calib.py", line 26, in <module>
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:     import torch
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/__init__.py", line 1382, in <module>
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:     from .functional import *  # noqa: F403
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/functional.py", line 7, in <module>
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:     import torch.nn.functional as F
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/__init__.py", line 1, in <module>
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:     from .modules import *  # noqa: F403
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/__init__.py", line 35, in <module>
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:     from .transformer import TransformerEncoder, TransformerDecoder, \
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/transformer.py", line 20, in <module>
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:     device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+[15:34:39.937] [info] [MIAS-LCEC] 子进程: /usr/local/lib/python3.10/dist-packages/torch/nn/modules/transformer.py:20: UserWarning: Failed to initialize NumPy: _ARRAY_API not found (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:84.)
+[15:34:39.937] [info] [MIAS-LCEC] 子进程:   device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+[15:34:40.991] [info] [MIAS-LCEC] 子进程: /usr/local/lib/python3.10/dist-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+[15:34:40.991] [info] [MIAS-LCEC] 子进程:   warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[15:34:40.991] [info] [MIAS-LCEC] 子进程: /usr/local/lib/python3.10/dist-packages/timm/models/registry.py:4: FutureWarning: Importing from timm.models.registry is deprecated, please import via timm.models
+[15:34:40.991] [info] [MIAS-LCEC] 子进程:   warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.models", FutureWarning)
+[15:34:40.992] [info] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_5m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_5m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[15:34:40.992] [info] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[15:34:40.992] [info] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_11m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_11m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[15:34:40.992] [info] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[15:34:40.992] [info] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[15:34:40.992] [info] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[15:34:40.992] [info] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_384 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_384. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[15:34:40.992] [info] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[15:34:40.992] [info] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_512 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_512. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[15:34:40.992] [info] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[15:34:40.996] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:40.996] [INFO] 已写出 quality_report.yaml: /tmp/mias_work/output/quality_report.yaml
+[15:34:40.996] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:40.996] [INFO] 粗标定完成  方法=identity  耗时=1.61s  输出=/tmp/mias_work/output/extrinsic_result.yaml
+[15:34:40.996] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:40.996] [INFO] [粗标定] ★ 最终: 使用恒等外参 (identity)，未使用深度模型
+[15:34:40.996] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:40.996] [INFO] ======== 粗标定结束 ========
+[15:34:40.996] [info] [MIAS-LCEC] 子进程: [2026-04-09 15:34:40.996] [WARNING] [粗标定] 诊断摘要: 未使用深度模型 (method=identity)，详见上方 [MIAS_LCEC_INFER] 错误与修复建议
+[15:34:40.996] [info] [MIAS-LCEC] 子进程: [run_lidar_cam_coarse] OK  method=identity  output=/tmp/mias_work/output/extrinsic_result.yaml  elapsed_s=1.61
+[15:34:41.351] [info] [AI-Exec] 子进程完整输出已保存到: /tmp/mias_work/subprocess_1775720079.log
+[15:34:41.351] [info] [MIAS-LCEC] 子进程结束  exit_code=0  elapsed_ms=2004  output_exists=yes
+[15:34:41.351] [info] [MIAS-LCEC] 粗标定方法: identity)，详见上方 (由子进程 stdout 解析)
+[15:34:41.351] [warning] [MIAS-LCEC] ★ 粗标定未使用深度模型，结果来自几何回退(identity)，详见上方)；原因见上方子进程日志或 子进程完整输出
+[15:34:41.351] [info] [MIAS-LCEC] 解析结果  t=[0.0000, 0.0000, 0.0000]  is_identity=true
+[15:34:41.351] [info] [MIAS-LCEC] 第 2 次尝试仍为 identity，使用该结果
+[15:34:41.351] [info] [MIAS-LCEC] 粗估外参 最终: t=[0.0000, 0.0000, 0.0000]m  is_identity=true  output=/tmp/mias_work/output/extrinsic_result.yaml (重试后)
+[15:34:41.351] [info] [MIAS-LCEC] 粗标定结果来源: identity)，详见上方 (mias_lcec=深度模型, pnp=几何回退, identity=恒等)
+[15:34:41.351] [warning] [MIAS-LCEC] 粗标定输出为 identity；精标定可能无法收敛。建议: 1) 查看上方 [PnP] 日志确认网格/回退是否成功 2) 配置 model_path 尝试深度模型 3) 检查内参与数据
+[15:34:41.351] [info] [Coarse-AI/LiDAR-Cam] 粗标定成功 t=[0.000,0.000,0.000]m
+[15:34:41.351] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:41.351] [info] ■ 结束阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[15:34:41.351] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 4831 ms
+[15:34:41.351] [info]   消息: MIAS-LCEC 粗标定成功，初值将用于精标定
+[15:34:41.351] [info] [CALC] 阶段结束 stage=Coarse-AI task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=4831.3 threshold=-1.0000
+[15:34:41.351] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:41.352] [info] 
+[15:34:41.352] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:41.352] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[15:34:41.352] [info]   描述: 无目标优化
+[15:34:41.352] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:41.352] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[15:34:41.352] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[15:34:41.352] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[15:34:41.352] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[15:34:41.352] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[15:34:41.352] [info]   [精标定数据源] 类型=FILES  lidar_id=lidar_front
+[15:34:41.352] [info]   文件目录: lidar=/root/calib_ws/data/lidar_pcd  camera=/root/calib_ws/data/Image/cam_left
+[15:34:41.352] [info] [Fine-Auto/LiDAR-Cam] 步骤: 从文件加载点云
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+[15:34:43.075] [info] [Fine-Auto/LiDAR-Cam] 点云加载完成 — 22 帧
+[15:34:43.389] [info] [Fine-Auto] 推断内参: 1024x768 fx=921.6 fy=921.6
+[15:34:43.389] [info] [Fine-Auto/LiDAR-Cam] 步骤: LiDAR-Camera 标定 相机=camera_list (方法: 边缘对齐)
+[15:34:43.390] [info] [CalibVisualizer] 初始化完成
+[15:34:43.390] [info] [Fine-Auto/LiDAR-Cam] 可视化已启用：仅标定结束后显示一帧「图像+点云投影」叠加，不创建 3D 窗口、不泵送其他帧
+[15:34:43.390] [info] [Fine-Auto/LiDAR-Cam] 使用粗标定初值 t=[0.000,0.000,0.000]m
+[15:34:43.391] [info] [Fine-Auto] 结果已保存: ./results/lidar_cam_camera_list_extrinsic.yaml
+[15:34:43.391] [info] [Viz] 即将生成投影图并保存到 ./results/lidar_cam_camera_list_projection.png
+[15:34:43.416] [info] 投影可视化保存: ./results/lidar_cam_camera_list_projection.png
+[15:34:43.416] [info] [Viz] 投影图已保存（仅使用配置初值，未做精标定）
+[15:34:43.416] [info] [Fine-Auto/LiDAR-Cam] 相机 camera_list 已使用配置初值跳过精标定，直接供手动微调
+[15:34:43.416] [info] [Viz/Display] 即将关闭可视化窗口 原因=用户关闭或流程结束 pangolin_running=false
+[15:34:43.416] [info] [Fine-Auto/LiDAR-Cam] 精标定完成: 1 个相机  最大 RMS=0.0000 px
+[15:34:43.416] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 完成
+[15:34:43.416] [info] [Fine-Auto/LiDAR-Cam] RMS 阈值=2.00 px  最大 RMS=0.0000 px  在阈值内
+[15:34:43.418] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:43.418] [info] ■ 结束阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[15:34:43.418] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 2066 ms
+[15:34:43.418] [info]   消息: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=0.000000 px
+[15:34:43.418] [info] [CALC] 阶段结束 stage=Fine-Auto task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=2064.1 threshold=2.0000
+[15:34:43.418] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:43.419] [info] [Pipeline] 用户已启用手动校准 (--manual), 进入 6-DOF 调整
+[15:34:43.419] [info] 
+[15:34:43.419] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:43.419] [info] ▶ 开始阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[15:34:43.419] [info]   描述: 手动校准: 6-DOF 交互式调整
+[15:34:43.419] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:43.419] [info] [Manual-Refine] 任务: lidar_cam_extrin
+[15:34:43.419] [info] [Manual-Refine] 操作说明: Q/A Roll  W/S Pitch  E/D Yaw  R/F Tx  T/G Ty  Y/H Tz  U Undo  Enter 接受  Esc 取消
+[15:34:43.419] [info] [ManualSession] 会话ID: session_2026-04-09_15-34-43
+[15:34:43.419] [info] [ManualSession] 保存目录: ./results/manual_sessions
+[15:34:43.419] [info] [Manual-Refine] 已打开 6-DOF 可视化调整窗口，请在本窗口内按键微调后 Enter 接受或 Esc 取消
+[15:34:43.419] [info] [Manual-Refine] LiDAR-Camera 手动调整仅使用首帧匹配数据（第 0 帧点云 + 第 0 帧图像）
+[15:34:43.419] [info] [ManualSession] 启动 LiDAR-Camera 手动校准
+[15:34:43.419] [info] [ManualSession] 自动标定 RMS: 0.0000 px (阈值建议 < 2.0px)
+[15:34:43.419] [debug] [ManualSession] 事件: lidar_cam_start | auto_rms=0.000000
+[15:34:43.419] [info] [ManualAdjust] 初始外参:
+[15:34:43.419] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:34:43.419] [info]   旋转 RPY: (0.0000, 0.0000, 0.0000) deg
+[15:34:43.419] [info]   平移 XYZ: (0.0000, 0.0000, 0.0000) m
+[15:34:43.419] [info] [ManualSession] ===== 手动校准操作说明 =====
+[15:34:43.419] [info]   Q/A: Roll ±0.1deg   W/S: Pitch ±0.1deg   E/D: Yaw ±0.1deg
+[15:34:43.419] [info]   R/F: Tx ±0.5cm   T/G: Ty ±0.5cm   Y/H: Tz ±0.5cm
+[15:34:43.419] [info]   Shift+键: 10倍步长
+[15:34:43.419] [info]   P: 进入点击精化模式  U: 撤销  Z: 重做
+[15:34:43.419] [info]   S: 保存  ESC: 接受并退出
+[15:34:43.419] [info]   点云投影质量越高 (边缘对齐越好) 表示标定越准确
+[15:34:43.452] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_153443_initial.yaml
+[15:34:43.452] [info] [ManualCalib] 交互窗口启动前已自动保存初始状态快照（备用）:
+[15:34:43.452] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_153443_initial.png
+[15:34:43.452] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_153443_initial.pcd
+[15:34:43.452] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_153443_initial.yaml
+
+(unicalib_lidar_camera:100): dbind-WARNING **: 15:34:43.455: Couldn't connect to accessibility bus: Failed to connect to socket /run/user/1000/at-spi/bus: No such file or directory
+[15:34:43.468] [info] [ManualCalib] 3D 点云窗口已禁用（避免 VTK 闪退），请在 2D 投影窗口进行微调。按下 'S' 键可手动保存当前微调结果图片和点云。
+[15:34:43.468] [info] [ManualCalib] 初始位姿 T_lidar_to_cam:
+[15:34:43.468] [info]   - Translation: 0.0000, 0.0000, 0.0000
+[15:34:43.468] [info]   - RPY (deg):   -0.0000, 0.0000, -0.0000
+[15:34:46.857] [info] [ManualSession] 用户取消，保留自动标定结果
+[15:34:46.857] [debug] [ManualSession] 事件: lidar_cam_end | final_rms=0.000000
+[15:34:46.857] [info] [ManualSession] 会话已保存: ./results/manual_sessions/session_2026-04-09_15-34-43.yaml
+[15:34:46.857] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:46.857] [info] ■ 结束阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[15:34:46.857] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 3438 ms
+[15:34:46.857] [info]   消息: LiDAR-Camera 手动调整完成
+[15:34:46.857] [info] [CALC] 阶段结束 stage=Manual-Refine task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=3438.4 threshold=-1.0000
+[15:34:46.857] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:46.857] [info] ====== Pipeline Report: pipeline_20260409_153436 ======
+[15:34:46.857] [info]   Total time: 10333.8 ms
+[15:34:46.857] [info]   All stages succeeded: YES
+[15:34:46.857] [info]   标定质量: 各阶段 RMS 均在阈值内
+[15:34:46.857] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=4831.3ms: MIAS-LCEC 粗标定成功，初值将用于精标定
+[15:34:46.857] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=0.0000 time=2064.1ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=0.000000 px
+[15:34:46.857] [info]   [Manual-Refine-lidar_cam_extrin] success=true rms=0.0000 time=3438.4ms: LiDAR-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   lidar_front->camera_list:
+║     R(RPY°): [0.00, 0.00, 0.00]
+║     T(m):    [0.00, 0.00, 0.00]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[15:34:46.857] [info] ================================
+[15:34:46.857] [info] Pipeline report saved: ./results/pipeline_report_20260409_153436.yaml
+[15:34:46.857] [info] ====== Pipeline Report: pipeline_20260409_153436 ======
+[15:34:46.857] [info]   Total time: 10333.8 ms
+[15:34:46.857] [info]   All stages succeeded: YES
+[15:34:46.857] [info]   标定质量: 各阶段 RMS 均在阈值内
+[15:34:46.857] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=4831.3ms: MIAS-LCEC 粗标定成功，初值将用于精标定
+[15:34:46.857] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=0.0000 time=2064.1ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=0.000000 px
+[15:34:46.857] [info]   [Manual-Refine-lidar_cam_extrin] success=true rms=0.0000 time=3438.4ms: LiDAR-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   lidar_front->camera_list:
+║     R(RPY°): [0.00, 0.00, 0.00]
+║     T(m):    [0.00, 0.00, 0.00]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[15:34:46.857] [info] ================================
+[15:34:46.857] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:34:46.857] [info] LiDAR-Camera 标定流程完成
+[15:34:46.857] [info] 结果目录: ./results
+[15:34:46.857] [info] 标定流程正常退出 exit_code=0
+[15:34:46.857] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

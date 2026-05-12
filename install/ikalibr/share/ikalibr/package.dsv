@@ -1,0 +1,5 @@
+source;share/ikalibr/local_setup.bash
+source;share/ikalibr/local_setup.dsv
+source;share/ikalibr/local_setup.ps1
+source;share/ikalibr/local_setup.sh
+source;share/ikalibr/local_setup.zsh

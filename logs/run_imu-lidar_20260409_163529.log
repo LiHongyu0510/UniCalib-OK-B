@@ -1,0 +1,83 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — IMU-LiDAR 外参标定                       ║
+ ║   两阶段: L2Calib RL粗估 → B样条连续时间精化           ║
+ ║   手动校准: --manual 触发旋转可视化验证                 ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] 配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml | IMU: imu_0 | LiDAR: lidar_0
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] AI粗标定: false | 手动校准: false (阈值=0.50deg)
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] ▶ Stage 2: B样条连续时间精标定
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:]   IMU数据: (未设置)
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:]   LiDAR目录: (未设置)
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:]   B样条间距: 0.1s | 时间偏移优化: true
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] IMU 内参: 从 results 目录读取 (1 个)，路径示例: ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] [CalibPipeline] 初始化 ID=pipeline_20260409_163530
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] [CalibPipeline] 无目标优先: true
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] [CalibPipeline] 任务掩码: 0x04
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] 
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] ║   Pipeline ID: pipeline_20260409_163530       ║
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-09 16:35:30.026] [info] [IMU-LiDAR] [:] [Pipeline] 已从 results 加载 IMU 内参: imu_0 <- ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+[16:35:30.026] [info] 
+[16:35:30.026] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:35:30.026] [info] ▶ 开始阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[16:35:30.026] [info]   描述: 无目标优化
+[16:35:30.026] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:35:30.026] [info] [CALC] 精标定阶段开始 task=imu_lidar_extrin
+[16:35:30.026] [info] [Fine-Auto] 任务: imu_lidar_extrin | 无目标优先: true
+[16:35:30.026] [info] [Fine-Auto] 方法: B样条连续时间优化 (无目标)
+[16:35:30.026] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[16:35:30.026] [info]   Bag 文件: /root/calib_ws/data/my_dataset/
+[16:35:30.026] [info]   实时模式: false
+[16:35:30.026] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/my_dataset/
+[16:35:30.026] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/my_dataset/metadata.yaml
+[16:35:30.027] [info] [Ros2BagDataSource] 使用配置的 LiDAR 话题 (来自 sensors): /os1_cloud_node1/points
+[16:35:30.027] [info] [Ros2BagDataSource] 自动检测相机话题: /DirectionVelocity
+[16:35:30.027] [info] [Ros2BagDataSource] 使用配置的 IMU 话题 (来自 sensors): /imu/imu
+[16:35:30.027] [error] [Ros2BagDataSource] 加载失败: Exception on parsing info file: invalid node; first invalid key: "duration"
+[16:35:30.027] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:35:30.027] [info] ■ 结束阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[16:35:30.027] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 1 ms
+[16:35:30.027] [info]   消息: ROS2 数据加载失败: 加载失败: Exception on parsing info file: invalid node; first invalid key: "duration"
+[16:35:30.027] [info] [CALC] 阶段结束 stage=Fine-Auto task=imu_lidar_extrin success=false residual_rms=0.000000 elapsed_ms=1.1 threshold=0.5000
+[16:35:30.027] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:35:30.027] [info] ====== Pipeline Report: pipeline_20260409_163530 ======
+[16:35:30.027] [info]   Total time: 1.1 ms
+[16:35:30.027] [info]   All stages succeeded: NO
+[16:35:30.027] [info]   标定质量: 各阶段 RMS 均在阈值内
+[16:35:30.027] [info]   [Fine-Auto-imu_lidar_extrin] success=false rms=0.0000 time=1.1ms: ROS2 数据加载失败: 加载失败: Exception on parsing info file: invalid node; first invalid key: "duration"
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ IMU 内参:
+║   imu_0:
+║     陀螺噪声: 6.161e-02 rad/s/√Hz
+║     加速计噪声: 7.484e-02 m/s²/√Hz
+╚══════════════════════════════════════════════════════╝
+
+[16:35:30.027] [info] ================================
+[16:35:30.027] [info] Pipeline report saved: ./results/pipeline_report_20260409_163530.yaml
+[16:35:30.028] [info] ====== Pipeline Report: pipeline_20260409_163530 ======
+[16:35:30.028] [info]   Total time: 1.1 ms
+[16:35:30.028] [info]   All stages succeeded: NO
+[16:35:30.028] [info]   标定质量: 各阶段 RMS 均在阈值内
+[16:35:30.028] [info]   [Fine-Auto-imu_lidar_extrin] success=false rms=0.0000 time=1.1ms: ROS2 数据加载失败: 加载失败: Exception on parsing info file: invalid node; first invalid key: "duration"
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ IMU 内参:
+║   imu_0:
+║     陀螺噪声: 6.161e-02 rad/s/√Hz
+║     加速计噪声: 7.484e-02 m/s²/√Hz
+╚══════════════════════════════════════════════════════╝
+
+[16:35:30.028] [info] ================================
+[16:35:30.028] [info] IMU-LiDAR 标定完成 | 结果: ./results

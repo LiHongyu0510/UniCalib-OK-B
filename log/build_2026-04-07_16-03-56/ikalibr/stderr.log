@@ -1,0 +1,21 @@
+CMake Warning (dev) at CMakeLists.txt:39 (set):
+  implicitly converting 'STRINGS' to 'STRING' type.
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+** WARNING ** io features related to pcap will be disabled
+CMake Error in thirdparty/veta-stub/CMakeLists.txt:
+  Target "veta" INTERFACE_INCLUDE_DIRECTORIES property contains path:
+
+    "/root/calib_ws/iKalibr/thirdparty/veta-stub/../cereal/include"
+
+  which is prefixed in the source directory.
+
+
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    USE_VETA_STUB
+    glm_DIR
+
+
+CMake Generate step failed.  Build files cannot be regenerated correctly.

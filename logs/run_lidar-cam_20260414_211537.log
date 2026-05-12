@@ -1,0 +1,96 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-14 21:15:37.432] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-14 21:15:37.432] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-14 21:15:37.432] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-14 21:15:37.432] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-14 21:15:37.432] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-14 21:15:37.432] [info] [LiDAR-Camera] [:] AI粗标定: false | 手动校准: false
+[2026-04-14 21:15:37.432] [info] [LiDAR-Camera] [:]   粗标定未启用原因: 未传入 --coarse；启用粗标定请加 --coarse 并配置 coarse_pcd_file/coarse_image_file（或由 run.sh 传入 --coarse）
+[2026-04-14 21:15:37.432] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-14 21:15:37.434] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [数据路径] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:]   数据路径来源: 统一格式 (data.lidar.<id> / data.camera.<id>.images_dir)
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:]   配置原始值 — lidar:  (未设置)
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:]   配置原始值 — camera: (未设置)
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:]   base_data_dir:  /root/calib_ws/data
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:]   base 来源: 命令行 --data-dir
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:]   lidar_dir:      (未设置)
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:]   camera_dir:     (未设置)
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:]   【数据就绪】否 — 原因: 配置中未提供 LiDAR 或相机数据路径（请填写 data.lidar.<id> 与 data.camera.<id>.images_dir）
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:]   说明: 使用 --dataset 时请将 data.lidar/data.camera 设为相对 base 的路径（如 pcd、images），不要使用 /path/to/... 占位符
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-14 21:15:37.435] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-14 21:15:37.436] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-14 21:15:37.436] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-14 21:15:37.437] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-14 21:15:37.437] [info] [LiDAR-Camera] [:] 配置: 使用 ROS2 bag 模式（离线标定）
+[2026-04-14 21:15:37.437] [info] [LiDAR-Camera] [:]   Bag 路径: /root/calib_ws/data/nya_02_ros2
+[2026-04-14 21:15:37.437] [info] [LiDAR-Camera] [:]   LiDAR 话题: /os1_cloud_node1/points
+[2026-04-14 21:15:37.437] [info] [LiDAR-Camera] [:]   相机话题: /left/image_raw
+[2026-04-14 21:15:37.437] [info] [LiDAR-Camera] [:]   IMU 话题: /dji_sdk/imu
+[2026-04-14 21:15:37.437] [info] [LiDAR-Camera] [:] [数据源] 类型=ROS2_BAG  path=/root/calib_ws/data/nya_02_ros2  lidar_topic=/os1_cloud_node1/points  camera_topic=/left/image_raw
+[2026-04-14 21:15:37.437] [info] [LiDAR-Camera] [:]   内参将从相机标定结果读取: /root/calib_ws/results/camera_intrinsic/camera_intrinsic_cam_left.yaml (camera_id=cam_left)
+[2026-04-14 21:15:37.437] [info] [LiDAR-Camera] [:] [CalibPipeline] 初始化 ID=pipeline_20260414_211537
+[2026-04-14 21:15:37.437] [info] [LiDAR-Camera] [:] [CalibPipeline] 输出目录: /root/calib_ws/results
+[2026-04-14 21:15:37.438] [info] [LiDAR-Camera] [:] [CalibPipeline] 无目标优先: true
+[2026-04-14 21:15:37.438] [info] [LiDAR-Camera] [:] [CalibPipeline] 任务掩码: 0x10
+[2026-04-14 21:15:37.438] [info] [LiDAR-Camera] [:] ▶ Stage 2: 精标定 (方法=edge)
+[2026-04-14 21:15:37.438] [warning] [LiDAR-Camera] [:] 数据路径未就绪，当前运行将仅执行流水线占位阶段，不进行实际标定优化。详见上方【数据就绪】原因。
+[2026-04-14 21:15:37.438] [info] [LiDAR-Camera] [:] 
+[2026-04-14 21:15:37.438] [info] [LiDAR-Camera] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-14 21:15:37.438] [info] [LiDAR-Camera] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-14 21:15:37.438] [info] [LiDAR-Camera] [:] ║   Pipeline ID: pipeline_20260414_211537       ║
+[2026-04-14 21:15:37.438] [info] [LiDAR-Camera] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-14 21:15:37.438] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=false → do_coarse=false
+[2026-04-14 21:15:37.438] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] 跳过粗标定: 未启用 (请使用 --coarse 启用 MIAS-LCEC 粗标定)
+[21:15:37.438] [info] 
+[21:15:37.438] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[21:15:37.438] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[21:15:37.438] [info]   描述: 无目标优化
+[21:15:37.438] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[21:15:37.438] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[21:15:37.438] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[21:15:37.438] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[21:15:37.438] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[21:15:37.438] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[21:15:37.438] [info]   [精标定数据源] 类型=ROS2_BAG  lidar_id=lidar_horz
+[21:15:37.438] [info]   ROS2 Bag: /root/calib_ws/data/nya_02_ros2  LiDAR 话题: /os1_cloud_node1/points  相机话题: /left/image_raw
+[21:15:37.438] [info] [Fine-Auto/LiDAR-Cam] 从 ROS2 加载数据...
+[21:15:37.439] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[21:15:37.439] [info]   Bag 文件: /root/calib_ws/data/nya_02_ros2
+[21:15:37.439] [info]   实时模式: false
+[21:15:37.439] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/nya_02_ros2
+[21:15:37.439] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/nya_02_ros2/metadata.yaml
+[21:15:37.440] [info] [Ros2BagDataSource] 使用配置的 LiDAR 话题: /os1_cloud_node1/points
+[21:15:37.440] [info] [Ros2BagDataSource] 使用配置的相机话题: /left/image_raw
+[21:15:37.440] [info] [Ros2BagDataSource] 使用配置的 IMU 话题: /dji_sdk/imu
+[INFO] [1776172537.446785158] [rosbag2_storage]: Opened database '/root/calib_ws/data/nya_02_ros2/nya_02_ros2.db3' for READ_ONLY.
+[21:15:37.446] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[21:15:37.446] [info] [Ros2BagDataSource] 找到 19 个话题
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /dji_sdk/imu  类型: sensor_msgs/msg/Imu  消息数: 171462
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /dji_sdk/attitude  类型: geometry_msgs/msg/QuaternionStamped  消息数: 42866
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /imu/imu  类型: sensor_msgs/msg/Imu  消息数: 166428
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /imu/magnetic_field  类型: sensor_msgs/msg/MagneticField  消息数: 166428
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /imu/temperature  类型: sensor_msgs/msg/Temperature  消息数: 166428
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_position  类型: sensor_msgs/msg/NavSatFix  消息数: 21433
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /dji_sdk/height_above_takeoff  类型: std_msgs/msg/Float32  消息数: 21433
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_health  类型: std_msgs/msg/UInt8  消息数: 21433
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /uwb_endorange_info  类型: uwb_driver/msg/UwbRange  消息数: 25172
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /left/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /right/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4287
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4286
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /uwb_exorange_info  类型: uwb_driver/msg/UwbEcho  消息数: 2437
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /node_pos_marker_sc  类型: visualization_msgs/msg/Marker  消息数: 2437
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /node_pos_sc  类型: nav_msgs/msg/Path  消息数: 2437
+[21:15:37.446] [info] [Ros2BagDataSource]  话题: /leica/pose/relative  类型: geometry_msgs/msg/PoseStamped  消息数: 7679
+[21:15:37.446] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用

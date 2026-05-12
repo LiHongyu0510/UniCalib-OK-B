@@ -1,0 +1,12 @@
+/root/calib_ws/build/ikalibr/rosidl_adapter/ikalibr:msg/PropheseeEvent.idl
+/root/calib_ws/build/ikalibr/rosidl_adapter/ikalibr:msg/PropheseeEventArray.idl
+/root/calib_ws/build/ikalibr/rosidl_adapter/ikalibr:msg/DVSEvent.idl
+/root/calib_ws/build/ikalibr/rosidl_adapter/ikalibr:msg/DVSEventArray.idl
+/root/calib_ws/build/ikalibr/rosidl_adapter/ikalibr:msg/LivoxCustomMsg.idl
+/root/calib_ws/build/ikalibr/rosidl_adapter/ikalibr:msg/LivoxCustomPoint.idl
+/root/calib_ws/build/ikalibr/rosidl_adapter/ikalibr:msg/SbgImuData.idl
+/root/calib_ws/build/ikalibr/rosidl_adapter/ikalibr:msg/SbgImuStatus.idl
+/root/calib_ws/build/ikalibr/rosidl_adapter/ikalibr:msg/AinsteinRadarTarget.idl
+/root/calib_ws/build/ikalibr/rosidl_adapter/ikalibr:msg/AinsteinRadarTargetArray.idl
+/root/calib_ws/build/ikalibr/rosidl_adapter/ikalibr:msg/AWR1843RadarScan.idl
+/root/calib_ws/build/ikalibr/rosidl_adapter/ikalibr:msg/AWR1843RadarScanCustom.idl

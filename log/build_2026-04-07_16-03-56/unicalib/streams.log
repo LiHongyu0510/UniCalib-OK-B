@@ -1,0 +1,46 @@
+[0.621s] Invoking command in '/root/calib_ws/build/unicalib': PYTHONPATH=/root/calib_ws/build/unicalib/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/calib_ws/install/unicalib/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /root/calib_ws/build/unicalib/build --no-deps symlink_data
+[0.784s] /usr/local/lib/python3.10/dist-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+[0.785s]   warnings.warn(msg)
+[0.849s] running develop
+[0.849s] /usr/local/lib/python3.10/dist-packages/setuptools/_distutils/cmd.py:90: DevelopDeprecationWarning: develop command is deprecated.
+[0.849s] !!
+[0.849s] 
+[0.849s]         ********************************************************************************
+[0.849s]         Please avoid running ``setup.py`` and ``develop``.
+[0.849s]         Instead, use standards-based tools like pip or uv.
+[0.849s] 
+[0.849s]         This deprecation is overdue, please update your project and remove deprecated
+[0.849s]         calls to avoid build errors in the future.
+[0.849s] 
+[0.849s]         See https://github.com/pypa/setuptools/issues/917 for details.
+[0.849s]         ********************************************************************************
+[0.849s] 
+[0.849s] !!
+[0.849s]   self.initialize_options()
+[1.932s] Obtaining file:///root/calib_ws/build/unicalib
+[1.933s]   Installing build dependencies: started
+[9.494s]   Installing build dependencies: finished with status 'done'
+[9.494s]   Checking if build backend supports build_editable: started
+[9.665s]   Checking if build backend supports build_editable: finished with status 'done'
+[9.666s]   Getting requirements to build editable: started
+[9.785s]   Getting requirements to build editable: finished with status 'done'
+[9.786s]   Preparing editable metadata (pyproject.toml): started
+[9.886s]   Preparing editable metadata (pyproject.toml): finished with status 'done'
+[9.888s] Building wheels for collected packages: unicalib
+[9.889s]   Building editable for unicalib (pyproject.toml): started
+[9.984s]   Building editable for unicalib (pyproject.toml): finished with status 'done'
+[9.984s]   Created wheel for unicalib: filename=unicalib-1.0.0-0.editable-py3-none-any.whl size=3239 sha256=1894ee65b31941be13052646f29300c31458df1d955525b3e9da3dd36cb53b7a
+[9.984s]   Stored in directory: /tmp/pip-ephem-wheel-cache-ebl4ajoy/wheels/24/ca/58/04566a4f2e7e09df16ae2449b21c9f5b1c1100fe91713ad9ad
+[9.986s] Successfully built unicalib
+[9.986s] Installing collected packages: unicalib
+[9.986s]   Attempting uninstall: unicalib
+[9.986s]     Found existing installation: unicalib 1.0.0
+[9.986s]     WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.
+[9.987s]     WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.
+[9.987s]     WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.
+[9.987s]     WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.
+[9.987s]     WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.
+[9.988s]     Uninstalling unicalib-1.0.0:
+[9.988s]       Successfully uninstalled unicalib-1.0.0
+[9.996s] Successfully installed unicalib-1.0.0
+[14.208s] running symlink_data

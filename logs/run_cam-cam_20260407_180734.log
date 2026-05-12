@@ -1,0 +1,267 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — Camera-Camera 外参标定                   ║
+ ║   两阶段: 特征匹配初始化 → BA精化(无目标优先)          ║
+ ║   手动校准: --manual 触发 click-calib 对应点精化       ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-07 18:07:34.756] [info] [Cam-Cam] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] 配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] 精标定方法: ba | 无目标优先: true
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] 手动校准: true (阈值=1.50px)
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] [Cam-Cam] 已从配置读取 1 对标定对
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] [Cam-Cam] 数据源: ROS2 bag  path=/root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] [Cam-Cam]   相机 cam_left -> /left/image_raw
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] [Cam-Cam]   相机 cam_right -> /right/image_raw
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] [CalibPipeline] 初始化 ID=pipeline_20260407_180734
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] [CalibPipeline] 无目标优先: true
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] [CalibPipeline] 任务掩码: 0x20
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] ▶ Stage 1 (粗标定): 特征点匹配 + 本质矩阵
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:]   图像: 从 ROS2 bag 按 camera_topics / sensors 加载
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] ▶ Stage 2 (精标定): ba (无目标=true)
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] ▶ Stage 3 (手动校准): click-calib 双目对应点精化
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:]   阈值: 1.50px 超过则提示手动校准
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:]   使用 ManualClickRefiner::refine_cam_cam() 进行精化
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] 
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] ║   Pipeline ID: pipeline_20260407_180734       ║
+[2026-04-07 18:07:34.760] [info] [Cam-Cam] [:] ╚═══════════════════════════════════════════════╝
+[18:07:34.760] [info] 
+[18:07:34.760] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:07:34.760] [info] ▶ 开始阶段: [Fine-Auto] 任务: [cam_cam_extrin]
+[18:07:34.760] [info]   描述: 无目标优化
+[18:07:34.760] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:07:34.760] [info] [CALC] 精标定阶段开始 task=cam_cam_extrin
+[18:07:34.760] [info] [Fine-Auto] 任务: cam_cam_extrin | 无目标优先: true
+[18:07:34.760] [info] [Fine-Auto] 方法: 特征匹配 + Bundle Adjustment (无目标)
+[18:07:34.760] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[18:07:34.760] [info]   Bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[18:07:34.760] [info]   实时模式: false
+[18:07:34.761] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[18:07:34.761] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/metadata.yaml
+[18:07:34.762] [info] [Ros2BagDataSource] 自动检测 LiDAR 话题: /os1_cloud_node1/points
+[18:07:34.762] [info] [Ros2BagDataSource] 使用配置的相机话题 (来自 sensors): /left/image_raw
+[18:07:34.762] [info] [Ros2BagDataSource] 自动检测 IMU 话题: /dji_sdk/attitude
+[INFO] [1775556454.773098469] [rosbag2_storage]: Opened database '/root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/nya_02_ros2.db3' for READ_ONLY.
+[18:07:34.773] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[18:07:34.773] [info] [Ros2BagDataSource] 找到 19 个话题
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /dji_sdk/imu  类型: sensor_msgs/msg/Imu  消息数: 171462
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /dji_sdk/attitude  类型: geometry_msgs/msg/QuaternionStamped  消息数: 42866
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /imu/imu  类型: sensor_msgs/msg/Imu  消息数: 166428
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /imu/magnetic_field  类型: sensor_msgs/msg/MagneticField  消息数: 166428
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /imu/temperature  类型: sensor_msgs/msg/Temperature  消息数: 166428
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_position  类型: sensor_msgs/msg/NavSatFix  消息数: 21433
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /dji_sdk/height_above_takeoff  类型: std_msgs/msg/Float32  消息数: 21433
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_health  类型: std_msgs/msg/UInt8  消息数: 21433
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /uwb_endorange_info  类型: uwb_driver/msg/UwbRange  消息数: 25172
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /left/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /right/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4287
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4286
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /uwb_exorange_info  类型: uwb_driver/msg/UwbEcho  消息数: 2437
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /node_pos_marker_sc  类型: visualization_msgs/msg/Marker  消息数: 2437
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /node_pos_sc  类型: nav_msgs/msg/Path  消息数: 2437
+[18:07:34.773] [info] [Ros2BagDataSource]  话题: /leica/pose/relative  类型: geometry_msgs/msg/PoseStamped  消息数: 7679
+[18:07:34.773] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[18:07:50.937] [info] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[18:07:50.938] [info]   LiDAR [/os1_cloud_node1/points]: 4287 帧
+[18:07:50.938] [info]   LiDAR [/os1_cloud_node2/points]: 4286 帧
+[18:07:50.938] [info]   相机 [/left/image_raw]: 4285 帧
+[18:07:50.938] [info]   相机 [/right/image_raw]: 4285 帧
+[18:07:50.938] [info]   IMU [/dji_sdk/imu]: 171462 帧
+[18:07:50.938] [info]   IMU [/imu/imu]: 166428 帧
+[18:07:50.938] [info]   IMU [/os1_cloud_node1/imu]: 42862 帧
+[18:07:50.938] [info]   IMU [/os1_cloud_node2/imu]: 42862 帧
+[18:07:50.938] [info]   选用 LiDAR  lidar_0 -> /os1_cloud_node1/points
+[18:07:50.938] [info]   选用 相机  cam_left -> /left/image_raw
+[18:07:50.938] [info]   选用 相机  cam_right -> /right/image_raw
+[18:07:50.938] [info]   选用 IMU    imu_0 -> /dji_sdk/imu
+[18:07:50.939] [info]   时间范围: 1609045331.127 - 1609045759.771 秒
+[18:07:50.939] [info] [Ros2BagDataSource] 应用采样/帧数限制...
+[18:07:50.954] [info]   LiDAR /os1_cloud_node1/points 采样后: 800 帧
+[18:07:50.980] [info]   LiDAR /os1_cloud_node2/points 采样后: 800 帧
+[18:07:50.995] [info]   相机 /left/image_raw 采样后: 800 帧
+[18:07:51.028] [info]   相机 /right/image_raw 采样后: 800 帧
+[18:07:51.112] [info] [Fine-Auto/Cam-Cam] 相机数: 2，将依次标定相邻对: (0-1), (1-2), ...
+[18:07:51.117] [info] [CalibVisualizer] 初始化完成
+[18:07:51.117] [info] [Viz/Display] 已自动设置 XDG_RUNTIME_DIR=/tmp（原未设置，避免 GLFW 报错）
+[18:07:51.117] [info] [Viz/Display] 显示环境 DISPLAY=:0  XDG_RUNTIME_DIR=/tmp  WAYLAND_DISPLAY=(未设置)
+[18:07:51.117] [info] [PangolinRender] 正在创建窗口与 OpenGL 上下文: UniCalib Cam-Cam (1280x720)
+Framebuffer with requested attributes not available. Using available framebuffer. You may see visual artifacts.[18:07:51.366] [info] [PangolinRender] CreateWindowAndBind 已完成
+[18:07:51.366] [info] [PangolinRender] 初始化完成: UniCalib Cam-Cam (1280x720)  ShouldQuit=false (窗口内容: 网格+坐标轴，点云需后续推送)
+[18:07:51.366] [info] [Viz/Display] 首帧泵送: 开始 (共 12 帧)
+[18:07:51.366] [info] [Viz/Render] render_and_handle_input 第 1 次调用 即将调用 pangolin_render_->render()
+[18:07:51.366] [info] [PangolinRender] 首帧渲染 点云数=0  坐标系数=0 (无点云时仅显示网格与坐标轴)
+[18:07:51.366] [info] [PangolinRender] render 开始 帧=1
+[18:07:51.367] [info] [PangolinRender] render 步骤 glClear 完成
+[18:07:51.367] [info] [PangolinRender] render 步骤 Activate 完成
+[18:07:51.438] [info] [PangolinRender] render 步骤 grid+axis 完成
+[18:07:51.474] [info] [PangolinRender] render_point_clouds 本次完成 详细日志次数=1/5
+[18:07:51.474] [info] [PangolinRender] render 步骤 point_clouds 完成
+[18:07:51.474] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[18:07:51.479] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[18:07:51.479] [info] [Viz/Render] render_and_handle_input 第 1 次 render() 返回 continue_render=true
+[18:07:51.479] [info] [Viz/Display] 首帧泵送 第 1/12 帧 render_ok=true
+[18:07:51.499] [info] [Viz/Render] render_and_handle_input 第 2 次调用 即将调用 pangolin_render_->render()
+[18:07:51.499] [info] [PangolinRender] render 开始 帧=2
+[18:07:51.499] [info] [PangolinRender] render 步骤 glClear 完成
+[18:07:51.499] [info] [PangolinRender] render 步骤 Activate 完成
+[18:07:51.499] [info] [PangolinRender] render 步骤 grid+axis 完成
+[18:07:51.499] [info] [PangolinRender] render_point_clouds 本次完成 详细日志次数=2/5
+[18:07:51.499] [info] [PangolinRender] render 步骤 point_clouds 完成
+[18:07:51.499] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[18:07:51.505] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[18:07:51.505] [info] [Viz/Render] render_and_handle_input 第 2 次 render() 返回 continue_render=true
+[18:07:51.525] [info] [Viz/Render] render_and_handle_input 第 3 次调用 即将调用 pangolin_render_->render()
+[18:07:51.525] [info] [PangolinRender] render 开始 帧=3
+[18:07:51.525] [info] [PangolinRender] render 步骤 glClear 完成
+[18:07:51.525] [info] [PangolinRender] render 步骤 Activate 完成
+[18:07:51.525] [info] [PangolinRender] render 步骤 grid+axis 完成
+[18:07:51.525] [info] [PangolinRender] render_point_clouds 本次完成 详细日志次数=3/5
+[18:07:51.525] [info] [PangolinRender] render 步骤 point_clouds 完成
+[18:07:51.525] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[18:07:51.555] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[18:07:51.555] [info] [Viz/Render] render_and_handle_input 第 3 次 render() 返回 continue_render=true
+[18:07:51.575] [info] [Viz/Render] render_and_handle_input 第 4 次调用 即将调用 pangolin_render_->render()
+[18:07:51.575] [info] [PangolinRender] render 开始 帧=4
+[18:07:51.576] [info] [PangolinRender] render 步骤 glClear 完成
+[18:07:51.576] [info] [PangolinRender] render 步骤 Activate 完成
+[18:07:51.576] [info] [PangolinRender] render 步骤 grid+axis 完成
+[18:07:51.576] [info] [PangolinRender] render_point_clouds 本次完成 详细日志次数=4/5
+[18:07:51.576] [info] [PangolinRender] render 步骤 point_clouds 完成
+[18:07:51.576] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[18:07:51.578] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[18:07:51.578] [info] [Viz/Render] render_and_handle_input 第 4 次 render() 返回 continue_render=true
+[18:07:51.598] [info] [Viz/Render] render_and_handle_input 第 5 次调用 即将调用 pangolin_render_->render()
+[18:07:51.598] [info] [PangolinRender] render 开始 帧=5
+[18:07:51.598] [info] [PangolinRender] render 步骤 glClear 完成
+[18:07:51.598] [info] [PangolinRender] render 步骤 Activate 完成
+[18:07:51.598] [info] [PangolinRender] render 步骤 grid+axis 完成
+[18:07:51.598] [info] [PangolinRender] render_point_clouds 本次完成 详细日志次数=5/5
+[18:07:51.598] [info] [PangolinRender] render 步骤 point_clouds 完成
+[18:07:51.598] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[18:07:51.601] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[18:07:51.601] [info] [Viz/Render] render_and_handle_input 第 5 次 render() 返回 continue_render=true
+[18:07:51.621] [info] [Viz/Render] render_and_handle_input 第 6 次调用 即将调用 pangolin_render_->render()
+[18:07:51.621] [info] [PangolinRender] render 开始 帧=6
+[18:07:51.621] [info] [PangolinRender] render 步骤 glClear 完成
+[18:07:51.621] [info] [PangolinRender] render 步骤 Activate 完成
+[18:07:51.621] [info] [PangolinRender] render 步骤 grid+axis 完成
+[18:07:51.621] [info] [PangolinRender] render 步骤 point_clouds 完成
+[18:07:51.621] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[18:07:51.626] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[18:07:51.626] [info] [Viz/Render] render_and_handle_input 第 6 次 render() 返回 continue_render=true
+[18:07:51.646] [info] [Viz/Render] render_and_handle_input 第 7 次调用 即将调用 pangolin_render_->render()
+[18:07:51.646] [info] [PangolinRender] render 开始 帧=7
+[18:07:51.646] [info] [PangolinRender] render 步骤 glClear 完成
+[18:07:51.647] [info] [PangolinRender] render 步骤 Activate 完成
+[18:07:51.647] [info] [PangolinRender] render 步骤 grid+axis 完成
+[18:07:51.647] [info] [PangolinRender] render 步骤 point_clouds 完成
+[18:07:51.647] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[18:07:51.649] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[18:07:51.649] [info] [Viz/Render] render_and_handle_input 第 7 次 render() 返回 continue_render=true
+[18:07:51.669] [info] [Viz/Render] render_and_handle_input 第 8 次调用 即将调用 pangolin_render_->render()
+[18:07:51.669] [info] [PangolinRender] render 开始 帧=8
+[18:07:51.669] [info] [PangolinRender] render 步骤 glClear 完成
+[18:07:51.669] [info] [PangolinRender] render 步骤 Activate 完成
+[18:07:51.670] [info] [PangolinRender] render 步骤 grid+axis 完成
+[18:07:51.670] [info] [PangolinRender] render 步骤 point_clouds 完成
+[18:07:51.670] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[18:07:51.672] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[18:07:51.672] [info] [Viz/Render] render_and_handle_input 第 8 次 render() 返回 continue_render=true
+[18:07:51.692] [info] [Viz/Render] render_and_handle_input 第 9 次调用 即将调用 pangolin_render_->render()
+[18:07:51.692] [info] [PangolinRender] render 开始 帧=9
+[18:07:51.692] [info] [PangolinRender] render 步骤 glClear 完成
+[18:07:51.692] [info] [PangolinRender] render 步骤 Activate 完成
+[18:07:51.692] [info] [PangolinRender] render 步骤 grid+axis 完成
+[18:07:51.692] [info] [PangolinRender] render 步骤 point_clouds 完成
+[18:07:51.692] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[18:07:51.697] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[18:07:51.697] [info] [Viz/Render] render_and_handle_input 第 9 次 render() 返回 continue_render=true
+[18:07:51.717] [info] [Viz/Render] render_and_handle_input 第 10 次调用 即将调用 pangolin_render_->render()
+[18:07:51.717] [info] [PangolinRender] render 开始 帧=10
+[18:07:51.717] [info] [PangolinRender] render 步骤 glClear 完成
+[18:07:51.717] [info] [PangolinRender] render 步骤 Activate 完成
+[18:07:51.717] [info] [PangolinRender] render 步骤 grid+axis 完成
+[18:07:51.717] [info] [PangolinRender] render 步骤 point_clouds 完成
+[18:07:51.717] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[18:07:51.720] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[18:07:51.720] [info] [Viz/Render] render_and_handle_input 第 10 次 render() 返回 continue_render=true
+[18:07:51.740] [info] [PangolinRender] render 开始 帧=11
+[18:07:51.740] [info] [PangolinRender] render 步骤 glClear 完成
+[18:07:51.740] [info] [PangolinRender] render 步骤 Activate 完成
+[18:07:51.740] [info] [PangolinRender] render 步骤 grid+axis 完成
+[18:07:51.740] [info] [PangolinRender] render 步骤 point_clouds 完成
+[18:07:51.740] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[18:07:51.743] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[18:07:51.763] [info] [PangolinRender] render 开始 帧=12
+[18:07:51.763] [info] [PangolinRender] render 步骤 glClear 完成
+[18:07:51.763] [info] [PangolinRender] render 步骤 Activate 完成
+[18:07:51.763] [info] [PangolinRender] render 步骤 grid+axis 完成
+[18:07:51.763] [info] [PangolinRender] render 步骤 point_clouds 完成
+[18:07:51.763] [info] [PangolinRender] render 步骤 frustum+frames 完成
+[18:07:51.765] [info] [PangolinRender] render 步骤 FinishFrame 完成
+[18:07:51.765] [info] [Viz/Display] 首帧泵送 第 12/12 帧 render_ok=true
+[18:07:51.785] [info] [Viz/Display] 首帧泵送完成 共 12 帧 (窗口应已显示网格/坐标轴，尚未推送点云)；标定完成后请手动关闭窗口
+[18:07:51.785] [info] [Fine-Auto/Cam-Cam] 可视化已启用（默认）
+[18:07:51.785] [info] [Fine-Auto/Cam-Cam] 按配置 camera_align 标定 1 对
+[18:07:51.785] [warning] [Fine-Auto/Cam-Cam] 跳过 cam_right->cam_left: 缺少内参
+[18:07:51.786] [info] [Fine-Auto/Cam-Cam] Camera-Camera 标定完成: 0 对, 最大 RMS=N/A
+[18:07:51.841] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:07:51.841] [info] ■ 结束阶段: [Fine-Auto] 任务: [cam_cam_extrin]
+[18:07:51.841] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 17081 ms
+[18:07:51.842] [info]   消息: Camera-Camera 标定完成: 0 对, 最大 RMS=N/A
+[18:07:51.842] [info] [CALC] 阶段结束 stage=Fine-Auto task=cam_cam_extrin success=false residual_rms=0.000000 elapsed_ms=17025.8 threshold=1.5000
+[18:07:51.842] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:07:51.842] [info] [Pipeline] 用户已启用手动校准 (--manual), 进入 6-DOF 调整
+[18:07:51.842] [info] 
+[18:07:51.842] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:07:51.842] [info] ▶ 开始阶段: [Manual-Refine] 任务: [cam_cam_extrin]
+[18:07:51.842] [info]   描述: 手动校准: 6-DOF 交互式调整
+[18:07:51.842] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:07:51.842] [info] [Manual-Refine] 任务: cam_cam_extrin
+[18:07:51.842] [info] [Manual-Refine] 操作说明: Q/A Roll  W/S Pitch  E/D Yaw  R/F Tx  T/G Ty  Y/H Tz  U Undo  Enter 接受  Esc 取消
+[18:07:51.843] [info] [ManualSession] 会话ID: session_2026-04-07_18-07-51
+[18:07:51.843] [info] [ManualSession] 保存目录: ./results/manual_sessions
+[18:07:51.843] [warning] [Manual-Refine] 无 Camera-Camera 精标定缓存数据，无法启用手动调整
+[18:07:51.843] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:07:51.843] [info] ■ 结束阶段: [Manual-Refine] 任务: [cam_cam_extrin]
+[18:07:51.843] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 0 ms
+[18:07:51.843] [info]   消息: 无 Camera-Camera 精标定缓存数据，无法启用手动调整
+[18:07:51.843] [info] [CALC] 阶段结束 stage=Manual-Refine task=cam_cam_extrin success=false residual_rms=0.000000 elapsed_ms=0.5 threshold=-1.0000
+[18:07:51.843] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[18:07:51.843] [info] ====== Pipeline Report: pipeline_20260407_180734 ======
+[18:07:51.843] [info]   Total time: 17026.3 ms
+[18:07:51.843] [info]   All stages succeeded: NO
+[18:07:51.843] [info]   标定质量: 各阶段 RMS 均在阈值内
+[18:07:51.843] [info]   [Fine-Auto-cam_cam_extrin] success=false rms=0.0000 time=17025.8ms: Camera-Camera 标定完成: 0 对, 最大 RMS=N/A
+[18:07:51.843] [info]   [Manual-Refine-cam_cam_extrin] success=false rms=0.0000 time=0.5ms: 无 Camera-Camera 精标定缓存数据，无法启用手动调整
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+╚══════════════════════════════════════════════════════╝
+
+[18:07:51.843] [info] ================================
+[18:07:51.844] [info] Pipeline report saved: ./results/pipeline_report_20260407_180734.yaml
+[18:07:51.844] [info] ====== Pipeline Report: pipeline_20260407_180734 ======
+[18:07:51.844] [info]   Total time: 17026.3 ms
+[18:07:51.844] [info]   All stages succeeded: NO
+[18:07:51.844] [info]   标定质量: 各阶段 RMS 均在阈值内
+[18:07:51.844] [info]   [Fine-Auto-cam_cam_extrin] success=false rms=0.0000 time=17025.8ms: Camera-Camera 标定完成: 0 对, 最大 RMS=N/A
+[18:07:51.844] [info]   [Manual-Refine-cam_cam_extrin] success=false rms=0.0000 time=0.5ms: 无 Camera-Camera 精标定缓存数据，无法启用手动调整
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+╚══════════════════════════════════════════════════════╝
+
+[18:07:51.844] [info] ================================
+[18:07:51.844] [info] Cam-Cam 标定完成 | 结果: ./results

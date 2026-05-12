@@ -1,0 +1,106 @@
+
+ ╔══════════════════════════════════════════════╗
+ ║    UniCalib — IMU 内参标定 (Allan + 六面法)  ║
+ ╚══════════════════════════════════════════════╝
+
+[2026-04-07 20:54:53.412] [info] [UniCalib-IMU-Intrinsic] [:] 日志文件: ./results/logs/imu_intrinsic_20260407_205453.log
+[2026-04-07 20:54:53.412] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[2026-04-07 20:54:53.412] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/metadata.yaml
+[2026-04-07 20:54:53.413] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource] 自动检测 LiDAR 话题: /os1_cloud_node1/points
+[2026-04-07 20:54:53.413] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource] 自动检测相机话题: /left/image_raw
+[2026-04-07 20:54:53.413] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource] 使用配置的 IMU 话题: /imu/imu
+[INFO] [1775566493.417518424] [rosbag2_storage]: Opened database '/root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/nya_02_ros2.db3' for READ_ONLY.
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource] 找到 19 个话题
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/imu  类型: sensor_msgs/msg/Imu  消息数: 171462
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/attitude  类型: geometry_msgs/msg/QuaternionStamped  消息数: 42866
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /os1_cloud_node2/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /os1_cloud_node1/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /imu/imu  类型: sensor_msgs/msg/Imu  消息数: 166428
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /imu/magnetic_field  类型: sensor_msgs/msg/MagneticField  消息数: 166428
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /imu/temperature  类型: sensor_msgs/msg/Temperature  消息数: 166428
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/gps_position  类型: sensor_msgs/msg/NavSatFix  消息数: 21433
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/height_above_takeoff  类型: std_msgs/msg/Float32  消息数: 21433
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/gps_health  类型: std_msgs/msg/UInt8  消息数: 21433
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /uwb_endorange_info  类型: uwb_driver/msg/UwbRange  消息数: 25172
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /left/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /right/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /os1_cloud_node1/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4287
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /os1_cloud_node2/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4286
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /uwb_exorange_info  类型: uwb_driver/msg/UwbEcho  消息数: 2437
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /node_pos_marker_sc  类型: visualization_msgs/msg/Marker  消息数: 2437
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /node_pos_sc  类型: nav_msgs/msg/Path  消息数: 2437
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource]  话题: /leica/pose/relative  类型: geometry_msgs/msg/PoseStamped  消息数: 7679
+[2026-04-07 20:54:53.417] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[2026-04-07 20:55:09.591] [info] [UniCalib-IMU-Intrinsic] [:] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[2026-04-07 20:55:09.592] [info] [UniCalib-IMU-Intrinsic] [:]   LiDAR [/os1_cloud_node1/points]: 4287 帧
+[2026-04-07 20:55:09.592] [info] [UniCalib-IMU-Intrinsic] [:]   LiDAR [/os1_cloud_node2/points]: 4286 帧
+[2026-04-07 20:55:09.592] [info] [UniCalib-IMU-Intrinsic] [:]   相机 [/left/image_raw]: 4285 帧
+[2026-04-07 20:55:09.592] [info] [UniCalib-IMU-Intrinsic] [:]   相机 [/right/image_raw]: 4285 帧
+[2026-04-07 20:55:09.592] [info] [UniCalib-IMU-Intrinsic] [:]   IMU [/dji_sdk/imu]: 171462 帧
+[2026-04-07 20:55:09.592] [info] [UniCalib-IMU-Intrinsic] [:]   IMU [/imu/imu]: 166428 帧
+[2026-04-07 20:55:09.592] [info] [UniCalib-IMU-Intrinsic] [:]   IMU [/os1_cloud_node1/imu]: 42862 帧
+[2026-04-07 20:55:09.592] [info] [UniCalib-IMU-Intrinsic] [:]   IMU [/os1_cloud_node2/imu]: 42862 帧
+[2026-04-07 20:55:09.592] [info] [UniCalib-IMU-Intrinsic] [:]   选用 LiDAR  lidar_0 -> /os1_cloud_node1/points
+[2026-04-07 20:55:09.592] [info] [UniCalib-IMU-Intrinsic] [:]   选用 相机  camera_0 -> /left/image_raw
+[2026-04-07 20:55:09.592] [info] [UniCalib-IMU-Intrinsic] [:]   选用 IMU    imu_0 -> /imu/imu
+[2026-04-07 20:55:09.592] [info] [UniCalib-IMU-Intrinsic] [:]   时间范围: 1609045331.127 - 1609045759.771 秒
+[2026-04-07 20:55:09.602] [info] [UniCalib-IMU-Intrinsic] [:] Loading IMU data from ROS2 bag: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2 (topic: /imu/imu, 166428 frames)
+[2026-04-07 20:55:10.147] [info] [UniCalib-IMU-Intrinsic] [:] Duration: 428.6 s | Frames: 166428
+  [starting]   [starting] [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░] 0%[2026-04-07 20:55:10.150] [info] [UniCalib-IMU-Intrinsic] [:] === IMU 内参标定开始 ===
+[2026-04-07 20:55:10.150] [info] [UniCalib-IMU-Intrinsic] [:]   数据帧数: 166428
+[2026-04-07 20:55:10.150] [info] [UniCalib-IMU-Intrinsic] [:]   数据时长: 428.6 s
+[2026-04-07 20:55:10.150] [info] [UniCalib-IMU-Intrinsic] [:] [IMU-Intrin] Step 1/2: Allan 方差分析 ...
+  [allan_variance]   [allan_variance] [███░░░░░░░░░░░░░░░░░░░░░░░░░░░] 10%[2026-04-07 20:55:10.150] [info] [UniCalib-IMU-Intrinsic] [:] Allan: sample_rate=378.5 Hz, N=166428 frames
+[2026-04-07 20:55:10.184] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing gyro axis X ...
+[2026-04-07 20:55:10.190] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing accel axis X ...
+[2026-04-07 20:55:10.193] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing gyro axis Y ...
+[2026-04-07 20:55:10.197] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing accel axis Y ...
+[2026-04-07 20:55:10.201] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing gyro axis Z ...
+[2026-04-07 20:55:10.204] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing accel axis Z ...
+[2026-04-07 20:55:10.207] [info] [UniCalib-IMU-Intrinsic] [:] [IMU-Intrin] Step 2/2: 六面法加速度计标定 ...
+  [six_position]   [six_position] [█████████████████████░░░░░░░░░] 70%[2026-04-07 20:55:10.207] [info] [UniCalib-IMU-Intrinsic] [:] Static segments detected: 0
+[2026-04-07 20:55:10.207] [warning] [UniCalib-IMU-Intrinsic] [:] Six-position: only 0 static segments found (need ≥6)
+[2026-04-07 20:55:10.207] [info] [UniCalib-IMU-Intrinsic] [:] [CALC] IMU内参(legacy) 标定完成 帧数=166428 allan_fit_rms=0.000000 noise_gyro=6.1610e-02 noise_acce=7.4843e-02
+  [done]   [done] [██████████████████████████████] 100%[2026-04-07 20:55:10.207] [info] [UniCalib-IMU-Intrinsic] [:] === IMU 内参标定完成 ===
+[2026-04-07 20:55:10.207] [info] [UniCalib-IMU-Intrinsic] [:]   陀螺噪声:     6.1610e-02 rad/s/√Hz
+[2026-04-07 20:55:10.207] [info] [UniCalib-IMU-Intrinsic] [:]   陀螺零偏不稳: 1.8268e-03 rad/s
+[2026-04-07 20:55:10.208] [info] [UniCalib-IMU-Intrinsic] [:]   加速度计噪声: 7.4843e-02 m/s²/√Hz
+[2026-04-07 20:55:10.208] [info] [UniCalib-IMU-Intrinsic] [:]   加速度计零偏不稳: 2.4894e-02 m/s²
+
+[2026-04-07 20:55:10.208] [info] [UniCalib-IMU-Intrinsic] [:] Calibration took 0.1 s
+[2026-04-07 20:55:10.208] [info] [UniCalib-IMU-Intrinsic] [:] Static segments detected: 0
+[2026-04-07 20:55:10.216] [info] [UniCalib-IMU-Intrinsic] [:] [UniCalib-IMU-Intrinsic] Transformer-IMU 路径: /root/calib_ws/Transformer-IMU-Calibrator
+[2026-04-07 20:55:10.217] [info] [UniCalib-IMU-Intrinsic] [:] [TransformerIMU] 不可用: 脚本不存在 script=/root/calib_ws/Transformer-IMU-Calibrator/eval_unicalib.py
+[2026-04-07 20:55:10.217] [info] [UniCalib-IMU-Intrinsic] [:] [TransformerIMU] Transformer-IMU 不可用，使用 C++ 原生零偏估计（上方已打印具体原因）
+[2026-04-07 20:55:10.217] [info] [UniCalib-IMU-Intrinsic] [:] [TransformerIMU] 原生零偏: 重力自检 g=(0.2623,-0.1531,-9.8053)
+[2026-04-07 20:55:10.217] [info] [UniCalib-IMU-Intrinsic] [:] [TransformerIMU] 使用 C++ 原生零偏估计 (无 Python/无模型推理) mean_accel‖=9.5994 ‖ba‖=0.2106 m/s²
+[2026-04-07 20:55:10.217] [info] [UniCalib-IMU-Intrinsic] [:] 六面法静态段不足 (0 < 6)，零偏来源: Transformer-IMU-Calibrator(native) (备选路径)
+[2026-04-07 20:55:10.217] [info] [UniCalib-IMU-Intrinsic] [:]   bias_gyro=[0.006512, 0.002893, 0.009256] (陀螺零偏为均值/模型粗估，可作初值)
+[2026-04-07 20:55:10.217] [info] [UniCalib-IMU-Intrinsic] [:]   bias_acce=[-0.005632, 0.003286, 0.210535] ‖ba‖=0.2106 m/s²
+[2026-04-07 20:55:10.217] [info] [UniCalib-IMU-Intrinsic] [:] Allan: sample_rate=378.5 Hz, N=166428 frames
+[2026-04-07 20:55:10.219] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing gyro axis X ...
+[2026-04-07 20:55:10.225] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing accel axis X ...
+[2026-04-07 20:55:10.230] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing gyro axis Y ...
+[2026-04-07 20:55:10.234] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing accel axis Y ...
+[2026-04-07 20:55:10.237] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing gyro axis Z ...
+[2026-04-07 20:55:10.239] [info] [UniCalib-IMU-Intrinsic] [:] Allan: analyzing accel axis Z ...
+[2026-04-07 20:55:10.250] [info] [UniCalib-IMU-Intrinsic] [:] Allan plot saved: ./results/allan_gyro.png
+[2026-04-07 20:55:10.251] [info] [UniCalib-IMU-Intrinsic] [:] Results saved to: ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+
+┌────────────────────────────────────────────────────┐
+│              IMU 内参标定结果                      │
+├──────────────────────┬─────────────────────────────┤
+│ 传感器 ID            │                       imu_0 │
+│ 数据帧数             │                      166428 │
+│ 数据时长 (s)         │                       428.6 │
+├──────────────────────┼─────────────────────────────┤
+│ 陀螺噪声 (rad/s/√Hz) │                  6.1610e-02 │
+│ 陀螺零偏不稳 (rad/s) │                  1.8268e-03 │
+│ 加速计噪声 (m/s²/√Hz)│                  7.4843e-02 │
+│ 加速计零偏不稳 (m/s²)│                  2.4894e-02 │
+│ 加速计零偏 ‖ba‖(m/s²)│                  2.1064e-01 │
+└──────────────────────┴─────────────────────────────┘
+
+结果保存至: ./results
+

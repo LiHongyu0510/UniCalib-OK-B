@@ -1,0 +1,73 @@
+[0.182s] Invoking command in '/root/calib_ws/build/unicalib_cpp': /opt/cmake/bin/cmake /root/calib_ws/unicalib_C_plus_plus -DCMAKE_BUILD_TYPE=Release -DUSE_THIRDPARTY_LIBS=ON -DUSE_VETA_STUB=ON -Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm -DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/unicalib_cpp
+[0.214s] -- The CXX compiler identification is GNU 11.4.0
+[0.220s] -- Detecting CXX compiler ABI info
+[0.258s] -- Detecting CXX compiler ABI info - done
+[0.264s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.264s] -- Detecting CXX compile features
+[0.265s] -- Detecting CXX compile features - done
+[0.291s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[0.343s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[0.344s] -- Found Threads: TRUE  
+[0.356s] -- Found CUDA: /usr/local/cuda (found suitable exact version "11.8") 
+[0.365s] -- Configuring done
+[0.372s] -- Generating done
+[0.372s] CMake Warning:
+[0.372s]   Manually-specified variables were not used by the project:
+[0.372s] 
+[0.372s]     USE_THIRDPARTY_LIBS
+[0.372s]     USE_VETA_STUB
+[0.372s]     glm_DIR
+[0.372s] 
+[0.372s] 
+[0.375s] -- Build files have been written to: /root/calib_ws/build/unicalib_cpp
+[0.377s] Invoked command in '/root/calib_ws/build/unicalib_cpp' returned '0': /opt/cmake/bin/cmake /root/calib_ws/unicalib_C_plus_plus -DCMAKE_BUILD_TYPE=Release -DUSE_THIRDPARTY_LIBS=ON -DUSE_VETA_STUB=ON -Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm -DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/unicalib_cpp
+[0.379s] Invoking command in '/root/calib_ws/build/unicalib_cpp': /opt/cmake/bin/cmake --build /root/calib_ws/build/unicalib_cpp -- -j28 -l28
+[0.392s] [  2%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/sensor_config.cpp.o
+[0.393s] [  8%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/data_manager.cpp.o
+[0.393s] [ 11%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/imu_intrinsic.cpp.o
+[0.393s] [ 13%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/allan_variance.cpp.o
+[0.394s] [ 16%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/transforms.cpp.o
+[0.394s] [ 19%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/process_runner.cpp.o
+[0.394s] [ 19%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/calib_result.cpp.o
+[0.394s] [ 22%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/camera_fisheye.cpp.o
+[0.394s] [ 25%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/external_tools_config.cpp.o
+[0.399s] [ 30%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/dm_calib_wrapper.cpp.o
+[0.399s] [ 30%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/learn_to_calib_wrapper.cpp.o
+[0.399s] [ 33%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/mias_lcec_wrapper.cpp.o
+[0.399s] [ 38%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/ikalibr_wrapper.cpp.o
+[0.399s] [ 38%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/feature_matching.cpp.o
+[0.402s] [ 41%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/click_calib_wrapper.cpp.o
+[0.402s] [ 44%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/reprojection.cpp.o
+[0.402s] [ 50%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/visualization_v2.cpp.o
+[0.402s] [ 50%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/report_generator.cpp.o
+[0.404s] [ 52%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/interactive_report.cpp.o
+[0.410s] [ 58%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/exceptions.cpp.o
+[0.413s] [ 58%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/system.cpp.o
+[0.413s] [ 61%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/logger.cpp.o
+[0.414s] [ 63%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/realtime_visualizer.cpp.o
+[0.417s] [ 66%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/data_validator.cpp.o
+[0.418s] [ 69%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/calibration_quality.cpp.o
+[0.422s] [ 72%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/iterative_refinement.cpp.o
+[0.430s] [ 75%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/temporal_calibration.cpp.o
+[2.198s] /root/calib_ws/unicalib_C_plus_plus/src/interactive_report.cpp: In constructor ‘unicalib::InteractiveReportGenerator::InteractiveReportGenerator(const string&)’:
+[2.198s] /root/calib_ws/unicalib_C_plus_plus/src/interactive_report.cpp:20:9: warning: ignoring return value of ‘int system(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+[2.199s]    20 |   system(mkdir_cmd.c_str());
+[2.199s]       |   ~~~~~~^~~~~~~~~~~~~~~~~~~
+[3.471s] /root/calib_ws/unicalib_C_plus_plus/src/visualization_v2.cpp: In constructor ‘unicalib::VisualizationV2::VisualizationV2(const string&)’:
+[3.471s] /root/calib_ws/unicalib_C_plus_plus/src/visualization_v2.cpp:24:9: warning: ignoring return value of ‘int system(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+[3.471s]    24 |   system(mkdir_cmd.c_str());
+[3.471s]       |   ~~~~~~^~~~~~~~~~~~~~~~~~~
+[5.924s] [ 77%] Linking CXX static library libunicalib_cpp.a
+[5.947s] [ 77%] Built target unicalib_cpp
+[5.953s] [ 80%] Building CXX object CMakeFiles/unicalib_example.dir/examples/example_main.cpp.o
+[5.953s] [ 83%] Building CXX object CMakeFiles/unicalib_viz_example.dir/examples/visualization_example.cpp.o
+[5.953s] [ 88%] Building CXX object CMakeFiles/unicalib_realtime_example.dir/examples/realtime_visualization_example.cpp.o
+[5.953s] [ 88%] Building CXX object CMakeFiles/unicalib_optimization_example.dir/examples/optimization_example.cpp.o
+[6.693s] [ 91%] Linking CXX executable unicalib_example
+[6.790s] [ 91%] Built target unicalib_example
+[7.134s] [ 94%] Linking CXX executable unicalib_realtime_example
+[7.181s] [ 94%] Built target unicalib_realtime_example
+[7.460s] [ 97%] Linking CXX executable unicalib_optimization_example
+[7.504s] [ 97%] Built target unicalib_optimization_example
+[7.574s] [100%] Linking CXX executable unicalib_viz_example
+[7.636s] [100%] Built target unicalib_viz_example

@@ -1,0 +1,86 @@
+{
+	"backtrace" : 4,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_custom_target",
+			"MakeWheel",
+			"include"
+		],
+		"files" : 
+		[
+			"thirdparty/Pangolin/Pangolin-0.9.0/cmake/MakePythonWheel.cmake",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_python/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 2
+			},
+			{
+				"command" : 2,
+				"file" : 2,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 1,
+				"parent" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 83,
+				"parent" : 2
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 92,
+				"parent" : 3
+			}
+		]
+	},
+	"id" : "pypangolin_pip_uninstall::@8458d982a2022fa26f7d",
+	"name" : "pypangolin_pip_uninstall",
+	"paths" : 
+	{
+		"build" : "thirdparty_build/Pangolin",
+		"source" : "thirdparty/Pangolin/Pangolin-0.9.0"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		},
+		{
+			"name" : "CMake Rules",
+			"sourceIndexes" : 
+			[
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 4,
+			"isGenerated" : true,
+			"path" : "/root/calib_ws/build/UniCalib/thirdparty_build/Pangolin/CMakeFiles/pypangolin_pip_uninstall",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "/root/calib_ws/build/UniCalib/thirdparty_build/Pangolin/CMakeFiles/pypangolin_pip_uninstall.rule",
+			"sourceGroupIndex" : 1
+		}
+	],
+	"type" : "UTILITY"
+}

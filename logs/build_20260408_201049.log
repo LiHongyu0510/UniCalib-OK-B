@@ -1,0 +1,73 @@
+Consolidate compiler generated dependencies of target pango_core
+[  7%] Built target pango_core
+Consolidate compiler generated dependencies of target pango_vars
+Consolidate compiler generated dependencies of target pango_packetstream
+[  8%] Built target pango_vars
+[ 13%] Built target pango_packetstream
+Consolidate compiler generated dependencies of target pango_image
+[ 23%] Built target pango_image
+Consolidate compiler generated dependencies of target pango_opengl
+[ 31%] Built target pango_opengl
+Consolidate compiler generated dependencies of target pango_windowing
+[ 37%] Built target pango_windowing
+Consolidate compiler generated dependencies of target pango_video
+Consolidate compiler generated dependencies of target pango_display
+[ 46%] Built target pango_display
+[ 69%] Built target pango_video
+Consolidate compiler generated dependencies of target pango_plot
+[ 71%] Built target pango_plot
+Consolidate compiler generated dependencies of target unicalib
+[ 89%] Built target unicalib
+Consolidate compiler generated dependencies of target unicalib_camera_intrinsic
+Consolidate compiler generated dependencies of target unicalib_lidar_lidar
+Consolidate compiler generated dependencies of target unicalib_joint
+Consolidate compiler generated dependencies of target unicalib_imu_lidar
+Consolidate compiler generated dependencies of target unicalib_lidar_camera
+Consolidate compiler generated dependencies of target unicalib_cam_cam
+Consolidate compiler generated dependencies of target unicalib_imu_intrinsic
+[ 91%] Built target unicalib_joint
+[ 92%] Built target unicalib_lidar_lidar
+[ 94%] Built target unicalib_imu_lidar
+[ 95%] Built target unicalib_cam_cam
+[ 97%] Built target unicalib_camera_intrinsic
+[ 98%] Built target unicalib_imu_intrinsic
+[ 98%] Building CXX object CMakeFiles/unicalib_lidar_camera.dir/apps/lidar_camera_extrin/main.cpp.o
+cc1plus: warning: /opt/ros/humble/include/moveit_butterworth_filter_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_bullet_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_detection_fcl_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_collision_distance_field_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_kinematics_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_move_group_interface_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_pipeline_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_planning_scene_monitor_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_smoothing_base_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_trajectory_execution_manager_export.h: not a directory
+cc1plus: warning: /opt/ros/humble/include/moveit_warehouse_export.h: not a directory
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp: In function ‘void fatal_signal_handler(int)’:
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:83:54: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   83 |     for (const char* p = prefix; *p; ++p) (void)write(STDERR_FILENO, p, 1);
+      |                                                 ~~~~~^~~~~~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:84:53: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   84 |     for (const char* p = sname; *p; ++p) (void)write(STDERR_FILENO, p, 1);
+      |                                                ~~~~~^~~~~~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:85:51: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   85 |     for (const char* p = mid; *p; ++p) (void)write(STDERR_FILENO, p, 1);
+      |                                              ~~~~~^~~~~~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:87:53: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   87 |     if (stage) { for (; *stage; ++stage) (void)write(STDERR_FILENO, stage, 1); }
+      |                                                ~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:88:65: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   88 |     else { const char* n = "(null)"; for (; *n; ++n) (void)write(STDERR_FILENO, n, 1); }
+      |                                                            ~~~~~^~~~~~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:89:50: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   89 |     for (const char* p = nl; *p; ++p) (void)write(STDERR_FILENO, p, 1);
+      |                                             ~~~~~^~~~~~~~~~~~~~~~~~~~~
+/root/calib_ws/calib_unified/apps/lidar_camera_extrin/main.cpp:93:56: warning: ignoring return value of ‘ssize_t write(int, const void*, size_t)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   93 |         for (const char* p = hint; *p; ++p) (void)write(STDERR_FILENO, p, 1);
+      |                                                   ~~~~~^~~~~~~~~~~~~~~~~~~~~
+[100%] Linking CXX executable bin/unicalib_lidar_camera
+/usr/bin/ld: warning: libopencv_imgcodecs.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_imgcodecs.so.408
+/usr/bin/ld: warning: libopencv_core.so.4.5d, needed by /opt/ros/humble/lib/libcv_bridge.so, may conflict with libopencv_core.so.408
+[100%] Built target unicalib_lidar_camera

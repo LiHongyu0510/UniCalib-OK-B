@@ -1,0 +1,513 @@
+
+ ╔═══════════════════════════════════════════════════════════════╗
+ ║   UniCalib v2.0 — 多传感器联合标定系统                        ║
+ ║                                                               ║
+ ║   支持: IMU内参 / 相机内参 / IMU-LiDAR外参 /                  ║
+ ║         LiDAR-Camera外参 / Camera-Camera外参                  ║
+ ║                                                               ║
+ ║   两阶段: AI粗标定 → 无目标精标定 → 手动校准                  ║
+ ║   AI模型: DM-Calib / MIAS-LCEC / Transformer-IMU / L2Calib   ║
+ ╚═══════════════════════════════════════════════════════════════╝
+
+[2026-04-27 11:23:28.125] [info] [Joint-Calib] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:]   IMU: 1, LiDAR: 1, Camera: 4
+
+  标定任务:
+    ✓ IMU 内参
+    ✓ 相机内参
+    ✓ IMU-LiDAR 外参
+    ✓ LiDAR-Camera 外参
+    ✗ Camera-Camera 外参
+
+  选项:
+    AI粗标定:    禁用
+    手动校准:    禁用
+    无目标优先:  是
+
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] 配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] 输出: ./results
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] 配置: 读取到 1 对 IMU-LiDAR 标定对
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] 配置: 读取到 1 对 LiDAR-LiDAR 标定对
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] 配置: 读取到 4 对 LiDAR-Camera 标定对
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] 配置: 读取到 1 对 Camera-Camera 标定对 (from pairs)
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] [CalibPipeline] 初始化 ID=pipeline_20260427_112328
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] [CalibPipeline] 无目标优先: true
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] [CalibPipeline] 任务掩码: 0x17
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] ▶ 开始联合标定流水线...
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] 
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] ║   Pipeline ID: pipeline_20260427_112328       ║
+[2026-04-27 11:23:28.126] [info] [Joint-Calib] [:] ╚═══════════════════════════════════════════════╝
+[11:23:28.127] [info] 
+[11:23:28.127] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:23:28.127] [info] ▶ 开始阶段: [Fine-Auto] 任务: [imu_intrinsic]
+[11:23:28.127] [info]   描述: 无目标优化
+[11:23:28.127] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:23:28.127] [info] [CALC] 精标定阶段开始 task=imu_intrinsic
+[11:23:28.127] [info] [Fine-Auto] 任务: imu_intrinsic | 无目标优先: true
+[11:23:28.127] [info] [Fine-Auto] 方法: Allan方差分析
+[11:23:28.127] [info] [Fine-Auto/IMU-Intrin] 开始执行IMU内参标定...
+[11:23:28.127] [info]   数据源类型: ROS2 Bag 文件
+[11:23:28.127] [info]   ROS2 Bag 文件: /root/calib_ws/data/park
+[11:23:28.127] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[11:23:28.127] [info]   Bag 文件: /root/calib_ws/data/park
+[11:23:28.127] [info]   实时模式: false
+[11:23:28.127] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/park
+[11:23:28.127] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/park/metadata.yaml
+[11:23:28.127] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam3/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4733)
+[11:23:28.127] [debug] [Ros2BagDataSource] 找到话题: /os_node/lidar_packets (类型: ouster_ros/msg/PacketMsg, 消息数: 100958)
+[11:23:28.127] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam4/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4733)
+[11:23:28.127] [debug] [Ros2BagDataSource] 找到话题: /os_node/imu_packets (类型: ouster_ros/msg/PacketMsg, 消息数: 15772)
+[11:23:28.127] [debug] [Ros2BagDataSource] 找到话题: /os_cloud_node/imu (类型: sensor_msgs/msg/Imu, 消息数: 15772)
+[11:23:28.127] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/imu (类型: sensor_msgs/msg/Imu, 消息数: 31515)
+[11:23:28.127] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam0/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4732)
+[11:23:28.127] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam1/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4732)
+[11:23:28.127] [debug] [Ros2BagDataSource] 找到话题: /os_cloud_node/points (类型: sensor_msgs/msg/PointCloud2, 消息数: 1577)
+[11:23:28.127] [debug] [Ros2BagDataSource] 匹配 LiDAR 话题: /os_cloud_node/imu (关键词: os_cloud)
+[11:23:28.127] [info] [Ros2BagDataSource] 自动检测 LiDAR 话题: /os_cloud_node/imu
+[11:23:28.127] [info] [Ros2BagDataSource] 使用配置的 IMU 话题: /os_cloud_node/imu
+[INFO] [1777260208.130273790] [rosbag2_storage]: Opened database '/root/calib_ws/data/park/park.db3' for READ_ONLY.
+[11:23:28.130] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[11:23:28.130] [info] [Ros2BagDataSource] 找到 9 个话题
+[11:23:28.130] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam3/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4733
+[11:23:28.130] [info] [Ros2BagDataSource]  话题: /os_node/lidar_packets  类型: ouster_ros/msg/PacketMsg  消息数: 100958
+[11:23:28.130] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam4/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4733
+[11:23:28.130] [info] [Ros2BagDataSource]  话题: /os_node/imu_packets  类型: ouster_ros/msg/PacketMsg  消息数: 15772
+[11:23:28.130] [info] [Ros2BagDataSource]  话题: /os_cloud_node/imu  类型: sensor_msgs/msg/Imu  消息数: 15772
+[11:23:28.130] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/imu  类型: sensor_msgs/msg/Imu  消息数: 31515
+[11:23:28.130] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam0/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4732
+[11:23:28.130] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam1/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4732
+[11:23:28.130] [info] [Ros2BagDataSource]  话题: /os_cloud_node/points  类型: sensor_msgs/msg/PointCloud2  消息数: 1577
+[11:23:28.130] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[11:23:30.588] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 5000
+[11:23:33.150] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 500
+[11:23:33.151] [debug]   收集 IMU [/os_cloud_node/imu] 帧数: 5000
+[11:23:33.151] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 10000
+[11:23:35.442] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 15000
+[11:23:38.053] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 1000
+[11:23:38.054] [debug]   收集 IMU [/os_cloud_node/imu] 帧数: 10000
+[11:23:38.066] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 20000
+[11:23:40.568] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 25000
+[11:23:43.017] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 1500
+[11:23:43.018] [debug]   收集 IMU [/os_cloud_node/imu] 帧数: 15000
+[11:23:43.029] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 30000
+[11:23:43.766] [info] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[11:23:43.766] [info]   LiDAR [/os_cloud_node/points]: 1577 帧
+[11:23:43.766] [info]   IMU [/alphasense_driver_ros/imu]: 31515 帧
+[11:23:43.766] [info]   IMU [/os_cloud_node/imu]: 15772 帧
+[11:23:43.766] [info]   选用 LiDAR  lidar_0 -> /os_cloud_node/points
+[11:23:43.766] [info]   选用 IMU    imu_0 -> /os_cloud_node/imu
+[11:23:43.766] [info]   时间范围: 1638292235.952 - 1638292393.732 秒
+[11:23:43.767] [info]   加载IMU数据: 15772 帧 (sensor_id=imu_0)
+[11:23:43.847] [info] [IMU-Intrin] Step 1: Allan 方差分析...
+[11:23:43.847] [info]   [Fine-Auto-Allan方差分析: starting] 10.0%
+[11:23:43.847] [info] === IMU 内参标定开始 ===
+[11:23:43.847] [info]   数据帧数: 15772
+[11:23:43.847] [info]   数据时长: 157.7 s
+[11:23:43.847] [info] [IMU-Intrin] Step 1/2: Allan 方差分析 ...
+[11:23:43.847] [info]   [Fine-Auto-Allan方差分析: allan_variance] 16.0%
+[11:23:43.848] [info] Allan: sample_rate=100.0 Hz, N=15772 frames
+[11:23:43.848] [info] Allan: analyzing gyro axis X ...
+[11:23:43.848] [debug] Allan axis: ARW=2.7963e-02, BI=2.3216e-04, RRW=6.2488e-03
+[11:23:43.848] [info] Allan: analyzing accel axis X ...
+[11:23:43.848] [debug] Allan axis: ARW=2.3029e-01, BI=1.6846e-01, RRW=8.6174e-02
+[11:23:43.848] [info] Allan: analyzing gyro axis Y ...
+[11:23:43.848] [debug] Allan axis: ARW=3.7971e-02, BI=2.3899e-03, RRW=8.4834e-03
+[11:23:43.848] [info] Allan: analyzing accel axis Y ...
+[11:23:43.849] [debug] Allan axis: ARW=1.6486e-01, BI=1.1367e-02, RRW=6.6358e-02
+[11:23:43.849] [info] Allan: analyzing gyro axis Z ...
+[11:23:43.849] [debug] Allan axis: ARW=6.4498e-02, BI=5.6609e-02, RRW=4.4536e-02
+[11:23:43.849] [info] Allan: analyzing accel axis Z ...
+[11:23:43.849] [debug] Allan axis: ARW=1.1675e-01, BI=1.1429e-02, RRW=3.8915e-02
+[11:23:43.849] [info] [IMU-Intrin] Step 2/2: 六面法加速度计标定 ...
+[11:23:43.849] [info]   [Fine-Auto-Allan方差分析: six_position] 52.0%
+[11:23:43.849] [info] Static segments detected: 0
+[11:23:43.849] [warning] Six-position: only 0 static segments found (need ≥6)
+[11:23:43.849] [info] [CALC] IMU内参(legacy) 标定完成 帧数=15772 allan_fit_rms=0.000000 noise_gyro=4.3477e-02 noise_acce=1.7063e-01
+[11:23:43.849] [info]   [Fine-Auto-Allan方差分析: done] 70.0%
+[11:23:43.849] [info] === IMU 内参标定完成 ===
+[11:23:43.849] [info]   陀螺噪声:     4.3477e-02 rad/s/√Hz
+[11:23:43.849] [info]   陀螺零偏不稳: 1.9744e-02 rad/s
+[11:23:43.849] [info]   加速度计噪声: 1.7063e-01 m/s²/√Hz
+[11:23:43.849] [info]   加速度计零偏不稳: 6.3751e-02 m/s²
+[11:23:43.849] [info] [IMU-Intrin] Step 2: 保存标定结果...
+[11:23:43.850] [info] [Fine-Auto] IMU内参已保存: ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+[11:23:43.850] [info] Allan: sample_rate=100.0 Hz, N=15772 frames
+[11:23:43.850] [info] Allan: analyzing gyro axis X ...
+[11:23:43.850] [debug] Allan axis: ARW=2.7963e-02, BI=2.3216e-04, RRW=6.2488e-03
+[11:23:43.850] [info] Allan: analyzing accel axis X ...
+[11:23:43.850] [debug] Allan axis: ARW=2.3029e-01, BI=1.6846e-01, RRW=8.6174e-02
+[11:23:43.850] [info] Allan: analyzing gyro axis Y ...
+[11:23:43.851] [debug] Allan axis: ARW=3.7971e-02, BI=2.3899e-03, RRW=8.4834e-03
+[11:23:43.851] [info] Allan: analyzing accel axis Y ...
+[11:23:43.851] [debug] Allan axis: ARW=1.6486e-01, BI=1.1367e-02, RRW=6.6358e-02
+[11:23:43.851] [info] Allan: analyzing gyro axis Z ...
+[11:23:43.851] [debug] Allan axis: ARW=6.4498e-02, BI=5.6609e-02, RRW=4.4536e-02
+[11:23:43.851] [info] Allan: analyzing accel axis Z ...
+[11:23:43.851] [debug] Allan axis: ARW=1.1675e-01, BI=1.1429e-02, RRW=3.8915e-02
+[11:23:43.856] [info] Allan plot saved: ./results/imu_allan_variance.png
+[11:23:43.856] [info] [Fine-Auto/IMU-Intrin] 标定完成: RMS=0.0000 | 耗时: 15729.6 ms
+[11:23:43.899] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:23:43.899] [info] ■ 结束阶段: [Fine-Auto] 任务: [imu_intrinsic]
+[11:23:43.899] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 15772 ms
+[11:23:43.899] [info]   消息: IMU内参标定完成: gyro_noise=0.0434774 rad/s/√Hz, gyro_bias=0.0197436 rad/s, accel_noise=0.170633 m/s²/√Hz, accel_bias=0.0637513 m/s²
+[11:23:43.899] [info] [CALC] 阶段结束 stage=Fine-Auto task=imu_intrinsic success=true residual_rms=0.000000 elapsed_ms=15729.6 threshold=0.1000
+[11:23:43.899] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:23:43.899] [info] 
+[11:23:43.899] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:23:43.899] [info] ▶ 开始阶段: [Fine-Auto] 任务: [cam_intrinsic]
+[11:23:43.899] [info]   描述: 无目标优化
+[11:23:43.899] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:23:43.899] [info] [CALC] 精标定阶段开始 task=cam_intrinsic
+[11:23:43.899] [info] [Fine-Auto] 任务: cam_intrinsic | 无目标优先: true
+[11:23:43.899] [info] [Fine-Auto] 方法: DM-Calib精化 + RANSAC
+[11:23:43.899] [warning] [Fine-Auto] 任务 cam_intrinsic 当前为占位实现
+[11:23:43.899] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:23:43.899] [info] ■ 结束阶段: [Fine-Auto] 任务: [cam_intrinsic]
+[11:23:43.899] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 0 ms
+[11:23:43.899] [info]   消息: 精标定占位 — 请通过具体标定器实现
+[11:23:43.899] [info] [CALC] 阶段结束 stage=Fine-Auto task=cam_intrinsic success=true residual_rms=0.000000 elapsed_ms=0.0 threshold=-1.0000
+[11:23:43.899] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:23:43.900] [info] 
+[11:23:43.900] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:23:43.900] [info] ▶ 开始阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[11:23:43.900] [info]   描述: 无目标优化
+[11:23:43.900] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:23:43.900] [info] [CALC] 精标定阶段开始 task=imu_lidar_extrin
+[11:23:43.900] [info] [Fine-Auto] 任务: imu_lidar_extrin | 无目标优先: true
+[11:23:43.900] [info] [Fine-Auto] 方法: B样条连续时间优化 (无目标)
+[11:23:43.900] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[11:23:43.900] [info]   Bag 文件: /root/calib_ws/data/park
+[11:23:43.900] [info]   实时模式: false
+[11:23:43.900] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/park
+[11:23:43.900] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/park/metadata.yaml
+[11:23:43.900] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam3/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4733)
+[11:23:43.900] [debug] [Ros2BagDataSource] 找到话题: /os_node/lidar_packets (类型: ouster_ros/msg/PacketMsg, 消息数: 100958)
+[11:23:43.900] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam4/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4733)
+[11:23:43.900] [debug] [Ros2BagDataSource] 找到话题: /os_node/imu_packets (类型: ouster_ros/msg/PacketMsg, 消息数: 15772)
+[11:23:43.900] [debug] [Ros2BagDataSource] 找到话题: /os_cloud_node/imu (类型: sensor_msgs/msg/Imu, 消息数: 15772)
+[11:23:43.900] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/imu (类型: sensor_msgs/msg/Imu, 消息数: 31515)
+[11:23:43.900] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam0/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4732)
+[11:23:43.900] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam1/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4732)
+[11:23:43.900] [debug] [Ros2BagDataSource] 找到话题: /os_cloud_node/points (类型: sensor_msgs/msg/PointCloud2, 消息数: 1577)
+[11:23:43.900] [info] [Ros2BagDataSource] 使用配置的 LiDAR 话题 (来自 sensors): /os_cloud_node/points
+[11:23:43.900] [info] [Ros2BagDataSource] 使用配置的 IMU 话题 (来自 sensors): /os_cloud_node/imu
+[INFO] [1777260223.903058886] [rosbag2_storage]: Opened database '/root/calib_ws/data/park/park.db3' for READ_ONLY.
+[11:23:43.903] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[11:23:43.903] [info] [Ros2BagDataSource] 找到 9 个话题
+[11:23:43.903] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam3/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4733
+[11:23:43.903] [info] [Ros2BagDataSource]  话题: /os_node/lidar_packets  类型: ouster_ros/msg/PacketMsg  消息数: 100958
+[11:23:43.903] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam4/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4733
+[11:23:43.903] [info] [Ros2BagDataSource]  话题: /os_node/imu_packets  类型: ouster_ros/msg/PacketMsg  消息数: 15772
+[11:23:43.903] [info] [Ros2BagDataSource]  话题: /os_cloud_node/imu  类型: sensor_msgs/msg/Imu  消息数: 15772
+[11:23:43.903] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/imu  类型: sensor_msgs/msg/Imu  消息数: 31515
+[11:23:43.903] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam0/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4732
+[11:23:43.903] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam1/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4732
+[11:23:43.903] [info] [Ros2BagDataSource]  话题: /os_cloud_node/points  类型: sensor_msgs/msg/PointCloud2  消息数: 1577
+[11:23:43.903] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[11:23:46.384] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 5000
+[11:23:48.735] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 500
+[11:23:48.735] [debug]   收集 IMU [/os_cloud_node/imu] 帧数: 5000
+[11:23:48.736] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 10000
+[11:23:51.241] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 15000
+[11:23:53.260] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 1000
+[11:23:53.261] [debug]   收集 IMU [/os_cloud_node/imu] 帧数: 10000
+[11:23:53.271] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 20000
+[11:23:55.751] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 25000
+[11:23:58.179] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 1500
+[11:23:58.180] [debug]   收集 IMU [/os_cloud_node/imu] 帧数: 15000
+[11:23:58.191] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 30000
+[11:23:58.928] [info] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[11:23:58.928] [info]   LiDAR [/os_cloud_node/points]: 1577 帧
+[11:23:58.928] [info]   IMU [/alphasense_driver_ros/imu]: 31515 帧
+[11:23:58.928] [info]   IMU [/os_cloud_node/imu]: 15772 帧
+[11:23:58.928] [info]   选用 LiDAR  lidar_0 -> /os_cloud_node/points
+[11:23:58.928] [info]   选用 IMU    imu_0 -> /os_cloud_node/imu
+[11:23:58.928] [info]   时间范围: 1638292235.952 - 1638292393.732 秒
+[11:23:58.928] [info] [Ros2BagDataSource] 应用采样/帧数限制...
+[11:23:58.977] [info]   LiDAR /os_cloud_node/points 采样后: 800 帧
+[11:23:58.978] [info] [Fine-Auto/IMU-LiDAR] imu_0 从内参标定结果文件加载: ./results/imu_intrinsic/imu_intrinsic_imu_0.yaml
+[11:23:58.978] [info] [IMU-LiDAR] 开始两阶段标定
+[11:23:58.978] [info]   IMU 数据: 15772 帧
+[11:23:58.978] [info]   LiDAR 数据: 800 帧
+[11:23:58.978] [info] [Time-Align] IMU  时间范围: [1638292236.004, 1638292393.732] 跨度 157.73s
+[11:23:58.978] [info] [Time-Align] LiDAR 时间范围: [1638292235.952, 1638292315.851] 跨度 79.90s
+[11:23:58.978] [info] [Time-Align] 重叠区间: [1638292236.004, 1638292315.851] 跨度 79.85s
+[11:23:58.979] [info] [Time-Align] 重叠占比: 99.9% (相对较短流)
+[11:23:58.979] [warning] [Time-Align] IMU 与 LiDAR 首/末帧时间戳差异较大: 首帧差 0.052s 末帧差 77.881s — 若两者非同一时间基准（如不同 ROS 时钟），必须对齐后再标定
+[11:23:58.979] [warning] [Time-Align] 末帧差 >10s，旋转对可能系统性偏差，手眼标定易得 180° 歧义；建议确保同一时间基准或对齐后再标定
+[11:23:58.979] [info] [Time-Align] 结论: 请检查时间基准与对齐 (重叠>10s且首末差<1s为优)
+[11:23:58.979] [info] [LiDAR-Odom] 开始 LiDAR 里程计 (NDT 配准)
+[11:26:42.228] [info] [LiDAR-Odom] 完成, 处理 800 帧 (有效 800 帧)
+[11:26:42.228] [info] [LiDAR-Odom] 点云规模: 每帧点数 min=97495 med≈101437 max=112061
+[11:26:42.240] [warning] [GyroBias] 静态样本不足 (70)，使用零偏
+[11:26:42.240] [info] [Build-RotPairs] 构建旋转对
+[11:26:42.240] [info] [Build-RotPairs] 计算逻辑: 同一时间段 [t_begin,t_end] 内 — LiDAR 相对旋转 = (T_w_l0^{-1}*T_w_l1).so3().inverse() 即机体从 t_begin→t_end 的旋转；IMU 相对旋转 = 陀螺积分 R(t_begin→t_end)。二者同为机体旋转，应一致
+[11:26:42.240] [info] [Build-RotPairs] 时间基准要求: t_begin/t_end 使用 LiDAR 帧时间戳，IMU 积分区间与之一致；IMU 与 LiDAR 必须为同一时间基准（如 ROS bag 时间），未对齐会导致旋转对错误、标定偏差甚至约 180° 误差
+[11:26:42.241] [info] [Build-RotPairs] 首对积分统计: dt=0.100s 采样数=5 陀螺1σ漂移≈0.7889° (ARW)
+[11:26:42.241] [info] [Build-RotPairs] 首对时间对齐: LiDAR 区间 [t_begin,t_end]=[1638292235.9520, 1638292236.0523] | IMU 参与积分区间 [1638292236.0044, 1638292236.0444]
+[11:26:42.241] [info] [Build-RotPairs] 首对 IMU 积分计算: sum_dt=0.040000s 实际时间跨度=0.040000s 请求区间=0.100293s (sum_dt 应≈实际跨度)
+[*** LOG ERROR #0001 ***] [2026-04-27 11:26:42] [stage] {argument not found}
+[11:26:42.242] [warning] [Build-RotPairs] IMU 与 LiDAR 区间边界差异: 首端 0.052s 末端 0.008s — 若时间基准不一致，必须对齐后再标定
+[11:26:42.242] [info] [Build-RotPairs] 首对区间裁剪: 积分未覆盖 t_begin~t_first 约 0.0523s, t_last~t_end 约 0.0079s (可能导致 IMU 角略小于真实)
+[11:26:42.247] [info] [Build-RotPairs] 构建了 18 个有效旋转对 (相邻帧 18 + 短时窗 0, 最小激励 3.0 deg)
+[11:26:42.247] [info] [Build-RotPairs] IMU 相对旋转: 3.03 ~ 5.26 deg | LiDAR 相对旋转: 0.77 ~ 6.46 deg
+[11:26:42.247] [info] [Build-RotPairs] LiDAR 相对平移(相邻帧): min=0.072 med=0.180 max=0.363 m (平移过小且旋转过小则 NDT 可能退化)
+[11:26:42.247] [info] [Build-RotPairs] 旋转对时间跨度 dt_span(s): min=0.099 med=0.100 max=0.101 (大跨度会放大里程计漂移与时间不同步)
+[11:26:42.247] [info] [Build-RotPairs] LiDAR角/IMU角 比值: 均值=0.693 中位数=0.560 标准差=0.415 (理想≈1)
+[11:26:42.247] [info] [Build-RotPairs] 比值分位: P25=0.409 P50=0.560 P75=1.191
+[11:26:42.247] [info] [Build-RotPairs] 比值分布: ratio<0.5 共 9 对, 0.5~0.8 共 3 对, 0.8~1.2 共 2 对, >1.2 共 4 对
+[11:26:42.247] [info] [Build-RotPairs] 旋转对质量: 差 (优=比值近1且多数在0.8~1.2)
+[11:26:42.247] [warning] [Build-RotPairs] 比值均值 0.693 系统性偏离 1，手眼易出现 180° 歧义；请检查时间对齐/帧间隔，或配置 handeye_prefer_identity_when_ambiguous: true
+[11:26:42.247] [info] [Build-RotPairs] 抽样 (前5对):
+[11:26:42.247] [info] [Build-RotPairs]   pair#0 dt=0.10s rot_imu=3.47° rot_lidar=4.72° ratio=1.363 trans=0.195m
+[11:26:42.247] [info] [Build-RotPairs]   pair#1 dt=0.10s rot_imu=4.93° rot_lidar=1.10° ratio=0.223 trans=0.072m
+[11:26:42.247] [info] [Build-RotPairs]   pair#2 dt=0.10s rot_imu=5.26° rot_lidar=6.46° ratio=1.229 trans=0.267m
+[11:26:42.247] [info] [Build-RotPairs]   pair#3 dt=0.10s rot_imu=4.24° rot_lidar=5.50° ratio=1.297 trans=0.363m
+[11:26:42.247] [info] [Build-RotPairs]   pair#4 dt=0.10s rot_imu=3.26° rot_lidar=3.89° ratio=1.191 trans=0.145m
+[11:26:42.247] [info] [Build-RotPairs] 抽样 (后5对):
+[11:26:42.247] [info] [Build-RotPairs]   pair#13 dt=0.10s rot_imu=3.91° rot_lidar=0.77° ratio=0.197 trans=0.161m
+[11:26:42.247] [info] [Build-RotPairs]   pair#14 dt=0.10s rot_imu=3.22° rot_lidar=1.54° ratio=0.479 trans=0.151m
+[11:26:42.247] [info] [Build-RotPairs]   pair#15 dt=0.10s rot_imu=4.12° rot_lidar=1.89° ratio=0.458 trans=0.122m
+[11:26:42.247] [info] [Build-RotPairs]   pair#16 dt=0.10s rot_imu=3.29° rot_lidar=3.29° ratio=1.000 trans=0.355m
+[11:26:42.247] [info] [Build-RotPairs]   pair#17 dt=0.10s rot_imu=4.23° rot_lidar=2.07° ratio=0.488 trans=0.230m
+[11:26:42.247] [info] [Motion-Excitation] 运动激励: roll=7.2° pitch=13.8° yaw=64.3° 轴多样性=0.089 z平移占比=0.135
+[11:26:42.247] [info] [Motion-Excitation] 结论: 平面运动 | 平面运动：仅对激励充足的自由度（通常为 yaw）精确标定，roll/pitch 用先验 0°；平移 z 可固定或弱约束
+[11:26:42.247] [info] [IMU-LiDAR] 步骤: 手眼旋转标定开始 — 旋转对 18 个
+[11:26:42.247] [info] [Handeye] 方程: R_imu*X = X*R_lidar，X=R_LidarInImu。歧义时: decision=prefer_180 margin_deg=3.0°
+[11:26:42.247] [info] [Handeye] 质量权重: min=0.150 max=1.000 avg=0.592
+[11:26:42.248] [info] [Handeye] 约束矩阵 M (72x4) 奇异值: 6.6004 6.5254 6.4492 0.0468 (最小过小表示病态)
+[11:26:42.248] [info] [Handeye] 奇异值比 sv_min/sv_max = 0.0071 (越接近0越病态，>0.05 较健康)
+[11:26:42.248] [info] [IMU-LiDAR] 步骤: 手眼旋转标定完成 — 平均误差: 2.2632 deg (min=0.8852 max=3.9884 std=0.8257)
+[11:26:42.248] [info] [Handeye] 残差分位: P50=2.370° P90=3.537°
+[11:26:42.248] [info] [Handeye] 残差最大 3 对 (用于定位异常时段):
+[11:26:42.248] [info]   pair#1 t=[1638292238.3,1638292238.4]s dt_span=0.10s 残差=3.99 deg
+[11:26:42.248] [info]   pair#10 t=[1638292251.6,1638292251.7]s dt_span=0.10s 残差=3.54 deg
+[11:26:42.248] [info]   pair#13 t=[1638292299.4,1638292299.5]s dt_span=0.10s 残差=3.39 deg
+[11:26:42.248] [info] [Handeye] SVD 初解: trace(R)=-0.9999 相对单位阵旋转角=179.561° (0°=单位阵 180°=歧义解)
+[11:26:42.248] [info] [Handeye] 180° 歧义两解: 180°侧 残差=2.2632° | 单位阵侧 残差=6.2387° (策略: prefer_180)
+[11:26:42.248] [info] [Handeye] 保留 180° 解 (策略=prefer_180，单位阵未优出 3.0°)
+[11:26:42.248] [info] [Handeye] 最终解: 180°侧 (相对单位阵旋转角=179.561°)
+[11:26:42.248] [warning] [Handeye] 最终采用 180° 解。若 IMU 与 LiDAR 同向安装，请: (1) 检查 IMU/LiDAR 时间基准与对齐 (2) 设置 handeye_prefer_identity_when_ambiguous: true (3) 检查旋转对 LiDAR角/IMU角 比值是否系统性偏离 1
+[11:26:42.248] [info] [Handeye] 旋转矩阵 R_Imu_Lidar (3x3):
+[11:26:42.248] [info]   [1.000000, -0.000368, 0.000399]
+[11:26:42.248] [info]   [-0.000365, -0.999971, -0.007660]
+[11:26:42.248] [info]   [0.000402, 0.007660, -0.999971]
+[11:26:42.248] [info]   手眼旋转标定成功
+[11:26:42.248] [info] [CALC] IMU-LiDAR 手眼旋转 平均残差=2.2632 deg 旋转对数=18
+[11:26:42.248] [info] [IMU-LiDAR] 步骤: 平移估计开始 (里程计 800 帧)
+[11:26:42.248] [info] [Trans-Est] 帧间 dt(s): min=0.098 med=0.100 max=0.102 (有效范围 [0.05, 2.0]); 总时间跨度 79.9s
+[11:26:42.248] [debug] [Trans-Est] 无法估计 v_imu, 使用零速度假设 (可能降低精度)
+[11:26:42.252] [info] [Trans-Est] 共收集 789 个约束
+[11:26:42.252] [info] [Trans-Est] MAD 滤波: 789 -> 750 约束
+[11:26:42.252] [info] [Trans-Est] 平面运动 (z平移占比=0.135)：平移 z 固定为 0，仅标定 x/y
+[11:26:42.252] [info] [CALC] IMU-LiDAR 平移估计 t=[0.0000,-0.0000,0.0000] m rms_m_s=0.0000 约束数=750
+[11:26:42.252] [info] [IMU-LiDAR] 步骤: 平移估计完成 — t=[0.000, -0.000, 0.000] m, RMS=0.0000 m/s
+[11:26:42.252] [info]   t = [0.000, -0.000, 0.000] m
+[11:26:42.252] [info]   RMS 误差 = 0.0000 m/s (基于 750 个约束)
+[11:26:42.252] [info] [IMU-LiDAR] 粗标定完成
+[11:26:42.252] [info] [IMU-LiDAR] 粗标定摘要: R(RPY°)=[179.561, -0.023, -0.021] t(m)=[0.0000, -0.0000, 0.0000] 旋转对=18
+[11:26:42.252] [warning] [IMU-LiDAR] 粗标定结果约 180° (RPY≈±180°,0°,0°)。若 IMU 与 LiDAR 同向安装，请检查时间对齐或设置 handeye_prefer_identity_when_ambiguous: true
+[11:26:42.252] [info]   四元数 (xyzw):     0.999993 -0.000183274  0.000200433   0.00382994
+[11:26:42.252] [info]   平移: [0.000000, -0.000000, 0.000000] m
+[11:26:42.252] [info] [IMU-LiDAR] 粗标定 4x4 T_Imu_Lidar:
+[11:26:42.252] [info]   [1.000000, -0.000368, 0.000399, 0.000000]
+[11:26:42.252] [info]   [-0.000365, -0.999971, -0.007660, -0.000000]
+[11:26:42.252] [info]   [0.000402, 0.007660, -0.999971, 0.000000]
+[11:26:42.252] [info]   [0.000000, 0.000000, 0.000000, 1.000000]
+[11:26:42.252] [info] [IMU-LiDAR] 步骤: B样条精细优化开始 (LiDAR 800 帧)
+[11:26:42.252] [info] [LiDAR-Odom] 开始 LiDAR 里程计 (NDT 配准)
+[11:29:24.799] [info] [LiDAR-Odom] 完成, 处理 800 帧 (有效 800 帧)
+[11:29:24.799] [info] [LiDAR-Odom] 点云规模: 每帧点数 min=97495 med≈101437 max=112061
+iter      cost      cost_change  |gradient|   |step|    tr_ratio  tr_radius  ls_iter  iter_time  total_time
+   0  1.191752e+01    0.00e+00    1.28e+02   0.00e+00   0.00e+00  1.00e+04        0    1.13e-03    2.41e-03
+   1  1.225349e+01   -3.36e-01    1.28e+02   2.88e-03  -2.91e-02  5.00e+03        1    9.45e-03    1.19e-02
+   2  1.223168e+01   -3.14e-01    1.28e+02   2.73e-03  -2.72e-02  1.25e+03        1    8.89e-03    2.08e-02
+   3  1.210310e+01   -1.86e-01    1.28e+02   1.91e-03  -1.60e-02  1.56e+02        1    8.88e-03    2.97e-02
+   4  1.106639e+01    8.51e-01    1.23e+02   6.89e-03   7.36e-02  9.64e+01        1    2.27e-03    3.19e-02
+   5  1.040254e+01    6.64e-01    1.19e+02   5.51e-03   6.20e-02  5.77e+01        1    2.28e-03    3.42e-02
+   6  9.457883e+00    9.45e-01    1.12e+02   8.21e-03   9.42e-02  3.76e+01        1    2.26e-03    3.65e-02
+   7  8.429689e+00    1.03e+00    1.05e+02   9.53e-03   1.14e-01  2.57e+01        1    2.28e-03    3.88e-02
+   8  7.373710e+00    1.06e+00    9.62e+01   1.06e-02   1.32e-01  1.84e+01        1    2.26e-03    4.10e-02
+   9  6.370799e+00    1.00e+00    8.76e+01   1.10e-02   1.46e-01  1.36e+01        1    2.26e-03    4.33e-02
+  10  5.459803e+00    9.11e-01    7.89e+01   1.11e-02   1.56e-01  1.02e+01        1    2.26e-03    4.56e-02
+  11  4.664424e+00    7.95e-01    7.04e+01   1.08e-02   1.64e-01  7.85e+00        1    2.28e-03    4.78e-02
+  12  3.990292e+00    6.74e-01    6.24e+01   1.03e-02   1.69e-01  6.09e+00        1    2.27e-03    5.01e-02
+  13  3.433356e+00    5.57e-01    5.48e+01   9.65e-03   1.73e-01  4.76e+00        1    2.27e-03    5.24e-02
+  14  2.983139e+00    4.50e-01    4.78e+01   8.94e-03   1.74e-01  3.73e+00        1    2.28e-03    5.47e-02
+  15  2.626211e+00    3.57e-01    4.14e+01   8.21e-03   1.74e-01  2.92e+00        1    2.26e-03    5.69e-02
+  16  2.348297e+00    2.78e-01    3.56e+01   7.48e-03   1.72e-01  2.28e+00        1    2.26e-03    5.92e-02
+  17  2.135667e+00    2.13e-01    3.04e+01   6.78e-03   1.69e-01  1.77e+00        1    2.27e-03    6.15e-02
+  18  1.975872e+00    1.60e-01    2.58e+01   6.10e-03   1.65e-01  1.36e+00        1    2.27e-03    6.38e-02
+  19  1.858046e+00    1.18e-01    2.18e+01   5.43e-03   1.59e-01  1.03e+00        1    2.29e-03    6.60e-02
+  20  1.772929e+00    8.51e-02    1.84e+01   4.75e-03   1.52e-01  7.71e-01        1    2.27e-03    6.83e-02
+  21  1.712770e+00    6.02e-02    1.55e+01   4.07e-03   1.44e-01  5.66e-01        1    2.27e-03    7.06e-02
+  22  1.671190e+00    4.16e-02    1.32e+01   3.38e-03   1.35e-01  4.08e-01        1    2.26e-03    7.28e-02
+  23  1.643062e+00    2.81e-02    1.13e+01   2.71e-03   1.26e-01  2.88e-01        1    2.28e-03    7.51e-02
+  24  1.624391e+00    1.87e-02    9.87e+00   2.10e-03   1.18e-01  1.99e-01        1    2.27e-03    7.74e-02
+  25  1.612179e+00    1.22e-02    8.81e+00   1.56e-03   1.11e-01  1.35e-01        1    2.26e-03    7.97e-02
+  26  1.604273e+00    7.91e-03    8.05e+00   1.13e-03   1.05e-01  9.05e-02        1    2.28e-03    8.19e-02
+  27  1.599184e+00    5.09e-03    7.52e+00   7.86e-04   9.99e-02  5.98e-02        1    2.26e-03    8.42e-02
+  28  1.595917e+00    3.27e-03    7.16e+00   5.35e-04   9.64e-02  3.92e-02        1    2.28e-03    8.65e-02
+  29  1.593822e+00    2.10e-03    6.92e+00   3.58e-04   9.39e-02  2.55e-02        1    2.26e-03    8.87e-02
+  30  1.592477e+00    1.34e-03    6.75e+00   2.37e-04   9.22e-02  1.66e-02        1    2.27e-03    9.10e-02
+  31  1.591615e+00    8.63e-04    6.65e+00   1.55e-04   9.11e-02  1.07e-02        1    2.27e-03    9.33e-02
+  32  1.591061e+00    5.54e-04    6.58e+00   1.01e-04   9.03e-02  6.90e-03        1    2.28e-03    9.56e-02
+  33  1.590705e+00    3.56e-04    6.54e+00   6.53e-05   8.99e-02  4.45e-03        1    2.27e-03    9.78e-02
+  34  1.590476e+00    2.29e-04    6.51e+00   4.22e-05   8.95e-02  2.86e-03        1    2.29e-03    1.00e-01
+  35  1.590330e+00    1.47e-04    6.49e+00   2.72e-05   8.93e-02  1.84e-03        1    2.27e-03    1.02e-01
+  36  1.590235e+00    9.44e-05    6.48e+00   1.75e-05   8.92e-02  1.19e-03        1    2.27e-03    1.05e-01
+  37  1.590174e+00    6.07e-05    6.47e+00   1.13e-05   8.91e-02  7.62e-04        1    2.26e-03    1.07e-01
+  38  1.590135e+00    3.90e-05    6.47e+00   7.26e-06   8.90e-02  4.90e-04        1    2.26e-03    1.09e-01
+  39  1.590110e+00    2.51e-05    6.46e+00   4.67e-06   8.90e-02  3.15e-04        1    2.28e-03    1.11e-01
+  40  1.590094e+00    1.61e-05    6.46e+00   3.00e-06   8.90e-02  2.03e-04        1    2.26e-03    1.14e-01
+  41  1.590084e+00    1.04e-05    6.46e+00   1.93e-06   8.90e-02  1.30e-04        1    2.27e-03    1.16e-01
+  42  1.590077e+00    6.66e-06    6.46e+00   1.24e-06   8.90e-02  8.37e-05        1    2.27e-03    1.18e-01
+  43  1.590073e+00    4.28e-06    6.46e+00   7.97e-07   8.90e-02  5.38e-05        1    2.27e-03    1.21e-01
+  44  1.590070e+00    2.75e-06    6.46e+00   5.13e-07   8.90e-02  3.46e-05        1    2.26e-03    1.23e-01
+  45  1.590068e+00    1.77e-06    6.46e+00   3.30e-07   8.90e-02  2.22e-05        1    2.27e-03    1.25e-01
+[11:29:24.936] [info] [CALC] IMU-LiDAR B样条 Ceres initial_cost=11.917524 final_cost=1.590068 iter=46 time_offset_s=-0.0000 converged=yes
+[11:29:24.936] [info] [B-spline] Ceres: 46 iterations, cost=1.590068
+[11:29:24.936] [info] [IMU-LiDAR] 步骤: B样条精细优化完成 — time_offset=-0.0000s converged=yes cost=1.590068 iter=46
+[11:29:24.936] [info] [B-spline] 代价: 初=11.917524 终=1.590068 (迭代46 次)
+[11:29:24.936] [info] [B-spline] 初值→精化: 旋转差 0.5092 deg, 平移差 0.152943 m
+[11:29:24.936] [info] [B-spline] 精标定 4x4 T_Imu_Lidar:
+[11:29:24.936] [info]   [0.999959, -0.007974, -0.004199, -0.152471]
+[11:29:24.936] [info]   [-0.008005, -0.999939, -0.007609, 0.011220]
+[11:29:24.936] [info]   [-0.004138, 0.007642, -0.999962, -0.004291]
+[11:29:24.936] [info]   [0.000000, 0.000000, 0.000000, 1.000000]
+[11:29:24.937] [info] [Fine-Auto/IMU-LiDAR] imu_0->lidar_0 最终 4x4 T_Imu_Lidar (p_imu = T * p_lidar):
+[11:29:24.937] [info]   [0.999959, -0.007974, -0.004199, -0.152471]
+[11:29:24.937] [info]   [-0.008005, -0.999939, -0.007609, 0.011220]
+[11:29:24.937] [info]   [-0.004138, 0.007642, -0.999962, -0.004291]
+[11:29:24.937] [info]   [0.000000, 0.000000, 0.000000, 1.000000]
+[11:29:24.937] [info] [Fine-Auto/IMU-LiDAR] imu_0->lidar_0 结果已写入: /root/calib_ws/./results/imu_lidar_extrinsic/imu_lidar_imu_0_lidar_0.yaml
+[11:29:24.937] [info] [Fine-Auto/IMU-LiDAR] imu_0->lidar_0 完成
+[11:29:24.937] [info] [Fine-Auto/IMU-LiDAR] IMU-LiDAR 标定完成: 1 对
+[11:29:24.938] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:29:24.938] [info] ■ 结束阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[11:29:24.938] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 341038 ms
+[11:29:24.938] [info]   消息: IMU-LiDAR 标定完成: 1 对
+[11:29:24.938] [info] [CALC] 阶段结束 stage=Fine-Auto task=imu_lidar_extrin success=true residual_rms=0.000000 elapsed_ms=341037.7 threshold=0.5000
+[11:29:24.938] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:29:24.938] [info] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=false → do_coarse=false
+[11:29:24.938] [info] [Coarse-AI/LiDAR-Cam] 跳过粗标定: 未启用 (请使用 --coarse 启用 MIAS-LCEC 粗标定)
+[11:29:24.938] [info] 
+[11:29:24.938] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:29:24.938] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[11:29:24.938] [info]   描述: 无目标优化
+[11:29:24.938] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:29:24.938] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[11:29:24.938] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[11:29:24.938] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[11:29:24.938] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[11:29:24.938] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[11:29:24.938] [info]   [精标定数据源] 类型=ROS2_BAG  lidar_id=lidar_0
+[11:29:24.938] [info]   ROS2 Bag: /root/calib_ws/data/park  LiDAR 话题: /os_cloud_node/points  相机话题: /alphasense_driver_ros/cam0/compressed
+[11:29:24.938] [info] [Fine-Auto/LiDAR-Cam] 使用 lidar_camera.pairs：当前 lidar=lidar_0 下 4 个相机
+[11:29:24.938] [info] [Fine-Auto/LiDAR-Cam] 从 ROS2 加载数据...
+[11:29:24.938] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[11:29:24.938] [info]   Bag 文件: /root/calib_ws/data/park
+[11:29:24.938] [info]   实时模式: false
+[11:29:24.938] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/park
+[11:29:24.938] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/park/metadata.yaml
+[11:29:24.938] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam3/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4733)
+[11:29:24.938] [debug] [Ros2BagDataSource] 找到话题: /os_node/lidar_packets (类型: ouster_ros/msg/PacketMsg, 消息数: 100958)
+[11:29:24.938] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam4/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4733)
+[11:29:24.938] [debug] [Ros2BagDataSource] 找到话题: /os_node/imu_packets (类型: ouster_ros/msg/PacketMsg, 消息数: 15772)
+[11:29:24.938] [debug] [Ros2BagDataSource] 找到话题: /os_cloud_node/imu (类型: sensor_msgs/msg/Imu, 消息数: 15772)
+[11:29:24.938] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/imu (类型: sensor_msgs/msg/Imu, 消息数: 31515)
+[11:29:24.938] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam0/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4732)
+[11:29:24.938] [debug] [Ros2BagDataSource] 找到话题: /alphasense_driver_ros/cam1/compressed (类型: sensor_msgs/msg/CompressedImage, 消息数: 4732)
+[11:29:24.938] [debug] [Ros2BagDataSource] 找到话题: /os_cloud_node/points (类型: sensor_msgs/msg/PointCloud2, 消息数: 1577)
+[11:29:24.938] [info] [Ros2BagDataSource] 使用配置的 LiDAR 话题: /os_cloud_node/points
+[11:29:24.938] [info] [Ros2BagDataSource] 使用配置的相机话题: /alphasense_driver_ros/cam0/compressed
+[11:29:24.938] [info] [Ros2BagDataSource] 使用配置的 IMU 话题: /os_cloud_node/imu
+[INFO] [1777260564.941172950] [rosbag2_storage]: Opened database '/root/calib_ws/data/park/park.db3' for READ_ONLY.
+[11:29:24.941] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[11:29:24.941] [info] [Ros2BagDataSource] 找到 9 个话题
+[11:29:24.941] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam3/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4733
+[11:29:24.941] [info] [Ros2BagDataSource]  话题: /os_node/lidar_packets  类型: ouster_ros/msg/PacketMsg  消息数: 100958
+[11:29:24.941] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam4/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4733
+[11:29:24.941] [info] [Ros2BagDataSource]  话题: /os_node/imu_packets  类型: ouster_ros/msg/PacketMsg  消息数: 15772
+[11:29:24.941] [info] [Ros2BagDataSource]  话题: /os_cloud_node/imu  类型: sensor_msgs/msg/Imu  消息数: 15772
+[11:29:24.941] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/imu  类型: sensor_msgs/msg/Imu  消息数: 31515
+[11:29:24.941] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam0/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4732
+[11:29:24.941] [info] [Ros2BagDataSource]  话题: /alphasense_driver_ros/cam1/compressed  类型: sensor_msgs/msg/CompressedImage  消息数: 4732
+[11:29:24.941] [info] [Ros2BagDataSource]  话题: /os_cloud_node/points  类型: sensor_msgs/msg/PointCloud2  消息数: 1577
+[11:29:24.941] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[11:29:27.295] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 5000
+[11:29:29.489] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 500
+[11:29:29.489] [debug]   收集 IMU [/os_cloud_node/imu] 帧数: 5000
+[11:29:29.490] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 10000
+[11:29:31.939] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 15000
+[11:29:33.926] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 1000
+[11:29:33.926] [debug]   收集 IMU [/os_cloud_node/imu] 帧数: 10000
+[11:29:33.936] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 20000
+[11:29:36.318] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 25000
+[11:29:38.687] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 1500
+[11:29:38.688] [debug]   收集 IMU [/os_cloud_node/imu] 帧数: 15000
+[11:29:38.698] [debug]   收集 IMU [/alphasense_driver_ros/imu] 帧数: 30000
+[11:29:39.428] [info] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[11:29:39.428] [info]   LiDAR [/os_cloud_node/points]: 1577 帧
+[11:29:39.428] [info]   IMU [/alphasense_driver_ros/imu]: 31515 帧
+[11:29:39.428] [info]   IMU [/os_cloud_node/imu]: 15772 帧
+[11:29:39.428] [info]   选用 LiDAR  lidar_0 -> /os_cloud_node/points
+[11:29:39.428] [info]   选用 IMU    imu_0 -> /os_cloud_node/imu
+[11:29:39.428] [info]   时间范围: 1638292235.952 - 1638292393.732 秒
+[11:29:39.428] [info] [Ros2BagDataSource] 应用采样/帧数限制...
+[11:29:39.428] [info]   LiDAR /os_cloud_node/points 采样后: 800 帧
+[11:29:39.428] [info] [Fine-Auto/LiDAR-Cam] LiDAR 加载完成: 800 帧 (将按相机逐路取帧)
+[11:29:39.428] [warning] [Fine-Auto/LiDAR-Cam] 相机 cam_0 无帧，跳过
+[11:29:39.428] [warning] [Fine-Auto/LiDAR-Cam] 相机 cam_1 无帧，跳过
+[11:29:39.428] [warning] [Fine-Auto/LiDAR-Cam] 相机 cam_3 无帧，跳过
+[11:29:39.428] [warning] [Fine-Auto/LiDAR-Cam] 相机 cam_4 无帧，跳过
+[11:29:39.428] [info] [Fine-Auto/LiDAR-Cam] 精标定完成: 0 个相机  最大 RMS=0.0000 px
+[11:29:39.428] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 完成
+[11:29:39.429] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:29:39.429] [info] ■ 结束阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[11:29:39.429] [info]   结果: ✗ 失败 | 残差RMS: -1.0000 | 耗时: 14491 ms
+[11:29:39.429] [info]   消息: LiDAR-Camera 精标定失败 — 无相机得到有效结果
+[11:29:39.429] [info] [CALC] 阶段结束 stage=Fine-Auto task=lidar_cam_extrin success=false residual_rms=-1.000000 elapsed_ms=14490.4 threshold=2.0000
+[11:29:39.429] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:29:39.429] [info] ====== Pipeline Report: pipeline_20260427_112328 ======
+[11:29:39.429] [info]   Total time: 371257.7 ms
+[11:29:39.429] [info]   All stages succeeded: NO
+[11:29:39.429] [info]   标定质量: 各阶段 RMS 均在阈值内
+[11:29:39.429] [info]   [Fine-Auto-imu_intrinsic] success=true rms=0.0000 time=15729.6ms: IMU内参标定完成: gyro_noise=0.0434774 rad/s/√Hz, gyro_bias=0.0197436 rad/s, accel_noise=0.170633 m/s²/√Hz, accel_bias=0.0637513 m/s²
+[11:29:39.429] [info]   [Fine-Auto-cam_intrinsic] success=true rms=0.0000 time=0.0ms: 精标定占位 — 请通过具体标定器实现
+[11:29:39.429] [info]   [Fine-Auto-imu_lidar_extrin] success=true rms=0.0000 time=341037.7ms: IMU-LiDAR 标定完成: 1 对
+[11:29:39.429] [info]   [Fine-Auto-lidar_cam_extrin] success=false rms=-1.0000 time=14490.4ms: LiDAR-Camera 精标定失败 — 无相机得到有效结果
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   imu_0->lidar_0:
+║     R(RPY°): [179.56, 0.24, -0.46]
+║     T(m):    [-0.15, 0.01, -0.00]
+║     时偏(s): -0.00
+║     RMS:     0.00 ✓
+╚══════════════════════════════════════════════════════╝
+
+[11:29:39.429] [info] ================================
+[11:29:39.429] [info] Pipeline report saved: ./results/pipeline_report_20260427_112328.yaml
+
+  ┌─────────────────────────────────────────────────┐
+  │            UniCalib 联合标定完成                 │
+  ├─────────────────────────────────────────────────┤
+  │ Pipeline ID: pipeline_20260427_112328            │
+  │ 总耗时: 371258     ms                             │
+  │ 全部收敛: 否 ✗ (查看日志)                │
+[11:29:39.429] [info]   [Fine-Auto] rms=0.0000 time=15730ms: ✓ IMU内参标定完成: gyro_noise=0.0434774 rad/s/√Hz, gyro_bias=0.0197436 rad/s, accel_noise=0.170633 m/s²/√Hz, accel_bias=0.0637513 m/s²
+[11:29:39.429] [info]   [Fine-Auto] rms=0.0000 time=0ms: ✓ 精标定占位 — 请通过具体标定器实现
+[11:29:39.429] [info]   [Fine-Auto] rms=0.0000 time=341038ms: ✓ IMU-LiDAR 标定完成: 1 对
+[11:29:39.429] [info]   [Fine-Auto] rms=-1.0000 time=14490ms: ✗ LiDAR-Camera 精标定失败 — 无相机得到有效结果
+  ├─────────────────────────────────────────────────┤
+  │ 结果目录: ./results                             │
+  └─────────────────────────────────────────────────┘
+

@@ -1,0 +1,37 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from ikalibr/msg/AinsteinRadarTarget.msg
+// generated code does not contain a copyright notice
+
+
+module ikalibr {
+  module msg {
+    @verbatim (language="comment", text=
+      "A copy format from 'https://github.com/AinsteinAI/ainstein_radar' (more detail, open the link)" "\n"
+      "This message describes a target (detection) from a RADAR sensor.")
+    struct AinsteinRadarTarget {
+      @verbatim (language="comment", text=
+        "ID of the target, as set by the sensor")
+      uint16 target_id;
+
+      @verbatim (language="comment", text=
+        "Signal-to-noise ratio")
+      double snr;
+
+      @verbatim (language="comment", text=
+        "Distance from sensor to target along sensor x-axis")
+      double range;
+
+      @verbatim (language="comment", text=
+        "Speed (range rate of change) of target along sensor x-axis")
+      double speed;
+
+      @verbatim (language="comment", text=
+        "Angle of target relative to sensor within x-y plane")
+      double azimuth;
+
+      @verbatim (language="comment", text=
+        "Angle of target relative to sensor within y-z plane")
+      double elevation;
+    };
+  };
+};

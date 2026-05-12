@@ -1,0 +1,134 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-08 11:30:25.283] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-08 11:30:25.283] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-08 11:30:25.283] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-08 11:30:25.283] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-08 11:30:25.283] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-08 11:30:25.283] [info] [LiDAR-Camera] [:] AI粗标定: true | 手动校准: false
+[2026-04-08 11:30:25.283] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-08 11:30:25.284] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 1, Camera: 2
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [数据路径] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]   数据路径来源: 统一格式 (data.lidar.<id> / data.camera.<id>.images_dir)
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]   配置原始值 — lidar:  kitti_drive_0084/velodyne_points
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]   配置原始值 — camera: kitti_drive_0084/image_00
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]   base_data_dir:  /root/calib_ws/data
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]   base 来源: 命令行 --data-dir
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]   lidar_dir:      /root/calib_ws/data/kitti_drive_0084/velodyne_points
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]   camera_dir:     /root/calib_ws/data/kitti_drive_0084/image_00
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]   【数据就绪】是 — 点云与图像目录均存在，将执行精标定
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:]   说明: 使用 --dataset 时请将 data.lidar/data.camera 设为相对 base 的路径（如 pcd、images），不要使用 /path/to/... 占位符
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-08 11:30:25.285] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-08 11:30:25.286] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 1, Camera: 2
+[2026-04-08 11:30:25.286] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-08 11:30:25.287] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 1, Camera: 2
+[2026-04-08 11:30:25.287] [info] [LiDAR-Camera] [:] [数据源] 类型=FILES  lidar_dir=/root/calib_ws/data/kitti_drive_0084/velodyne_points  camera_dir=/root/calib_ws/data/kitti_drive_0084/image_00
+[2026-04-08 11:30:25.287] [info] [LiDAR-Camera] [:]   内参将从相机标定结果读取: ./results/camera_intrinsic/camera_intrinsic_cam_left.yaml (camera_id=cam_left)
+[2026-04-08 11:30:25.287] [info] [LiDAR-Camera] [:]   内参将从相机标定结果读取: ./results/camera_intrinsic/camera_intrinsic_cam_right.yaml (camera_id=cam_right)
+[2026-04-08 11:30:25.287] [info] [LiDAR-Camera] [:] [CalibPipeline] 初始化 ID=pipeline_20260408_113025
+[2026-04-08 11:30:25.287] [info] [LiDAR-Camera] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-08 11:30:25.287] [info] [LiDAR-Camera] [:] [CalibPipeline] 无目标优先: true
+[2026-04-08 11:30:25.287] [info] [LiDAR-Camera] [:] [CalibPipeline] 任务掩码: 0x10
+[2026-04-08 11:30:25.287] [info] [LiDAR-Camera] [:] ▶ Stage 1: AI 粗标定 (MIAS-LCEC)
+[2026-04-08 11:30:25.287] [info] [LiDAR-Camera] [:]   模型路径: /root/calib_ws/MIAS-LCEC (粗标定使用 pretrained_overlap_transformer.pth.tar)
+[2026-04-08 11:30:26.296] [info] [LiDAR-Camera] [:] [AI-Calib] DM-Calib 配置的 Python 无 torch，改用已装 torch 的 Python: python3
+[2026-04-08 11:30:26.296] [info] [LiDAR-Camera] [:] [AI-Calib] ===== AI 模型可用性检查 =====
+[2026-04-08 11:30:26.296] [info] [LiDAR-Camera] [:] [DM-Calib] 可用性检查 失败 原因=推理脚本不存在 路径=/root/calib_ws/DM-Calib/DMCalib/tools/infer_unicalib.py
+[2026-04-08 11:30:26.296] [info] [LiDAR-Camera] [:]   DM-Calib (相机内参):      ✗ 不可用
+[2026-04-08 11:30:26.296] [info] [LiDAR-Camera] [:]   MIAS-LCEC (LiDAR-Cam):   ✓ 可用
+[2026-04-08 11:30:26.296] [info] [LiDAR-Camera] [:] [TransformerIMU] 不可用: 脚本不存在 script=/root/calib_ws/Transformer-IMU-Calibrator/eval_unicalib.py
+[2026-04-08 11:30:26.296] [info] [LiDAR-Camera] [:]   Transformer-IMU (IMU内参): ✗ 不可用
+[2026-04-08 11:30:26.296] [info] [LiDAR-Camera] [:]   L2Calib (IMU-LiDAR):     ✗ 不可用
+[2026-04-08 11:30:26.296] [info] [LiDAR-Camera] [:] [AI-Calib] ================================
+[2026-04-08 11:30:26.296] [info] [LiDAR-Camera] [:]   [Stage 1] MIAS-LCEC 可用: 是 (粗标定支持: 1) 指定 coarse_pcd_file/coarse_image_file 2) 从当前数据源取首帧，同相机内参)
+[2026-04-08 11:30:26.296] [info] [LiDAR-Camera] [:]   内参: fx=384.0 fy=384.0 cx=376.0 cy=240.0 尺寸=752x480 (来自 ./results/camera_intrinsic/camera_intrinsic_cam_left.yaml)
+[2026-04-08 11:30:26.296] [warning] [LiDAR-Camera] [:]   [Stage 1] 文件目录无可用首帧: PCD 数=0  图像数=383 (dirs: /root/calib_ws/data/kitti_drive_0084/velodyne_points / /root/calib_ws/data/kitti_drive_0084/image_00)
+[2026-04-08 11:30:26.297] [warning] [LiDAR-Camera] [:]   未提供 coarse_pcd_file/coarse_image_file 且未从当前数据源取到首帧，跳过 AI 粗标定
+[2026-04-08 11:30:26.297] [info] [LiDAR-Camera] [:]   说明: 粗标定支持 1) 在 config 中设置 coarse_pcd_file / coarse_image_file 2) 使用 ROS2 bag/话题或文件目录时自动取首帧（同相机内参粗标定）
+[2026-04-08 11:30:26.297] [info] [LiDAR-Camera] [:]   当前: coarse_pcd_file='(未设置)' coarse_image_file='(未设置)'
+[2026-04-08 11:30:26.297] [warning] [LiDAR-Camera] [:] 【粗标定未执行】精标定将使用 identity 初值。原因: (1) MIAS-LCEC 可用=是 (2) 粗标定输入已就绪=否
+[2026-04-08 11:30:26.297] [info] [LiDAR-Camera] [:]   [Stage 1] 结果: 跳过 (详见上方原因)
+[2026-04-08 11:30:26.297] [info] [LiDAR-Camera] [:] ▶ Stage 2: 精标定 (方法=edge)
+[2026-04-08 11:30:26.297] [info] [LiDAR-Camera] [:] 
+[2026-04-08 11:30:26.297] [info] [LiDAR-Camera] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-08 11:30:26.297] [info] [LiDAR-Camera] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-08 11:30:26.297] [info] [LiDAR-Camera] [:] ║   Pipeline ID: pipeline_20260408_113025       ║
+[2026-04-08 11:30:26.297] [info] [LiDAR-Camera] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-08 11:30:26.297] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=true → do_coarse=true
+[11:30:26.297] [info] 
+[11:30:26.297] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:30:26.297] [info] ▶ 开始阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[11:30:26.297] [info]   描述: AI模型提供初始估计值
+[11:30:26.297] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:30:26.297] [info] [CALC] 粗标定阶段开始 task=lidar_cam_extrin
+[11:30:27.282] [info] [AI-Calib] DM-Calib 配置的 Python 无 torch，改用已装 torch 的 Python: python3
+[11:30:27.282] [warning] [Coarse-AI/LiDAR-Cam] 粗标定无输入 (未配置数据或首帧不可用)，精标定将使用 identity  pcd_empty=true  image_empty=true
+[11:30:27.282] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:30:27.282] [info] ■ 结束阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[11:30:27.282] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 984 ms
+[11:30:27.282] [info]   消息: 粗标定无输入 (未配置数据或首帧不可用)，精标定将使用 identity
+[11:30:27.282] [info] [CALC] 阶段结束 stage=Coarse-AI task=lidar_cam_extrin success=false residual_rms=0.000000 elapsed_ms=984.9 threshold=-1.0000
+[11:30:27.282] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:30:27.282] [info] [Pipeline] 粗标定未成功，精标定将使用传统方法初始化
+[11:30:27.282] [info] 
+[11:30:27.282] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:30:27.282] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[11:30:27.282] [info]   描述: 无目标优化
+[11:30:27.282] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:30:27.282] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[11:30:27.282] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[11:30:27.282] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[11:30:27.282] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[11:30:27.282] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[11:30:27.282] [info]   [精标定数据源] 类型=FILES  lidar_id=lidar_0
+[11:30:27.282] [info]   文件目录: lidar=/root/calib_ws/data/kitti_drive_0084/velodyne_points  camera=/root/calib_ws/data/kitti_drive_0084/image_00
+[11:30:27.282] [error] [Fine-Auto/LiDAR-Cam] 相机图像目录未配置或不存在 (camera=cam_left): kitti_drive_0084/image_00
+[11:30:27.282] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:30:27.282] [info] ■ 结束阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[11:30:27.282] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 0 ms
+[11:30:27.282] [info]   消息: 相机图像目录未配置或不存在 (camera=cam_left): kitti_drive_0084/image_00
+[11:30:27.282] [info] [CALC] 阶段结束 stage=Fine-Auto task=lidar_cam_extrin success=false residual_rms=0.000000 elapsed_ms=0.0 threshold=2.0000
+[11:30:27.282] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:30:27.282] [info] ====== Pipeline Report: pipeline_20260408_113025 ======
+[11:30:27.282] [info]   Total time: 984.9 ms
+[11:30:27.282] [info]   All stages succeeded: NO
+[11:30:27.282] [info]   标定质量: 各阶段 RMS 均在阈值内
+[11:30:27.282] [info]   [Coarse-AI-lidar_cam_extrin] success=false rms=0.0000 time=984.9ms: 粗标定无输入 (未配置数据或首帧不可用)，精标定将使用 identity
+[11:30:27.282] [info]   [Fine-Auto-lidar_cam_extrin] success=false rms=0.0000 time=0.0ms: 相机图像目录未配置或不存在 (camera=cam_left): kitti_drive_0084/image_00
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+╚══════════════════════════════════════════════════════╝
+
+[11:30:27.282] [info] ================================
+[11:30:27.282] [info] Pipeline report saved: ./results/pipeline_report_20260408_113025.yaml
+[11:30:27.282] [info] ====== Pipeline Report: pipeline_20260408_113025 ======
+[11:30:27.282] [info]   Total time: 984.9 ms
+[11:30:27.282] [info]   All stages succeeded: NO
+[11:30:27.282] [info]   标定质量: 各阶段 RMS 均在阈值内
+[11:30:27.282] [info]   [Coarse-AI-lidar_cam_extrin] success=false rms=0.0000 time=984.9ms: 粗标定无输入 (未配置数据或首帧不可用)，精标定将使用 identity
+[11:30:27.282] [info]   [Fine-Auto-lidar_cam_extrin] success=false rms=0.0000 time=0.0ms: 相机图像目录未配置或不存在 (camera=cam_left): kitti_drive_0084/image_00
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+╚══════════════════════════════════════════════════════╝
+
+[11:30:27.282] [info] ================================
+[11:30:27.282] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:30:27.282] [info] LiDAR-Camera 标定流程完成
+[11:30:27.282] [info] 结果目录: ./results
+[11:30:27.282] [info] 标定流程正常退出 exit_code=0
+[11:30:27.282] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

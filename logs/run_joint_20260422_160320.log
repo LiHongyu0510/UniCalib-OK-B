@@ -1,0 +1,143 @@
+
+ ╔═══════════════════════════════════════════════════════════════╗
+ ║   UniCalib v2.0 — 多传感器联合标定系统                        ║
+ ║                                                               ║
+ ║   支持: IMU内参 / 相机内参 / IMU-LiDAR外参 /                  ║
+ ║         LiDAR-Camera外参 / Camera-Camera外参                  ║
+ ║                                                               ║
+ ║   两阶段: AI粗标定 → 无目标精标定 → 手动校准                  ║
+ ║   AI模型: DM-Calib / MIAS-LCEC / Transformer-IMU / L2Calib   ║
+ ╚═══════════════════════════════════════════════════════════════╝
+
+[2026-04-22 16:03:21.340] [info] [Joint-Calib] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:]   IMU: 1, LiDAR: 1, Camera: 2
+
+  标定任务:
+    ✓ IMU 内参
+    ✓ 相机内参
+    ✓ IMU-LiDAR 外参
+    ✓ LiDAR-Camera 外参
+    ✗ Camera-Camera 外参
+
+  选项:
+    AI粗标定:    禁用
+    手动校准:    禁用
+    无目标优先:  是
+
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] 配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] 输出: ./results
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] 配置: 读取到 1 对 IMU-LiDAR 标定对
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] 配置: 读取到 1 对 LiDAR-LiDAR 标定对
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] 配置: 读取到 2 对 LiDAR-Camera 标定对
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] 配置: 读取到 1 对 Camera-Camera 标定对 (from pairs)
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] [CalibPipeline] 初始化 ID=pipeline_20260422_160321
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] [CalibPipeline] 无目标优先: true
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] [CalibPipeline] 任务掩码: 0x17
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] ▶ 开始联合标定流水线...
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] 
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] ║   Pipeline ID: pipeline_20260422_160321       ║
+[2026-04-22 16:03:21.341] [info] [Joint-Calib] [:] ╚═══════════════════════════════════════════════╝
+[16:03:21.341] [info] 
+[16:03:21.341] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:03:21.341] [info] ▶ 开始阶段: [Fine-Auto] 任务: [imu_intrinsic]
+[16:03:21.341] [info]   描述: 无目标优化
+[16:03:21.341] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:03:21.341] [info] [CALC] 精标定阶段开始 task=imu_intrinsic
+[16:03:21.341] [info] [Fine-Auto] 任务: imu_intrinsic | 无目标优先: true
+[16:03:21.341] [info] [Fine-Auto] 方法: Allan方差分析
+[16:03:21.341] [info] [Fine-Auto/IMU-Intrin] 开始执行IMU内参标定...
+[16:03:21.341] [info]   数据源类型: ROS2 Bag 文件
+[16:03:21.341] [info]   ROS2 Bag 文件: /root/calib_ws/data/ntu_day_02/ntu_merged
+[16:03:21.341] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[16:03:21.341] [info]   Bag 文件: /root/calib_ws/data/ntu_day_02/ntu_merged
+[16:03:21.341] [info]   实时模式: false
+[16:03:21.341] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/ntu_day_02/ntu_merged
+[16:03:21.341] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/ntu_day_02/ntu_merged/metadata.yaml
+[16:03:21.342] [debug] [Ros2BagDataSource] 找到话题: /d455b/imu (类型: sensor_msgs/msg/Imu, 消息数: 91566)
+[16:03:21.342] [debug] [Ros2BagDataSource] 找到话题: /d435i/imu (类型: sensor_msgs/msg/Imu, 消息数: 91482)
+[16:03:21.342] [debug] [Ros2BagDataSource] 找到话题: /vn100/imu (类型: sensor_msgs/msg/Imu, 消息数: 90881)
+[16:03:21.342] [debug] [Ros2BagDataSource] 找到话题: /d455b/color/image_raw (类型: sensor_msgs/msg/Image, 消息数: 6862)
+[16:03:21.342] [debug] [Ros2BagDataSource] 找到话题: /d435i/color/image_raw (类型: sensor_msgs/msg/Image, 消息数: 6861)
+[16:03:21.342] [debug] [Ros2BagDataSource] 找到话题: /os_cloud_node/points (类型: sensor_msgs/msg/PointCloud2, 消息数: 2288)
+[16:03:21.342] [debug] [Ros2BagDataSource] 匹配 LiDAR 话题: /os_cloud_node/points (关键词: points)
+[16:03:21.342] [info] [Ros2BagDataSource] 自动检测 LiDAR 话题: /os_cloud_node/points
+[16:03:21.342] [debug] [Ros2BagDataSource] 匹配相机话题: /d435i/color/image_raw (关键词: image)
+[16:03:21.342] [info] [Ros2BagDataSource] 自动检测相机话题: /d435i/color/image_raw
+[16:03:21.342] [info] [Ros2BagDataSource] 使用配置的 IMU 话题: /vn100/imu
+[INFO] [1776845001.344270241] [rosbag2_storage]: Opened database '/root/calib_ws/data/ntu_day_02/ntu_merged/ntu_merged.db3' for READ_ONLY.
+[16:03:21.344] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[16:03:21.344] [info] [Ros2BagDataSource] 找到 6 个话题
+[16:03:21.344] [info] [Ros2BagDataSource]  话题: /d455b/imu  类型: sensor_msgs/msg/Imu  消息数: 91566
+[16:03:21.344] [info] [Ros2BagDataSource]  话题: /d435i/imu  类型: sensor_msgs/msg/Imu  消息数: 91482
+[16:03:21.344] [info] [Ros2BagDataSource]  话题: /vn100/imu  类型: sensor_msgs/msg/Imu  消息数: 90881
+[16:03:21.344] [info] [Ros2BagDataSource]  话题: /d455b/color/image_raw  类型: sensor_msgs/msg/Image  消息数: 6862
+[16:03:21.344] [info] [Ros2BagDataSource]  话题: /d435i/color/image_raw  类型: sensor_msgs/msg/Image  消息数: 6861
+[16:03:21.344] [info] [Ros2BagDataSource]  话题: /os_cloud_node/points  类型: sensor_msgs/msg/PointCloud2  消息数: 2288
+[16:03:21.344] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[16:03:24.609] [debug]   收集 IMU [/d435i/imu] 帧数: 5000
+[16:03:24.626] [debug]   收集 IMU [/d455b/imu] 帧数: 5000
+[16:03:24.656] [debug]   收集 IMU [/vn100/imu] 帧数: 5000
+[16:03:25.646] [debug]   收集相机 [/d455b/color/image_raw] 帧数: 500
+[16:03:25.648] [debug]   收集相机 [/d435i/color/image_raw] 帧数: 500
+[16:03:27.439] [debug]   收集 IMU [/d435i/imu] 帧数: 10000
+[16:03:27.439] [debug]   收集 IMU [/d455b/imu] 帧数: 10000
+[16:03:27.482] [debug]   收集 IMU [/vn100/imu] 帧数: 10000
+[16:03:29.207] [debug]   收集相机 [/d455b/color/image_raw] 帧数: 1000
+[16:03:29.210] [debug]   收集相机 [/d435i/color/image_raw] 帧数: 1000
+[16:03:30.098] [debug]   收集 IMU [/d455b/imu] 帧数: 15000
+[16:03:30.110] [debug]   收集 IMU [/d435i/imu] 帧数: 15000
+[16:03:30.160] [debug]   收集 IMU [/vn100/imu] 帧数: 15000
+[16:03:32.838] [debug]   收集 IMU [/d455b/imu] 帧数: 20000
+[16:03:32.849] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 500
+[16:03:32.851] [debug]   收集相机 [/d455b/color/image_raw] 帧数: 1500
+[16:03:32.853] [debug]   收集相机 [/d435i/color/image_raw] 帧数: 1500
+[16:03:32.853] [debug]   收集 IMU [/d435i/imu] 帧数: 20000
+[16:03:32.941] [debug]   收集 IMU [/vn100/imu] 帧数: 20000
+[16:03:35.690] [debug]   收集 IMU [/d455b/imu] 帧数: 25000
+[16:03:35.707] [debug]   收集 IMU [/d435i/imu] 帧数: 25000
+[16:03:35.796] [debug]   收集 IMU [/vn100/imu] 帧数: 25000
+[16:03:36.604] [debug]   收集相机 [/d455b/color/image_raw] 帧数: 2000
+[16:03:36.606] [debug]   收集相机 [/d435i/color/image_raw] 帧数: 2000
+[16:03:38.501] [debug]   收集 IMU [/d455b/imu] 帧数: 30000
+[16:03:38.526] [debug]   收集 IMU [/d435i/imu] 帧数: 30000
+[16:03:38.657] [debug]   收集 IMU [/vn100/imu] 帧数: 30000
+[16:03:40.381] [debug]   收集相机 [/d455b/color/image_raw] 帧数: 2500
+[16:03:40.382] [debug]   收集相机 [/d435i/color/image_raw] 帧数: 2500
+[16:03:41.292] [debug]   收集 IMU [/d455b/imu] 帧数: 35000
+[16:03:41.310] [debug]   收集 IMU [/d435i/imu] 帧数: 35000
+[16:03:41.466] [debug]   收集 IMU [/vn100/imu] 帧数: 35000
+[16:03:43.978] [debug]   收集 IMU [/d455b/imu] 帧数: 40000
+[16:03:43.988] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 1000
+[16:03:43.994] [debug]   收集相机 [/d455b/color/image_raw] 帧数: 3000
+[16:03:43.995] [debug]   收集相机 [/d435i/color/image_raw] 帧数: 3000
+[16:03:43.995] [debug]   收集 IMU [/d435i/imu] 帧数: 40000
+[16:03:44.148] [debug]   收集 IMU [/vn100/imu] 帧数: 40000
+[16:03:46.720] [debug]   收集 IMU [/d455b/imu] 帧数: 45000
+[16:03:46.740] [debug]   收集 IMU [/d435i/imu] 帧数: 45000
+[16:03:46.891] [debug]   收集 IMU [/vn100/imu] 帧数: 45000
+[16:03:47.655] [debug]   收集相机 [/d455b/color/image_raw] 帧数: 3500
+[16:03:47.657] [debug]   收集相机 [/d435i/color/image_raw] 帧数: 3500
+[16:03:49.526] [debug]   收集 IMU [/d455b/imu] 帧数: 50000
+[16:03:49.547] [debug]   收集 IMU [/d435i/imu] 帧数: 50000
+[16:03:49.742] [debug]   收集 IMU [/vn100/imu] 帧数: 50000
+[16:03:51.446] [debug]   收集相机 [/d455b/color/image_raw] 帧数: 4000
+[16:03:51.460] [debug]   收集相机 [/d435i/color/image_raw] 帧数: 4000
+[16:03:52.404] [debug]   收集 IMU [/d455b/imu] 帧数: 55000
+[16:03:52.429] [debug]   收集 IMU [/d435i/imu] 帧数: 55000
+[16:03:52.643] [debug]   收集 IMU [/vn100/imu] 帧数: 55000
+[16:03:55.390] [debug]   收集 IMU [/d455b/imu] 帧数: 60000
+[16:03:55.403] [debug]   收集 LiDAR [/os_cloud_node/points] 帧数: 1500
+[16:03:55.412] [debug]   收集相机 [/d455b/color/image_raw] 帧数: 4500
+[16:03:55.414] [debug]   收集相机 [/d435i/color/image_raw] 帧数: 4500
+[16:03:55.414] [debug]   收集 IMU [/d435i/imu] 帧数: 60000
+[16:03:55.747] [debug]   收集 IMU [/vn100/imu] 帧数: 60000
+[16:03:58.777] [debug]   收集 IMU [/d455b/imu] 帧数: 65000
+[16:03:58.818] [debug]   收集 IMU [/d435i/imu] 帧数: 65000
+[16:03:59.103] [debug]   收集 IMU [/vn100/imu] 帧数: 65000
+[16:20:55.355] [debug]   收集相机 [/d455b/color/image_raw] 帧数: 5000
+[16:20:55.378] [debug]   收集相机 [/d435i/color/image_raw] 帧数: 5000

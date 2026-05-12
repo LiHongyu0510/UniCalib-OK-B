@@ -1,0 +1,158 @@
+
+ ╔═══════════════════════════════════════════════════════════════╗
+ ║   UniCalib v2.0 — 多传感器联合标定系统                        ║
+ ║                                                               ║
+ ║   支持: IMU内参 / 相机内参 / IMU-LiDAR外参 /                  ║
+ ║         LiDAR-Camera外参 / Camera-Camera外参                  ║
+ ║                                                               ║
+ ║   两阶段: AI粗标定 → 无目标精标定 → 手动校准                  ║
+ ║   AI模型: DM-Calib / MIAS-LCEC / Transformer-IMU / L2Calib   ║
+ ╚═══════════════════════════════════════════════════════════════╝
+
+[2026-04-27 10:25:10.486] [info] [Joint-Calib] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:]   IMU: 1, LiDAR: 1, Camera: 4
+
+  标定任务:
+    ✓ IMU 内参
+    ✓ 相机内参
+    ✓ IMU-LiDAR 外参
+    ✓ LiDAR-Camera 外参
+    ✗ Camera-Camera 外参
+
+  选项:
+    AI粗标定:    禁用
+    手动校准:    禁用
+    无目标优先:  是
+
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] 配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] 输出: ./results
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] 配置: 读取到 1 对 IMU-LiDAR 标定对
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] 配置: 读取到 1 对 LiDAR-LiDAR 标定对
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] 配置: 读取到 4 对 LiDAR-Camera 标定对
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] 配置: 读取到 1 对 Camera-Camera 标定对 (from pairs)
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] [CalibPipeline] 初始化 ID=pipeline_20260427_102510
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] [CalibPipeline] 无目标优先: true
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] [CalibPipeline] 任务掩码: 0x17
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] ▶ 开始联合标定流水线...
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] 
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] ║   Pipeline ID: pipeline_20260427_102510       ║
+[2026-04-27 10:25:10.487] [info] [Joint-Calib] [:] ╚═══════════════════════════════════════════════╝
+[10:25:10.487] [info] 
+[10:25:10.487] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.487] [info] ▶ 开始阶段: [Fine-Auto] 任务: [imu_intrinsic]
+[10:25:10.487] [info]   描述: 无目标优化
+[10:25:10.487] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.487] [info] [CALC] 精标定阶段开始 task=imu_intrinsic
+[10:25:10.487] [info] [Fine-Auto] 任务: imu_intrinsic | 无目标优先: true
+[10:25:10.487] [info] [Fine-Auto] 方法: Allan方差分析
+[10:25:10.487] [info] [Fine-Auto/IMU-Intrin] 开始执行IMU内参标定...
+[10:25:10.487] [info]   数据源类型: ROS2 Bag 文件
+[10:25:10.487] [info]   ROS2 Bag 文件: /root/calib_ws/data/park/park
+[10:25:10.487] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[10:25:10.487] [info]   Bag 文件: /root/calib_ws/data/park/park
+[10:25:10.487] [info]   实时模式: false
+[10:25:10.487] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/park/park
+[10:25:10.487] [info] [Ros2BagDataSource] 未找到 metadata.yaml: /root/calib_ws/data/park/park/metadata.yaml
+[10:25:10.487] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.487] [info] ■ 结束阶段: [Fine-Auto] 任务: [imu_intrinsic]
+[10:25:10.487] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 0 ms
+[10:25:10.487] [info]   消息: ROS2 数据加载失败: 读取 metadata.yaml 失败
+[10:25:10.487] [info] [CALC] 阶段结束 stage=Fine-Auto task=imu_intrinsic success=false residual_rms=0.000000 elapsed_ms=0.0 threshold=0.1000
+[10:25:10.487] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.487] [info] 
+[10:25:10.487] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.487] [info] ▶ 开始阶段: [Fine-Auto] 任务: [cam_intrinsic]
+[10:25:10.487] [info]   描述: 无目标优化
+[10:25:10.487] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.487] [info] [CALC] 精标定阶段开始 task=cam_intrinsic
+[10:25:10.487] [info] [Fine-Auto] 任务: cam_intrinsic | 无目标优先: true
+[10:25:10.488] [info] [Fine-Auto] 方法: DM-Calib精化 + RANSAC
+[10:25:10.488] [warning] [Fine-Auto] 任务 cam_intrinsic 当前为占位实现
+[10:25:10.488] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.488] [info] ■ 结束阶段: [Fine-Auto] 任务: [cam_intrinsic]
+[10:25:10.488] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 0 ms
+[10:25:10.488] [info]   消息: 精标定占位 — 请通过具体标定器实现
+[10:25:10.488] [info] [CALC] 阶段结束 stage=Fine-Auto task=cam_intrinsic success=true residual_rms=0.000000 elapsed_ms=0.0 threshold=-1.0000
+[10:25:10.488] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.488] [info] 
+[10:25:10.488] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.488] [info] ▶ 开始阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[10:25:10.488] [info]   描述: 无目标优化
+[10:25:10.488] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.488] [info] [CALC] 精标定阶段开始 task=imu_lidar_extrin
+[10:25:10.488] [info] [Fine-Auto] 任务: imu_lidar_extrin | 无目标优先: true
+[10:25:10.488] [info] [Fine-Auto] 方法: B样条连续时间优化 (无目标)
+[10:25:10.488] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[10:25:10.488] [info]   Bag 文件: /root/calib_ws/data/park/park
+[10:25:10.488] [info]   实时模式: false
+[10:25:10.488] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/park/park
+[10:25:10.488] [info] [Ros2BagDataSource] 未找到 metadata.yaml: /root/calib_ws/data/park/park/metadata.yaml
+[10:25:10.488] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.488] [info] ■ 结束阶段: [Fine-Auto] 任务: [imu_lidar_extrin]
+[10:25:10.488] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 0 ms
+[10:25:10.488] [info]   消息: ROS2 数据加载失败: 读取 metadata.yaml 失败
+[10:25:10.488] [info] [CALC] 阶段结束 stage=Fine-Auto task=imu_lidar_extrin success=false residual_rms=0.000000 elapsed_ms=0.0 threshold=0.5000
+[10:25:10.488] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.488] [info] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=false → do_coarse=false
+[10:25:10.488] [info] [Coarse-AI/LiDAR-Cam] 跳过粗标定: 未启用 (请使用 --coarse 启用 MIAS-LCEC 粗标定)
+[10:25:10.488] [info] 
+[10:25:10.488] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.488] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[10:25:10.488] [info]   描述: 无目标优化
+[10:25:10.488] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.488] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[10:25:10.488] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[10:25:10.488] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[10:25:10.488] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[10:25:10.488] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[10:25:10.488] [info]   [精标定数据源] 类型=ROS2_BAG  lidar_id=lidar_0
+[10:25:10.488] [info]   ROS2 Bag: /root/calib_ws/data/park/park  LiDAR 话题: /os_cloud_node/points  相机话题: /alphasense_driver_ros/cam0/compressed
+[10:25:10.488] [info] [Fine-Auto/LiDAR-Cam] 使用 lidar_camera.pairs：当前 lidar=lidar_0 下 4 个相机
+[10:25:10.488] [info] [Fine-Auto/LiDAR-Cam] 从 ROS2 加载数据...
+[10:25:10.488] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[10:25:10.488] [info]   Bag 文件: /root/calib_ws/data/park/park
+[10:25:10.488] [info]   实时模式: false
+[10:25:10.488] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/park/park
+[10:25:10.488] [info] [Ros2BagDataSource] 未找到 metadata.yaml: /root/calib_ws/data/park/park/metadata.yaml
+[10:25:10.488] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.488] [info] ■ 结束阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[10:25:10.488] [info]   结果: ✗ 失败 | 残差RMS: 0.0000 | 耗时: 0 ms
+[10:25:10.488] [info]   消息: ROS2 数据加载失败: 读取 metadata.yaml 失败
+[10:25:10.488] [info] [CALC] 阶段结束 stage=Fine-Auto task=lidar_cam_extrin success=false residual_rms=0.000000 elapsed_ms=0.0 threshold=2.0000
+[10:25:10.488] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[10:25:10.488] [info] ====== Pipeline Report: pipeline_20260427_102510 ======
+[10:25:10.488] [info]   Total time: 0.0 ms
+[10:25:10.488] [info]   All stages succeeded: NO
+[10:25:10.488] [info]   标定质量: 各阶段 RMS 均在阈值内
+[10:25:10.488] [info]   [Fine-Auto-imu_intrinsic] success=false rms=0.0000 time=0.0ms: ROS2 数据加载失败: 读取 metadata.yaml 失败
+[10:25:10.488] [info]   [Fine-Auto-cam_intrinsic] success=true rms=0.0000 time=0.0ms: 精标定占位 — 请通过具体标定器实现
+[10:25:10.488] [info]   [Fine-Auto-imu_lidar_extrin] success=false rms=0.0000 time=0.0ms: ROS2 数据加载失败: 读取 metadata.yaml 失败
+[10:25:10.488] [info]   [Fine-Auto-lidar_cam_extrin] success=false rms=0.0000 time=0.0ms: ROS2 数据加载失败: 读取 metadata.yaml 失败
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+╚══════════════════════════════════════════════════════╝
+
+[10:25:10.488] [info] ================================
+[10:25:10.488] [info] Pipeline report saved: ./results/pipeline_report_20260427_102510.yaml
+
+  ┌─────────────────────────────────────────────────┐
+  │            UniCalib 联合标定完成                 │
+  ├─────────────────────────────────────────────────┤
+  │ Pipeline ID: pipeline_20260427_102510            │
+  │ 总耗时: 0          ms                             │
+  │ 全部收敛: 否 ✗ (查看日志)                │
+[10:25:10.488] [info]   [Fine-Auto] rms=0.0000 time=0ms: ✗ ROS2 数据加载失败: 读取 metadata.yaml 失败
+[10:25:10.488] [info]   [Fine-Auto] rms=0.0000 time=0ms: ✓ 精标定占位 — 请通过具体标定器实现
+[10:25:10.488] [info]   [Fine-Auto] rms=0.0000 time=0ms: ✗ ROS2 数据加载失败: 读取 metadata.yaml 失败
+[10:25:10.488] [info]   [Fine-Auto] rms=0.0000 time=0ms: ✗ ROS2 数据加载失败: 读取 metadata.yaml 失败
+  ├─────────────────────────────────────────────────┤
+  │ 结果目录: ./results                             │
+  └─────────────────────────────────────────────────┘
+

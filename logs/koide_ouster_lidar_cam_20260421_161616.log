@@ -1,0 +1,868 @@
+[0;36m[1m
+ ╔═══════════════════════════════════════════════════════════════╗
+ ║  UniCalib calib_unified — 多传感器两阶段标定一键脚本           ║
+ ║  镜像: calib_env:humble  (只挂载, 不修改镜像/Dockerfile)       ║
+ ║  支持: IMU内参/相机内参/IMU-LiDAR/LiDAR-Cam/LiDAR-LiDAR/Cam-Cam           ║
+ ║  两阶段: AI粗标定 → 无目标精标定 → 手动校准                   ║
+ ╚═══════════════════════════════════════════════════════════════╝
+[0m
+[1m配置摘要:[0m
+  镜像:          calib_env:humble
+  源码:          /home/lihongyu/Unicalib/UniCalib-OK/calib_unified
+  构建(宿主):  /home/lihongyu/Unicalib/UniCalib-OK/calib_unified/build
+  数据:          /home/lihongyu/Unicalib/UniCalib-OK/data
+  结果:          /home/lihongyu/Unicalib/UniCalib-OK/results
+  日志:          /home/lihongyu/Unicalib/UniCalib-OK/logs
+  编译类型:    Release
+  并行数:       28
+
+
+[0;34m[1m──── 检查 Docker 环境 ────[0m
+[0;32m[INFO][0m  Docker: Docker version 29.3.1, build c2be9cc
+[0;32m[1m  ✓ 镜像 calib_env:humble 就绪[0m
+[0;32m[1m  ✓ GPU 支持可用[0m
+
+[0;34m[1m──── 运行标定: task=lidar-cam coarse=true manual=false ────[0m
+=========================================
+Multi-Calibration Dev Environment
+ROS2 Humble + CUDA 11.8 + PyTorch 2.1
+=========================================
+[INFO] 工作空间: /root/calib_ws
+[INFO] 用户: root
+[INFO] 主机: lihongyu-System-Product-Name
+
+
+=========================================
+环境已就绪
+=========================================
+
+[可用命令]
+  /opt/scripts/verify_env.sh          # 验证环境
+  /opt/scripts/run_calib_cpp.sh       # 一键标定（C++ 主框架，与 README 一致）
+  /opt/scripts/build_ros2_drivers.sh  # 手动编译 ROS2 驱动
+  source /root/calib_ws/install/setup.bash
+
+[使用示例]
+  # C++ 主框架一键标定（推荐）
+  /opt/scripts/run_calib_cpp.sh
+  # 或手动: cd $WORKSPACE/unicalib_C_plus_plus/build && RUN_PIPELINE=1 ./unicalib_example ../config/sensors.yaml $WORKSPACE/data
+  # Python 参考实现
+  python3 src/UniCalib/scripts/run_calibration.py --config ... --data data/ --output results/
+
+[INFO] 执行命令: bash /root/calib_ws/.calib_scripts/run.sh
+[INFO] 粗标定 (MIAS-LCEC) 将使用 NumPy 1.x 覆盖 (UNICALIB_MIAS_LCEC_PYTHON)，cv2/PnP 可用
+[INFO] 粗标定需要 MobileSAM，从本地安装: pip install -e /root/calib_ws/calib_unified/thirdparty/MobileSAM
+Obtaining file:///root/calib_ws/calib_unified/thirdparty/MobileSAM
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: mobile_sam
+  Building editable for mobile_sam (pyproject.toml): started
+  Building editable for mobile_sam (pyproject.toml): finished with status 'done'
+  Created wheel for mobile_sam: filename=mobile_sam-1.0-0.editable-py3-none-any.whl size=6964 sha256=9076ffee33821c17113f1ac8f4a45c31425281d7126fb4bcc734903769f9e683
+  Stored in directory: /tmp/pip-ephem-wheel-cache-qgsxa6xp/wheels/5b/40/38/3557d723fd3e340968b45733358bcf2b7fd3c0f559462207ea
+Successfully built mobile_sam
+Installing collected packages: mobile_sam
+Successfully installed mobile_sam-1.0
+[INFO] MobileSAM 安装成功（来自 /root/calib_ws/calib_unified/thirdparty/MobileSAM）
+
+╔════════════════════════════════════════════════════════╗
+║  UniCalib 标定任务: lidar-cam
+║  可执行: unicalib_lidar_camera
+╚════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│  运行前检查 — 请确认以下项                                                │
+├─────────────────────────────────────────────────────────────────────────┤
+│  当前任务: lidar-cam
+│  说明:     雷达与相机外参 (边缘对齐 + 默认 MIAS-LCEC 粗标定)
+│  配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml  (全工程唯一配置)
+│  数据目录: /root/calib_ws/data  (宿主机: 请将数据放入 CALIB_DATA_DIR)
+│  结果目录: /root/calib_ws/results
+│  可执行:   /root/calib_ws/calib_unified/build/bin/unicalib_lidar_camera
+│  选项:     coarse=true  manual=false
+│  IMU 备选: UNICALIB_TRANSFORMER_IMU=/root/calib_ws/Transformer-IMU-Calibrator
+└─────────────────────────────────────────────────────────────────────────┘
+  详细任务说明与数据要求: 宿主机执行 ./calib_unified_run.sh --task-help
+
+[INFO] 配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[INFO] 数据: /root/calib_ws/data
+[INFO] 结果: /root/calib_ws/results
+[INFO] 日志: /root/calib_ws/logs/run_lidar-cam_20260421_161622.log
+[INFO] 启动: 2026-04-21 16:16:22
+
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-21 16:16:22.923] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-21 16:16:22.923] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-21 16:16:22.923] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-21 16:16:22.923] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-21 16:16:22.923] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-21 16:16:22.923] [info] [LiDAR-Camera] [:] AI粗标定: true | 手动校准: false
+[2026-04-21 16:16:22.923] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-21 16:16:22.925] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]   IMU: 0, LiDAR: 1, Camera: 1
+[2026-04-21 16:16:22.926] [warning] [LiDAR-Camera] [:] 相机图像目录不存在: /root/calib_ws/data/null (请确保数据已放入此路径)
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [数据路径] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]   数据路径来源: 统一格式 (data.lidar.<id> / data.camera.<id>.images_dir)
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]   配置原始值 — lidar:  Koide/livox/lidar.yaml
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]   配置原始值 — camera: null
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]   base_data_dir:  /root/calib_ws/data
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]   base 来源: 命令行 --data-dir
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]   lidar_dir:      /root/calib_ws/data/Koide/livox/lidar.yaml
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]   camera_dir:     /root/calib_ws/data/null
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]     → 存在: 否
+[2026-04-21 16:16:22.926] [warning] [LiDAR-Camera] [:]     相机图像目录不存在，精标定将无法加载图像
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]   【数据就绪】否 — 原因: 相机图像目录不存在: /root/calib_ws/data/null
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:]   说明: 使用 --dataset 时请将 data.lidar/data.camera 设为相对 base 的路径（如 pcd、images），不要使用 /path/to/... 占位符
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-21 16:16:22.926] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-21 16:16:22.927] [info] [LiDAR-Camera] [:]   IMU: 0, LiDAR: 1, Camera: 1
+[2026-04-21 16:16:22.927] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-21 16:16:22.928] [info] [LiDAR-Camera] [:]   IMU: 0, LiDAR: 1, Camera: 1
+[2026-04-21 16:16:22.928] [info] [LiDAR-Camera] [:] 配置: 使用 ROS2 bag 模式（离线标定）
+[2026-04-21 16:16:22.928] [info] [LiDAR-Camera] [:]   Bag 路径: /root/calib_ws/data/Koide/livox/rosbag2_2023_03_09-13_42_46
+[2026-04-21 16:16:22.928] [info] [LiDAR-Camera] [:]   LiDAR 话题: /livox/points
+[2026-04-21 16:16:22.928] [info] [LiDAR-Camera] [:]   相机话题: /image
+[2026-04-21 16:16:22.928] [info] [LiDAR-Camera] [:]   IMU 话题: (未设置)
+[2026-04-21 16:16:22.928] [info] [LiDAR-Camera] [:] [数据源] 类型=ROS2_BAG  path=/root/calib_ws/data/Koide/livox/rosbag2_2023_03_09-13_42_46  lidar_topic=/livox/points  camera_topic=/image
+[2026-04-21 16:16:22.929] [info] [LiDAR-Camera] [:] [CalibPipeline] 初始化 ID=pipeline_20260421_161622
+[2026-04-21 16:16:22.929] [info] [LiDAR-Camera] [:] [CalibPipeline] 输出目录: /home/lihongyu/Unicalib/UniCalib-OK/results
+[2026-04-21 16:16:22.929] [info] [LiDAR-Camera] [:] [CalibPipeline] 无目标优先: true
+[2026-04-21 16:16:22.929] [info] [LiDAR-Camera] [:] [CalibPipeline] 任务掩码: 0x10
+[2026-04-21 16:16:22.929] [info] [LiDAR-Camera] [:] ▶ Stage 1: AI 粗标定 (MIAS-LCEC)
+[2026-04-21 16:16:22.929] [info] [LiDAR-Camera] [:]   模型路径: /root/calib_ws/MIAS-LCEC (粗标定使用 pretrained_overlap_transformer.pth.tar)
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:] [AI-Calib] DM-Calib 配置的 Python 无 torch，改用已装 torch 的 Python: python3
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:] [AI-Calib] ===== AI 模型可用性检查 =====
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:] [DM-Calib] 可用性检查 失败 原因=推理脚本不存在 路径=/root/calib_ws/DM-Calib/DMCalib/tools/infer_unicalib.py
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:]   DM-Calib (相机内参):      ✗ 不可用
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:]   MIAS-LCEC (LiDAR-Cam):   ✓ 可用
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:] [TransformerIMU] 不可用: 脚本不存在 script=/root/calib_ws/Transformer-IMU-Calibrator/eval_unicalib.py
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:]   Transformer-IMU (IMU内参): ✗ 不可用
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:]   L2Calib (IMU-LiDAR):     ✗ 不可用
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:] [AI-Calib] ================================
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:]   [Stage 1] MIAS-LCEC 可用: 是 (粗标定支持: 1) 指定 coarse_pcd_file/coarse_image_file 2) 从当前数据源取首帧，同相机内参)
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:]   [Stage 1] 粗标定输入来源: 从 ROS2 数据源取首帧 (max_frames=2, lidar_id=lidar_0)
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:] [UnifiedDataLoader] 从 ROS2 加载数据...
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:]   Bag 文件: /root/calib_ws/data/Koide/livox/rosbag2_2023_03_09-13_42_46
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:]   实时模式: false
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/Koide/livox/rosbag2_2023_03_09-13_42_46
+[2026-04-21 16:16:23.741] [info] [LiDAR-Camera] [:] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/Koide/livox/rosbag2_2023_03_09-13_42_46/metadata.yaml
+[2026-04-21 16:16:23.742] [info] [LiDAR-Camera] [:] [Ros2BagDataSource] 使用配置的 LiDAR 话题: /livox/points
+[2026-04-21 16:16:23.742] [info] [LiDAR-Camera] [:] [Ros2BagDataSource] 使用配置的相机话题: /image
+[2026-04-21 16:16:23.742] [info] [LiDAR-Camera] [:] [Ros2BagDataSource] 使用配置的 IMU 话题 (来自 sensors): 
+[INFO] [1776759383.751007237] [rosbag2_storage]: Opened database '/root/calib_ws/data/Koide/livox/rosbag2_2023_03_09-13_42_46/rosbag2_2023_03_09-13_42_46_0.db3' for READ_ONLY.
+[2026-04-21 16:16:23.751] [info] [LiDAR-Camera] [:] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[2026-04-21 16:16:23.751] [info] [LiDAR-Camera] [:] [Ros2BagDataSource] 找到 5 个话题
+[2026-04-21 16:16:23.751] [info] [LiDAR-Camera] [:] [Ros2BagDataSource]  话题: /livox/points  类型: sensor_msgs/msg/PointCloud2  消息数: 157
+[2026-04-21 16:16:23.751] [info] [LiDAR-Camera] [:] [Ros2BagDataSource]  话题: /livox/imu  类型: sensor_msgs/msg/Imu  消息数: 2597
+[2026-04-21 16:16:23.751] [info] [LiDAR-Camera] [:] [Ros2BagDataSource]  话题: /livox/lidar  类型: livox_interfaces/msg/CustomMsg  消息数: 157
+[2026-04-21 16:16:23.751] [info] [LiDAR-Camera] [:] [Ros2BagDataSource]  话题: /image  类型: sensor_msgs/msg/Image  消息数: 30
+[2026-04-21 16:16:23.751] [info] [LiDAR-Camera] [:] [Ros2BagDataSource]  话题: /camera_info  类型: sensor_msgs/msg/CameraInfo  消息数: 31
+[2026-04-21 16:16:23.751] [info] [LiDAR-Camera] [:] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[2026-04-21 16:16:24.684] [info] [LiDAR-Camera] [:] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[2026-04-21 16:16:24.684] [info] [LiDAR-Camera] [:]   LiDAR [/livox/points]: 157 帧
+[2026-04-21 16:16:24.684] [info] [LiDAR-Camera] [:]   相机 [/image]: 30 帧
+[2026-04-21 16:16:24.684] [info] [LiDAR-Camera] [:]   IMU [/livox/imu]: 2597 帧
+[2026-04-21 16:16:24.684] [info] [LiDAR-Camera] [:]   选用 LiDAR  lidar_0 -> /livox/points
+[2026-04-21 16:16:24.684] [info] [LiDAR-Camera] [:]   选用 相机  cam_0 -> /image
+[2026-04-21 16:16:24.684] [info] [LiDAR-Camera] [:]   选用 IMU    imu_0 -> /livox/imu
+[2026-04-21 16:16:24.684] [info] [LiDAR-Camera] [:]   时间范围: 545.614 - 582.547 秒
+[2026-04-21 16:16:24.684] [info] [LiDAR-Camera] [:] [Ros2BagDataSource] 应用采样/帧数限制...
+[2026-04-21 16:16:24.685] [info] [LiDAR-Camera] [:]   LiDAR /livox/points 采样后: 2 帧
+[2026-04-21 16:16:24.692] [info] [LiDAR-Camera] [:]   相机 /image 采样后: 2 帧
+[2026-04-21 16:16:24.693] [info] [LiDAR-Camera] [:]   [Stage 1] ROS2 加载结果: LiDAR 2 帧  相机 2 帧 (sensor_id=cam_0)
+[2026-04-21 16:16:24.810] [info] [LiDAR-Camera] [:]   [Stage 1] 已写入首帧到: PCD=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.pcd  image=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.png (ASCII PCD 供 Python 兼容)
+[2026-04-21 16:16:24.810] [info] [LiDAR-Camera] [:]   [Stage 1] 内参未配置，从首帧推断: 2448x2048  fx=1958.4  cx=1224.0  cy=1024.0
+[2026-04-21 16:16:24.819] [info] [LiDAR-Camera] [:]   [Stage 1] 标定对: lidar_id=lidar_0  camera_id=cam_0
+[2026-04-21 16:16:24.819] [info] [LiDAR-Camera] [:]   [Stage 1] 调用粗标定: pcd=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.pcd  image=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.png 内参: fx=1958.4 尺寸=2448x2048
+[2026-04-21 16:16:24.819] [info] [LiDAR-Camera] [:] [AI-Calib] LiDAR-Cam 粗估 (MIAS-LCEC) lidar_0→cam_0
+[2026-04-21 16:16:24.819] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 仓库: /root/calib_ws/calib_unified 脚本: scripts/run_lidar_cam_coarse.py 实际传入模型路径: /root/calib_ws/MIAS-LCEC/model/mobile_sam.pt
+[2026-04-21 16:16:24.820] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程 Python: python3 (已绕过 wrapper)
+[2026-04-21 16:16:24.820] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 粗标定尝试 1/2  (首次), 超时=180s
+[2026-04-21 16:16:24.820] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 执行命令 (python3+PYTHONPATH): python3 /root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py --pcd /home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.pcd --image /home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.png --sensor_config /tmp/mias_work/sensor_config.yaml --output_dir /tmp/mias_work/output --quality-ncc-good 0.300000 --quality-ncc-acceptable 0.200000 --quality-rms-good-px 2.000000 --quality-rms-acceptable-px 5.000000 --quality-inlier-ratio-good 0.600000 --quality-inlier-ratio-acceptable 0.400000 --model_path /root/calib_ws/MIAS-LCEC/model/mobile_sam.pt --mias_repo /root/calib_ws/calib_unified --no-require-model
+[2026-04-21 16:16:24.953] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:24.951] [INFO] 环境: numpy=2.2.6
+[2026-04-21 16:16:24.953] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:24.951] [INFO] ======== 粗标定开始 ========
+[2026-04-21 16:16:24.953] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:24.951] [INFO] 输入: pcd=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.pcd  image=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.png  sensor_config=/tmp/mias_work/sensor_config.yaml  output_dir=/tmp/mias_work/output
+[2026-04-21 16:16:24.953] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:24.951] [INFO] [步骤 1/4] 读取 sensor_config...
+[2026-04-21 16:16:24.959] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:24.959] [INFO] 读取 sensor_config: /tmp/mias_work/sensor_config.yaml
+[2026-04-21 16:16:24.960] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:24.960] [INFO] 相机内参: fx=1958.40 fy=1958.40 cx=1224.00 cy=1024.00 width=2448 height=2048
+[2026-04-21 16:16:24.960] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:24.960] [INFO] [步骤 2/4] 读取 PCD...
+[2026-04-21 16:16:24.970] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:24.970] [INFO] PCD 加载方式: ASCII (优先，避免 Open3D/NumPy 2.x 兼容问题)  路径=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.pcd
+[2026-04-21 16:16:24.971] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:24.971] [INFO] 点云规模: 20210 点  范围 X[1.05, 82.09] Y[-57.22, 16.86] Z[-5.77, 24.91]
+[2026-04-21 16:16:24.971] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:24.971] [INFO] [步骤 2/4] PCD 读取完成  点数=20210
+[2026-04-21 16:16:24.971] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:24.971] [INFO] [步骤 3/4] 读取图像 (优先 Pillow，避免 NumPy 2.x 下 cv2 崩溃)...
+[2026-04-21 16:16:25.096] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.096] [INFO] 图像加载: Pillow  路径=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.png  尺寸=2448x2048 (避免 NumPy 2.x 下 cv2 崩溃)
+[2026-04-21 16:16:25.097] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.097] [INFO] [步骤 3/4] 图像读取完成  尺寸=2448x2048
+[2026-04-21 16:16:25.097] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.097] [INFO] [粗标定] ===== 尝试深度模型推理 =====
+[2026-04-21 16:16:25.097] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.097] [INFO] [粗标定] 配置: model_path=/root/calib_ws/MIAS-LCEC/model/mobile_sam.pt
+[2026-04-21 16:16:25.097] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.097] [INFO] [粗标定] 配置: mias_repo=/root/calib_ws/calib_unified
+[2026-04-21 16:16:25.097] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.097] [INFO] [粗标定] require_model=False
+[2026-04-21 16:16:25.098] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.098] [INFO] [粗标定] mias_lcec_infer 导入成功
+[2026-04-21 16:16:25.098] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.098] [INFO] [粗标定] 开始调用深度模型推理...
+[2026-04-21 16:16:25.098] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.098] [INFO] [粗标定] 输入: pcd=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.pcd image=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.png
+[2026-04-21 16:16:25.098] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [MIAS_LCEC_INFER 2026-04-21 16:16:25.098] [WARNING] [MIAS-LCEC 推理] 未使用深度模型: 模型文件不存在或未配置 model_path=/root/calib_ws/MIAS-LCEC/model/mobile_sam.pt
+[2026-04-21 16:16:25.098] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.098] [INFO] [粗标定] 推理完成，返回值类型: None
+[2026-04-21 16:16:25.098] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.098] [WARNING] [粗标定] 深度模型未返回结果 (require_model=false)，将回退 PnP 几何初值；请检查: 1) MIAS-LCEC 仓库是否有 infer_unicalib.py 或 LcMatch_CApi 2) Python 版本是否为 3.10 (LcMatch_CApi 需要) 3) model_path 是否正确
+[2026-04-21 16:16:25.098] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.098] [WARNING] [粗标定] ★ 结论: 未使用深度模型，将回退 PnP；原因见上方 [MIAS_LCEC_INFER] 错误日志（如 Read-only file system、ImportError 等）
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: A module that was compiled using NumPy 1.x cannot be run in
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: NumPy 2.2.6 as it may crash. To support both 1.x and 2.x
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: versions of NumPy, modules must be compiled with NumPy 2.0.
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: If you are a user of the module, the easiest solution will be to
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: downgrade to 'numpy<2' or try to upgrade the affected module.
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: We expect that some modules will need time to support NumPy 2.
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: Traceback (most recent call last):  File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 698, in <module>
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     sys.exit(main_with_traceback())
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 689, in main_with_traceback
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     return main()
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 567, in main
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     if not _check_cv2_available():
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 259, in _check_cv2_available
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     import cv2  # noqa: F401
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/cv2/__init__.py", line 181, in <module>
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     bootstrap()
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/cv2/__init__.py", line 153, in bootstrap
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     native_module = importlib.import_module("cv2")
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     return _bootstrap._gcd_import(name[level:], package, level)
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: AttributeError: _ARRAY_API not found
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.368] [WARNING] [粗标定] cv2 不可用 (ImportError)，跳过 PnP，将输出 identity。原因: numpy.core.multiarray failed to import
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.368] [WARNING] [粗标定] cv2 不可用，不调用 PnP，输出 identity；精标定可能无法收敛，建议修复环境后重试
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.368] [INFO] [粗标定] 方法=identity  输出 t=[0, 0, 0]  (精标定可能无法收敛，建议检查 PnP 或深度模型)
+[2026-04-21 16:16:25.368] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.368] [INFO] [步骤 4/5] 写入 extrinsic_result.yaml...
+[2026-04-21 16:16:25.370] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.370] [INFO] 已写出 extrinsic_result.yaml: /tmp/mias_work/output/extrinsic_result.yaml  translation=[0.0000, 0.0000, 0.0000]
+[2026-04-21 16:16:25.370] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:25.370] [INFO] [步骤 5/5] 生成 quality_report.yaml...
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: A module that was compiled using NumPy 1.x cannot be run in
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: NumPy 2.2.6 as it may crash. To support both 1.x and 2.x
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: versions of NumPy, modules must be compiled with NumPy 2.0.
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: If you are a user of the module, the easiest solution will be to
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: downgrade to 'numpy<2' or try to upgrade the affected module.
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: We expect that some modules will need time to support NumPy 2.
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: Traceback (most recent call last):  File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 698, in <module>
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     sys.exit(main_with_traceback())
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 689, in main_with_traceback
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     return main()
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 636, in main
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from mias_lcec_pytorch.quality_assessment import assess_calibration_quality
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/mias_lcec_pytorch/__init__.py", line 17, in <module>
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from .coarse_calib import MIASLCECCoarseCalib
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/mias_lcec_pytorch/coarse_calib.py", line 26, in <module>
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     import torch
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/__init__.py", line 1382, in <module>
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from .functional import *  # noqa: F403
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/functional.py", line 7, in <module>
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     import torch.nn.functional as F
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/__init__.py", line 1, in <module>
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from .modules import *  # noqa: F403
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/__init__.py", line 35, in <module>
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from .transformer import TransformerEncoder, TransformerDecoder, \
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/transformer.py", line 20, in <module>
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /usr/local/lib/python3.10/dist-packages/torch/nn/modules/transformer.py:20: UserWarning: Failed to initialize NumPy: _ARRAY_API not found (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:84.)
+[2026-04-21 16:16:25.829] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /usr/local/lib/python3.10/dist-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /usr/local/lib/python3.10/dist-packages/timm/models/registry.py:4: FutureWarning: Importing from timm.models.registry is deprecated, please import via timm.models
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.models", FutureWarning)
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_5m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_5m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_11m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_11m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_384 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_384. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_512 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_512. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[2026-04-21 16:16:27.053] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[2026-04-21 16:16:27.059] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.059] [INFO] 已写出 quality_report.yaml: /tmp/mias_work/output/quality_report.yaml
+[2026-04-21 16:16:27.059] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.059] [INFO] 粗标定完成  方法=identity  耗时=2.20s  输出=/tmp/mias_work/output/extrinsic_result.yaml
+[2026-04-21 16:16:27.059] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.059] [INFO] [粗标定] ★ 最终: 使用恒等外参 (identity)，未使用深度模型
+[2026-04-21 16:16:27.059] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.059] [INFO] ======== 粗标定结束 ========
+[2026-04-21 16:16:27.059] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.059] [WARNING] [粗标定] 诊断摘要: 未使用深度模型 (method=identity)，详见上方 [MIAS_LCEC_INFER] 错误与修复建议
+[2026-04-21 16:16:27.059] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [run_lidar_cam_coarse] OK  method=identity  output=/tmp/mias_work/output/extrinsic_result.yaml  elapsed_s=2.20
+[2026-04-21 16:16:27.825] [info] [LiDAR-Camera] [:] [AI-Exec] 子进程完整输出已保存到: /tmp/mias_work/subprocess_1776759384.log
+[2026-04-21 16:16:27.825] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程结束  exit_code=0  elapsed_ms=3003  output_exists=yes
+[2026-04-21 16:16:27.825] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 粗标定方法: identity)，详见上方 (由子进程 stdout 解析)
+[2026-04-21 16:16:27.825] [warning] [LiDAR-Camera] [:] [MIAS-LCEC] ★ 粗标定未使用深度模型，结果来自几何回退(identity)，详见上方)；原因见上方子进程日志或 子进程完整输出
+[2026-04-21 16:16:27.826] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 解析结果  t=[0.0000, 0.0000, 0.0000]  is_identity=true
+[2026-04-21 16:16:27.826] [warning] [LiDAR-Camera] [:] [MIAS-LCEC] 粗标定结果为 identity，重试  attempt=2/2  显式附加 --use_pnp
+[2026-04-21 16:16:27.826] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 粗标定尝试 2/2  (identity 后重试), 超时=180s
+[2026-04-21 16:16:27.826] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 执行命令 (python3+PYTHONPATH): python3 /root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py --pcd /home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.pcd --image /home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.png --sensor_config /tmp/mias_work/sensor_config.yaml --output_dir /tmp/mias_work/output --quality-ncc-good 0.300000 --quality-ncc-acceptable 0.200000 --quality-rms-good-px 2.000000 --quality-rms-acceptable-px 5.000000 --quality-inlier-ratio-good 0.600000 --quality-inlier-ratio-acceptable 0.400000 --model_path /root/calib_ws/MIAS-LCEC/model/mobile_sam.pt --mias_repo /root/calib_ws/calib_unified --no-require-model --use_pnp
+[2026-04-21 16:16:27.900] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.900] [INFO] 环境: numpy=2.2.6
+[2026-04-21 16:16:27.901] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.900] [INFO] ======== 粗标定开始 ========
+[2026-04-21 16:16:27.901] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.900] [INFO] 输入: pcd=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.pcd  image=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.png  sensor_config=/tmp/mias_work/sensor_config.yaml  output_dir=/tmp/mias_work/output
+[2026-04-21 16:16:27.901] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.900] [INFO] [步骤 1/4] 读取 sensor_config...
+[2026-04-21 16:16:27.908] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.908] [INFO] 读取 sensor_config: /tmp/mias_work/sensor_config.yaml
+[2026-04-21 16:16:27.910] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.910] [INFO] 相机内参: fx=1958.40 fy=1958.40 cx=1224.00 cy=1024.00 width=2448 height=2048
+[2026-04-21 16:16:27.910] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.910] [INFO] [步骤 2/4] 读取 PCD...
+[2026-04-21 16:16:27.928] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.928] [INFO] PCD 加载方式: ASCII (优先，避免 Open3D/NumPy 2.x 兼容问题)  路径=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.pcd
+[2026-04-21 16:16:27.928] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.928] [INFO] 点云规模: 20210 点  范围 X[1.05, 82.09] Y[-57.22, 16.86] Z[-5.77, 24.91]
+[2026-04-21 16:16:27.928] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.928] [INFO] [步骤 2/4] PCD 读取完成  点数=20210
+[2026-04-21 16:16:27.929] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:27.929] [INFO] [步骤 3/4] 读取图像 (优先 Pillow，避免 NumPy 2.x 下 cv2 崩溃)...
+[2026-04-21 16:16:28.031] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.031] [INFO] 图像加载: Pillow  路径=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.png  尺寸=2448x2048 (避免 NumPy 2.x 下 cv2 崩溃)
+[2026-04-21 16:16:28.032] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.032] [INFO] [步骤 3/4] 图像读取完成  尺寸=2448x2048
+[2026-04-21 16:16:28.032] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.032] [INFO] [粗标定] ===== 尝试深度模型推理 =====
+[2026-04-21 16:16:28.032] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.032] [INFO] [粗标定] 配置: model_path=/root/calib_ws/MIAS-LCEC/model/mobile_sam.pt
+[2026-04-21 16:16:28.032] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.032] [INFO] [粗标定] 配置: mias_repo=/root/calib_ws/calib_unified
+[2026-04-21 16:16:28.032] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.032] [INFO] [粗标定] require_model=False
+[2026-04-21 16:16:28.033] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.033] [INFO] [粗标定] mias_lcec_infer 导入成功
+[2026-04-21 16:16:28.033] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.033] [INFO] [粗标定] 开始调用深度模型推理...
+[2026-04-21 16:16:28.033] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.033] [INFO] [粗标定] 输入: pcd=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.pcd image=/home/lihongyu/Unicalib/UniCalib-OK/results/coarse_input/coarse_first.png
+[2026-04-21 16:16:28.033] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [MIAS_LCEC_INFER 2026-04-21 16:16:28.033] [WARNING] [MIAS-LCEC 推理] 未使用深度模型: 模型文件不存在或未配置 model_path=/root/calib_ws/MIAS-LCEC/model/mobile_sam.pt
+[2026-04-21 16:16:28.033] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.033] [INFO] [粗标定] 推理完成，返回值类型: None
+[2026-04-21 16:16:28.033] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.033] [WARNING] [粗标定] 深度模型未返回结果 (require_model=false)，将回退 PnP 几何初值；请检查: 1) MIAS-LCEC 仓库是否有 infer_unicalib.py 或 LcMatch_CApi 2) Python 版本是否为 3.10 (LcMatch_CApi 需要) 3) model_path 是否正确
+[2026-04-21 16:16:28.033] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.033] [WARNING] [粗标定] ★ 结论: 未使用深度模型，将回退 PnP；原因见上方 [MIAS_LCEC_INFER] 错误日志（如 Read-only file system、ImportError 等）
+[2026-04-21 16:16:28.115] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: A module that was compiled using NumPy 1.x cannot be run in
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: NumPy 2.2.6 as it may crash. To support both 1.x and 2.x
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: versions of NumPy, modules must be compiled with NumPy 2.0.
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: If you are a user of the module, the easiest solution will be to
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: downgrade to 'numpy<2' or try to upgrade the affected module.
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: We expect that some modules will need time to support NumPy 2.
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: Traceback (most recent call last):  File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 698, in <module>
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     sys.exit(main_with_traceback())
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 689, in main_with_traceback
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     return main()
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 567, in main
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     if not _check_cv2_available():
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 259, in _check_cv2_available
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     import cv2  # noqa: F401
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/cv2/__init__.py", line 181, in <module>
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     bootstrap()
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/cv2/__init__.py", line 153, in bootstrap
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     native_module = importlib.import_module("cv2")
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/lib/python3.10/importlib/__init__.py", line 126, in import_module
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     return _bootstrap._gcd_import(name[level:], package, level)
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: AttributeError: _ARRAY_API not found
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.116] [WARNING] [粗标定] cv2 不可用 (ImportError)，跳过 PnP，将输出 identity。原因: numpy.core.multiarray failed to import
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.116] [WARNING] [粗标定] cv2 不可用，不调用 PnP，输出 identity；精标定可能无法收敛，建议修复环境后重试
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.116] [INFO] [粗标定] 方法=identity  输出 t=[0, 0, 0]  (精标定可能无法收敛，建议检查 PnP 或深度模型)
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.116] [INFO] [步骤 4/5] 写入 extrinsic_result.yaml...
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.116] [INFO] 已写出 extrinsic_result.yaml: /tmp/mias_work/output/extrinsic_result.yaml  translation=[0.0000, 0.0000, 0.0000]
+[2026-04-21 16:16:28.116] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:28.116] [INFO] [步骤 5/5] 生成 quality_report.yaml...
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: A module that was compiled using NumPy 1.x cannot be run in
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: NumPy 2.2.6 as it may crash. To support both 1.x and 2.x
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: versions of NumPy, modules must be compiled with NumPy 2.0.
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: Some module may need to rebuild instead e.g. with 'pybind11>=2.12'.
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: If you are a user of the module, the easiest solution will be to
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: downgrade to 'numpy<2' or try to upgrade the affected module.
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: We expect that some modules will need time to support NumPy 2.
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: Traceback (most recent call last):  File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 698, in <module>
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     sys.exit(main_with_traceback())
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 689, in main_with_traceback
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     return main()
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/run_lidar_cam_coarse.py", line 636, in main
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from mias_lcec_pytorch.quality_assessment import assess_calibration_quality
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/mias_lcec_pytorch/__init__.py", line 17, in <module>
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from .coarse_calib import MIASLCECCoarseCalib
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/root/calib_ws/calib_unified/scripts/mias_lcec_pytorch/coarse_calib.py", line 26, in <module>
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     import torch
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/__init__.py", line 1382, in <module>
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from .functional import *  # noqa: F403
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/functional.py", line 7, in <module>
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     import torch.nn.functional as F
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/__init__.py", line 1, in <module>
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from .modules import *  # noqa: F403
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/__init__.py", line 35, in <module>
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     from .transformer import TransformerEncoder, TransformerDecoder, \
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   File "/usr/local/lib/python3.10/dist-packages/torch/nn/modules/transformer.py", line 20, in <module>
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:     device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /usr/local/lib/python3.10/dist-packages/torch/nn/modules/transformer.py:20: UserWarning: Failed to initialize NumPy: _ARRAY_API not found (Triggered internally at ../torch/csrc/utils/tensor_numpy.cpp:84.)
+[2026-04-21 16:16:28.343] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   device: torch.device = torch.device(torch._C._get_default_device()),  # torch.device('cpu'),
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /usr/local/lib/python3.10/dist-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /usr/local/lib/python3.10/dist-packages/timm/models/registry.py:4: FutureWarning: Importing from timm.models.registry is deprecated, please import via timm.models
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.models", FutureWarning)
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_5m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_5m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_11m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_11m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_224 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_224. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_384 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_384. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: /root/calib_ws/calib_unified/thirdparty/MobileSAM/mobile_sam/modeling/tiny_vit_sam.py:656: UserWarning: Overwriting tiny_vit_21m_512 in registry with mobile_sam.modeling.tiny_vit_sam.tiny_vit_21m_512. This is because the name being registered conflicts with an existing name. Please check if this is not expected.
+[2026-04-21 16:16:29.437] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程:   return register_model(fn_wrapper)
+[2026-04-21 16:16:29.442] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:29.442] [INFO] 已写出 quality_report.yaml: /tmp/mias_work/output/quality_report.yaml
+[2026-04-21 16:16:29.442] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:29.442] [INFO] 粗标定完成  方法=identity  耗时=1.57s  输出=/tmp/mias_work/output/extrinsic_result.yaml
+[2026-04-21 16:16:29.442] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:29.442] [INFO] [粗标定] ★ 最终: 使用恒等外参 (identity)，未使用深度模型
+[2026-04-21 16:16:29.442] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:29.442] [INFO] ======== 粗标定结束 ========
+[2026-04-21 16:16:29.442] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [2026-04-21 16:16:29.442] [WARNING] [粗标定] 诊断摘要: 未使用深度模型 (method=identity)，详见上方 [MIAS_LCEC_INFER] 错误与修复建议
+[2026-04-21 16:16:29.442] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程: [run_lidar_cam_coarse] OK  method=identity  output=/tmp/mias_work/output/extrinsic_result.yaml  elapsed_s=1.57
+[2026-04-21 16:16:29.833] [info] [LiDAR-Camera] [:] [AI-Exec] 子进程完整输出已保存到: /tmp/mias_work/subprocess_1776759387.log
+[2026-04-21 16:16:29.833] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 子进程结束  exit_code=0  elapsed_ms=2007  output_exists=yes
+[2026-04-21 16:16:29.833] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 粗标定方法: identity)，详见上方 (由子进程 stdout 解析)
+[2026-04-21 16:16:29.833] [warning] [LiDAR-Camera] [:] [MIAS-LCEC] ★ 粗标定未使用深度模型，结果来自几何回退(identity)，详见上方)；原因见上方子进程日志或 子进程完整输出
+[2026-04-21 16:16:29.834] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 解析结果  t=[0.0000, 0.0000, 0.0000]  is_identity=true
+[2026-04-21 16:16:29.834] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 第 2 次尝试仍为 identity，使用该结果
+[2026-04-21 16:16:29.834] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 粗估外参 最终: t=[0.0000, 0.0000, 0.0000]m  is_identity=true  output=/tmp/mias_work/output/extrinsic_result.yaml (重试后)
+[2026-04-21 16:16:29.834] [info] [LiDAR-Camera] [:] [MIAS-LCEC] 粗标定结果来源: identity)，详见上方 (mias_lcec=深度模型, pnp=几何回退, identity=恒等)
+[2026-04-21 16:16:29.834] [warning] [LiDAR-Camera] [:] [MIAS-LCEC] 粗标定输出为 identity；精标定可能无法收敛。建议: 1) 查看上方 [PnP] 日志确认网格/回退是否成功 2) 配置 model_path 尝试深度模型 3) 检查内参与数据
+[2026-04-21 16:16:29.834] [info] [LiDAR-Camera] [:]   ✓ AI粗标定成功: t=[0.000,0.000,0.000]m
+[2026-04-21 16:16:29.834] [info] [LiDAR-Camera] [:]   [Stage 1] 结果: 成功  初值将用于精标定
+[2026-04-21 16:16:29.834] [info] [LiDAR-Camera] [:]   [Stage 1] 结果: 成功  精标定初值已就绪
+[2026-04-21 16:16:29.834] [info] [LiDAR-Camera] [:] ▶ Stage 2: 精标定 (方法=edge)
+[2026-04-21 16:16:29.834] [warning] [LiDAR-Camera] [:] 数据路径未就绪，当前运行将仅执行流水线占位阶段，不进行实际标定优化。详见上方【数据就绪】原因。
+[2026-04-21 16:16:29.835] [info] [LiDAR-Camera] [:] 
+[2026-04-21 16:16:29.835] [info] [LiDAR-Camera] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-21 16:16:29.835] [info] [LiDAR-Camera] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-21 16:16:29.835] [info] [LiDAR-Camera] [:] ║   Pipeline ID: pipeline_20260421_161622       ║
+[2026-04-21 16:16:29.835] [info] [LiDAR-Camera] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-21 16:16:29.835] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=true → do_coarse=true
+[16:16:29.836] [info] 
+[16:16:29.836] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:16:29.836] [info] ▶ 开始阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[16:16:29.836] [info]   描述: AI模型提供初始估计值
+[16:16:29.836] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:16:29.836] [info] [CALC] 粗标定阶段开始 task=lidar_cam_extrin
+[16:16:29.836] [info] [Coarse-AI/LiDAR-Cam] 使用主程序已注入的粗标定结果 t=[0.000,0.000,0.000]m，精标定将以此起步
+[16:16:29.836] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:16:29.836] [info] ■ 结束阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[16:16:29.836] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 0 ms
+[16:16:29.836] [info]   消息: 使用主程序 Stage1 粗标定结果，作为精标定初值
+[16:16:29.836] [info] [CALC] 阶段结束 stage=Coarse-AI task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=0.0 threshold=-1.0000
+[16:16:29.836] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:16:29.836] [info] 
+[16:16:29.836] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:16:29.836] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[16:16:29.836] [info]   描述: 无目标优化
+[16:16:29.836] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:16:29.836] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[16:16:29.836] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[16:16:29.836] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[16:16:29.836] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[16:16:29.836] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[16:16:29.836] [info]   [精标定数据源] 类型=ROS2_BAG  lidar_id=lidar_0
+[16:16:29.836] [info]   ROS2 Bag: /root/calib_ws/data/Koide/livox/rosbag2_2023_03_09-13_42_46  LiDAR 话题: /livox/points  相机话题: /image
+[16:16:29.836] [info] [Fine-Auto/LiDAR-Cam] 从 ROS2 加载数据...
+[16:16:29.836] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[16:16:29.836] [info]   Bag 文件: /root/calib_ws/data/Koide/livox/rosbag2_2023_03_09-13_42_46
+[16:16:29.836] [info]   实时模式: false
+[16:16:29.836] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/Koide/livox/rosbag2_2023_03_09-13_42_46
+[16:16:29.836] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/Koide/livox/rosbag2_2023_03_09-13_42_46/metadata.yaml
+[16:16:29.838] [debug] [Ros2BagDataSource] 找到话题: /livox/points (类型: sensor_msgs/msg/PointCloud2, 消息数: 157)
+[16:16:29.838] [debug] [Ros2BagDataSource] 找到话题: /livox/imu (类型: sensor_msgs/msg/Imu, 消息数: 2597)
+[16:16:29.838] [debug] [Ros2BagDataSource] 找到话题: /livox/lidar (类型: livox_interfaces/msg/CustomMsg, 消息数: 157)
+[16:16:29.838] [debug] [Ros2BagDataSource] 找到话题: /image (类型: sensor_msgs/msg/Image, 消息数: 30)
+[16:16:29.838] [debug] [Ros2BagDataSource] 找到话题: /camera_info (类型: sensor_msgs/msg/CameraInfo, 消息数: 31)
+[16:16:29.838] [info] [Ros2BagDataSource] 使用配置的 LiDAR 话题: /livox/points
+[16:16:29.838] [info] [Ros2BagDataSource] 使用配置的相机话题: /image
+[16:16:29.838] [debug] [Ros2BagDataSource] 匹配 IMU 话题: /livox/imu (关键词: imu)
+[16:16:29.838] [info] [Ros2BagDataSource] 自动检测 IMU 话题: /livox/imu
+[INFO] [1776759389.845533944] [rosbag2_storage]: Opened database '/root/calib_ws/data/Koide/livox/rosbag2_2023_03_09-13_42_46/rosbag2_2023_03_09-13_42_46_0.db3' for READ_ONLY.
+[16:16:29.845] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[16:16:29.845] [info] [Ros2BagDataSource] 找到 5 个话题
+[16:16:29.845] [info] [Ros2BagDataSource]  话题: /livox/points  类型: sensor_msgs/msg/PointCloud2  消息数: 157
+[16:16:29.845] [info] [Ros2BagDataSource]  话题: /livox/imu  类型: sensor_msgs/msg/Imu  消息数: 2597
+[16:16:29.845] [info] [Ros2BagDataSource]  话题: /livox/lidar  类型: livox_interfaces/msg/CustomMsg  消息数: 157
+[16:16:29.845] [info] [Ros2BagDataSource]  话题: /image  类型: sensor_msgs/msg/Image  消息数: 30
+[16:16:29.845] [info] [Ros2BagDataSource]  话题: /camera_info  类型: sensor_msgs/msg/CameraInfo  消息数: 31
+[16:16:29.845] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[16:16:30.352] [info] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[16:16:30.352] [info]   LiDAR [/livox/points]: 157 帧
+[16:16:30.352] [info]   相机 [/image]: 30 帧
+[16:16:30.352] [info]   IMU [/livox/imu]: 2597 帧
+[16:16:30.352] [info]   选用 LiDAR  lidar_0 -> /livox/points
+[16:16:30.352] [info]   选用 相机  cam_0 -> /image
+[16:16:30.352] [info]   选用 IMU    imu_0 -> /livox/imu
+[16:16:30.352] [info]   时间范围: 545.614 - 582.547 秒
+[16:16:30.352] [info] [Ros2BagDataSource] 应用采样/帧数限制...
+[16:16:30.352] [info] [Fine-Auto/LiDAR-Cam] LiDAR 加载完成: 157 帧 (将按相机逐路取帧)
+[16:16:30.353] [info] [Fine-Auto] 推断内参: 2448x2048 fx=2203.2 fy=2203.2
+[16:16:30.353] [info] [Fine-Auto/LiDAR-Cam] 步骤: LiDAR-Camera 标定 相机=cam_0 (方法: 边缘对齐)
+[16:16:30.354] [info] [CalibVisualizer] 初始化完成
+[16:16:30.354] [info] [Fine-Auto/LiDAR-Cam] 可视化已启用：仅标定结束后显示一帧「图像+点云投影」叠加，不创建 3D 窗口、不泵送其他帧
+[16:16:30.354] [info] [Fine-Auto/LiDAR-Cam] 使用粗标定初值 t=[0.000,0.000,0.000]m
+[16:16:30.354] [info] [Fine-Auto/LiDAR-Cam] 执行标定 相机=cam_0: 点云 157 帧  图像 30 帧
+[16:16:30.355] [info] ╔══════════════════════════════════════════════════════════════════╗
+[16:16:30.355] [info] ║         LiDAR-Camera 两阶段标定 - 详细日志                  ║
+[16:16:30.355] [info] ╚══════════════════════════════════════════════════════════════════╝
+[16:16:30.355] [info] ┌────────────────────────────────────────────────────────────────┐
+[16:16:30.355] [info] │ 输入参数:
+[16:16:30.355] [info] │   - LiDAR ID: lidar_0  图像 ID: cam_0
+[16:16:30.355] [info] │   - 点云帧数: 157  图像帧数: 30
+[16:16:30.355] [info] │   - 图像尺寸: 2448x2048
+[16:16:30.355] [info] │   - 相机内参: fx=2203.20 fy=2203.20 cx=1224.00 cy=1024.00
+[16:16:30.355] [info] │   - 优先无目标方法: 是(边缘对齐)
+[16:16:30.355] [info] │   - 粗标定初值: 已提供
+[16:16:30.355] [info] │   - 初始平移: [0.0000, 0.0000, 0.0000] m
+[16:16:30.355] [info] └────────────────────────────────────────────────────────────────┘
+[16:16:30.355] [info] 
+[16:16:30.355] [info] ┌────────────────────────────────────────────────────────────────┐
+[16:16:30.355] [info] │ [Stage 1] 粗标定阶段
+[16:16:30.355] [info] └────────────────────────────────────────────────────────────────┘
+[16:16:30.355] [info] │ [Coarse] 使用提供的初始值:
+[16:16:30.355] [info] │   - 平移向量: [0.0000, 0.0000, 0.0000] m
+[16:16:30.355] [info] │   - 旋转角度: [-0.00, 0.00, -0.00] deg (RPY)
+[16:16:30.355] [info] │   - 变换范数: 0.0000
+[16:16:30.355] [info] └────────────────────────────────────────────────────────────────┘
+[16:16:30.355] [info] 
+[16:16:30.355] [info] ┌────────────────────────────────────────────────────────────────┐
+[16:16:30.355] [info] │ [Stage 2] 精标定阶段
+[16:16:30.355] [info] └────────────────────────────────────────────────────────────────┘
+[16:16:30.355] [info] │ [Fine] 执行边缘对齐优化...
+[16:16:30.355] [info] │ 配置: NCC阈值=0.050 帧同步阈值=0.500s 时间偏移搜索范围=±0.500s
+[16:16:30.355] [info] ┌────────────────────────────────────────────────────────────────┐
+[16:16:30.355] [info] │ [精标定] 边缘对齐法 (Edge Alignment)                        │
+[16:16:30.355] [info] ├────────────────────────────────────────────────────────────────┤
+[16:16:30.355] [info] │ 初始值: identity (identity=true)
+[16:16:30.355] [info] │ 数据: 点云帧=157 图像帧=30 采样=30 尺寸=2448x2048
+[16:16:30.355] [info] │ 时间: 图像[545.614-560.115]s LiDAR[566.800-582.400]s
+[16:16:30.355] [info] │ 配置: 同步阈值=0.500s 边缘Canny(50, 150) NCC阈值=0.050
+[16:16:30.355] [info] │ 特征权重: edge=0.50 corner=0.30 intensity=0.20
+[16:16:30.355] [info] └────────────────────────────────────────────────────────────────┘
+[16:16:30.355] [info] │ [时间偏移搜索] 最佳偏移=+0.0000s 最佳NCC=-1000000000.0000
+[16:16:30.355] [info]   初值 NCC=N/A(无有效帧)  有效帧数=0  (候选帧数=0，未评估任何帧；请检查 LiDAR/相机时间戳与数据)
+[16:16:30.355] [warning]   [精标定] 有效帧不足  有效帧数=0  候选帧数=0  NCC阈值=0.050  最大NCC=-1000000000.0000  → 跳过 Ceres，返回初值
+[16:16:30.355] [warning]   诊断: 投影与图像边缘重叠不足(NCC 均<=阈值)。建议: 1) 查看 [MIAS-LCEC]/[PnP] 粗标定是否给出非 identity 2) 确认 LiDAR/相机 FOV 与时间同步 3) 检查内参 width/height 与图像一致
+[16:16:30.355] [info] │
+[16:16:30.355] [info] │ ★ 标定结果:
+[16:16:30.355] [info] │   - 平移: [0.0000, 0.0000, 0.0000] m
+[16:16:30.355] [info] │   - RMS: 1.0000 px
+[16:16:30.355] [info] │   - 收敛: 否
+[16:16:30.355] [info] └────────────────────────────────────────────────────────────────┘
+[16:16:30.356] [info] [Fine-Auto] 结果已保存: /home/lihongyu/Unicalib/UniCalib-OK/results/lidar_cam_cam_0_extrinsic.yaml
+[16:16:30.356] [info] [Viz] 即将生成投影图并保存到 /home/lihongyu/Unicalib/UniCalib-OK/results/lidar_cam_cam_0_projection.png
+[16:16:30.454] [info] 投影可视化保存: /home/lihongyu/Unicalib/UniCalib-OK/results/lidar_cam_cam_0_projection.png
+[16:16:30.454] [info] [Viz] 投影图已保存（当前未将结果点云回显到 3D 窗口，仅保存 PNG）
+[16:16:30.454] [info] [Fine-Auto/LiDAR-Cam] 相机 cam_0 完成, RMS=1.0000 px  收敛=否
+[16:16:30.454] [warning] [Fine-Auto/LiDAR-Cam] 精标定未收敛 (NCC 未达 0.3 或 RMS 偏高)，建议: 1) 确保粗标定提供非 identity 初值 2) 检查 LiDAR/相机 FOV 与时间同步 3) 查看上方 [精标定] 质量结论与 NCC 统计
+[16:16:30.454] [info] [Viz/Display] 即将关闭可视化窗口 原因=用户关闭或流程结束 pangolin_running=false
+[16:16:30.455] [info] [Fine-Auto/LiDAR-Cam] 精标定完成: 1 个相机  最大 RMS=1.0000 px
+[16:16:30.455] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 完成
+[16:16:30.455] [info] [Fine-Auto/LiDAR-Cam] RMS 阈值=2.00 px  最大 RMS=1.0000 px  在阈值内
+[16:16:30.468] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:16:30.468] [info] ■ 结束阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[16:16:30.468] [info]   结果: ✓ 成功 | 残差RMS: 1.0000 | 耗时: 632 ms
+[16:16:30.468] [info]   消息: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=1.000000 px
+[16:16:30.468] [info] [CALC] 阶段结束 stage=Fine-Auto task=lidar_cam_extrin success=true residual_rms=1.000000 elapsed_ms=618.4 threshold=2.0000
+[16:16:30.468] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:16:30.468] [info] ====== Pipeline Report: pipeline_20260421_161622 ======
+[16:16:30.468] [info]   Total time: 618.4 ms
+[16:16:30.468] [info]   All stages succeeded: YES
+[16:16:30.468] [info]   标定质量: 各阶段 RMS 均在阈值内
+[16:16:30.468] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用主程序 Stage1 粗标定结果，作为精标定初值
+[16:16:30.468] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=1.0000 time=618.4ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=1.000000 px
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   lidar_0->cam_0:
+║     R(RPY°): [0.00, 0.00, 0.00]
+║     T(m):    [0.00, 0.00, 0.00]
+║     时偏(s): 0.00
+║     RMS:     1.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[16:16:30.469] [info] ================================
+[16:16:30.469] [info] Pipeline report saved: /home/lihongyu/Unicalib/UniCalib-OK/results/pipeline_report_20260421_161622.yaml
+[16:16:30.469] [info] ====== Pipeline Report: pipeline_20260421_161622 ======
+[16:16:30.469] [info]   Total time: 618.4 ms
+[16:16:30.469] [info]   All stages succeeded: YES
+[16:16:30.469] [info]   标定质量: 各阶段 RMS 均在阈值内
+[16:16:30.469] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用主程序 Stage1 粗标定结果，作为精标定初值
+[16:16:30.469] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=1.0000 time=618.4ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=1.000000 px
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   lidar_0->cam_0:
+║     R(RPY°): [0.00, 0.00, 0.00]
+║     T(m):    [0.00, 0.00, 0.00]
+║     时偏(s): 0.00
+║     RMS:     1.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[16:16:30.469] [info] ================================
+[16:16:30.469] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[16:16:30.469] [info] LiDAR-Camera 标定流程完成
+[16:16:30.469] [info] 结果目录: /home/lihongyu/Unicalib/UniCalib-OK/results
+[16:16:30.469] [info] 标定流程正常退出 exit_code=0
+[16:16:30.469] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+╔══════════════════════════════════╗
+║  标定完成 ✓                      ║
+╚══════════════════════════════════╝
+结果目录: /root/calib_ws/results
+total 4.4M
+-rw-r--r-- 1 root root  19K Apr 14 20:20 allan_gyro.png
+-rw-r--r-- 1 root root 1.9K Apr 21 12:30 calib_accuracy_cam_cam_extrin.csv
+-rw-r--r-- 1 root root  461 Apr 21 12:30 calib_accuracy_cam_intrinsic.csv
+-rw-r--r-- 1 root root  910 Apr 21 12:30 calib_accuracy_imu_intrinsic.csv
+-rw-r--r-- 1 root root 5.3K Apr 21 12:30 calib_accuracy_imu_lidar_extrin.csv
+-rw-r--r-- 1 root root  31K Apr 21 12:30 calib_accuracy_lidar_cam_extrin.csv
+drwxr-xr-x 2 root root 4.0K Apr  7 20:21 camera_camera_extrinsic
+drwxr-xr-x 2 root root 4.0K Apr  7 20:19 camera_intrinsic
+drwxr-xr-x 2 root root 4.0K Apr  8 13:00 coarse_input
+drwxr-xr-x 4 root root 4.0K Apr  7 20:19 dm_calib_input
+-rw-r--r-- 1 root root  21K Apr 10 18:40 imu_allan_variance.png
+drwxr-xr-x 2 root root 4.0K Apr  7 20:48 imu_intrinsic
+drwxr-xr-x 2 root root 4.0K Apr  7 18:15 imu_lidar_extrinsic
+-rw-r--r-- 1 root root 1.3K Apr 10 11:52 lidar_cam_cam_front_extrinsic.yaml
+-rw-r--r-- 1 root root 1.4M Apr  9 20:29 lidar_cam_cam_front_projection.png
+-rw-r--r-- 1 root root  634 Apr 14 20:24 lidar_cam_cam_left_extrinsic.yaml
+-rw-r--r-- 1 root root 616K Apr 14 20:24 lidar_cam_cam_left_projection.png
+-rw-r--r-- 1 root root 1.4K Apr  9 19:14 lidar_cam_camera_list_extrinsic.yaml
+-rw-r--r-- 1 root root 1.3M Apr  9 19:14 lidar_cam_camera_list_projection.png
+drwxr-xr-x 2 root root  32K Apr 14 12:30 lidar_camera_extrinsic
+drwxr-xr-x 2 root root 4.0K Apr  7 18:10 lidar_lidar_extrinsic
+drwxr-xr-x 2 root root  68K Apr 21 16:16 logs
+drwxr-xr-x 2 root root 4.0K Apr 14 12:30 manual_sessions
+-rw-r--r-- 1 root root  632 Apr  7 17:43 pipeline_report_20260407_174316.yaml
+-rw-r--r-- 1 root root  868 Apr  7 17:53 pipeline_report_20260407_174453.yaml
+-rw-r--r-- 1 root root  600 Apr  7 17:59 pipeline_report_20260407_175343.yaml
+-rw-r--r-- 1 root root  601 Apr  7 18:05 pipeline_report_20260407_175951.yaml
+-rw-r--r-- 1 root root  603 Apr  7 18:07 pipeline_report_20260407_180734.yaml
+-rw-r--r-- 1 root root  557 Apr  7 18:15 pipeline_report_20260407_181047.yaml
+-rw-r--r-- 1 root root  603 Apr  7 19:11 pipeline_report_20260407_191125.yaml
+-rw-r--r-- 1 root root  868 Apr  7 19:28 pipeline_report_20260407_192658.yaml
+-rw-r--r-- 1 root root  870 Apr  7 19:37 pipeline_report_20260407_193532.yaml
+-rw-r--r-- 1 root root  986 Apr  7 19:45 pipeline_report_20260407_194531.yaml
+-rw-r--r-- 1 root root  603 Apr  7 19:46 pipeline_report_20260407_194631.yaml
+-rw-r--r-- 1 root root  868 Apr  7 19:57 pipeline_report_20260407_195047.yaml
+-rw-r--r-- 1 root root  603 Apr  7 20:16 pipeline_report_20260407_201600.yaml
+-rw-r--r-- 1 root root  587 Apr  7 20:22 pipeline_report_20260407_202024.yaml
+-rw-r--r-- 1 root root  556 Apr  7 20:38 pipeline_report_20260407_203337.yaml
+-rw-r--r-- 1 root root  870 Apr  7 21:01 pipeline_report_20260407_210020.yaml
+-rw-r--r-- 1 root root  630 Apr  8 11:19 pipeline_report_20260408_111945.yaml
+-rw-r--r-- 1 root root  661 Apr  8 11:28 pipeline_report_20260408_112852.yaml
+-rw-r--r-- 1 root root  656 Apr  8 11:30 pipeline_report_20260408_113025.yaml
+-rw-r--r-- 1 root root  636 Apr  8 11:33 pipeline_report_20260408_113343.yaml
+-rw-r--r-- 1 root root  636 Apr  8 11:34 pipeline_report_20260408_113429.yaml
+-rw-r--r-- 1 root root  635 Apr  8 11:40 pipeline_report_20260408_114019.yaml
+-rw-r--r-- 1 root root  655 Apr  8 11:41 pipeline_report_20260408_114150.yaml
+-rw-r--r-- 1 root root  661 Apr  8 11:42 pipeline_report_20260408_114237.yaml
+-rw-r--r-- 1 root root  606 Apr  8 11:43 pipeline_report_20260408_114330.yaml
+-rw-r--r-- 1 root root  632 Apr  8 11:46 pipeline_report_20260408_114618.yaml
+-rw-r--r-- 1 root root  632 Apr  8 11:47 pipeline_report_20260408_114656.yaml
+-rw-r--r-- 1 root root  615 Apr  8 13:01 pipeline_report_20260408_130018.yaml
+-rw-r--r-- 1 root root  615 Apr  8 13:02 pipeline_report_20260408_130153.yaml
+-rw-r--r-- 1 root root  853 Apr  8 13:40 pipeline_report_20260408_133852.yaml
+-rw-r--r-- 1 root root  611 Apr  8 13:44 pipeline_report_20260408_134332.yaml
+-rw-r--r-- 1 root root  615 Apr  8 13:55 pipeline_report_20260408_135432.yaml
+-rw-r--r-- 1 root root  868 Apr  8 14:01 pipeline_report_20260408_140037.yaml
+-rw-r--r-- 1 root root  645 Apr  8 16:02 pipeline_report_20260408_160225.yaml
+-rw-r--r-- 1 root root  646 Apr  8 16:02 pipeline_report_20260408_160249.yaml
+-rw-r--r-- 1 root root  652 Apr  8 16:05 pipeline_report_20260408_160521.yaml
+-rw-r--r-- 1 root root  626 Apr  8 16:07 pipeline_report_20260408_160729.yaml
+-rw-r--r-- 1 root root  597 Apr  8 16:12 pipeline_report_20260408_161257.yaml
+-rw-r--r-- 1 root root  632 Apr  8 16:19 pipeline_report_20260408_161915.yaml
+-rw-r--r-- 1 root root  866 Apr  8 16:21 pipeline_report_20260408_162046.yaml
+-rw-r--r-- 1 root root  646 Apr  8 16:30 pipeline_report_20260408_163052.yaml
+-rw-r--r-- 1 root root  632 Apr  8 16:31 pipeline_report_20260408_163149.yaml
+-rw-r--r-- 1 root root  615 Apr  8 16:34 pipeline_report_20260408_163434.yaml
+-rw-r--r-- 1 root root  630 Apr  8 16:37 pipeline_report_20260408_163721.yaml
+-rw-r--r-- 1 root root  628 Apr  8 18:59 pipeline_report_20260408_185911.yaml
+-rw-r--r-- 1 root root  628 Apr  8 18:59 pipeline_report_20260408_185929.yaml
+-rw-r--r-- 1 root root  626 Apr  8 19:00 pipeline_report_20260408_190004.yaml
+-rw-r--r-- 1 root root  651 Apr  8 19:00 pipeline_report_20260408_190041.yaml
+-rw-r--r-- 1 root root  647 Apr  8 19:02 pipeline_report_20260408_190229.yaml
+-rw-r--r-- 1 root root  652 Apr  8 19:03 pipeline_report_20260408_190312.yaml
+-rw-r--r-- 1 root root  652 Apr  8 19:05 pipeline_report_20260408_190559.yaml
+-rw-r--r-- 1 root root  632 Apr  8 19:13 pipeline_report_20260408_191335.yaml
+-rw-r--r-- 1 root root  628 Apr  8 19:15 pipeline_report_20260408_191427.yaml
+-rw-r--r-- 1 root root  868 Apr  8 19:17 pipeline_report_20260408_191646.yaml
+-rw-r--r-- 1 root root  647 Apr  8 19:19 pipeline_report_20260408_191923.yaml
+-rw-r--r-- 1 root root  652 Apr  8 19:19 pipeline_report_20260408_191951.yaml
+-rw-r--r-- 1 root root  627 Apr  8 19:20 pipeline_report_20260408_192024.yaml
+-rw-r--r-- 1 root root  651 Apr  8 19:22 pipeline_report_20260408_192231.yaml
+-rw-r--r-- 1 root root  651 Apr  8 19:28 pipeline_report_20260408_192827.yaml
+-rw-r--r-- 1 root root  651 Apr  8 19:29 pipeline_report_20260408_192927.yaml
+-rw-r--r-- 1 root root  650 Apr  8 19:30 pipeline_report_20260408_193028.yaml
+-rw-r--r-- 1 root root  651 Apr  8 19:31 pipeline_report_20260408_193127.yaml
+-rw-r--r-- 1 root root  646 Apr  8 19:35 pipeline_report_20260408_193504.yaml
+-rw-r--r-- 1 root root  646 Apr  8 19:35 pipeline_report_20260408_193554.yaml
+-rw-r--r-- 1 root root  646 Apr  8 19:36 pipeline_report_20260408_193652.yaml
+-rw-r--r-- 1 root root  646 Apr  8 19:37 pipeline_report_20260408_193737.yaml
+-rw-r--r-- 1 root root  646 Apr  8 19:39 pipeline_report_20260408_193946.yaml
+-rw-r--r-- 1 root root 1.1K Apr  8 19:40 pipeline_report_20260408_194049.yaml
+-rw-r--r-- 1 root root  646 Apr  8 19:41 pipeline_report_20260408_194120.yaml
+-rw-r--r-- 1 root root  646 Apr  8 19:43 pipeline_report_20260408_194345.yaml
+-rw-r--r-- 1 root root  646 Apr  8 19:44 pipeline_report_20260408_194405.yaml
+-rw-r--r-- 1 root root  646 Apr  8 19:44 pipeline_report_20260408_194429.yaml
+-rw-r--r-- 1 root root  646 Apr  8 19:44 pipeline_report_20260408_194444.yaml
+-rw-r--r-- 1 root root  646 Apr  8 19:45 pipeline_report_20260408_194515.yaml
+-rw-r--r-- 1 root root  646 Apr  8 19:51 pipeline_report_20260408_195120.yaml
+-rw-r--r-- 1 root root  645 Apr  8 19:51 pipeline_report_20260408_195142.yaml
+-rw-r--r-- 1 root root  643 Apr  8 20:07 pipeline_report_20260408_200736.yaml
+-rw-r--r-- 1 root root  643 Apr  8 20:07 pipeline_report_20260408_200750.yaml
+-rw-r--r-- 1 root root  994 Apr  8 20:08 pipeline_report_20260408_200842.yaml
+-rw-r--r-- 1 root root  693 Apr  8 20:09 pipeline_report_20260408_200937.yaml
+-rw-r--r-- 1 root root  943 Apr  8 20:10 pipeline_report_20260408_201044.yaml
+-rw-r--r-- 1 root root  626 Apr  8 20:11 pipeline_report_20260408_201145.yaml
+-rw-r--r-- 1 root root  632 Apr  8 20:13 pipeline_report_20260408_201327.yaml
+-rw-r--r-- 1 root root  867 Apr  8 20:17 pipeline_report_20260408_201439.yaml
+-rw-r--r-- 1 root root  686 Apr  8 20:24 pipeline_report_20260408_202412.yaml
+-rw-r--r-- 1 root root  630 Apr  8 20:25 pipeline_report_20260408_202546.yaml
+-rw-r--r-- 1 root root  632 Apr  8 20:26 pipeline_report_20260408_202616.yaml
+-rw-r--r-- 1 root root  627 Apr  8 20:27 pipeline_report_20260408_202712.yaml
+-rw-r--r-- 1 root root  958 Apr  8 20:28 pipeline_report_20260408_202834.yaml
+-rw-r--r-- 1 root root  659 Apr  8 20:29 pipeline_report_20260408_202955.yaml
+-rw-r--r-- 1 root root  659 Apr  8 20:30 pipeline_report_20260408_203014.yaml
+-rw-r--r-- 1 root root  659 Apr  8 20:31 pipeline_report_20260408_203142.yaml
+-rw-r--r-- 1 root root  659 Apr  8 20:32 pipeline_report_20260408_203235.yaml
+-rw-r--r-- 1 root root  632 Apr  8 20:33 pipeline_report_20260408_203329.yaml
+-rw-r--r-- 1 root root  962 Apr  8 20:34 pipeline_report_20260408_203440.yaml
+-rw-r--r-- 1 root root  870 Apr  8 20:36 pipeline_report_20260408_203630.yaml
+-rw-r--r-- 1 root root  686 Apr  8 20:50 pipeline_report_20260408_205012.yaml
+-rw-r--r-- 1 root root  870 Apr  8 20:54 pipeline_report_20260408_205335.yaml
+-rw-r--r-- 1 root root  686 Apr  8 20:57 pipeline_report_20260408_205715.yaml
+-rw-r--r-- 1 root root  632 Apr  8 20:58 pipeline_report_20260408_205802.yaml
+-rw-r--r-- 1 root root  962 Apr  8 20:59 pipeline_report_20260408_205938.yaml
+-rw-r--r-- 1 root root  962 Apr  9 10:05 pipeline_report_20260409_100534.yaml
+-rw-r--r-- 1 root root  961 Apr  9 10:06 pipeline_report_20260409_100645.yaml
+-rw-r--r-- 1 root root  962 Apr  9 10:21 pipeline_report_20260409_102154.yaml
+-rw-r--r-- 1 root root  961 Apr  9 10:24 pipeline_report_20260409_102459.yaml
+-rw-r--r-- 1 root root  929 Apr  9 10:28 pipeline_report_20260409_102809.yaml
+-rw-r--r-- 1 root root  868 Apr  9 10:33 pipeline_report_20260409_102932.yaml
+-rw-r--r-- 1 root root  631 Apr  9 10:39 pipeline_report_20260409_103939.yaml
+-rw-r--r-- 1 root root  632 Apr  9 12:00 pipeline_report_20260409_120054.yaml
+-rw-r--r-- 1 root root  962 Apr  9 12:30 pipeline_report_20260409_123022.yaml
+-rw-r--r-- 1 root root  870 Apr  9 12:34 pipeline_report_20260409_123342.yaml
+-rw-r--r-- 1 root root  962 Apr  9 12:41 pipeline_report_20260409_124100.yaml
+-rw-r--r-- 1 root root  632 Apr  9 12:44 pipeline_report_20260409_124425.yaml
+-rw-r--r-- 1 root root  632 Apr  9 12:45 pipeline_report_20260409_124514.yaml
+-rw-r--r-- 1 root root  632 Apr  9 12:45 pipeline_report_20260409_124533.yaml
+-rw-r--r-- 1 root root  661 Apr  9 12:48 pipeline_report_20260409_124853.yaml
+-rw-r--r-- 1 root root  662 Apr  9 12:49 pipeline_report_20260409_124908.yaml
+-rw-r--r-- 1 root root  632 Apr  9 12:50 pipeline_report_20260409_125002.yaml
+-rw-r--r-- 1 root root  632 Apr  9 12:50 pipeline_report_20260409_125022.yaml
+-rw-r--r-- 1 root root  870 Apr  9 12:51 pipeline_report_20260409_125055.yaml
+-rw-r--r-- 1 root root  868 Apr  9 14:06 pipeline_report_20260409_140512.yaml
+-rw-r--r-- 1 root root  557 Apr  9 14:11 pipeline_report_20260409_140626.yaml
+-rw-r--r-- 1 root root  685 Apr  9 14:54 pipeline_report_20260409_145425.yaml
+-rw-r--r-- 1 root root  685 Apr  9 14:54 pipeline_report_20260409_145440.yaml
+-rw-r--r-- 1 root root  632 Apr  9 15:09 pipeline_report_20260409_150923.yaml
+-rw-r--r-- 1 root root  869 Apr  9 15:30 pipeline_report_20260409_153028.yaml
+-rw-r--r-- 1 root root  842 Apr  9 15:32 pipeline_report_20260409_153206.yaml
+-rw-r--r-- 1 root root  842 Apr  9 15:34 pipeline_report_20260409_153436.yaml
+-rw-r--r-- 1 root root  841 Apr  9 15:35 pipeline_report_20260409_153521.yaml
+-rw-r--r-- 1 root root  842 Apr  9 15:37 pipeline_report_20260409_153738.yaml
+-rw-r--r-- 1 root root  841 Apr  9 15:42 pipeline_report_20260409_154238.yaml
+-rw-r--r-- 1 root root  869 Apr  9 15:43 pipeline_report_20260409_154311.yaml
+-rw-r--r-- 1 root root  969 Apr  9 15:54 pipeline_report_20260409_155438.yaml
+-rw-r--r-- 1 root root  971 Apr  9 15:56 pipeline_report_20260409_155624.yaml
+-rw-r--r-- 1 root root  921 Apr  9 16:03 pipeline_report_20260409_160301.yaml
+-rw-r--r-- 1 root root  971 Apr  9 16:22 pipeline_report_20260409_162235.yaml
+-rw-r--r-- 1 root root  593 Apr  9 16:25 pipeline_report_20260409_162516.yaml
+-rw-r--r-- 1 root root  601 Apr  9 16:27 pipeline_report_20260409_162706.yaml
+-rw-r--r-- 1 root root  577 Apr  9 16:29 pipeline_report_20260409_162937.yaml
+-rw-r--r-- 1 root root  636 Apr  9 16:32 pipeline_report_20260409_163242.yaml
+-rw-r--r-- 1 root root  637 Apr  9 16:35 pipeline_report_20260409_163507.yaml
+-rw-r--r-- 1 root root  402 Apr  9 16:35 pipeline_report_20260409_163530.yaml
+-rw-r--r-- 1 root root  402 Apr  9 16:36 pipeline_report_20260409_163611.yaml
+-rw-r--r-- 1 root root  342 Apr  9 16:41 pipeline_report_20260409_164120.yaml
+-rw-r--r-- 1 root root  342 Apr  9 16:42 pipeline_report_20260409_164222.yaml
+-rw-r--r-- 1 root root  578 Apr  9 16:42 pipeline_report_20260409_164226.yaml
+-rw-r--r-- 1 root root  601 Apr  9 16:43 pipeline_report_20260409_164329.yaml
+-rw-r--r-- 1 root root  836 Apr  9 17:26 pipeline_report_20260409_172608.yaml
+-rw-r--r-- 1 root root  835 Apr  9 17:31 pipeline_report_20260409_173054.yaml
+-rw-r--r-- 1 root root  836 Apr  9 17:32 pipeline_report_20260409_173208.yaml
+-rw-r--r-- 1 root root  556 Apr  9 17:37 pipeline_report_20260409_173602.yaml
+-rw-r--r-- 1 root root  868 Apr  9 18:06 pipeline_report_20260409_180122.yaml
+-rw-r--r-- 1 root root  870 Apr  9 18:07 pipeline_report_20260409_180649.yaml
+-rw-r--r-- 1 root root  869 Apr  9 18:09 pipeline_report_20260409_180926.yaml
+-rw-r--r-- 1 root root  842 Apr  9 18:11 pipeline_report_20260409_181129.yaml
+-rw-r--r-- 1 root root  870 Apr  9 18:14 pipeline_report_20260409_181350.yaml
+-rw-r--r-- 1 root root  869 Apr  9 18:14 pipeline_report_20260409_181425.yaml
+-rw-r--r-- 1 root root  632 Apr  9 18:14 pipeline_report_20260409_181458.yaml
+-rw-r--r-- 1 root root  658 Apr  9 18:15 pipeline_report_20260409_181558.yaml
+-rw-r--r-- 1 root root  556 Apr  9 18:20 pipeline_report_20260409_181907.yaml
+-rw-r--r-- 1 root root  315 Apr  9 18:35 pipeline_report_20260409_183256.yaml
+-rw-r--r-- 1 root root  868 Apr  9 19:14 pipeline_report_20260409_191433.yaml
+-rw-r--r-- 1 root root  865 Apr  9 19:47 pipeline_report_20260409_194410.yaml
+-rw-r--r-- 1 root root  868 Apr  9 19:55 pipeline_report_20260409_195508.yaml
+-rw-r--r-- 1 root root  864 Apr  9 20:07 pipeline_report_20260409_200055.yaml
+-rw-r--r-- 1 root root  864 Apr  9 20:32 pipeline_report_20260409_202719.yaml
+-rw-r--r-- 1 root root 1.1K Apr 10 11:41 pipeline_report_20260410_112653.yaml
+-rw-r--r-- 1 root root  869 Apr 10 11:47 pipeline_report_20260410_114719.yaml
+-rw-r--r-- 1 root root  870 Apr 10 11:52 pipeline_report_20260410_115230.yaml
+-rw-r--r-- 1 root root  870 Apr 10 11:58 pipeline_report_20260410_115755.yaml
+-rw-r--r-- 1 root root  632 Apr 10 11:58 pipeline_report_20260410_115844.yaml
+-rw-r--r-- 1 root root  806 Apr 10 12:40 pipeline_report_20260410_123731.yaml
+-rw-r--r-- 1 root root  600 Apr 10 13:47 pipeline_report_20260410_134756.yaml
+-rw-r--r-- 1 root root  944 Apr 10 13:50 pipeline_report_20260410_135041.yaml
+-rw-r--r-- 1 root root  944 Apr 10 13:51 pipeline_report_20260410_135159.yaml
+-rw-r--r-- 1 root root 1.2K Apr 10 13:58 pipeline_report_20260410_135810.yaml
+-rw-r--r-- 1 root root 1.1K Apr 10 14:02 pipeline_report_20260410_140209.yaml
+-rw-r--r-- 1 root root 1.1K Apr 10 14:03 pipeline_report_20260410_140352.yaml
+-rw-r--r-- 1 root root 1.1K Apr 10 14:06 pipeline_report_20260410_140642.yaml
+-rw-r--r-- 1 root root 1.1K Apr 10 14:32 pipeline_report_20260410_143200.yaml
+-rw-r--r-- 1 root root  557 Apr 10 14:42 pipeline_report_20260410_143711.yaml
+-rw-r--r-- 1 root root  869 Apr 10 14:47 pipeline_report_20260410_144454.yaml
+-rw-r--r-- 1 root root  920 Apr 10 15:23 pipeline_report_20260410_152304.yaml
+-rw-r--r-- 1 root root 1.2K Apr 10 15:26 pipeline_report_20260410_152318.yaml
+-rw-r--r-- 1 root root 1.2K Apr 10 15:31 pipeline_report_20260410_152730.yaml
+-rw-r--r-- 1 root root  870 Apr 10 15:33 pipeline_report_20260410_153232.yaml
+-rw-r--r-- 1 root root  632 Apr 10 15:36 pipeline_report_20260410_153622.yaml
+-rw-r--r-- 1 root root  868 Apr 10 15:47 pipeline_report_20260410_154338.yaml
+-rw-r--r-- 1 root root  632 Apr 10 15:48 pipeline_report_20260410_154838.yaml
+-rw-r--r-- 1 root root  632 Apr 10 16:09 pipeline_report_20260410_160856.yaml
+-rw-r--r-- 1 root root  632 Apr 10 16:11 pipeline_report_20260410_161112.yaml
+-rw-r--r-- 1 root root  632 Apr 10 16:15 pipeline_report_20260410_161514.yaml
+-rw-r--r-- 1 root root  868 Apr 10 16:23 pipeline_report_20260410_162103.yaml
+-rw-r--r-- 1 root root  614 Apr 10 16:29 pipeline_report_20260410_162940.yaml
+-rw-r--r-- 1 root root  853 Apr 10 16:31 pipeline_report_20260410_163025.yaml
+-rw-r--r-- 1 root root  614 Apr 10 16:32 pipeline_report_20260410_163210.yaml
+-rw-r--r-- 1 root root  851 Apr 10 16:44 pipeline_report_20260410_164324.yaml
+-rw-r--r-- 1 root root  615 Apr 10 16:45 pipeline_report_20260410_164500.yaml
+-rw-r--r-- 1 root root  632 Apr 10 17:01 pipeline_report_20260410_170057.yaml
+-rw-r--r-- 1 root root  869 Apr 10 17:02 pipeline_report_20260410_170157.yaml
+-rw-r--r-- 1 root root  853 Apr 10 17:14 pipeline_report_20260410_171359.yaml
+-rw-r--r-- 1 root root 1.1K Apr 10 17:22 pipeline_report_20260410_172217.yaml
+-rw-r--r-- 1 root root 1.7K Apr 10 17:41 pipeline_report_20260410_172329.yaml
+-rw-r--r-- 1 root root  632 Apr 10 18:43 pipeline_report_20260410_184310.yaml
+-rw-r--r-- 1 root root  868 Apr 10 18:45 pipeline_report_20260410_184422.yaml
+-rw-r--r-- 1 root root 1.1K Apr 14 11:14 pipeline_report_20260414_111450.yaml
+-rw-r--r-- 1 root root 1.1K Apr 14 11:38 pipeline_report_20260414_113855.yaml
+-rw-r--r-- 1 root root 1.1K Apr 14 11:42 pipeline_report_20260414_114232.yaml
+-rw-r--r-- 1 root root 1.1K Apr 14 11:43 pipeline_report_20260414_114345.yaml
+-rw-r--r-- 1 root root  948 Apr 14 11:44 pipeline_report_20260414_114405.yaml
+-rw-r--r-- 1 root root  907 Apr 14 11:44 pipeline_report_20260414_114441.yaml
+-rw-r--r-- 1 root root  906 Apr 14 11:49 pipeline_report_20260414_114910.yaml
+-rw-r--r-- 1 root root  607 Apr 14 11:50 pipeline_report_20260414_115008.yaml
+-rw-r--r-- 1 root root  905 Apr 14 11:50 pipeline_report_20260414_115057.yaml
+-rw-r--r-- 1 root root  907 Apr 14 11:51 pipeline_report_20260414_115105.yaml
+-rw-r--r-- 1 root root  868 Apr 14 11:54 pipeline_report_20260414_115135.yaml
+-rw-r--r-- 1 root root  870 Apr 14 11:55 pipeline_report_20260414_115531.yaml
+-rw-r--r-- 1 root root  878 Apr 14 12:30 pipeline_report_20260414_120236.yaml
+-rw-r--r-- 1 root root  841 Apr 14 14:52 pipeline_report_20260414_145225.yaml
+-rw-r--r-- 1 root root  841 Apr 14 14:53 pipeline_report_20260414_145341.yaml
+-rw-r--r-- 1 root root  841 Apr 14 14:55 pipeline_report_20260414_145550.yaml
+-rw-r--r-- 1 root root  632 Apr 14 14:57 pipeline_report_20260414_145735.yaml
+-rw-r--r-- 1 root root  628 Apr 14 14:58 pipeline_report_20260414_145827.yaml
+-rw-r--r-- 1 root root  837 Apr 14 15:01 pipeline_report_20260414_150130.yaml
+-rw-r--r-- 1 root root  628 Apr 14 15:02 pipeline_report_20260414_150204.yaml
+-rw-r--r-- 1 root root  630 Apr 14 15:09 pipeline_report_20260414_150900.yaml
+-rw-r--r-- 1 root root  632 Apr 14 15:11 pipeline_report_20260414_151123.yaml
+-rw-r--r-- 1 root root  615 Apr 14 15:13 pipeline_report_20260414_151334.yaml
+-rw-r--r-- 1 root root  837 Apr 14 15:16 pipeline_report_20260414_151608.yaml
+-rw-r--r-- 1 root root  635 Apr 14 15:18 pipeline_report_20260414_151809.yaml
+-rw-r--r-- 1 root root  621 Apr 14 15:20 pipeline_report_20260414_152023.yaml
+-rw-r--r-- 1 root root  615 Apr 14 15:22 pipeline_report_20260414_152211.yaml
+-rw-r--r-- 1 root root  615 Apr 14 15:26 pipeline_report_20260414_152558.yaml
+-rw-r--r-- 1 root root  615 Apr 14 20:10 pipeline_report_20260414_201010.yaml
+-rw-r--r-- 1 root root  615 Apr 14 20:13 pipeline_report_20260414_201346.yaml
+-rw-r--r-- 1 root root  632 Apr 14 20:17 pipeline_report_20260414_201658.yaml
+-rw-r--r-- 1 root root  632 Apr 14 20:17 pipeline_report_20260414_201726.yaml
+-rw-r--r-- 1 root root  632 Apr 14 20:21 pipeline_report_20260414_202101.yaml
+-rw-r--r-- 1 root root  388 Apr 14 20:21 pipeline_report_20260414_202124.yaml
+-rw-r--r-- 1 root root  630 Apr 14 20:24 pipeline_report_20260414_202448.yaml
+-rw-r--r-- 1 root root 1.4K Apr 21 12:30 pipeline_report_20260421_123043.yaml

@@ -1,0 +1,7 @@
+
+ ╔══════════════════════════════════════════════╗
+ ║    UniCalib — IMU 内参标定 (Allan + 六面法)  ║
+ ╚══════════════════════════════════════════════╝
+
+[2026-04-14 20:56:02.302] [info] [UniCalib-IMU-Intrinsic] [:] 日志文件: ./results/logs/imu_intrinsic_20260414_205602.log
+[2026-04-14 20:56:02.302] [error] [UniCalib-IMU-Intrinsic] [:] ROS2 bag 路径不存在: /root/calib_ws/data/nya_02_ros2

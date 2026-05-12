@@ -1,0 +1,35 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-22 13:44:56.878] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-22 13:44:56.878] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-22 13:44:56.878] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-22 13:44:56.878] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-22 13:44:56.878] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-22 13:44:56.878] [info] [LiDAR-Camera] [:] AI粗标定: true | 手动校准: true
+[2026-04-22 13:44:56.878] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-22 13:44:56.881] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 1, Camera: 2
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [数据路径] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]   数据路径来源: 统一格式 (data.lidar.<id> / data.camera.<id>.images_dir)
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]   配置原始值 — lidar:  nya_02_slam_imu_to_lidar/lidar_horz.yaml
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]   配置原始值 — camera: lidar_camera_calibration-master/calibration_data/camera_calibration
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]   base_data_dir:  /root/calib_ws/data
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]   base 来源: 命令行 --data-dir
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]   lidar_dir:      /root/calib_ws/data/nya_02_slam_imu_to_lidar/lidar_horz.yaml
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]   camera_dir:     /root/calib_ws/data/lidar_camera_calibration-master/calibration_data/camera_calibration
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]   【数据就绪】是 — 点云与图像目录均存在，将执行精标定
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:]   说明: 使用 --dataset 时请将 data.lidar/data.camera 设为相对 base 的路径（如 pcd、images），不要使用 /path/to/... 占位符
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:] [LiDAR-Cam] use_config_extrinsic_only=true：跳过 AI 粗标定，将使用配置 initial_extrinsic 直接进入精标定/手动微调
+[2026-04-22 13:44:56.883] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-22 13:44:56.885] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 1, Camera: 2
+[2026-04-22 13:44:56.885] [critical] [LiDAR-Camera] [:] 未处理的标准异常: yaml-cpp: error at line 184, column 17: bad conversion (type=N4YAML18TypedBadConversionINSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEEE)

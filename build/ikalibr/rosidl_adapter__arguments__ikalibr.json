@@ -1,0 +1,17 @@
+{
+  "package_name": "ikalibr",
+  "non_idl_tuples": [
+    "/root/calib_ws/iKalibr:msg/PropheseeEvent.msg",
+    "/root/calib_ws/iKalibr:msg/PropheseeEventArray.msg",
+    "/root/calib_ws/iKalibr:msg/DVSEvent.msg",
+    "/root/calib_ws/iKalibr:msg/DVSEventArray.msg",
+    "/root/calib_ws/iKalibr:msg/LivoxCustomMsg.msg",
+    "/root/calib_ws/iKalibr:msg/LivoxCustomPoint.msg",
+    "/root/calib_ws/iKalibr:msg/SbgImuData.msg",
+    "/root/calib_ws/iKalibr:msg/SbgImuStatus.msg",
+    "/root/calib_ws/iKalibr:msg/AinsteinRadarTarget.msg",
+    "/root/calib_ws/iKalibr:msg/AinsteinRadarTargetArray.msg",
+    "/root/calib_ws/iKalibr:msg/AWR1843RadarScan.msg",
+    "/root/calib_ws/iKalibr:msg/AWR1843RadarScanCustom.msg"
+  ]
+}

@@ -1,0 +1,365 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Release-3766d8b8f18bf2b079b2.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.12"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						20,
+						21,
+						22,
+						23,
+						24,
+						25,
+						26,
+						27,
+						28,
+						29
+					]
+				},
+				{
+					"build" : "thirdparty_build/Pangolin",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-thirdparty_build.Pangolin-Release-45e1d38ebf6557b46d6a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "thirdparty/Pangolin/Pangolin-0.9.0",
+					"targetIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						30
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "UniCalib",
+					"targetIndexes" : 
+					[
+						0,
+						20,
+						21,
+						22,
+						23,
+						24,
+						25,
+						26,
+						27,
+						28,
+						29
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "Pangolin",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15,
+						16,
+						17,
+						18,
+						19,
+						30
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "UniCalib_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-UniCalib_uninstall-Release-fd7b6a0abff7359532b6.json",
+					"name" : "UniCalib_uninstall",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_core::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_core-Release-14ec5a1f64b166bb37f0.json",
+					"name" : "pango_core",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_display::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_display-Release-c6d23dc2834ca70f8d8d.json",
+					"name" : "pango_display",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_geometry::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_geometry-Release-ae8a5f4cd599f4ce8d0e.json",
+					"name" : "pango_geometry",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_glgeometry::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_glgeometry-Release-33a797dfa960e74d40dd.json",
+					"name" : "pango_glgeometry",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_image::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_image-Release-854950c57bdb8ce0abfc.json",
+					"name" : "pango_image",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_opengl::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_opengl-Release-ac125a16744e76a8b352.json",
+					"name" : "pango_opengl",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_packetstream::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_packetstream-Release-26686b80d52183a79b4e.json",
+					"name" : "pango_packetstream",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_plot::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_plot-Release-34e94e19b29ba79f5302.json",
+					"name" : "pango_plot",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_python::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_python-Release-49df12d038d7d98acc26.json",
+					"name" : "pango_python",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_scene::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_scene-Release-c3bbd888719c1d8d0c0f.json",
+					"name" : "pango_scene",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_tools::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_tools-Release-6e148d7dea2c099102e5.json",
+					"name" : "pango_tools",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_vars::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_vars-Release-591188c1965483c02e9f.json",
+					"name" : "pango_vars",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_video::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_video-Release-87e3ae8d949225d15702.json",
+					"name" : "pango_video",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pango_windowing::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pango_windowing-Release-86b695bfa6f05ac76165.json",
+					"name" : "pango_windowing",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pypangolin::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pypangolin-Release-ecaaf729b834bc12b454.json",
+					"name" : "pypangolin",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pypangolin_pip_install::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pypangolin_pip_install-Release-333149e53ca440f6af91.json",
+					"name" : "pypangolin_pip_install",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pypangolin_pip_uninstall::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pypangolin_pip_uninstall-Release-a93d306ad891c6a07b26.json",
+					"name" : "pypangolin_pip_uninstall",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pypangolin_wheel::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-pypangolin_wheel-Release-f188740697b270a053d0.json",
+					"name" : "pypangolin_wheel",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "tinyobj::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-tinyobj-Release-c7992abcf706bff8147e.json",
+					"name" : "tinyobj",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib-Release-be9af46989011f448f2d.json",
+					"name" : "unicalib",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_cam_cam::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_cam_cam-Release-a2a45f28d0ed179e9403.json",
+					"name" : "unicalib_cam_cam",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_camera_intrinsic::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_camera_intrinsic-Release-0a64ca615b972736c30c.json",
+					"name" : "unicalib_camera_intrinsic",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_ikalibr_prog::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_ikalibr_prog-Release-6350fa90aa15fa389950.json",
+					"name" : "unicalib_ikalibr_prog",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_imu_intri_tool::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_imu_intri_tool-Release-f57ff4a215f99053f46e.json",
+					"name" : "unicalib_imu_intri_tool",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_imu_intrinsic::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_imu_intrinsic-Release-effe4a0e988d5ee6f4d0.json",
+					"name" : "unicalib_imu_intrinsic",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_imu_lidar::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_imu_lidar-Release-2b57c5f70b8d1cc2aeb8.json",
+					"name" : "unicalib_imu_lidar",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_joint::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_joint-Release-10fdcca730e713e7dfbc.json",
+					"name" : "unicalib_joint",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_lidar_camera::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_lidar_camera-Release-8e0b2735adba2a92d75a.json",
+					"name" : "unicalib_lidar_camera",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "unicalib_lidar_lidar::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-unicalib_lidar_lidar-Release-994a6b6ceb4d4a40ab89.json",
+					"name" : "unicalib_lidar_lidar",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "uninstall::@8458d982a2022fa26f7d",
+					"jsonFile" : "target-uninstall-Release-f3a60d1455792e707967.json",
+					"name" : "uninstall",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/root/calib_ws/build/UniCalib",
+		"source" : "/root/calib_ws/calib_unified"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

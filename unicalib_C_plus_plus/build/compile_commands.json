@@ -1,0 +1,157 @@
+[
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/sensor_config.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/sensor_config.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/sensor_config.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/calib_result.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/calib_result.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/calib_result.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/transforms.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/transforms.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/transforms.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/allan_variance.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/allan_variance.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/allan_variance.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/data_manager.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/data_manager.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/data_manager.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/imu_intrinsic.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/imu_intrinsic.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/imu_intrinsic.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/camera_fisheye.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/camera_fisheye.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/camera_fisheye.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/process_runner.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/process_runner.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/process_runner.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/external_tools_config.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/external_tools_config.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/external_tools_config.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/dm_calib_wrapper.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/dm_calib_wrapper.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/dm_calib_wrapper.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/learn_to_calib_wrapper.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/learn_to_calib_wrapper.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/learn_to_calib_wrapper.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/mias_lcec_wrapper.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/mias_lcec_wrapper.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/mias_lcec_wrapper.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/feature_matching.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/feature_matching.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/feature_matching.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/ikalibr_wrapper.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/ikalibr_wrapper.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/ikalibr_wrapper.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/click_calib_wrapper.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/click_calib_wrapper.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/click_calib_wrapper.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/reprojection.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/reprojection.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/reprojection.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/report_generator.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/report_generator.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/report_generator.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/visualization_v2.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/visualization_v2.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/visualization_v2.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/interactive_report.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/interactive_report.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/interactive_report.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/realtime_visualizer.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/realtime_visualizer.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/realtime_visualizer.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/system.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/system.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/system.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/exceptions.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/exceptions.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/exceptions.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/logger.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/logger.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/logger.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/data_validator.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/data_validator.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/data_validator.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/calibration_quality.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/calibration_quality.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/calibration_quality.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/iterative_refinement.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/iterative_refinement.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/iterative_refinement.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -I/root/calib_ws/unicalib_C_plus_plus/src -isystem /usr/local/include/opencv4 -isystem /usr/include/eigen3 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_cpp.dir/src/temporal_calibration.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/src/temporal_calibration.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/src/temporal_calibration.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -isystem /usr/include/eigen3 -isystem /usr/local/include/opencv4 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_example.dir/examples/example_main.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/examples/example_main.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/examples/example_main.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -isystem /usr/include/eigen3 -isystem /usr/local/include/opencv4 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_viz_example.dir/examples/visualization_example.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/examples/visualization_example.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/examples/visualization_example.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -isystem /usr/include/eigen3 -isystem /usr/local/include/opencv4 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_realtime_example.dir/examples/realtime_visualization_example.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/examples/realtime_visualization_example.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/examples/realtime_visualization_example.cpp"
+},
+{
+  "directory": "/root/calib_ws/unicalib_C_plus_plus/build",
+  "command": "/usr/bin/c++ -DUNICALIB_USE_OPENCV=1 -DUNICALIB_USE_YAML=1 -I/root/calib_ws/unicalib_C_plus_plus/include -isystem /usr/include/eigen3 -isystem /usr/local/include/opencv4 -O3 -DNDEBUG -std=gnu++17 -o CMakeFiles/unicalib_optimization_example.dir/examples/optimization_example.cpp.o -c /root/calib_ws/unicalib_C_plus_plus/examples/optimization_example.cpp",
+  "file": "/root/calib_ws/unicalib_C_plus_plus/examples/optimization_example.cpp"
+}
+]

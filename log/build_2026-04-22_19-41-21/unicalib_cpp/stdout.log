@@ -1,0 +1,18 @@
+Consolidate compiler generated dependencies of target unicalib_cpp
+[  2%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/imu_intrinsic.cpp.o
+[  5%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/system.cpp.o
+[  8%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/data_validator.cpp.o
+[ 11%] Linking CXX static library libunicalib_cpp.a
+[ 77%] Built target unicalib_cpp
+Consolidate compiler generated dependencies of target unicalib_optimization_example
+Consolidate compiler generated dependencies of target unicalib_example
+Consolidate compiler generated dependencies of target unicalib_realtime_example
+Consolidate compiler generated dependencies of target unicalib_viz_example
+[ 80%] Linking CXX executable unicalib_realtime_example
+[ 83%] Linking CXX executable unicalib_optimization_example
+[ 86%] Linking CXX executable unicalib_example
+[ 88%] Linking CXX executable unicalib_viz_example
+[ 91%] Built target unicalib_realtime_example
+[ 94%] Built target unicalib_optimization_example
+[ 97%] Built target unicalib_viz_example
+[100%] Built target unicalib_example

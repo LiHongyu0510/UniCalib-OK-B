@@ -1,0 +1,36 @@
+
+ ╔══════════════════════════════════════════════╗
+ ║    UniCalib — 相机内参标定 (针孔 + 鱼眼)    ║
+ ╚══════════════════════════════════════════════╝
+
+[2026-04-21 11:37:01.850] [info] [UniCalib-Camera-Intrinsic] [:] 日志文件: /root/calib_ws/results/logs/camera_intrinsic_20260421_113701.log
+[2026-04-21 11:37:01.850] [info] [UniCalib-Camera-Intrinsic] [:] 待标定相机数: 2 (配置中 sensors 内 type:camera 数量)
+[2026-04-21 11:37:01.850] [info] [UniCalib-Camera-Intrinsic] [:] 相机内参标定策略: 优先无棋盘格 (DM-Calib/先验)，棋盘格可选精化 (避免无棋盘格时标定失败)
+[2026-04-21 11:37:01.851] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[2026-04-21 11:37:01.851] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/metadata.yaml
+[2026-04-21 11:37:01.852] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 自动检测 LiDAR 话题: /os1_cloud_node1/points
+[2026-04-21 11:37:01.852] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 使用配置的相机话题: /left/image_raw
+[2026-04-21 11:37:01.852] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 自动检测 IMU 话题: /dji_sdk/attitude
+[INFO] [1776742621.859709555] [rosbag2_storage]: Opened database '/root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/nya_02_ros2.db3' for READ_ONLY.
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 找到 19 个话题
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/imu  类型: sensor_msgs/msg/Imu  消息数: 171462
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/attitude  类型: geometry_msgs/msg/QuaternionStamped  消息数: 42866
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /os1_cloud_node2/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /os1_cloud_node1/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /imu/imu  类型: sensor_msgs/msg/Imu  消息数: 166428
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /imu/magnetic_field  类型: sensor_msgs/msg/MagneticField  消息数: 166428
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /imu/temperature  类型: sensor_msgs/msg/Temperature  消息数: 166428
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/gps_position  类型: sensor_msgs/msg/NavSatFix  消息数: 21433
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/height_above_takeoff  类型: std_msgs/msg/Float32  消息数: 21433
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /dji_sdk/gps_health  类型: std_msgs/msg/UInt8  消息数: 21433
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /uwb_endorange_info  类型: uwb_driver/msg/UwbRange  消息数: 25172
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /left/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /right/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /os1_cloud_node1/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4287
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /os1_cloud_node2/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4286
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /uwb_exorange_info  类型: uwb_driver/msg/UwbEcho  消息数: 2437
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /node_pos_marker_sc  类型: visualization_msgs/msg/Marker  消息数: 2437
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /node_pos_sc  类型: nav_msgs/msg/Path  消息数: 2437
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource]  话题: /leica/pose/relative  类型: geometry_msgs/msg/PoseStamped  消息数: 7679
+[2026-04-21 11:37:01.859] [info] [UniCalib-Camera-Intrinsic] [:] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用

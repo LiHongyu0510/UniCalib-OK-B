@@ -1,0 +1,748 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install",
+			"include"
+		],
+		"files" : 
+		[
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_core/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_display/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_geometry/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_glgeometry/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_image/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_packetstream/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_plot/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_python/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_scene/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_tools/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_vars/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_video/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_windowing/CMakeLists.txt",
+			"thirdparty/Pangolin/Pangolin-0.9.0/components/tinyobj/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 0,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 45,
+				"parent" : 2
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 2,
+				"parent" : 4
+			},
+			{
+				"command" : 0,
+				"file" : 2,
+				"line" : 24,
+				"parent" : 5
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 3,
+				"parent" : 7
+			},
+			{
+				"command" : 0,
+				"file" : 3,
+				"line" : 18,
+				"parent" : 8
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 4,
+				"parent" : 10
+			},
+			{
+				"command" : 0,
+				"file" : 4,
+				"line" : 13,
+				"parent" : 11
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 5,
+				"parent" : 13
+			},
+			{
+				"command" : 0,
+				"file" : 5,
+				"line" : 113,
+				"parent" : 14
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 6,
+				"parent" : 16
+			},
+			{
+				"command" : 0,
+				"file" : 6,
+				"line" : 34,
+				"parent" : 17
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 7,
+				"parent" : 19
+			},
+			{
+				"command" : 0,
+				"file" : 7,
+				"line" : 18,
+				"parent" : 20
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 8,
+				"parent" : 22
+			},
+			{
+				"command" : 0,
+				"file" : 8,
+				"line" : 15,
+				"parent" : 23
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 9,
+				"parent" : 25
+			},
+			{
+				"command" : 0,
+				"file" : 9,
+				"line" : 62,
+				"parent" : 26
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 10,
+				"parent" : 28
+			},
+			{
+				"command" : 0,
+				"file" : 10,
+				"line" : 13,
+				"parent" : 29
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 11,
+				"parent" : 31
+			},
+			{
+				"command" : 0,
+				"file" : 11,
+				"line" : 13,
+				"parent" : 32
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 12,
+				"parent" : 34
+			},
+			{
+				"command" : 0,
+				"file" : 12,
+				"line" : 14,
+				"parent" : 35
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 13,
+				"parent" : 37
+			},
+			{
+				"command" : 0,
+				"file" : 13,
+				"line" : 224,
+				"parent" : 38
+			},
+			{
+				"command" : 0,
+				"file" : 13,
+				"line" : 225,
+				"parent" : 38
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 14,
+				"parent" : 41
+			},
+			{
+				"command" : 0,
+				"file" : 14,
+				"line" : 97,
+				"parent" : 42
+			},
+			{
+				"command" : 0,
+				"file" : 14,
+				"line" : 98,
+				"parent" : 42
+			},
+			{
+				"command" : 1,
+				"file" : 1,
+				"line" : 114,
+				"parent" : 0
+			},
+			{
+				"file" : 15,
+				"parent" : 45
+			},
+			{
+				"command" : 0,
+				"file" : 15,
+				"line" : 9,
+				"parent" : 46
+			},
+			{
+				"command" : 0,
+				"file" : 1,
+				"line" : 143,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 1,
+				"line" : 152,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 1,
+				"line" : 157,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_core/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 6,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_display/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 9,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_geometry/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 12,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_glgeometry/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 15,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_image/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 18,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 21,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_packetstream/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 24,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_plot/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 27,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_python/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 30,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_scene/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 33,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_tools/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 36,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_vars/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 39,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_video/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 40,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"/root/calib_ws/build/UniCalib/thirdparty_build/Pangolin/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 43,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/pango_windowing/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 44,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"/root/calib_ws/build/UniCalib/thirdparty_build/Pangolin/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 47,
+			"component" : "Unspecified",
+			"destination" : "/root/calib_ws/install/UniCalib",
+			"paths" : 
+			[
+				"thirdparty/Pangolin/Pangolin-0.9.0/components/tinyobj/include"
+			],
+			"type" : "directory"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_core.so"
+			],
+			"targetId" : "pango_core::@8458d982a2022fa26f7d",
+			"targetIndex" : 1,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_display.so"
+			],
+			"targetId" : "pango_display::@8458d982a2022fa26f7d",
+			"targetIndex" : 2,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_geometry.so"
+			],
+			"targetId" : "pango_geometry::@8458d982a2022fa26f7d",
+			"targetIndex" : 3,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_glgeometry.so"
+			],
+			"targetId" : "pango_glgeometry::@8458d982a2022fa26f7d",
+			"targetIndex" : 4,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_image.so"
+			],
+			"targetId" : "pango_image::@8458d982a2022fa26f7d",
+			"targetIndex" : 5,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_opengl.so"
+			],
+			"targetId" : "pango_opengl::@8458d982a2022fa26f7d",
+			"targetIndex" : 6,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_packetstream.so"
+			],
+			"targetId" : "pango_packetstream::@8458d982a2022fa26f7d",
+			"targetIndex" : 7,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_plot.so"
+			],
+			"targetId" : "pango_plot::@8458d982a2022fa26f7d",
+			"targetIndex" : 8,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_python.so"
+			],
+			"targetId" : "pango_python::@8458d982a2022fa26f7d",
+			"targetIndex" : 9,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_scene.so"
+			],
+			"targetId" : "pango_scene::@8458d982a2022fa26f7d",
+			"targetIndex" : 10,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_tools.so"
+			],
+			"targetId" : "pango_tools::@8458d982a2022fa26f7d",
+			"targetIndex" : 11,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_vars.so"
+			],
+			"targetId" : "pango_vars::@8458d982a2022fa26f7d",
+			"targetIndex" : 12,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_video.so"
+			],
+			"targetId" : "pango_video::@8458d982a2022fa26f7d",
+			"targetIndex" : 13,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libpango_windowing.so"
+			],
+			"targetId" : "pango_windowing::@8458d982a2022fa26f7d",
+			"targetIndex" : 14,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 48,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/libtinyobj.so"
+			],
+			"targetId" : "tinyobj::@8458d982a2022fa26f7d",
+			"targetIndex" : 19,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 49,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/Pangolin",
+			"paths" : 
+			[
+				"/root/calib_ws/build/UniCalib/thirdparty_build/Pangolin/PangolinConfig.cmake",
+				"/root/calib_ws/build/UniCalib/thirdparty_build/Pangolin/PangolinConfigVersion.cmake"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 50,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/Pangolin",
+			"exportName" : "PangolinTargets",
+			"exportTargets" : 
+			[
+				{
+					"id" : "pango_core::@8458d982a2022fa26f7d",
+					"index" : 1
+				},
+				{
+					"id" : "pango_display::@8458d982a2022fa26f7d",
+					"index" : 2
+				},
+				{
+					"id" : "pango_geometry::@8458d982a2022fa26f7d",
+					"index" : 3
+				},
+				{
+					"id" : "pango_glgeometry::@8458d982a2022fa26f7d",
+					"index" : 4
+				},
+				{
+					"id" : "pango_image::@8458d982a2022fa26f7d",
+					"index" : 5
+				},
+				{
+					"id" : "pango_opengl::@8458d982a2022fa26f7d",
+					"index" : 6
+				},
+				{
+					"id" : "pango_packetstream::@8458d982a2022fa26f7d",
+					"index" : 7
+				},
+				{
+					"id" : "pango_plot::@8458d982a2022fa26f7d",
+					"index" : 8
+				},
+				{
+					"id" : "pango_python::@8458d982a2022fa26f7d",
+					"index" : 9
+				},
+				{
+					"id" : "pango_scene::@8458d982a2022fa26f7d",
+					"index" : 10
+				},
+				{
+					"id" : "pango_tools::@8458d982a2022fa26f7d",
+					"index" : 11
+				},
+				{
+					"id" : "pango_vars::@8458d982a2022fa26f7d",
+					"index" : 12
+				},
+				{
+					"id" : "pango_video::@8458d982a2022fa26f7d",
+					"index" : 13
+				},
+				{
+					"id" : "pango_windowing::@8458d982a2022fa26f7d",
+					"index" : 14
+				},
+				{
+					"id" : "tinyobj::@8458d982a2022fa26f7d",
+					"index" : 19
+				}
+			],
+			"paths" : 
+			[
+				"thirdparty_build/Pangolin/CMakeFiles/Export/2022d04a83e11e29aa9cd8cffe2d235e/PangolinTargets.cmake"
+			],
+			"type" : "export"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "thirdparty_build/Pangolin",
+		"source" : "thirdparty/Pangolin/Pangolin-0.9.0"
+	}
+}

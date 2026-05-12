@@ -1,0 +1,202 @@
+# =============================================================================
+# UniCalib 统一多传感器标定系统配置文件
+# 示例: 1 IMU + 1 LiDAR + 1 前置针孔相机 + 2 侧面鱼眼相机
+# =============================================================================
+
+system:
+  name: "autonomous_vehicle_calib"
+  output_dir: "./calib_results/"
+  log_level: "INFO"
+  enable_manual_validation: false
+
+# =============================================================================
+# 传感器定义
+# sensor_type: camera_pinhole | camera_fisheye | lidar | imu
+# =============================================================================
+sensors:
+  - sensor_id: "imu0"
+    sensor_type: "imu"
+    topic: "/imu/data"
+    frame_id: "imu_link"
+    rate: 200  # Hz
+
+  - sensor_id: "lidar0"
+    sensor_type: "lidar"
+    topic: "/velodyne_points"
+    frame_id: "velodyne"
+    lidar_type: "spinning"   # spinning | solid_state
+
+  - sensor_id: "cam_front"
+    sensor_type: "camera_pinhole"
+    topic: "/camera/front/image_raw"
+    frame_id: "camera_front"
+    resolution: [1920, 1080]
+
+  - sensor_id: "cam_left"
+    sensor_type: "camera_fisheye"
+    topic: "/camera/left/image_raw"
+    frame_id: "camera_left"
+    resolution: [1280, 960]
+
+  - sensor_id: "cam_right"
+    sensor_type: "camera_fisheye"
+    topic: "/camera/right/image_raw"
+    frame_id: "camera_right"
+    resolution: [1280, 960]
+
+# =============================================================================
+# 数据采集需求说明
+# =============================================================================
+data_collection:
+  imu_intrinsic:
+    static_duration: 7200      # 2小时静态数据 (Allan 方差)
+    multi_position: true       # 6面翻转数据 (加速度计标定)
+
+  extrinsic:
+    duration: 120              # 2分钟运动数据
+    motion_type: "figure_8"    # 8字形运动 (确保充分激励)
+    min_acceleration: 2.0      # m/s²
+
+  camera_intrinsic:
+    checkerboard:
+      rows: 8                  # 棋盘格行数
+      cols: 11                 # 棋盘格列数
+      square_size: 0.03        # 方格尺寸 (米)
+    min_images: 30
+
+# =============================================================================
+# 标定策略配置
+# =============================================================================
+calibration:
+
+  # Stage 1: 内参标定
+  stage1_intrinsic:
+    camera_pinhole:
+      primary_method: "dm_calib"      # 无靶自动初估计 (DM-Calib)
+      refinement_method: "opencv"     # 棋盘格精化
+      min_reproj_error: 0.5           # px，低于此值使用 OpenCV 结果
+
+    # 鱼眼相机内参标定（系统必备能力）：多模型自动选优
+    camera_fisheye:
+      models_to_try:
+        - "eucm"
+        - "double_sphere"
+        - "kannala_brandt"
+        - "equidistant"
+
+    imu:
+      method: "ikalibr"              # ikalibr | transformer_imu | allan_only
+      accel_model: "FULL_TWELVE"     # FULL_TWELVE | SCALE_ONLY
+      gyro_model: "FULL_TWELVE"
+
+  # Stage 2: 粗外参标定
+  stage2_coarse:
+    imu_lidar:
+      method: "l2calib_rl_init"      # learn-to-calibrate RL
+      min_rotation_deg: 5.0
+      n_segments: 20
+
+    lidar_camera:
+      method: "mias_lcec_coarse"     # MIAS-LCEC 无靶标粗估计
+      fallback: "geometry_fallback"
+
+    camera_camera:
+      method: "feature_matching"
+      feature_matcher: "sift"        # sift | orb
+      min_matches: 30
+      max_frames: 50
+
+  # Stage 3: 精外参标定
+  stage3_fine:
+    global_optimization:
+      method: "ikalibr"
+      spline_order: 4
+      knot_distance_so3: 0.02        # 秒
+      knot_distance_pos: 0.02        # 秒
+      max_iterations: 50
+      enable_time_offset: true
+      robust_kernel: "cauchy"
+      robust_kernel_param: 1.0
+
+    lidar_camera_refinement:
+      method: "mias_lcec_fine"
+      use_imu_motion_compensation: true
+      optimize_time_offset: true
+
+    camera_camera_refinement:
+      method: "click_calib_ba"
+
+  # Stage 4: 验证
+  stage4_validation:
+    metrics:
+      - "reprojection_error"
+      - "point_cloud_colorization"
+      - "edge_alignment"
+    thresholds:
+      reproj_error_px: 1.0           # < 1px 合格
+      edge_alignment_px: 2.0         # < 2px 合格
+      time_offset_ms: 5.0            # < 5ms 合格
+    enable_click_calib_verify: false  # 是否启动人工验证 GUI
+
+# =============================================================================
+# 可视化配置
+# =============================================================================
+visualization:
+  enable: true                       # 是否启用可视化
+  
+  # 静态图生成
+  static:
+    enabled: true
+    output_dir: "./viz_results"
+    format: "jpg"                    # jpg | png
+    
+    # 热力图投影
+    heatmap:
+      max_depth: 50.0                # 最大深度（米）
+      point_size: 3                  # 点大小
+      alpha: 0.7                     # 透明度 [0,1]
+      colormap: "jet"                # jet | hot | rainbow | viridis
+      use_error_coloring: true       # 是否使用误差着色（如果有误差数据）
+    
+    # 误差分布图
+    error_distribution:
+      threshold: 1.0                 # 合格阈值（像素）
+      bins: 50                       # 直方图bin数量
+    
+    # 传感器视锥图
+    sensor_frustum:
+      frustum_depth: 5.0             # 视锥深度（米）
+      axis_scale: 1.0                # 坐标轴长度
+    
+    # 多帧对比图
+    multi_frame:
+      max_frames: 4                  # 最大对比帧数
+  
+  # 交互式报告
+  interactive:
+    enabled: true
+    generate_html: true              # 是否生成HTML报告
+    include_3d_plot: true           # 是否包含3D可视化
+    plotly_version: "2.27.0"        # Plotly版本
+  
+  # 实时可视化
+  realtime:
+    enabled: false                   # 是否启用实时可视化
+    use_open3d: true                 # 使用Open3D渲染
+    window_size: [1280, 720]         # 窗口大小
+    update_interval_ms: 100          # 更新间隔（毫秒）
+    
+    # 过程可视化
+    process:
+      enabled: true
+      show_residual_plot: true       # 显示残差收敛曲线
+      auto_scale: true              # 自动调整Y轴范围
+      max_iterations: 100            # 最大迭代次数
+  
+  # 性能优化
+  performance:
+    downsample_pointcloud: true     # 降采样点云
+    voxel_size: 0.1                 # 体素大小（米）
+    max_points_per_frame: 100000     # 每帧最大点数
+    enable_caching: true             # 启用图像缓存
+    cache_size: 128                  # 缓存大小

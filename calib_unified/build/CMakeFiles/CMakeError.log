@@ -1,0 +1,38 @@
+Determining if the function sgemm_ exists failed with the following output:
+Change Dir: /root/calib_ws/calib_unified/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_5610f/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_5610f.dir/build.make CMakeFiles/cmTC_5610f.dir/build
+gmake[1]: Entering directory '/root/calib_ws/calib_unified/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_5610f.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=sgemm_ -o CMakeFiles/cmTC_5610f.dir/CheckFunctionExists.c.o -c /opt/cmake/share/cmake-3.24/Modules/CheckFunctionExists.c
+Linking C executable cmTC_5610f
+/opt/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_5610f.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=sgemm_ CMakeFiles/cmTC_5610f.dir/CheckFunctionExists.c.o -o cmTC_5610f 
+/usr/bin/ld: CMakeFiles/cmTC_5610f.dir/CheckFunctionExists.c.o: in function `main':
+CheckFunctionExists.c:(.text+0x14): undefined reference to `sgemm_'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_5610f.dir/build.make:99: cmTC_5610f] Error 1
+gmake[1]: Leaving directory '/root/calib_ws/calib_unified/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_5610f/fast] Error 2
+
+
+
+Determining if the function cheev_ exists failed with the following output:
+Change Dir: /root/calib_ws/calib_unified/build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/gmake -f Makefile cmTC_1372c/fast && /usr/bin/gmake  -f CMakeFiles/cmTC_1372c.dir/build.make CMakeFiles/cmTC_1372c.dir/build
+gmake[1]: Entering directory '/root/calib_ws/calib_unified/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_1372c.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=cheev_ -o CMakeFiles/cmTC_1372c.dir/CheckFunctionExists.c.o -c /opt/cmake/share/cmake-3.24/Modules/CheckFunctionExists.c
+Linking C executable cmTC_1372c
+/opt/cmake/bin/cmake -E cmake_link_script CMakeFiles/cmTC_1372c.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=cheev_ CMakeFiles/cmTC_1372c.dir/CheckFunctionExists.c.o -o cmTC_1372c  /usr/lib/x86_64-linux-gnu/libblas.so /usr/lib/x86_64-linux-gnu/libf77blas.so /usr/lib/x86_64-linux-gnu/libatlas.so -lm -ldl 
+/usr/bin/ld: CMakeFiles/cmTC_1372c.dir/CheckFunctionExists.c.o: in function `main':
+CheckFunctionExists.c:(.text+0x14): undefined reference to `cheev_'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_1372c.dir/build.make:102: cmTC_1372c] Error 1
+gmake[1]: Leaving directory '/root/calib_ws/calib_unified/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:127: cmTC_1372c/fast] Error 2
+
+
+

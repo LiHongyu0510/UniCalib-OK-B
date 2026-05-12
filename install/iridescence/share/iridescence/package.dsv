@@ -1,0 +1,12 @@
+source;share/iridescence/hook/ld_library_path_lib.ps1
+source;share/iridescence/hook/ld_library_path_lib.dsv
+source;share/iridescence/hook/ld_library_path_lib.sh
+source;share/iridescence/hook/ros_package_path.ps1
+source;share/iridescence/hook/ros_package_path.dsv
+source;share/iridescence/hook/ros_package_path.sh
+source;share/iridescence/hook/pkg_config_path.ps1
+source;share/iridescence/hook/pkg_config_path.dsv
+source;share/iridescence/hook/pkg_config_path.sh
+source;share/iridescence/hook/pkg_config_path_multiarch.ps1
+source;share/iridescence/hook/pkg_config_path_multiarch.dsv
+source;share/iridescence/hook/pkg_config_path_multiarch.sh

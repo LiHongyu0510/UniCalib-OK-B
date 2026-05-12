@@ -1,0 +1,15 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-08 18:55:49.908] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-08 18:55:49.908] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-08 18:55:49.908] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-08 18:55:49.908] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-08 18:55:49.908] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-08 18:55:49.908] [info] [LiDAR-Camera] [:] AI粗标定: true | 手动校准: false
+[2026-04-08 18:55:49.908] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-08 18:55:49.910] [error] [LiDAR-Camera] [:] 配置文件加载失败: yaml-cpp: error at line 447, column 3: end of map not found

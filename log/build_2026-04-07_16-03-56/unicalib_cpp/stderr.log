@@ -1,0 +1,16 @@
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    USE_THIRDPARTY_LIBS
+    USE_VETA_STUB
+    glm_DIR
+
+
+/root/calib_ws/unicalib_C_plus_plus/src/interactive_report.cpp: In constructor ‘unicalib::InteractiveReportGenerator::InteractiveReportGenerator(const string&)’:
+/root/calib_ws/unicalib_C_plus_plus/src/interactive_report.cpp:20:9: warning: ignoring return value of ‘int system(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   20 |   system(mkdir_cmd.c_str());
+      |   ~~~~~~^~~~~~~~~~~~~~~~~~~
+/root/calib_ws/unicalib_C_plus_plus/src/visualization_v2.cpp: In constructor ‘unicalib::VisualizationV2::VisualizationV2(const string&)’:
+/root/calib_ws/unicalib_C_plus_plus/src/visualization_v2.cpp:24:9: warning: ignoring return value of ‘int system(const char*)’ declared with attribute ‘warn_unused_result’ [-Wunused-result]
+   24 |   system(mkdir_cmd.c_str());
+      |   ~~~~~~^~~~~~~~~~~~~~~~~~~

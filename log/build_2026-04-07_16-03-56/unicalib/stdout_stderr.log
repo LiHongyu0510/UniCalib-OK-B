@@ -1,0 +1,45 @@
+/usr/local/lib/python3.10/dist-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'
+  warnings.warn(msg)
+running develop
+/usr/local/lib/python3.10/dist-packages/setuptools/_distutils/cmd.py:90: DevelopDeprecationWarning: develop command is deprecated.
+!!
+
+        ********************************************************************************
+        Please avoid running ``setup.py`` and ``develop``.
+        Instead, use standards-based tools like pip or uv.
+
+        This deprecation is overdue, please update your project and remove deprecated
+        calls to avoid build errors in the future.
+
+        See https://github.com/pypa/setuptools/issues/917 for details.
+        ********************************************************************************
+
+!!
+  self.initialize_options()
+Obtaining file:///root/calib_ws/build/unicalib
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: unicalib
+  Building editable for unicalib (pyproject.toml): started
+  Building editable for unicalib (pyproject.toml): finished with status 'done'
+  Created wheel for unicalib: filename=unicalib-1.0.0-0.editable-py3-none-any.whl size=3239 sha256=1894ee65b31941be13052646f29300c31458df1d955525b3e9da3dd36cb53b7a
+  Stored in directory: /tmp/pip-ephem-wheel-cache-ebl4ajoy/wheels/24/ca/58/04566a4f2e7e09df16ae2449b21c9f5b1c1100fe91713ad9ad
+Successfully built unicalib
+Installing collected packages: unicalib
+  Attempting uninstall: unicalib
+    Found existing installation: unicalib 1.0.0
+    WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.
+    WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.
+    WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.
+    WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.
+    WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.
+    Uninstalling unicalib-1.0.0:
+      Successfully uninstalled unicalib-1.0.0
+Successfully installed unicalib-1.0.0
+running symlink_data

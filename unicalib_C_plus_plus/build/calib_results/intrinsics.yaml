@@ -1,0 +1,7 @@
+imu:
+  type: imu
+  gyro_noise: 0.00016967999999999999
+  gyro_bias_instability: 1.0000000000000001e-05
+  accel_noise: 0.002
+  accel_bias_instability: 0.00029999999999999997
+  method: default_mems

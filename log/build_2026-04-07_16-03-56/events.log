@@ -1,0 +1,667 @@
+[0.000000] (-) TimerEvent: {}
+[0.000111] (UniCalib) JobQueued: {'identifier': 'UniCalib', 'dependencies': OrderedDict()}
+[0.000141] (ikalibr) JobQueued: {'identifier': 'ikalibr', 'dependencies': OrderedDict()}
+[0.000157] (unicalib) JobQueued: {'identifier': 'unicalib', 'dependencies': OrderedDict()}
+[0.000171] (unicalib_cpp) JobQueued: {'identifier': 'unicalib_cpp', 'dependencies': OrderedDict()}
+[0.000370] (UniCalib) JobStarted: {'identifier': 'UniCalib'}
+[0.008415] (ikalibr) JobStarted: {'identifier': 'ikalibr'}
+[0.011563] (unicalib) JobStarted: {'identifier': 'unicalib'}
+[0.016140] (unicalib_cpp) JobStarted: {'identifier': 'unicalib_cpp'}
+[0.018612] (UniCalib) JobProgress: {'identifier': 'UniCalib', 'progress': 'cmake'}
+[0.018844] (UniCalib) Command: {'cmd': ['/opt/cmake/bin/cmake', '/root/calib_ws/calib_unified', '-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm', '-DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/UniCalib'], 'cwd': '/root/calib_ws/build/UniCalib', 'env': OrderedDict([('LIBRARY_PATH', '/usr/local/cuda/lib64/stubs'), ('NV_LIBCUBLAS_VERSION', '11.11.3.6-1'), ('NV_NVPROF_DEV_PACKAGE', 'cuda-nvprof-11-8=11.8.87-1'), ('NV_CUDA_COMPAT_PACKAGE', 'cuda-compat-11-8'), ('NV_CUDA_NSIGHT_COMPUTE_VERSION', '11.8.0-1'), ('HOSTNAME', 'a210fe5c1639'), ('ROS_PACKAGE_PATH', '/root/calib_ws/install/iridescence/share'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/root/calib_ws/install/iridescence/lib:/root/calib_ws/install/faster_lio/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/local/cuda/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64'), ('NV_LIBNCCL_PACKAGE_VERSION', '2.15.5-1'), ('HOME', '/root'), ('OLDPWD', '/root/calib_ws/iKalibr'), ('NV_CUDNN_PACKAGE_NAME', 'libcudnn8'), ('NV_LIBCUBLAS_DEV_VERSION', '11.11.3.6-1'), ('CALIB_DATA_DIR', '/root/calib_ws/data'), ('UNICALIB_DM_CALIB_MODEL', '/root/calib_ws/DM-Calib/model'), ('ROS_PYTHON_VERSION', '3'), ('THIRDPARTY_WS', '/root/thirdparty'), ('NV_LIBNCCL_DEV_PACKAGE_VERSION', '2.15.5-1'), ('NV_LIBNPP_PACKAGE', 'libnpp-11-8=11.8.0.86-1'), ('WORKSPACE', '/root/calib_ws'), ('UNICALIB_DM_CALIB', '/root/calib_ws/DM-Calib'), ('NV_CUDNN_PACKAGE', 'libcudnn8=8.9.6.50-1+cuda11.8'), ('CUDA_VERSION', '11.8.0'), ('COLCON_PREFIX_PATH', '/root/calib_ws/install:/opt/ros/humble'), ('NV_NVPROF_VERSION', '11.8.87-1'), ('ROS_DISTRO', 'humble'), ('CALIB_RESULTS_DIR', '/root/calib_ws/results'), ('NV_LIBCUBLAS_PACKAGE_NAME', 'libcublas-11-8'), ('NVIDIA_REQUIRE_CUDA', 'cuda>=11.8 brand=tesla,driver>=470,driver<471 brand=unknown,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=geforce,driver>=470,driver<471 brand=geforcertx,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=titan,driver>=470,driver<471 brand=titanrtx,driver>=470,driver<471'), ('ctraj_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ctraj-install/lib/cmake/ctraj'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('PKG_CONFIG_PATH', '/root/calib_ws/install/iridescence/lib/x86_64-linux-gnu/pkgconfig:/root/calib_ws/install/iridescence/lib/pkgconfig'), ('NV_LIBCUSPARSE_VERSION', '11.7.5.86-1'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('ufomap_INCLUDE_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/include'), ('NV_CUDA_LIB_VERSION', '11.8.0-1'), ('NV_LIBNCCL_PACKAGE_NAME', 'libnccl2'), ('NV_NVML_DEV_VERSION', '11.8.86-1'), ('NV_LIBNPP_DEV_PACKAGE', 'libnpp-dev-11-8=11.8.0.86-1'), ('NV_CUDA_CUDART_VERSION', '11.8.89-1'), ('NV_CUDNN_PACKAGE_DEV', 'libcudnn8-dev=8.9.6.50-1+cuda11.8'), ('ROS_LOCALHOST_ONLY', '0'), ('opengv_DIR', '/root/calib_ws/iKalibr/thirdparty-install/opengv-install/lib/cmake/opengv-1.0'), ('PATH', '/root/calib_ws/install/unicalib/bin:/opt/ros/humble/bin:/opt/cmake/bin:/usr/local/cuda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('UNICALIB_TRANSFORMER_IMU', '/root/calib_ws/Transformer-IMU-Calibrator'), ('NV_LIBCUBLAS_DEV_PACKAGE_NAME', 'libcublas-dev-11-8'), ('NV_LIBCUBLAS_PACKAGE', 'libcublas-11-8=11.11.3.6-1'), ('NVARCH', 'x86_64'), ('THIRDPARTY_DEPS', '/root/thirdparty/deps'), ('NV_LIBNCCL_DEV_PACKAGE_NAME', 'libnccl-dev'), ('NV_LIBCUSPARSE_DEV_VERSION', '11.7.5.86-1'), ('DISPLAY', ':1'), ('NV_LIBNCCL_PACKAGE', 'libnccl2=2.15.5-1+cuda11.8'), ('NVIDIA_PRODUCT_NAME', 'CUDA'), ('LANG', 'C.UTF-8'), ('glm_DIR', '/root/calib_ws/docker/deps/glm/cmake/glm'), ('NV_CUDA_CUDART_DEV_VERSION', '11.8.89-1'), ('veta_DIR', '/root/calib_ws/iKalibr/thirdparty-install/veta-install/lib/cmake/veta'), ('AMENT_PREFIX_PATH', '/root/calib_ws/install/unicalib:/opt/ros/humble'), ('DEBIAN_FRONTEND', 'noninteractive'), ('NV_LIBCUBLAS_DEV_PACKAGE', 'libcublas-dev-11-8=11.11.3.6-1'), ('NV_CUDA_NSIGHT_COMPUTE_DEV_PACKAGE', 'cuda-nsight-compute-11-8=11.8.0-1'), ('NV_LIBNCCL_DEV_PACKAGE', 'libnccl-dev=2.15.5-1+cuda11.8'), ('ufomap_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/lib/cmake/ufomap'), ('NV_NVTX_VERSION', '11.8.86-1'), ('NV_LIBNPP_VERSION', '11.8.0.86-1'), ('NV_CUDNN_VERSION', '8.9.6.50'), ('PWD', '/root/calib_ws/build/UniCalib'), ('LC_ALL', 'C.UTF-8'), ('CUDA_HOME', '/usr/local/cuda'), ('CALIB_LOGS_DIR', '/root/calib_ws/logs'), ('PYTHONPATH', '/root/calib_ws/install/unicalib/lib/python3.10/site-packages:/root/calib_ws/install/mobile_sam/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages:/root/calib_ws/DM-Calib:/root/calib_ws/learn-to-calibrate:/root/calib_ws/learn-to-calibrate/rl_solver:/root/calib_ws/MIAS-LCEC:/root/calib_ws/Transformer-IMU-Calibrator'), ('NVIDIA_VISIBLE_DEVICES', 'all'), ('NCCL_VERSION', '2.15.5-1'), ('TZ', 'Asia/Shanghai'), ('COLCON', '1'), ('NV_LIBNPP_DEV_VERSION', '11.8.0.86-1'), ('AI_ROOT', '/root/calib_ws'), ('CMAKE_PREFIX_PATH', '/root/calib_ws/install/process_bag:/root/calib_ws/install/faster_lio')]), 'shell': False}
+[0.019974] (ikalibr) JobProgress: {'identifier': 'ikalibr', 'progress': 'cmake'}
+[0.019999] (ikalibr) Command: {'cmd': ['/opt/cmake/bin/cmake', '/root/calib_ws/iKalibr', '-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm', '-DAMENT_CMAKE_SYMLINK_INSTALL=1', '-DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/ikalibr'], 'cwd': '/root/calib_ws/build/ikalibr', 'env': OrderedDict([('LIBRARY_PATH', '/usr/local/cuda/lib64/stubs'), ('NV_LIBCUBLAS_VERSION', '11.11.3.6-1'), ('NV_NVPROF_DEV_PACKAGE', 'cuda-nvprof-11-8=11.8.87-1'), ('NV_CUDA_COMPAT_PACKAGE', 'cuda-compat-11-8'), ('NV_CUDA_NSIGHT_COMPUTE_VERSION', '11.8.0-1'), ('HOSTNAME', 'a210fe5c1639'), ('ROS_PACKAGE_PATH', '/root/calib_ws/install/iridescence/share'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/root/calib_ws/install/iridescence/lib:/root/calib_ws/install/faster_lio/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/local/cuda/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64'), ('NV_LIBNCCL_PACKAGE_VERSION', '2.15.5-1'), ('HOME', '/root'), ('OLDPWD', '/root/calib_ws/iKalibr'), ('NV_CUDNN_PACKAGE_NAME', 'libcudnn8'), ('NV_LIBCUBLAS_DEV_VERSION', '11.11.3.6-1'), ('CALIB_DATA_DIR', '/root/calib_ws/data'), ('UNICALIB_DM_CALIB_MODEL', '/root/calib_ws/DM-Calib/model'), ('ROS_PYTHON_VERSION', '3'), ('THIRDPARTY_WS', '/root/thirdparty'), ('NV_LIBNCCL_DEV_PACKAGE_VERSION', '2.15.5-1'), ('NV_LIBNPP_PACKAGE', 'libnpp-11-8=11.8.0.86-1'), ('WORKSPACE', '/root/calib_ws'), ('UNICALIB_DM_CALIB', '/root/calib_ws/DM-Calib'), ('NV_CUDNN_PACKAGE', 'libcudnn8=8.9.6.50-1+cuda11.8'), ('CUDA_VERSION', '11.8.0'), ('COLCON_PREFIX_PATH', '/root/calib_ws/install:/opt/ros/humble'), ('NV_NVPROF_VERSION', '11.8.87-1'), ('ROS_DISTRO', 'humble'), ('CALIB_RESULTS_DIR', '/root/calib_ws/results'), ('NV_LIBCUBLAS_PACKAGE_NAME', 'libcublas-11-8'), ('NVIDIA_REQUIRE_CUDA', 'cuda>=11.8 brand=tesla,driver>=470,driver<471 brand=unknown,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=geforce,driver>=470,driver<471 brand=geforcertx,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=titan,driver>=470,driver<471 brand=titanrtx,driver>=470,driver<471'), ('ctraj_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ctraj-install/lib/cmake/ctraj'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('PKG_CONFIG_PATH', '/root/calib_ws/install/iridescence/lib/x86_64-linux-gnu/pkgconfig:/root/calib_ws/install/iridescence/lib/pkgconfig'), ('NV_LIBCUSPARSE_VERSION', '11.7.5.86-1'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('ufomap_INCLUDE_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/include'), ('NV_CUDA_LIB_VERSION', '11.8.0-1'), ('NV_LIBNCCL_PACKAGE_NAME', 'libnccl2'), ('NV_NVML_DEV_VERSION', '11.8.86-1'), ('NV_LIBNPP_DEV_PACKAGE', 'libnpp-dev-11-8=11.8.0.86-1'), ('NV_CUDA_CUDART_VERSION', '11.8.89-1'), ('NV_CUDNN_PACKAGE_DEV', 'libcudnn8-dev=8.9.6.50-1+cuda11.8'), ('ROS_LOCALHOST_ONLY', '0'), ('opengv_DIR', '/root/calib_ws/iKalibr/thirdparty-install/opengv-install/lib/cmake/opengv-1.0'), ('PATH', '/root/calib_ws/install/unicalib/bin:/opt/ros/humble/bin:/opt/cmake/bin:/usr/local/cuda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('UNICALIB_TRANSFORMER_IMU', '/root/calib_ws/Transformer-IMU-Calibrator'), ('NV_LIBCUBLAS_DEV_PACKAGE_NAME', 'libcublas-dev-11-8'), ('NV_LIBCUBLAS_PACKAGE', 'libcublas-11-8=11.11.3.6-1'), ('NVARCH', 'x86_64'), ('THIRDPARTY_DEPS', '/root/thirdparty/deps'), ('NV_LIBNCCL_DEV_PACKAGE_NAME', 'libnccl-dev'), ('NV_LIBCUSPARSE_DEV_VERSION', '11.7.5.86-1'), ('DISPLAY', ':1'), ('NV_LIBNCCL_PACKAGE', 'libnccl2=2.15.5-1+cuda11.8'), ('NVIDIA_PRODUCT_NAME', 'CUDA'), ('LANG', 'C.UTF-8'), ('glm_DIR', '/root/calib_ws/docker/deps/glm/cmake/glm'), ('NV_CUDA_CUDART_DEV_VERSION', '11.8.89-1'), ('veta_DIR', '/root/calib_ws/iKalibr/thirdparty-install/veta-install/lib/cmake/veta'), ('AMENT_PREFIX_PATH', '/root/calib_ws/install/unicalib:/opt/ros/humble'), ('DEBIAN_FRONTEND', 'noninteractive'), ('NV_LIBCUBLAS_DEV_PACKAGE', 'libcublas-dev-11-8=11.11.3.6-1'), ('NV_CUDA_NSIGHT_COMPUTE_DEV_PACKAGE', 'cuda-nsight-compute-11-8=11.8.0-1'), ('NV_LIBNCCL_DEV_PACKAGE', 'libnccl-dev=2.15.5-1+cuda11.8'), ('ufomap_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/lib/cmake/ufomap'), ('NV_NVTX_VERSION', '11.8.86-1'), ('NV_LIBNPP_VERSION', '11.8.0.86-1'), ('NV_CUDNN_VERSION', '8.9.6.50'), ('PWD', '/root/calib_ws/build/ikalibr'), ('LC_ALL', 'C.UTF-8'), ('CUDA_HOME', '/usr/local/cuda'), ('CALIB_LOGS_DIR', '/root/calib_ws/logs'), ('PYTHONPATH', '/root/calib_ws/install/unicalib/lib/python3.10/site-packages:/root/calib_ws/install/mobile_sam/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages:/root/calib_ws/DM-Calib:/root/calib_ws/learn-to-calibrate:/root/calib_ws/learn-to-calibrate/rl_solver:/root/calib_ws/MIAS-LCEC:/root/calib_ws/Transformer-IMU-Calibrator'), ('NVIDIA_VISIBLE_DEVICES', 'all'), ('NCCL_VERSION', '2.15.5-1'), ('TZ', 'Asia/Shanghai'), ('COLCON', '1'), ('NV_LIBNPP_DEV_VERSION', '11.8.0.86-1'), ('AI_ROOT', '/root/calib_ws'), ('CMAKE_PREFIX_PATH', '/root/calib_ws/install/process_bag:/root/calib_ws/install/unicalib:/opt/ros/humble:/root/calib_ws/install/faster_lio')]), 'shell': False}
+[0.100158] (-) TimerEvent: {}
+[0.195991] (UniCalib) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[0.196204] (UniCalib) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[0.196243] (UniCalib) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[0.196277] (UniCalib) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[0.196306] (UniCalib) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[0.196335] (UniCalib) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[0.196365] (UniCalib) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[0.196421] (UniCalib) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[0.196443] (ikalibr) StdoutLine: {'line': b'-- The C compiler identification is GNU 11.4.0\n'}
+[0.196510] (ikalibr) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[0.196532] (ikalibr) StdoutLine: {'line': b'-- Detecting C compiler ABI info\n'}
+[0.196551] (ikalibr) StdoutLine: {'line': b'-- Detecting C compiler ABI info - done\n'}
+[0.196572] (ikalibr) StdoutLine: {'line': b'-- Check for working C compiler: /usr/bin/cc - skipped\n'}
+[0.196592] (ikalibr) StdoutLine: {'line': b'-- Detecting C compile features\n'}
+[0.196612] (ikalibr) StdoutLine: {'line': b'-- Detecting C compile features - done\n'}
+[0.196632] (ikalibr) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[0.196653] (unicalib_cpp) JobProgress: {'identifier': 'unicalib_cpp', 'progress': 'cmake'}
+[0.196920] (unicalib_cpp) Command: {'cmd': ['/opt/cmake/bin/cmake', '/root/calib_ws/unicalib_C_plus_plus', '-DCMAKE_BUILD_TYPE=Release', '-DUSE_THIRDPARTY_LIBS=ON', '-DUSE_VETA_STUB=ON', '-Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm', '-DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/unicalib_cpp'], 'cwd': '/root/calib_ws/build/unicalib_cpp', 'env': OrderedDict([('LIBRARY_PATH', '/usr/local/cuda/lib64/stubs'), ('NV_LIBCUBLAS_VERSION', '11.11.3.6-1'), ('NV_NVPROF_DEV_PACKAGE', 'cuda-nvprof-11-8=11.8.87-1'), ('NV_CUDA_COMPAT_PACKAGE', 'cuda-compat-11-8'), ('NV_CUDA_NSIGHT_COMPUTE_VERSION', '11.8.0-1'), ('HOSTNAME', 'a210fe5c1639'), ('ROS_PACKAGE_PATH', '/root/calib_ws/install/iridescence/share'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/root/calib_ws/install/iridescence/lib:/root/calib_ws/install/faster_lio/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/local/cuda/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64'), ('NV_LIBNCCL_PACKAGE_VERSION', '2.15.5-1'), ('HOME', '/root'), ('OLDPWD', '/root/calib_ws/iKalibr'), ('NV_CUDNN_PACKAGE_NAME', 'libcudnn8'), ('NV_LIBCUBLAS_DEV_VERSION', '11.11.3.6-1'), ('CALIB_DATA_DIR', '/root/calib_ws/data'), ('UNICALIB_DM_CALIB_MODEL', '/root/calib_ws/DM-Calib/model'), ('ROS_PYTHON_VERSION', '3'), ('THIRDPARTY_WS', '/root/thirdparty'), ('NV_LIBNCCL_DEV_PACKAGE_VERSION', '2.15.5-1'), ('NV_LIBNPP_PACKAGE', 'libnpp-11-8=11.8.0.86-1'), ('WORKSPACE', '/root/calib_ws'), ('UNICALIB_DM_CALIB', '/root/calib_ws/DM-Calib'), ('NV_CUDNN_PACKAGE', 'libcudnn8=8.9.6.50-1+cuda11.8'), ('CUDA_VERSION', '11.8.0'), ('COLCON_PREFIX_PATH', '/root/calib_ws/install:/opt/ros/humble'), ('NV_NVPROF_VERSION', '11.8.87-1'), ('ROS_DISTRO', 'humble'), ('CALIB_RESULTS_DIR', '/root/calib_ws/results'), ('NV_LIBCUBLAS_PACKAGE_NAME', 'libcublas-11-8'), ('NVIDIA_REQUIRE_CUDA', 'cuda>=11.8 brand=tesla,driver>=470,driver<471 brand=unknown,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=geforce,driver>=470,driver<471 brand=geforcertx,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=titan,driver>=470,driver<471 brand=titanrtx,driver>=470,driver<471'), ('ctraj_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ctraj-install/lib/cmake/ctraj'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('PKG_CONFIG_PATH', '/root/calib_ws/install/iridescence/lib/x86_64-linux-gnu/pkgconfig:/root/calib_ws/install/iridescence/lib/pkgconfig'), ('NV_LIBCUSPARSE_VERSION', '11.7.5.86-1'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('ufomap_INCLUDE_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/include'), ('NV_CUDA_LIB_VERSION', '11.8.0-1'), ('NV_LIBNCCL_PACKAGE_NAME', 'libnccl2'), ('NV_NVML_DEV_VERSION', '11.8.86-1'), ('NV_LIBNPP_DEV_PACKAGE', 'libnpp-dev-11-8=11.8.0.86-1'), ('NV_CUDA_CUDART_VERSION', '11.8.89-1'), ('NV_CUDNN_PACKAGE_DEV', 'libcudnn8-dev=8.9.6.50-1+cuda11.8'), ('ROS_LOCALHOST_ONLY', '0'), ('opengv_DIR', '/root/calib_ws/iKalibr/thirdparty-install/opengv-install/lib/cmake/opengv-1.0'), ('PATH', '/root/calib_ws/install/unicalib/bin:/opt/ros/humble/bin:/opt/cmake/bin:/usr/local/cuda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('UNICALIB_TRANSFORMER_IMU', '/root/calib_ws/Transformer-IMU-Calibrator'), ('NV_LIBCUBLAS_DEV_PACKAGE_NAME', 'libcublas-dev-11-8'), ('NV_LIBCUBLAS_PACKAGE', 'libcublas-11-8=11.11.3.6-1'), ('NVARCH', 'x86_64'), ('THIRDPARTY_DEPS', '/root/thirdparty/deps'), ('NV_LIBNCCL_DEV_PACKAGE_NAME', 'libnccl-dev'), ('NV_LIBCUSPARSE_DEV_VERSION', '11.7.5.86-1'), ('DISPLAY', ':1'), ('NV_LIBNCCL_PACKAGE', 'libnccl2=2.15.5-1+cuda11.8'), ('NVIDIA_PRODUCT_NAME', 'CUDA'), ('LANG', 'C.UTF-8'), ('glm_DIR', '/root/calib_ws/docker/deps/glm/cmake/glm'), ('NV_CUDA_CUDART_DEV_VERSION', '11.8.89-1'), ('veta_DIR', '/root/calib_ws/iKalibr/thirdparty-install/veta-install/lib/cmake/veta'), ('AMENT_PREFIX_PATH', '/root/calib_ws/install/unicalib:/opt/ros/humble'), ('DEBIAN_FRONTEND', 'noninteractive'), ('NV_LIBCUBLAS_DEV_PACKAGE', 'libcublas-dev-11-8=11.11.3.6-1'), ('NV_CUDA_NSIGHT_COMPUTE_DEV_PACKAGE', 'cuda-nsight-compute-11-8=11.8.0-1'), ('NV_LIBNCCL_DEV_PACKAGE', 'libnccl-dev=2.15.5-1+cuda11.8'), ('ufomap_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/lib/cmake/ufomap'), ('NV_NVTX_VERSION', '11.8.86-1'), ('NV_LIBNPP_VERSION', '11.8.0.86-1'), ('NV_CUDNN_VERSION', '8.9.6.50'), ('PWD', '/root/calib_ws/build/unicalib_cpp'), ('LC_ALL', 'C.UTF-8'), ('CUDA_HOME', '/usr/local/cuda'), ('CALIB_LOGS_DIR', '/root/calib_ws/logs'), ('PYTHONPATH', '/root/calib_ws/install/unicalib/lib/python3.10/site-packages:/root/calib_ws/install/mobile_sam/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages:/root/calib_ws/DM-Calib:/root/calib_ws/learn-to-calibrate:/root/calib_ws/learn-to-calibrate/rl_solver:/root/calib_ws/MIAS-LCEC:/root/calib_ws/Transformer-IMU-Calibrator'), ('NVIDIA_VISIBLE_DEVICES', 'all'), ('NCCL_VERSION', '2.15.5-1'), ('TZ', 'Asia/Shanghai'), ('COLCON', '1'), ('NV_LIBNPP_DEV_VERSION', '11.8.0.86-1'), ('AI_ROOT', '/root/calib_ws'), ('CMAKE_PREFIX_PATH', '/root/calib_ws/install/process_bag:/root/calib_ws/install/faster_lio')]), 'shell': False}
+[0.198201] (UniCalib) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[0.198267] (ikalibr) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[0.200246] (-) TimerEvent: {}
+[0.202773] (UniCalib) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[0.202879] (UniCalib) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[0.203292] (UniCalib) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[0.203503] (ikalibr) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[0.203730] (ikalibr) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[0.204069] (ikalibr) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[0.204652] (ikalibr) StderrLine: {'line': b'CMake Warning (dev) at CMakeLists.txt:39 (set):\n'}
+[0.204703] (ikalibr) StderrLine: {'line': b"  implicitly converting 'STRINGS' to 'STRING' type.\n"}
+[0.204725] (ikalibr) StderrLine: {'line': b'This warning is for project developers.  Use -Wno-dev to suppress it.\n'}
+[0.204745] (ikalibr) StderrLine: {'line': b'\n'}
+[0.204766] (ikalibr) StdoutLine: {'line': b"-- do not use 'CMAKE_UNITY_BUILD' in building!\n"}
+[0.208564] (UniCalib) StdoutLine: {'line': b'-- Eigen3 found: /usr/include/eigen3\n'}
+[0.208824] (ikalibr) StdoutLine: {'line': b'-- Found ament_cmake: 1.3.13 (/opt/ros/humble/share/ament_cmake/cmake)\n'}
+[0.212405] (UniCalib) StdoutLine: {'line': b'-- Sophus: found in system\n'}
+[0.212576] (UniCalib) StdoutLine: {'line': b'-- veta: using self-contained veta-impl at /root/calib_ws/calib_unified/thirdparty/veta-impl/include\n'}
+[0.212632] (UniCalib) StdoutLine: {'line': b'-- basalt-headers: \xe2\x9c\x93 Found at /root/calib_ws/calib_unified/thirdparty/basalt-headers/include\n'}
+[0.212682] (UniCalib) StdoutLine: {'line': b'--   \xe2\x80\xa2 Features: Se3Spline, So3Spline, RdSpline, CeresHelper\n'}
+[0.229607] (unicalib_cpp) StdoutLine: {'line': b'-- The CXX compiler identification is GNU 11.4.0\n'}
+[0.236584] (unicalib_cpp) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info\n'}
+[0.273654] (unicalib_cpp) StdoutLine: {'line': b'-- Detecting CXX compiler ABI info - done\n'}
+[0.280290] (unicalib_cpp) StdoutLine: {'line': b'-- Check for working CXX compiler: /usr/bin/c++ - skipped\n'}
+[0.280451] (unicalib_cpp) StdoutLine: {'line': b'-- Detecting CXX compile features\n'}
+[0.280797] (unicalib_cpp) StdoutLine: {'line': b'-- Detecting CXX compile features - done\n'}
+[0.284739] (UniCalib) StdoutLine: {'line': b'-- libpng Found and Enabled\n'}
+[0.300333] (-) TimerEvent: {}
+[0.307471] (unicalib_cpp) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD\n'}
+[0.317710] (UniCalib) StdoutLine: {'line': b'-- libjpeg Found and Enabled\n'}
+[0.321194] (UniCalib) StdoutLine: {'line': b'-- libtiff Found and Enabled\n'}
+[0.321992] (UniCalib) StdoutLine: {'line': b'-- libopenexr Found and Enabled\n'}
+[0.323195] (UniCalib) StdoutLine: {'line': b'-- liblz4 Found and Enabled\n'}
+[0.324461] (UniCalib) StdoutLine: {'line': b'-- libzstd Found and Enabled\n'}
+[0.334289] (UniCalib) StdoutLine: {'line': b"-- Found Eigen: '/usr/include/eigen3'\n"}
+[0.358925] (unicalib_cpp) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success\n'}
+[0.359764] (unicalib_cpp) StdoutLine: {'line': b'-- Found Threads: TRUE  \n'}
+[0.371602] (unicalib_cpp) StdoutLine: {'line': b'-- Found CUDA: /usr/local/cuda (found suitable exact version "11.8") \n'}
+[0.380904] (unicalib_cpp) StdoutLine: {'line': b'-- Configuring done\n'}
+[0.387773] (unicalib_cpp) StdoutLine: {'line': b'-- Generating done\n'}
+[0.388111] (unicalib_cpp) StderrLine: {'line': b'CMake Warning:\n'}
+[0.388189] (unicalib_cpp) StderrLine: {'line': b'  Manually-specified variables were not used by the project:\n'}
+[0.388224] (unicalib_cpp) StderrLine: {'line': b'\n'}
+[0.388254] (unicalib_cpp) StderrLine: {'line': b'    USE_THIRDPARTY_LIBS\n'}
+[0.388283] (unicalib_cpp) StderrLine: {'line': b'    USE_VETA_STUB\n'}
+[0.388311] (unicalib_cpp) StderrLine: {'line': b'    glm_DIR\n'}
+[0.388342] (unicalib_cpp) StderrLine: {'line': b'\n'}
+[0.388370] (unicalib_cpp) StderrLine: {'line': b'\n'}
+[0.390661] (unicalib_cpp) StdoutLine: {'line': b'-- Build files have been written to: /root/calib_ws/build/unicalib_cpp\n'}
+[0.393385] (unicalib_cpp) CommandEnded: {'returncode': 0}
+[0.394176] (unicalib_cpp) JobProgress: {'identifier': 'unicalib_cpp', 'progress': 'build'}
+[0.394203] (unicalib_cpp) Command: {'cmd': ['/opt/cmake/bin/cmake', '--build', '/root/calib_ws/build/unicalib_cpp', '--', '-j28', '-l28'], 'cwd': '/root/calib_ws/build/unicalib_cpp', 'env': OrderedDict([('LIBRARY_PATH', '/usr/local/cuda/lib64/stubs'), ('NV_LIBCUBLAS_VERSION', '11.11.3.6-1'), ('NV_NVPROF_DEV_PACKAGE', 'cuda-nvprof-11-8=11.8.87-1'), ('NV_CUDA_COMPAT_PACKAGE', 'cuda-compat-11-8'), ('NV_CUDA_NSIGHT_COMPUTE_VERSION', '11.8.0-1'), ('HOSTNAME', 'a210fe5c1639'), ('ROS_PACKAGE_PATH', '/root/calib_ws/install/iridescence/share'), ('SHLVL', '2'), ('LD_LIBRARY_PATH', '/root/calib_ws/install/iridescence/lib:/root/calib_ws/install/faster_lio/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/local/cuda/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64'), ('NV_LIBNCCL_PACKAGE_VERSION', '2.15.5-1'), ('HOME', '/root'), ('OLDPWD', '/root/calib_ws/iKalibr'), ('NV_CUDNN_PACKAGE_NAME', 'libcudnn8'), ('NV_LIBCUBLAS_DEV_VERSION', '11.11.3.6-1'), ('CALIB_DATA_DIR', '/root/calib_ws/data'), ('UNICALIB_DM_CALIB_MODEL', '/root/calib_ws/DM-Calib/model'), ('ROS_PYTHON_VERSION', '3'), ('THIRDPARTY_WS', '/root/thirdparty'), ('NV_LIBNCCL_DEV_PACKAGE_VERSION', '2.15.5-1'), ('NV_LIBNPP_PACKAGE', 'libnpp-11-8=11.8.0.86-1'), ('WORKSPACE', '/root/calib_ws'), ('UNICALIB_DM_CALIB', '/root/calib_ws/DM-Calib'), ('NV_CUDNN_PACKAGE', 'libcudnn8=8.9.6.50-1+cuda11.8'), ('CUDA_VERSION', '11.8.0'), ('COLCON_PREFIX_PATH', '/root/calib_ws/install:/opt/ros/humble'), ('NV_NVPROF_VERSION', '11.8.87-1'), ('ROS_DISTRO', 'humble'), ('CALIB_RESULTS_DIR', '/root/calib_ws/results'), ('NV_LIBCUBLAS_PACKAGE_NAME', 'libcublas-11-8'), ('NVIDIA_REQUIRE_CUDA', 'cuda>=11.8 brand=tesla,driver>=470,driver<471 brand=unknown,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=geforce,driver>=470,driver<471 brand=geforcertx,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=titan,driver>=470,driver<471 brand=titanrtx,driver>=470,driver<471'), ('ctraj_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ctraj-install/lib/cmake/ctraj'), ('_', '/usr/bin/colcon'), ('ROS_VERSION', '2'), ('PKG_CONFIG_PATH', '/root/calib_ws/install/iridescence/lib/x86_64-linux-gnu/pkgconfig:/root/calib_ws/install/iridescence/lib/pkgconfig'), ('NV_LIBCUSPARSE_VERSION', '11.7.5.86-1'), ('NVIDIA_DRIVER_CAPABILITIES', 'all'), ('ufomap_INCLUDE_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/include'), ('NV_CUDA_LIB_VERSION', '11.8.0-1'), ('NV_LIBNCCL_PACKAGE_NAME', 'libnccl2'), ('NV_NVML_DEV_VERSION', '11.8.86-1'), ('NV_LIBNPP_DEV_PACKAGE', 'libnpp-dev-11-8=11.8.0.86-1'), ('NV_CUDA_CUDART_VERSION', '11.8.89-1'), ('NV_CUDNN_PACKAGE_DEV', 'libcudnn8-dev=8.9.6.50-1+cuda11.8'), ('ROS_LOCALHOST_ONLY', '0'), ('opengv_DIR', '/root/calib_ws/iKalibr/thirdparty-install/opengv-install/lib/cmake/opengv-1.0'), ('PATH', '/root/calib_ws/install/unicalib/bin:/opt/ros/humble/bin:/opt/cmake/bin:/usr/local/cuda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'), ('UNICALIB_TRANSFORMER_IMU', '/root/calib_ws/Transformer-IMU-Calibrator'), ('NV_LIBCUBLAS_DEV_PACKAGE_NAME', 'libcublas-dev-11-8'), ('NV_LIBCUBLAS_PACKAGE', 'libcublas-11-8=11.11.3.6-1'), ('NVARCH', 'x86_64'), ('THIRDPARTY_DEPS', '/root/thirdparty/deps'), ('NV_LIBNCCL_DEV_PACKAGE_NAME', 'libnccl-dev'), ('NV_LIBCUSPARSE_DEV_VERSION', '11.7.5.86-1'), ('DISPLAY', ':1'), ('NV_LIBNCCL_PACKAGE', 'libnccl2=2.15.5-1+cuda11.8'), ('NVIDIA_PRODUCT_NAME', 'CUDA'), ('LANG', 'C.UTF-8'), ('glm_DIR', '/root/calib_ws/docker/deps/glm/cmake/glm'), ('NV_CUDA_CUDART_DEV_VERSION', '11.8.89-1'), ('veta_DIR', '/root/calib_ws/iKalibr/thirdparty-install/veta-install/lib/cmake/veta'), ('AMENT_PREFIX_PATH', '/root/calib_ws/install/unicalib:/opt/ros/humble'), ('DEBIAN_FRONTEND', 'noninteractive'), ('NV_LIBCUBLAS_DEV_PACKAGE', 'libcublas-dev-11-8=11.11.3.6-1'), ('NV_CUDA_NSIGHT_COMPUTE_DEV_PACKAGE', 'cuda-nsight-compute-11-8=11.8.0-1'), ('NV_LIBNCCL_DEV_PACKAGE', 'libnccl-dev=2.15.5-1+cuda11.8'), ('ufomap_DIR', '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/lib/cmake/ufomap'), ('NV_NVTX_VERSION', '11.8.86-1'), ('NV_LIBNPP_VERSION', '11.8.0.86-1'), ('NV_CUDNN_VERSION', '8.9.6.50'), ('PWD', '/root/calib_ws/build/unicalib_cpp'), ('LC_ALL', 'C.UTF-8'), ('CUDA_HOME', '/usr/local/cuda'), ('CALIB_LOGS_DIR', '/root/calib_ws/logs'), ('PYTHONPATH', '/root/calib_ws/install/unicalib/lib/python3.10/site-packages:/root/calib_ws/install/mobile_sam/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages:/root/calib_ws/DM-Calib:/root/calib_ws/learn-to-calibrate:/root/calib_ws/learn-to-calibrate/rl_solver:/root/calib_ws/MIAS-LCEC:/root/calib_ws/Transformer-IMU-Calibrator'), ('NVIDIA_VISIBLE_DEVICES', 'all'), ('NCCL_VERSION', '2.15.5-1'), ('TZ', 'Asia/Shanghai'), ('COLCON', '1'), ('NV_LIBNPP_DEV_VERSION', '11.8.0.86-1'), ('AI_ROOT', '/root/calib_ws'), ('CMAKE_PREFIX_PATH', '/root/calib_ws/install/process_bag:/root/calib_ws/install/faster_lio')]), 'shell': False}
+[0.400405] (-) TimerEvent: {}
+[0.408324] (unicalib_cpp) StdoutLine: {'line': b'[  2%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/sensor_config.cpp.o\n'}
+[0.408607] (unicalib_cpp) StdoutLine: {'line': b'[  8%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/data_manager.cpp.o\n'}
+[0.408830] (unicalib_cpp) StdoutLine: {'line': b'[ 11%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/imu_intrinsic.cpp.o\n'}
+[0.409596] (unicalib_cpp) StdoutLine: {'line': b'[ 13%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/allan_variance.cpp.o\n'}
+[0.409667] (unicalib_cpp) StdoutLine: {'line': b'[ 16%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/transforms.cpp.o\n'}
+[0.410324] (unicalib_cpp) StdoutLine: {'line': b'[ 19%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/process_runner.cpp.o\n'}
+[0.410383] (unicalib_cpp) StdoutLine: {'line': b'[ 19%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/calib_result.cpp.o\n'}
+[0.410419] (unicalib_cpp) StdoutLine: {'line': b'[ 22%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/camera_fisheye.cpp.o\n'}
+[0.410453] (unicalib_cpp) StdoutLine: {'line': b'[ 25%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/external_tools_config.cpp.o\n'}
+[0.414952] (unicalib_cpp) StdoutLine: {'line': b'[ 30%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/dm_calib_wrapper.cpp.o\n'}
+[0.415101] (unicalib_cpp) StdoutLine: {'line': b'[ 30%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/learn_to_calib_wrapper.cpp.o\n'}
+[0.415151] (unicalib_cpp) StdoutLine: {'line': b'[ 33%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/mias_lcec_wrapper.cpp.o\n'}
+[0.415267] (unicalib_cpp) StdoutLine: {'line': b'[ 38%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/ikalibr_wrapper.cpp.o\n'}
+[0.415303] (unicalib_cpp) StdoutLine: {'line': b'[ 38%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/feature_matching.cpp.o\n'}
+[0.417755] (unicalib_cpp) StdoutLine: {'line': b'[ 41%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/click_calib_wrapper.cpp.o\n'}
+[0.417902] (unicalib_cpp) StdoutLine: {'line': b'[ 44%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/reprojection.cpp.o\n'}
+[0.418496] (unicalib_cpp) StdoutLine: {'line': b'[ 50%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/visualization_v2.cpp.o\n'}
+[0.418564] (unicalib_cpp) StdoutLine: {'line': b'[ 50%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/report_generator.cpp.o\n'}
+[0.419749] (unicalib_cpp) StdoutLine: {'line': b'[ 52%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/interactive_report.cpp.o\n'}
+[0.425676] (unicalib_cpp) StdoutLine: {'line': b'[ 58%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/exceptions.cpp.o\n'}
+[0.428718] (unicalib_cpp) StdoutLine: {'line': b'[ 58%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/system.cpp.o\n'}
+[0.428830] (unicalib_cpp) StdoutLine: {'line': b'[ 61%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/logger.cpp.o\n'}
+[0.429967] (unicalib_cpp) StdoutLine: {'line': b'[ 63%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/realtime_visualizer.cpp.o\n'}
+[0.433254] (unicalib_cpp) StdoutLine: {'line': b'[ 66%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/data_validator.cpp.o\n'}
+[0.433789] (unicalib_cpp) StdoutLine: {'line': b'[ 69%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/calibration_quality.cpp.o\n'}
+[0.438337] (unicalib_cpp) StdoutLine: {'line': b'[ 72%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/iterative_refinement.cpp.o\n'}
+[0.446203] (unicalib_cpp) StdoutLine: {'line': b'[ 75%] Building CXX object CMakeFiles/unicalib_cpp.dir/src/temporal_calibration.cpp.o\n'}
+[0.476404] (ikalibr) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter \n'}
+[0.501183] (-) TimerEvent: {}
+[0.601444] (-) TimerEvent: {}
+[0.631457] (unicalib) Command: {'cmd': ['/usr/bin/python3', '-W', 'ignore:setup.py install is deprecated', '-W', 'ignore:easy_install command is deprecated', 'setup.py', 'develop', '--editable', '--build-directory', '/root/calib_ws/build/unicalib/build', '--no-deps', 'symlink_data'], 'cwd': '/root/calib_ws/build/unicalib', 'env': {'LIBRARY_PATH': '/usr/local/cuda/lib64/stubs', 'NV_LIBCUBLAS_VERSION': '11.11.3.6-1', 'NV_NVPROF_DEV_PACKAGE': 'cuda-nvprof-11-8=11.8.87-1', 'NV_CUDA_COMPAT_PACKAGE': 'cuda-compat-11-8', 'NV_CUDA_NSIGHT_COMPUTE_VERSION': '11.8.0-1', 'HOSTNAME': 'a210fe5c1639', 'ROS_PACKAGE_PATH': '/root/calib_ws/install/iridescence/share', 'SHLVL': '2', 'LD_LIBRARY_PATH': '/root/calib_ws/install/iridescence/lib:/root/calib_ws/install/faster_lio/lib:/opt/ros/humble/opt/rviz_ogre_vendor/lib:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib:/usr/local/cuda/lib64:/usr/local/nvidia/lib:/usr/local/nvidia/lib64', 'NV_LIBNCCL_PACKAGE_VERSION': '2.15.5-1', 'HOME': '/root', 'OLDPWD': '/root/calib_ws/iKalibr', 'NV_CUDNN_PACKAGE_NAME': 'libcudnn8', 'NV_LIBCUBLAS_DEV_VERSION': '11.11.3.6-1', 'CALIB_DATA_DIR': '/root/calib_ws/data', 'UNICALIB_DM_CALIB_MODEL': '/root/calib_ws/DM-Calib/model', 'ROS_PYTHON_VERSION': '3', 'THIRDPARTY_WS': '/root/thirdparty', 'NV_LIBNCCL_DEV_PACKAGE_VERSION': '2.15.5-1', 'NV_LIBNPP_PACKAGE': 'libnpp-11-8=11.8.0.86-1', 'WORKSPACE': '/root/calib_ws', 'UNICALIB_DM_CALIB': '/root/calib_ws/DM-Calib', 'NV_CUDNN_PACKAGE': 'libcudnn8=8.9.6.50-1+cuda11.8', 'CUDA_VERSION': '11.8.0', 'COLCON_PREFIX_PATH': '/root/calib_ws/install:/opt/ros/humble', 'NV_NVPROF_VERSION': '11.8.87-1', 'ROS_DISTRO': 'humble', 'CALIB_RESULTS_DIR': '/root/calib_ws/results', 'NV_LIBCUBLAS_PACKAGE_NAME': 'libcublas-11-8', 'NVIDIA_REQUIRE_CUDA': 'cuda>=11.8 brand=tesla,driver>=470,driver<471 brand=unknown,driver>=470,driver<471 brand=nvidia,driver>=470,driver<471 brand=nvidiartx,driver>=470,driver<471 brand=geforce,driver>=470,driver<471 brand=geforcertx,driver>=470,driver<471 brand=quadro,driver>=470,driver<471 brand=quadrortx,driver>=470,driver<471 brand=titan,driver>=470,driver<471 brand=titanrtx,driver>=470,driver<471', 'ctraj_DIR': '/root/calib_ws/iKalibr/thirdparty-install/ctraj-install/lib/cmake/ctraj', '_': '/usr/bin/colcon', 'ROS_VERSION': '2', 'PKG_CONFIG_PATH': '/root/calib_ws/install/iridescence/lib/x86_64-linux-gnu/pkgconfig:/root/calib_ws/install/iridescence/lib/pkgconfig', 'NV_LIBCUSPARSE_VERSION': '11.7.5.86-1', 'NVIDIA_DRIVER_CAPABILITIES': 'all', 'ufomap_INCLUDE_DIR': '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/include', 'NV_CUDA_LIB_VERSION': '11.8.0-1', 'NV_LIBNCCL_PACKAGE_NAME': 'libnccl2', 'NV_NVML_DEV_VERSION': '11.8.86-1', 'NV_LIBNPP_DEV_PACKAGE': 'libnpp-dev-11-8=11.8.0.86-1', 'NV_CUDA_CUDART_VERSION': '11.8.89-1', 'NV_CUDNN_PACKAGE_DEV': 'libcudnn8-dev=8.9.6.50-1+cuda11.8', 'ROS_LOCALHOST_ONLY': '0', 'opengv_DIR': '/root/calib_ws/iKalibr/thirdparty-install/opengv-install/lib/cmake/opengv-1.0', 'PATH': '/root/calib_ws/install/unicalib/bin:/opt/ros/humble/bin:/opt/cmake/bin:/usr/local/cuda/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin', 'UNICALIB_TRANSFORMER_IMU': '/root/calib_ws/Transformer-IMU-Calibrator', 'NV_LIBCUBLAS_DEV_PACKAGE_NAME': 'libcublas-dev-11-8', 'NV_LIBCUBLAS_PACKAGE': 'libcublas-11-8=11.11.3.6-1', 'NVARCH': 'x86_64', 'THIRDPARTY_DEPS': '/root/thirdparty/deps', 'NV_LIBNCCL_DEV_PACKAGE_NAME': 'libnccl-dev', 'NV_LIBCUSPARSE_DEV_VERSION': '11.7.5.86-1', 'DISPLAY': ':1', 'NV_LIBNCCL_PACKAGE': 'libnccl2=2.15.5-1+cuda11.8', 'NVIDIA_PRODUCT_NAME': 'CUDA', 'LANG': 'C.UTF-8', 'glm_DIR': '/root/calib_ws/docker/deps/glm/cmake/glm', 'NV_CUDA_CUDART_DEV_VERSION': '11.8.89-1', 'veta_DIR': '/root/calib_ws/iKalibr/thirdparty-install/veta-install/lib/cmake/veta', 'AMENT_PREFIX_PATH': '/root/calib_ws/install/unicalib:/opt/ros/humble', 'DEBIAN_FRONTEND': 'noninteractive', 'NV_LIBCUBLAS_DEV_PACKAGE': 'libcublas-dev-11-8=11.11.3.6-1', 'NV_CUDA_NSIGHT_COMPUTE_DEV_PACKAGE': 'cuda-nsight-compute-11-8=11.8.0-1', 'NV_LIBNCCL_DEV_PACKAGE': 'libnccl-dev=2.15.5-1+cuda11.8', 'ufomap_DIR': '/root/calib_ws/iKalibr/thirdparty-install/ufomap-install/lib/cmake/ufomap', 'NV_NVTX_VERSION': '11.8.86-1', 'NV_LIBNPP_VERSION': '11.8.0.86-1', 'NV_CUDNN_VERSION': '8.9.6.50', 'PWD': '/root/calib_ws/build/unicalib', 'LC_ALL': 'C.UTF-8', 'CUDA_HOME': '/usr/local/cuda', 'CALIB_LOGS_DIR': '/root/calib_ws/logs', 'PYTHONPATH': '/root/calib_ws/build/unicalib/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/root/calib_ws/install/unicalib/lib/python3.10/site-packages:/root/calib_ws/install/unicalib/lib/python3.10/site-packages:/root/calib_ws/install/mobile_sam/lib/python3.10/site-packages:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages:/root/calib_ws/DM-Calib:/root/calib_ws/learn-to-calibrate:/root/calib_ws/learn-to-calibrate/rl_solver:/root/calib_ws/MIAS-LCEC:/root/calib_ws/Transformer-IMU-Calibrator', 'NVIDIA_VISIBLE_DEVICES': 'all', 'NCCL_VERSION': '2.15.5-1', 'TZ': 'Asia/Shanghai', 'COLCON': '1', 'NV_LIBNPP_DEV_VERSION': '11.8.0.86-1', 'AI_ROOT': '/root/calib_ws', 'CMAKE_PREFIX_PATH': '/root/calib_ws/install/process_bag:/root/calib_ws/install/faster_lio'}, 'shell': False}
+[0.647485] (ikalibr) StdoutLine: {'line': b'-- Override CMake install command with custom implementation using symlinks instead of copying resources\n'}
+[0.702201] (-) TimerEvent: {}
+[0.716554] (ikalibr) StdoutLine: {'line': b'-- Found rclcpp: 16.0.18 (/opt/ros/humble/share/rclcpp/cmake)\n'}
+[0.795658] (unicalib) StderrLine: {'line': b"/usr/local/lib/python3.10/dist-packages/setuptools/_distutils/dist.py:287: UserWarning: Unknown distribution option: 'tests_require'\n"}
+[0.796178] (unicalib) StderrLine: {'line': b'  warnings.warn(msg)\n'}
+[0.802290] (-) TimerEvent: {}
+[0.828616] (ikalibr) StdoutLine: {'line': b'-- Found rosidl_generator_c: 3.1.8 (/opt/ros/humble/share/rosidl_generator_c/cmake)\n'}
+[0.842137] (ikalibr) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.8 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[0.859755] (unicalib) StdoutLine: {'line': b'running develop\n'}
+[0.860353] (unicalib) StderrLine: {'line': b'/usr/local/lib/python3.10/dist-packages/setuptools/_distutils/cmd.py:90: DevelopDeprecationWarning: develop command is deprecated.\n'}
+[0.860438] (unicalib) StderrLine: {'line': b'!!\n'}
+[0.860482] (unicalib) StderrLine: {'line': b'\n'}
+[0.860522] (unicalib) StderrLine: {'line': b'        ********************************************************************************\n'}
+[0.860561] (unicalib) StderrLine: {'line': b'        Please avoid running ``setup.py`` and ``develop``.\n'}
+[0.860598] (unicalib) StderrLine: {'line': b'        Instead, use standards-based tools like pip or uv.\n'}
+[0.860634] (unicalib) StderrLine: {'line': b'\n'}
+[0.860671] (unicalib) StderrLine: {'line': b'        This deprecation is overdue, please update your project and remove deprecated\n'}
+[0.860708] (unicalib) StderrLine: {'line': b'        calls to avoid build errors in the future.\n'}
+[0.860745] (unicalib) StderrLine: {'line': b'\n'}
+[0.860780] (unicalib) StderrLine: {'line': b'        See https://github.com/pypa/setuptools/issues/917 for details.\n'}
+[0.860816] (unicalib) StderrLine: {'line': b'        ********************************************************************************\n'}
+[0.860851] (unicalib) StderrLine: {'line': b'\n'}
+[0.860885] (unicalib) StderrLine: {'line': b'!!\n'}
+[0.860919] (unicalib) StderrLine: {'line': b'  self.initialize_options()\n'}
+[0.868268] (ikalibr) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 3.1.8 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)\n'}
+[0.897536] (ikalibr) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[0.902482] (-) TimerEvent: {}
+[0.929256] (ikalibr) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[1.002556] (-) TimerEvent: {}
+[1.004487] (ikalibr) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)\n'}
+[1.014580] (ikalibr) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)\n'}
+[1.102693] (-) TimerEvent: {}
+[1.202967] (-) TimerEvent: {}
+[1.207756] (ikalibr) StdoutLine: {'line': b'-- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  \n'}
+[1.274332] (ikalibr) StdoutLine: {'line': b'-- Found FastRTPS: /opt/ros/humble/include  \n'}
+[1.303064] (-) TimerEvent: {}
+[1.329218] (ikalibr) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[1.352947] (ikalibr) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD\n'}
+[1.403181] (-) TimerEvent: {}
+[1.440411] (ikalibr) StdoutLine: {'line': b'-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success\n'}
+[1.440672] (ikalibr) StdoutLine: {'line': b'-- Found Threads: TRUE  \n'}
+[1.503505] (-) TimerEvent: {}
+[1.552154] (ikalibr) StdoutLine: {'line': b'-- Found rclpy: 3.3.20 (/opt/ros/humble/share/rclpy/cmake)\n'}
+[1.555163] (ikalibr) StdoutLine: {'line': b'-- Found geometry_msgs: 4.9.1 (/opt/ros/humble/share/geometry_msgs/cmake)\n'}
+[1.588981] (ikalibr) StdoutLine: {'line': b'-- Found sensor_msgs: 4.9.1 (/opt/ros/humble/share/sensor_msgs/cmake)\n'}
+[1.595560] (UniCalib) StdoutLine: {'line': b'-- Performing Test HAS_FLTO\n'}
+[1.607724] (-) TimerEvent: {}
+[1.612191] (ikalibr) StdoutLine: {'line': b'-- Found cv_bridge: 3.2.1 (/opt/ros/humble/share/cv_bridge/cmake)\n'}
+[1.646409] (ikalibr) StdoutLine: {'line': b'-- Found CUDA: /usr/local/cuda (found suitable exact version "11.8") \n'}
+[1.725016] (-) TimerEvent: {}
+[1.738675] (ikalibr) StdoutLine: {'line': b'-- Found OpenCV: /usr/local (found version "4.8.0") \n'}
+[1.750501] (ikalibr) StdoutLine: {'line': b'-- Found rosbag2_cpp: 0.15.16 (/opt/ros/humble/share/rosbag2_cpp/cmake)\n'}
+[1.825170] (-) TimerEvent: {}
+[1.881235] (UniCalib) StdoutLine: {'line': b'-- Performing Test HAS_FLTO - Success\n'}
+[1.909649] (ikalibr) StdoutLine: {'line': b"-- Checking for module 'eigen3'\n"}
+[1.919979] (ikalibr) StdoutLine: {'line': b'--   Found eigen3, version 3.4.0\n'}
+[1.925446] (-) TimerEvent: {}
+[1.941363] (ikalibr) StdoutLine: {'line': b'-- Found Eigen: /usr/include/eigen3 (Required is at least version "3.1") \n'}
+[1.941572] (ikalibr) StdoutLine: {'line': b'-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)\n'}
+[1.943278] (unicalib) StdoutLine: {'line': b'Obtaining file:///root/calib_ws/build/unicalib\n'}
+[1.944722] (unicalib) StdoutLine: {'line': b'  Installing build dependencies: started\n'}
+[1.972514] (ikalibr) StdoutLine: {'line': b'-- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found suitable version "1.74.0", minimum required is "1.65.0") found components: system filesystem date_time iostreams serialization \n'}
+[1.992799] (ikalibr) StdoutLine: {'line': b"-- Checking for module 'flann'\n"}
+[2.004467] (ikalibr) StdoutLine: {'line': b'--   Found flann, version 1.9.1\n'}
+[2.025574] (-) TimerEvent: {}
+[2.044405] (ikalibr) StdoutLine: {'line': b'-- Found FLANN: /usr/lib/x86_64-linux-gnu/libflann_cpp.so  \n'}
+[2.044627] (ikalibr) StdoutLine: {'line': b'-- FLANN found (include: /usr/include, lib: /usr/lib/x86_64-linux-gnu/libflann_cpp.so)\n'}
+[2.098283] (ikalibr) StdoutLine: {'line': b'-- Found GLEW: /usr/lib/x86_64-linux-gnu/libGLEW.so  \n'}
+[2.110317] (ikalibr) StdoutLine: {'line': b'-- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so  found components: OpenGL GLX \n'}
+[2.125703] (-) TimerEvent: {}
+[2.132655] (UniCalib) StdoutLine: {'line': b"-- Selected Python: '/usr/bin/python3.10'. cmake --build . -t pypangolin_pip_install to use pypangolin module.\n"}
+[2.135395] (UniCalib) StdoutLine: {'line': b'-- libdc1394 Found and Enabled\n'}
+[2.139203] (UniCalib) StdoutLine: {'line': b'-- V4L Found and Enabled\n'}
+[2.141527] (UniCalib) StdoutLine: {'line': b'-- Performing Test HAVE_FFMPEG_MAX_ANALYZE_DURATION\n'}
+[2.214257] (unicalib_cpp) StderrLine: {'line': b'/root/calib_ws/unicalib_C_plus_plus/src/interactive_report.cpp: In constructor \xe2\x80\x98unicalib::InteractiveReportGenerator::InteractiveReportGenerator(const string&)\xe2\x80\x99:\n'}
+[2.214557] (unicalib_cpp) StderrLine: {'line': b'/root/calib_ws/unicalib_C_plus_plus/src/interactive_report.cpp:20:9: warning: ignoring return value of \xe2\x80\x98int system(const char*)\xe2\x80\x99 declared with attribute \xe2\x80\x98warn_unused_result\xe2\x80\x99 [-Wunused-result]\n'}
+[2.214627] (unicalib_cpp) StderrLine: {'line': b'   20 |   system(mkdir_cmd.c_str());\n'}
+[2.214683] (unicalib_cpp) StderrLine: {'line': b'      |   ~~~~~~^~~~~~~~~~~~~~~~~~~\n'}
+[2.225815] (-) TimerEvent: {}
+[2.326131] (-) TimerEvent: {}
+[2.339374] (ikalibr) StdoutLine: {'line': b'-- Found MPI_C: /usr/lib/x86_64-linux-gnu/libmpi.so (found version "3.1") \n'}
+[2.351019] (ikalibr) StdoutLine: {'line': b'-- Found MPI: TRUE (found version "3.1") found components: C \n'}
+[2.355517] (ikalibr) StdoutLine: {'line': b'-- Found JsonCpp: /usr/lib/x86_64-linux-gnu/libjsoncpp.so (found suitable version "1.9.5", minimum required is "0.7.0") \n'}
+[2.372270] (ikalibr) StdoutLine: {'line': b'-- Found ZLIB: /usr/lib/x86_64-linux-gnu/libz.so (found version "1.2.11") \n'}
+[2.380769] (UniCalib) StdoutLine: {'line': b'-- Performing Test HAVE_FFMPEG_MAX_ANALYZE_DURATION - Success\n'}
+[2.382203] (UniCalib) StdoutLine: {'line': b'-- Performing Test HAVE_FFMPEG_AVFORMAT_ALLOC_OUTPUT_CONTEXT2\n'}
+[2.395246] (ikalibr) StdoutLine: {'line': b'-- Found PNG: /usr/lib/x86_64-linux-gnu/libpng.so (found version "1.6.37") \n'}
+[2.427203] (-) TimerEvent: {}
+[2.431051] (ikalibr) StdoutLine: {'line': b'-- Found Eigen3: /usr/include/eigen3 (found version "3.4.0") \n'}
+[2.527318] (-) TimerEvent: {}
+[2.539706] (ikalibr) StdoutLine: {'line': b'-- Found X11: /usr/include   \n'}
+[2.541535] (ikalibr) StdoutLine: {'line': b'-- Looking for XOpenDisplay in /usr/lib/x86_64-linux-gnu/libX11.so;/usr/lib/x86_64-linux-gnu/libXext.so\n'}
+[2.624212] (UniCalib) StdoutLine: {'line': b'-- Performing Test HAVE_FFMPEG_AVFORMAT_ALLOC_OUTPUT_CONTEXT2 - Success\n'}
+[2.624452] (UniCalib) StdoutLine: {'line': b'-- Performing Test HAVE_FFMPEG_AVPIXELFORMAT\n'}
+[2.627433] (-) TimerEvent: {}
+[2.647857] (ikalibr) StdoutLine: {'line': b'-- Looking for XOpenDisplay in /usr/lib/x86_64-linux-gnu/libX11.so;/usr/lib/x86_64-linux-gnu/libXext.so - found\n'}
+[2.648188] (ikalibr) StdoutLine: {'line': b'-- Looking for gethostbyname\n'}
+[2.694540] (UniCalib) StdoutLine: {'line': b'-- Performing Test HAVE_FFMPEG_AVPIXELFORMAT - Success\n'}
+[2.697868] (UniCalib) StdoutLine: {'line': b'-- ffmpeg Found and Enabled: /usr/include/x86_64-linux-gnu;/usr/include/x86_64-linux-gnu;/usr/include/x86_64-linux-gnu;/usr/include/x86_64-linux-gnu;/usr/include/x86_64-linux-gnu\n'}
+[2.701792] (ikalibr) StdoutLine: {'line': b'-- Looking for gethostbyname - found\n'}
+[2.701956] (ikalibr) StdoutLine: {'line': b'-- Looking for connect\n'}
+[2.702026] (UniCalib) StdoutLine: {'line': b'-- Found PkgConfig: /usr/bin/pkg-config (found version "0.29.2") \n'}
+[2.728236] (-) TimerEvent: {}
+[2.767282] (UniCalib) StdoutLine: {'line': b'-- OpenNI Found and Enabled\n'}
+[2.768606] (ikalibr) StdoutLine: {'line': b'-- Looking for connect - found\n'}
+[2.768779] (ikalibr) StdoutLine: {'line': b'-- Looking for remove\n'}
+[2.782157] (UniCalib) StdoutLine: {'line': b'-- OpenNI2 Found and Enabled\n'}
+[2.824539] (ikalibr) StdoutLine: {'line': b'-- Looking for remove - found\n'}
+[2.824745] (ikalibr) StdoutLine: {'line': b'-- Looking for shmat\n'}
+[2.828419] (-) TimerEvent: {}
+[2.875703] (ikalibr) StdoutLine: {'line': b'-- Looking for shmat - found\n'}
+[2.876007] (ikalibr) StdoutLine: {'line': b'-- Looking for IceConnectionNumber in ICE\n'}
+[2.928557] (-) TimerEvent: {}
+[2.960478] (ikalibr) StdoutLine: {'line': b'-- Looking for IceConnectionNumber in ICE - found\n'}
+[3.028667] (-) TimerEvent: {}
+[3.039493] (ikalibr) StdoutLine: {'line': b'-- Found EXPAT: /usr/lib/x86_64-linux-gnu/libexpat.so (found version "2.4.7") \n'}
+[3.041394] (ikalibr) StdoutLine: {'line': b'-- Found double-conversion: /usr/lib/x86_64-linux-gnu/libdouble-conversion.so  \n'}
+[3.043647] (ikalibr) StdoutLine: {'line': b'-- Found LZ4: /usr/lib/x86_64-linux-gnu/liblz4.so (found version "1.9.3") \n'}
+[3.045066] (ikalibr) StdoutLine: {'line': b'-- Found LZMA: /usr/lib/x86_64-linux-gnu/liblzma.so (found version "5.2.5") \n'}
+[3.084209] (ikalibr) StdoutLine: {'line': b'-- Found JPEG: /usr/lib/x86_64-linux-gnu/libjpeg.so (found version "80") \n'}
+[3.091144] (ikalibr) StdoutLine: {'line': b'-- Found TIFF: /usr/lib/x86_64-linux-gnu/libtiff.so (found version "4.3.0")  \n'}
+[3.096237] (ikalibr) StdoutLine: {'line': b'-- Found Freetype: /usr/lib/x86_64-linux-gnu/libfreetype.so (found version "2.11.1") \n'}
+[3.101553] (ikalibr) StdoutLine: {'line': b'-- Found utf8cpp: /usr/include/utf8cpp  \n'}
+[3.131173] (-) TimerEvent: {}
+[3.169572] (ikalibr) StdoutLine: {'line': b"-- Checking for module 'libusb-1.0'\n"}
+[3.180577] (ikalibr) StdoutLine: {'line': b'--   Found libusb-1.0, version 1.0.25\n'}
+[3.204098] (ikalibr) StdoutLine: {'line': b'-- Found libusb: /usr/lib/x86_64-linux-gnu/libusb-1.0.so  \n'}
+[3.205605] (ikalibr) StdoutLine: {'line': b'-- Found OpenNI: /usr/lib/libOpenNI.so;libusb::libusb (found version "1.5.4.0") \n'}
+[3.205678] (ikalibr) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[3.231470] (-) TimerEvent: {}
+[3.232612] (UniCalib) StdoutLine: {'line': b"-- Checking for module 'wayland-egl'\n"}
+[3.240244] (UniCalib) StdoutLine: {'line': b'--   Found wayland-egl, version 18.1.0\n'}
+[3.241609] (ikalibr) StdoutLine: {'line': b'-- Found OpenNI2: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb (found version "2.2.0.33") \n'}
+[3.241960] (ikalibr) StdoutLine: {'line': b'-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)\n'}
+[3.242024] (ikalibr) StderrLine: {'line': b'** WARNING ** io features related to pcap will be disabled\n'}
+[3.264398] (UniCalib) StdoutLine: {'line': b"-- Checking for module 'wayland-cursor'\n"}
+[3.271217] (UniCalib) StdoutLine: {'line': b'--   Found wayland-cursor, version 1.20.0\n'}
+[3.291879] (UniCalib) StdoutLine: {'line': b"-- Checking for module 'xkbcommon'\n"}
+[3.301858] (UniCalib) StdoutLine: {'line': b'--   Found xkbcommon, version 1.4.0\n'}
+[3.329793] (UniCalib) StdoutLine: {'line': b'-- Pangolin: building from /root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0\n'}
+[3.330058] (UniCalib) StdoutLine: {'line': b'-- Pangolin include paths: /root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_core/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_display/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_windowing/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_vars/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_image/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_plot/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_video/include\n'}
+[3.330139] (UniCalib) StdoutLine: {'line': b'-- basalt-headers: using /root/calib_ws/calib_unified/thirdparty/basalt-headers/include\n'}
+[3.330192] (UniCalib) StdoutLine: {'line': b'-- ctraj: using basalt-headers + ctraj_basalt_compat (replacing ctraj_full)\n'}
+[3.331538] (-) TimerEvent: {}
+[3.334161] (UniCalib) StdoutLine: {'line': b'-- Found Threads: TRUE  \n'}
+[3.352580] (UniCalib) StdoutLine: {'line': b'-- Found CXSparse: /usr/include/suitesparse (found suitable version "3.2.0", minimum required is "3.2.0") \n'}
+[3.398159] (ikalibr) StdoutLine: {'line': b'-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)\n'}
+[3.403894] (ikalibr) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[3.410586] (ikalibr) StdoutLine: {'line': b'-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)\n'}
+[3.432182] (-) TimerEvent: {}
+[3.487340] (unicalib_cpp) StderrLine: {'line': b'/root/calib_ws/unicalib_C_plus_plus/src/visualization_v2.cpp: In constructor \xe2\x80\x98unicalib::VisualizationV2::VisualizationV2(const string&)\xe2\x80\x99:\n'}
+[3.487525] (unicalib_cpp) StderrLine: {'line': b'/root/calib_ws/unicalib_C_plus_plus/src/visualization_v2.cpp:24:9: warning: ignoring return value of \xe2\x80\x98int system(const char*)\xe2\x80\x99 declared with attribute \xe2\x80\x98warn_unused_result\xe2\x80\x99 [-Wunused-result]\n'}
+[3.487565] (unicalib_cpp) StderrLine: {'line': b'   24 |   system(mkdir_cmd.c_str());\n'}
+[3.487622] (unicalib_cpp) StderrLine: {'line': b'      |   ~~~~~~^~~~~~~~~~~~~~~~~~~\n'}
+[3.532315] (-) TimerEvent: {}
+[3.585514] (ikalibr) StdoutLine: {'line': b'-- Found Qhull version 8.0.2\n'}
+[3.632401] (-) TimerEvent: {}
+[3.647743] (UniCalib) StdoutLine: {'line': b'-- Found AMD headers in: /usr/include/suitesparse\n'}
+[3.648630] (UniCalib) StdoutLine: {'line': b'-- Found AMD library: /usr/lib/x86_64-linux-gnu/libamd.so\n'}
+[3.649033] (UniCalib) StdoutLine: {'line': b'-- Found CAMD headers in: /usr/include/suitesparse\n'}
+[3.649773] (UniCalib) StdoutLine: {'line': b'-- Found CAMD library: /usr/lib/x86_64-linux-gnu/libcamd.so\n'}
+[3.650130] (UniCalib) StdoutLine: {'line': b'-- Found CCOLAMD headers in: /usr/include/suitesparse\n'}
+[3.650868] (UniCalib) StdoutLine: {'line': b'-- Found CCOLAMD library: /usr/lib/x86_64-linux-gnu/libccolamd.so\n'}
+[3.651111] (UniCalib) StdoutLine: {'line': b'-- Found CHOLMOD headers in: /usr/include/suitesparse\n'}
+[3.651683] (UniCalib) StdoutLine: {'line': b'-- Found CHOLMOD library: /usr/lib/x86_64-linux-gnu/libcholmod.so\n'}
+[3.652003] (UniCalib) StdoutLine: {'line': b'-- Found COLAMD headers in: /usr/include/suitesparse\n'}
+[3.652542] (UniCalib) StdoutLine: {'line': b'-- Found COLAMD library: /usr/lib/x86_64-linux-gnu/libcolamd.so\n'}
+[3.652823] (UniCalib) StdoutLine: {'line': b'-- Found SPQR headers in: /usr/include/suitesparse\n'}
+[3.653404] (UniCalib) StdoutLine: {'line': b'-- Found SPQR library: /usr/lib/x86_64-linux-gnu/libspqr.so\n'}
+[3.653698] (UniCalib) StdoutLine: {'line': b'-- Found Config headers in: /usr/include/suitesparse\n'}
+[3.654138] (UniCalib) StdoutLine: {'line': b'-- Found Config library: /usr/lib/x86_64-linux-gnu/libsuitesparseconfig.so\n'}
+[3.657890] (UniCalib) StdoutLine: {'line': b'-- Found Intel Thread Building Blocks (TBB) library (2021.5 / ) include location: . Assuming SuiteSparseQR was compiled with TBB.\n'}
+[3.658071] (UniCalib) StdoutLine: {'line': b'-- Looking for shm_open in rt\n'}
+[3.699595] (UniCalib) StdoutLine: {'line': b'-- Looking for shm_open in rt - found\n'}
+[3.699783] (UniCalib) StdoutLine: {'line': b'-- Adding librt to SuiteSparse_config libraries (required on Linux & Unix [not OSX] if SuiteSparse is compiled with timing).\n'}
+[3.704531] (UniCalib) StdoutLine: {'line': b'-- Found METIS: /usr/include (found version "5.1.0") \n'}
+[3.705564] (UniCalib) StdoutLine: {'line': b'-- Found SuiteSparse: /usr/include/suitesparse (found suitable version "5.10.1", minimum required is "5.10.1") found components: AMD CAMD CCOLAMD CHOLMOD COLAMD SPQR Config \n'}
+[3.706208] (UniCalib) StdoutLine: {'line': b'-- Found required Ceres dependency: Eigen version 3.4.0 in /usr/share/eigen3/cmake\n'}
+[3.714513] (UniCalib) StdoutLine: {'line': b'-- Found required Ceres dependency: glog\n'}
+[3.714862] (UniCalib) StdoutLine: {'line': b'-- Found required Ceres dependency: gflags\n'}
+[3.715669] (UniCalib) StdoutLine: {'line': b'-- Found Ceres version: 2.1.0 installed in: /usr/local with components: [EigenSparse, SparseLinearAlgebraLibrary, LAPACK, SuiteSparse, CXSparse, SchurSpecializations, Multithreading]\n'}
+[3.715823] (UniCalib) StdoutLine: {'line': b'-- Ceres: 2.1.0\n'}
+[3.725330] (ikalibr) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[3.733707] (-) TimerEvent: {}
+[3.737458] (UniCalib) StdoutLine: {'line': b'-- Found CUDA: /usr/local/cuda (found suitable exact version "11.8") \n'}
+[3.745307] (UniCalib) StdoutLine: {'line': b'-- Found OpenCV: /usr/local (found suitable version "4.8.0", minimum required is "4") found components: core imgproc calib3d highgui features2d video \n'}
+[3.745459] (UniCalib) StdoutLine: {'line': b'-- OpenCV: 4.8.0\n'}
+[3.759098] (UniCalib) StdoutLine: {'line': b"-- Checking for module 'eigen3'\n"}
+[3.765073] (UniCalib) StdoutLine: {'line': b'--   Found eigen3, version 3.4.0\n'}
+[3.781830] (UniCalib) StdoutLine: {'line': b'-- Found Eigen: /usr/include/eigen3 (Required is at least version "3.1") \n'}
+[3.782001] (UniCalib) StdoutLine: {'line': b'-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)\n'}
+[3.791264] (UniCalib) StdoutLine: {'line': b'-- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found suitable version "1.74.0", minimum required is "1.65.0") found components: system filesystem date_time iostreams serialization \n'}
+[3.822876] (UniCalib) StdoutLine: {'line': b"-- Checking for module 'libusb-1.0'\n"}
+[3.830737] (UniCalib) StdoutLine: {'line': b'--   Found libusb-1.0, version 1.0.25\n'}
+[3.834049] (-) TimerEvent: {}
+[3.845371] (UniCalib) StdoutLine: {'line': b'-- Found libusb: /usr/lib/x86_64-linux-gnu/libusb-1.0.so  \n'}
+[3.846058] (UniCalib) StdoutLine: {'line': b'-- Found OpenNI: /usr/lib/libOpenNI.so;libusb::libusb (found version "1.5.4.0") \n'}
+[3.846160] (UniCalib) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[3.869768] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_COMMON\n'}
+[3.870903] (ikalibr) StdoutLine: {'line': b'-- Found PCL_COMMON: /usr/lib/x86_64-linux-gnu/libpcl_common.so  \n'}
+[3.871184] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_KDTREE\n'}
+[3.871668] (UniCalib) StdoutLine: {'line': b'-- Found OpenNI2: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb (found version "2.2.0.33") \n'}
+[3.871778] (UniCalib) StdoutLine: {'line': b'-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)\n'}
+[3.871859] (UniCalib) StderrLine: {'line': b'** WARNING ** io features related to pcap will be disabled\n'}
+[3.871931] (UniCalib) StderrLine: {'line': b'** WARNING ** io features related to png will be disabled\n'}
+[3.872042] (ikalibr) StdoutLine: {'line': b'-- Found PCL_KDTREE: /usr/lib/x86_64-linux-gnu/libpcl_kdtree.so  \n'}
+[3.872155] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_OCTREE\n'}
+[3.872933] (ikalibr) StdoutLine: {'line': b'-- Found PCL_OCTREE: /usr/lib/x86_64-linux-gnu/libpcl_octree.so  \n'}
+[3.873090] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_SEARCH\n'}
+[3.873893] (ikalibr) StdoutLine: {'line': b'-- Found PCL_SEARCH: /usr/lib/x86_64-linux-gnu/libpcl_search.so  \n'}
+[3.874004] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_SAMPLE_CONSENSUS\n'}
+[3.874803] (ikalibr) StdoutLine: {'line': b'-- Found PCL_SAMPLE_CONSENSUS: /usr/lib/x86_64-linux-gnu/libpcl_sample_consensus.so  \n'}
+[3.874939] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_FILTERS\n'}
+[3.875754] (ikalibr) StdoutLine: {'line': b'-- Found PCL_FILTERS: /usr/lib/x86_64-linux-gnu/libpcl_filters.so  \n'}
+[3.875925] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_2D\n'}
+[3.876154] (ikalibr) StdoutLine: {'line': b'-- Found PCL_2D: /usr/include/pcl-1.12  \n'}
+[3.876323] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_GEOMETRY\n'}
+[3.876541] (ikalibr) StdoutLine: {'line': b'-- Found PCL_GEOMETRY: /usr/include/pcl-1.12  \n'}
+[3.876651] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_IO\n'}
+[3.877509] (ikalibr) StdoutLine: {'line': b'-- Found PCL_IO: /usr/lib/x86_64-linux-gnu/libpcl_io.so  \n'}
+[3.877747] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_FEATURES\n'}
+[3.878582] (ikalibr) StdoutLine: {'line': b'-- Found PCL_FEATURES: /usr/lib/x86_64-linux-gnu/libpcl_features.so  \n'}
+[3.878845] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_ML\n'}
+[3.879646] (ikalibr) StdoutLine: {'line': b'-- Found PCL_ML: /usr/lib/x86_64-linux-gnu/libpcl_ml.so  \n'}
+[3.879825] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_SEGMENTATION\n'}
+[3.880581] (ikalibr) StdoutLine: {'line': b'-- Found PCL_SEGMENTATION: /usr/lib/x86_64-linux-gnu/libpcl_segmentation.so  \n'}
+[3.880826] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_VISUALIZATION\n'}
+[3.881650] (ikalibr) StdoutLine: {'line': b'-- Found PCL_VISUALIZATION: /usr/lib/x86_64-linux-gnu/libpcl_visualization.so  \n'}
+[3.881898] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_SURFACE\n'}
+[3.882750] (ikalibr) StdoutLine: {'line': b'-- Found PCL_SURFACE: /usr/lib/x86_64-linux-gnu/libpcl_surface.so  \n'}
+[3.882973] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_REGISTRATION\n'}
+[3.883751] (ikalibr) StdoutLine: {'line': b'-- Found PCL_REGISTRATION: /usr/lib/x86_64-linux-gnu/libpcl_registration.so  \n'}
+[3.883961] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_KEYPOINTS\n'}
+[3.884782] (ikalibr) StdoutLine: {'line': b'-- Found PCL_KEYPOINTS: /usr/lib/x86_64-linux-gnu/libpcl_keypoints.so  \n'}
+[3.884998] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_TRACKING\n'}
+[3.885873] (ikalibr) StdoutLine: {'line': b'-- Found PCL_TRACKING: /usr/lib/x86_64-linux-gnu/libpcl_tracking.so  \n'}
+[3.886055] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_RECOGNITION\n'}
+[3.886951] (ikalibr) StdoutLine: {'line': b'-- Found PCL_RECOGNITION: /usr/lib/x86_64-linux-gnu/libpcl_recognition.so  \n'}
+[3.887260] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_STEREO\n'}
+[3.888100] (ikalibr) StdoutLine: {'line': b'-- Found PCL_STEREO: /usr/lib/x86_64-linux-gnu/libpcl_stereo.so  \n'}
+[3.888230] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_APPS\n'}
+[3.889117] (ikalibr) StdoutLine: {'line': b'-- Found PCL_APPS: /usr/lib/x86_64-linux-gnu/libpcl_apps.so  \n'}
+[3.889797] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_IN_HAND_SCANNER\n'}
+[3.890147] (ikalibr) StdoutLine: {'line': b'-- Found PCL_IN_HAND_SCANNER: /usr/include/pcl-1.12  \n'}
+[3.890331] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_MODELER\n'}
+[3.890704] (ikalibr) StdoutLine: {'line': b'-- Found PCL_MODELER: /usr/include/pcl-1.12  \n'}
+[3.890805] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_POINT_CLOUD_EDITOR\n'}
+[3.892207] (ikalibr) StdoutLine: {'line': b'-- Found PCL_POINT_CLOUD_EDITOR: /usr/include/pcl-1.12  \n'}
+[3.892266] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_OUTOFCORE\n'}
+[3.893031] (ikalibr) StdoutLine: {'line': b'-- Found PCL_OUTOFCORE: /usr/lib/x86_64-linux-gnu/libpcl_outofcore.so  \n'}
+[3.893332] (ikalibr) StdoutLine: {'line': b'-- looking for PCL_PEOPLE\n'}
+[3.894293] (ikalibr) StdoutLine: {'line': b'-- Found PCL_PEOPLE: /usr/lib/x86_64-linux-gnu/libpcl_people.so  \n'}
+[3.895114] (ikalibr) StdoutLine: {'line': b'-- Found PCL: pcl_common;pcl_kdtree;pcl_octree;pcl_search;pcl_sample_consensus;pcl_filters;pcl_io;pcl_features;pcl_ml;pcl_segmentation;pcl_visualization;pcl_surface;pcl_registration;pcl_keypoints;pcl_tracking;pcl_recognition;pcl_stereo;pcl_apps;pcl_outofcore;pcl_people;Boost::system;Boost::filesystem;Boost::date_time;Boost::iostreams;Boost::serialization;/usr/lib/libOpenNI.so;libusb::libusb;/usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb;VTK::ChartsCore;VTK::CommonColor;VTK::CommonComputationalGeometry;VTK::CommonCore;VTK::CommonDataModel;VTK::CommonExecutionModel;VTK::CommonMath;VTK::CommonMisc;VTK::CommonTransforms;VTK::FiltersCore;VTK::FiltersExtraction;VTK::FiltersGeneral;VTK::FiltersGeometry;VTK::FiltersModeling;VTK::FiltersSources;VTK::ImagingCore;VTK::ImagingSources;VTK::InteractionImage;VTK::InteractionStyle;VTK::InteractionWidgets;VTK::IOCore;VTK::IOGeometry;VTK::IOImage;VTK::IOLegacy;VTK::IOPLY;VTK::RenderingAnnotation;VTK::RenderingCore;VTK::RenderingContext2D;VTK::RenderingLOD;VTK::RenderingFreeType;VTK::ViewsCore;VTK::ViewsContext2D;VTK::RenderingOpenGL2;VTK::GUISupportQt;FLANN::FLANN;QHULL::QHULL  \n'}
+[3.897054] (ikalibr) StdoutLine: {'line': b'-- Found pcl_conversions: 2.4.5 (/opt/ros/humble/share/pcl_conversions/cmake)\n'}
+[3.897972] (UniCalib) StdoutLine: {'line': b'-- Found GLEW: /usr/lib/x86_64-linux-gnu/libGLEW.so  \n'}
+[3.900621] (UniCalib) StdoutLine: {'line': b'-- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so  found components: OpenGL GLX \n'}
+[3.927828] (ikalibr) StdoutLine: {'line': b'-- Trying to find third-party libraries...\n'}
+[3.927952] (ikalibr) StdoutLine: {'line': b'--   Found basalt-headers at /root/calib_ws/iKalibr/thirdparty/basalt-headers/include\n'}
+[3.927977] (ikalibr) StdoutLine: {'line': b'--   Using ctraj-compat (basalt-headers backend) at /root/calib_ws/iKalibr/thirdparty/ctraj_basalt_compat/include\n'}
+[3.927999] (ikalibr) StdoutLine: {'line': b'--   Using cereal from thirdparty/cereal/include\n'}
+[3.934169] (-) TimerEvent: {}
+[3.935204] (ikalibr) StdoutLine: {'line': b'--   Found Sophus (cmake)\n'}
+[3.942067] (ikalibr) StdoutLine: {'line': b'--   Found aslam_cv2 at /root/calib_ws/iKalibr/thirdparty/aslam_cv2 (distortion math inlined in veta-stub)\n'}
+[3.947793] (ikalibr) StdoutLine: {'line': b'--   Using veta-stub (aslam_cv2 math backend)\n'}
+[3.948634] (ikalibr) StdoutLine: {'line': b'--   Found ufomap (surfel)\n'}
+[3.948673] (ikalibr) StdoutLine: {'line': b'--   Found opengv\n'}
+[3.980727] (UniCalib) StdoutLine: {'line': b'-- Found MPI_C: /usr/lib/x86_64-linux-gnu/libmpi.so (found version "3.1") \n'}
+[3.980890] (UniCalib) StdoutLine: {'line': b'-- Found MPI: TRUE (found version "3.1") found components: C \n'}
+[3.982443] (UniCalib) StdoutLine: {'line': b'-- Found JsonCpp: /usr/lib/x86_64-linux-gnu/libjsoncpp.so (found suitable version "1.9.5", minimum required is "0.7.0") \n'}
+[3.989336] (UniCalib) StdoutLine: {'line': b'-- Found ZLIB: /usr/lib/x86_64-linux-gnu/libz.so (found version "1.2.11") \n'}
+[4.003660] (UniCalib) StdoutLine: {'line': b'-- Found PNG: /usr/lib/x86_64-linux-gnu/libpng.so (found version "1.6.37") \n'}
+[4.012090] (UniCalib) StdoutLine: {'line': b'-- Found Eigen3: /usr/include/eigen3 (found version "3.4.0") \n'}
+[4.033556] (UniCalib) StdoutLine: {'line': b'-- Found X11: /usr/include   \n'}
+[4.034220] (-) TimerEvent: {}
+[4.088728] (ikalibr) StdoutLine: {'line': b'-- Found OpenMP_C: -fopenmp (found version "4.5") \n'}
+[4.091456] (UniCalib) StdoutLine: {'line': b'-- Found EXPAT: /usr/lib/x86_64-linux-gnu/libexpat.so (found version "2.4.7") \n'}
+[4.093240] (UniCalib) StdoutLine: {'line': b'-- Found double-conversion: /usr/lib/x86_64-linux-gnu/libdouble-conversion.so  \n'}
+[4.095635] (UniCalib) StdoutLine: {'line': b'-- Found LZ4: /usr/lib/x86_64-linux-gnu/liblz4.so (found version "1.9.3") \n'}
+[4.096594] (UniCalib) StdoutLine: {'line': b'-- Found LZMA: /usr/lib/x86_64-linux-gnu/liblzma.so (found version "5.2.5") \n'}
+[4.104807] (UniCalib) StdoutLine: {'line': b'-- Found JPEG: /usr/lib/x86_64-linux-gnu/libjpeg.so (found version "80") \n'}
+[4.108354] (UniCalib) StdoutLine: {'line': b'-- Found TIFF: /usr/lib/x86_64-linux-gnu/libtiff.so (found version "4.3.0")  \n'}
+[4.113748] (UniCalib) StdoutLine: {'line': b'-- Found Freetype: /usr/lib/x86_64-linux-gnu/libfreetype.so (found version "2.11.1") \n'}
+[4.117230] (UniCalib) StdoutLine: {'line': b'-- Found utf8cpp: /usr/include/utf8cpp  \n'}
+[4.134330] (-) TimerEvent: {}
+[4.142005] (UniCalib) StdoutLine: {'line': b'-- Eigen found (include: /usr/include/eigen3, version: 3.4.0)\n'}
+[4.149119] (ikalibr) StdoutLine: {'line': b'-- Found OpenMP_CXX: -fopenmp (found version "4.5") \n'}
+[4.149437] (ikalibr) StdoutLine: {'line': b'-- Found OpenMP: TRUE (found version "4.5")  \n'}
+[4.159943] (UniCalib) StdoutLine: {'line': b"-- Checking for module 'flann'\n"}
+[4.167450] (UniCalib) StdoutLine: {'line': b'--   Found flann, version 1.9.1\n'}
+[4.184237] (ikalibr) StdoutLine: {'line': b'-- Found ament_lint_auto: 0.12.15 (/opt/ros/humble/share/ament_lint_auto/cmake)\n'}
+[4.192927] (UniCalib) StdoutLine: {'line': b'-- Found FLANN: /usr/lib/x86_64-linux-gnu/libflann_cpp.so  \n'}
+[4.193066] (UniCalib) StdoutLine: {'line': b'-- FLANN found (include: /usr/include, lib: /usr/lib/x86_64-linux-gnu/libflann_cpp.so)\n'}
+[4.234442] (-) TimerEvent: {}
+[4.334635] (-) TimerEvent: {}
+[4.434809] (-) TimerEvent: {}
+[4.442735] (ikalibr) StdoutLine: {'line': b'-- Found ament_cmake_ros: 0.10.0 (/opt/ros/humble/share/ament_cmake_ros/cmake)\n'}
+[4.464984] (UniCalib) StdoutLine: {'line': b'-- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)\n'}
+[4.470706] (UniCalib) StdoutLine: {'line': b'-- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)\n'}
+[4.534900] (-) TimerEvent: {}
+[4.601343] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_COMMON\n'}
+[4.601495] (UniCalib) StdoutLine: {'line': b'-- Found PCL_COMMON: /usr/lib/x86_64-linux-gnu/libpcl_common.so  \n'}
+[4.601540] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_OCTREE\n'}
+[4.602214] (UniCalib) StdoutLine: {'line': b'-- Found PCL_OCTREE: /usr/lib/x86_64-linux-gnu/libpcl_octree.so  \n'}
+[4.602353] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_IO\n'}
+[4.603127] (UniCalib) StdoutLine: {'line': b'-- Found PCL_IO: /usr/lib/x86_64-linux-gnu/libpcl_io.so  \n'}
+[4.603365] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_SAMPLE_CONSENSUS\n'}
+[4.604184] (UniCalib) StdoutLine: {'line': b'-- Found PCL_SAMPLE_CONSENSUS: /usr/lib/x86_64-linux-gnu/libpcl_sample_consensus.so  \n'}
+[4.604394] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_FILTERS\n'}
+[4.605255] (UniCalib) StdoutLine: {'line': b'-- Found PCL_FILTERS: /usr/lib/x86_64-linux-gnu/libpcl_filters.so  \n'}
+[4.605411] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_KDTREE\n'}
+[4.606196] (UniCalib) StdoutLine: {'line': b'-- Found PCL_KDTREE: /usr/lib/x86_64-linux-gnu/libpcl_kdtree.so  \n'}
+[4.606314] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_SEARCH\n'}
+[4.607092] (UniCalib) StdoutLine: {'line': b'-- Found PCL_SEARCH: /usr/lib/x86_64-linux-gnu/libpcl_search.so  \n'}
+[4.607248] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_GEOMETRY\n'}
+[4.607465] (UniCalib) StdoutLine: {'line': b'-- Found PCL_GEOMETRY: /usr/include/pcl-1.12  \n'}
+[4.607584] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_ML\n'}
+[4.608350] (UniCalib) StdoutLine: {'line': b'-- Found PCL_ML: /usr/lib/x86_64-linux-gnu/libpcl_ml.so  \n'}
+[4.608482] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_SEGMENTATION\n'}
+[4.609287] (UniCalib) StdoutLine: {'line': b'-- Found PCL_SEGMENTATION: /usr/lib/x86_64-linux-gnu/libpcl_segmentation.so  \n'}
+[4.609474] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_REGISTRATION\n'}
+[4.610287] (UniCalib) StdoutLine: {'line': b'-- Found PCL_REGISTRATION: /usr/lib/x86_64-linux-gnu/libpcl_registration.so  \n'}
+[4.610469] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_2D\n'}
+[4.610694] (UniCalib) StdoutLine: {'line': b'-- Found PCL_2D: /usr/include/pcl-1.12  \n'}
+[4.610866] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_FEATURES\n'}
+[4.611657] (UniCalib) StdoutLine: {'line': b'-- Found PCL_FEATURES: /usr/lib/x86_64-linux-gnu/libpcl_features.so  \n'}
+[4.611885] (UniCalib) StdoutLine: {'line': b'-- looking for PCL_VISUALIZATION\n'}
+[4.612675] (UniCalib) StdoutLine: {'line': b'-- Found PCL_VISUALIZATION: /usr/lib/x86_64-linux-gnu/libpcl_visualization.so  \n'}
+[4.613298] (UniCalib) StdoutLine: {'line': b'-- Found PCL: pcl_common;pcl_octree;pcl_io;pcl_sample_consensus;pcl_filters;pcl_kdtree;pcl_search;pcl_ml;pcl_segmentation;pcl_registration;pcl_features;pcl_visualization;Boost::system;Boost::filesystem;Boost::date_time;Boost::iostreams;Boost::serialization;/usr/lib/libOpenNI.so;libusb::libusb;/usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb;VTK::ChartsCore;VTK::CommonColor;VTK::CommonComputationalGeometry;VTK::CommonCore;VTK::CommonDataModel;VTK::CommonExecutionModel;VTK::CommonMath;VTK::CommonMisc;VTK::CommonTransforms;VTK::FiltersCore;VTK::FiltersExtraction;VTK::FiltersGeneral;VTK::FiltersGeometry;VTK::FiltersModeling;VTK::FiltersSources;VTK::ImagingCore;VTK::ImagingSources;VTK::InteractionImage;VTK::InteractionStyle;VTK::InteractionWidgets;VTK::IOCore;VTK::IOGeometry;VTK::IOImage;VTK::IOLegacy;VTK::IOPLY;VTK::RenderingAnnotation;VTK::RenderingCore;VTK::RenderingContext2D;VTK::RenderingLOD;VTK::RenderingFreeType;VTK::ViewsCore;VTK::ViewsContext2D;VTK::RenderingOpenGL2;VTK::GUISupportQt;FLANN::FLANN  \n'}
+[4.613497] (UniCalib) StdoutLine: {'line': b'-- PCL: 1.12.1\n'}
+[4.621416] (UniCalib) StdoutLine: {'line': b'-- spdlog: 1.9.2\n'}
+[4.621679] (UniCalib) StdoutLine: {'line': b'-- fmt: 8.1.1\n'}
+[4.624590] (UniCalib) StdoutLine: {'line': b'-- yaml-cpp: 0.7.0\n'}
+[4.635002] (-) TimerEvent: {}
+[4.717866] (ikalibr) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[4.735122] (-) TimerEvent: {}
+[4.768661] (UniCalib) StdoutLine: {'line': b'-- Found OpenMP_C: -fopenmp (found version "4.5") \n'}
+[4.815264] (ikalibr) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[4.817342] (UniCalib) StdoutLine: {'line': b'-- Found OpenMP_CXX: -fopenmp (found version "4.5") \n'}
+[4.817606] (UniCalib) StdoutLine: {'line': b'-- Found OpenMP: TRUE (found version "4.5")  \n'}
+[4.817781] (UniCalib) StdoutLine: {'line': b'-- OpenMP: found, version 4.5\n'}
+[4.830782] (ikalibr) StdoutLine: {'line': b'-- Configuring done\n'}
+[4.835184] (-) TimerEvent: {}
+[4.935289] (-) TimerEvent: {}
+[5.017719] (ikalibr) StderrLine: {'line': b'CMake Error in thirdparty/veta-stub/CMakeLists.txt:\n'}
+[5.017819] (ikalibr) StderrLine: {'line': b'  Target "veta" INTERFACE_INCLUDE_DIRECTORIES property contains path:\n'}
+[5.017845] (ikalibr) StderrLine: {'line': b'\n'}
+[5.017865] (ikalibr) StderrLine: {'line': b'    "/root/calib_ws/iKalibr/thirdparty/veta-stub/../cereal/include"\n'}
+[5.017885] (ikalibr) StderrLine: {'line': b'\n'}
+[5.017906] (ikalibr) StderrLine: {'line': b'  which is prefixed in the source directory.\n'}
+[5.017926] (ikalibr) StderrLine: {'line': b'\n'}
+[5.017946] (ikalibr) StderrLine: {'line': b'\n'}
+[5.018178] (ikalibr) StdoutLine: {'line': b'-- Generating done\n'}
+[5.019812] (ikalibr) StderrLine: {'line': b'CMake Warning:\n'}
+[5.019845] (ikalibr) StderrLine: {'line': b'  Manually-specified variables were not used by the project:\n'}
+[5.019867] (ikalibr) StderrLine: {'line': b'\n'}
+[5.019887] (ikalibr) StderrLine: {'line': b'    USE_VETA_STUB\n'}
+[5.019907] (ikalibr) StderrLine: {'line': b'    glm_DIR\n'}
+[5.019927] (ikalibr) StderrLine: {'line': b'\n'}
+[5.019948] (ikalibr) StderrLine: {'line': b'\n'}
+[5.019967] (ikalibr) StderrLine: {'line': b'CMake Generate step failed.  Build files cannot be regenerated correctly.\n'}
+[5.035379] (-) TimerEvent: {}
+[5.038700] (ikalibr) CommandEnded: {'returncode': 1}
+[5.053685] (ikalibr) JobEnded: {'identifier': 'ikalibr', 'rc': 1}
+[5.068943] (UniCalib) StdoutLine: {'line': b'-- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter \n'}
+[5.135476] (-) TimerEvent: {}
+[5.202562] (UniCalib) StdoutLine: {'line': b'-- Found rosidl_generator_c: 3.1.8 (/opt/ros/humble/share/rosidl_generator_c/cmake)\n'}
+[5.208852] (UniCalib) StdoutLine: {'line': b'-- Found rosidl_adapter: 3.1.8 (/opt/ros/humble/share/rosidl_adapter/cmake)\n'}
+[5.219082] (UniCalib) StdoutLine: {'line': b'-- Found rosidl_generator_cpp: 3.1.8 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)\n'}
+[5.233696] (UniCalib) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c\n'}
+[5.235532] (-) TimerEvent: {}
+[5.251725] (UniCalib) StdoutLine: {'line': b'-- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp\n'}
+[5.303561] (UniCalib) StdoutLine: {'line': b'-- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)\n'}
+[5.306303] (UniCalib) StdoutLine: {'line': b'-- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)\n'}
+[5.335647] (-) TimerEvent: {}
+[5.383231] (UniCalib) StdoutLine: {'line': b'-- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  \n'}
+[5.410757] (UniCalib) StdoutLine: {'line': b'-- Found FastRTPS: /opt/ros/humble/include  \n'}
+[5.435742] (-) TimerEvent: {}
+[5.455257] (UniCalib) StdoutLine: {'line': b"-- Using RMW implementation 'rmw_fastrtps_cpp' as default\n"}
+[5.535866] (-) TimerEvent: {}
+[5.547075] (UniCalib) StdoutLine: {'line': b'-- ROS2: found rclcpp, enabling full ROS2 integration\n'}
+[5.547669] (UniCalib) StdoutLine: {'line': b'-- ufomap: found new API (surfel_map) at /root/calib_ws/iKalibr/thirdparty-install/ufomap-install/include\n'}
+[5.547844] (UniCalib) StdoutLine: {'line': b'-- opengv: found prebuilt via cmake config\n'}
+[5.547895] (UniCalib) StdoutLine: {'line': b'-- Python bridge: enabled (DM-Calib/MIAS-LCEC/Transformer-IMU/L2Calib)\n'}
+[5.547942] (UniCalib) StdoutLine: {'line': b'-- iKalibr: checking dependencies...\n'}
+[5.547998] (UniCalib) StdoutLine: {'line': b'-- iKalibr: dependencies \xe2\x9c\x93 (Ceres, Sophus, Eigen3)\n'}
+[5.548046] (UniCalib) StdoutLine: {'line': b'-- Visualization: \xe2\x9c\x93 Pangolin 3D backend (interactive OpenGL)\n'}
+[5.548093] (UniCalib) StdoutLine: {'line': b'-- iKalibr: \xe2\x9c\x93 Enabled (B-spline solver via basalt-headers)\n'}
+[5.548148] (UniCalib) StdoutLine: {'line': b'--   \xe2\x80\xa2 Spline backend: basalt-headers\n'}
+[5.548251] (UniCalib) StdoutLine: {'line': b'--   \xe2\x80\xa2 Visualization backend: PANGOLIN\n'}
+[5.548302] (UniCalib) StdoutLine: {'line': b'-- unicalib: \xe2\x9c\x93 Library configured (PANGOLIN backend)\n'}
+[5.548551] (UniCalib) StdoutLine: {'line': b'-- lz4 library: /usr/lib/x86_64-linux-gnu/liblz4.so\n'}
+[5.550438] (UniCalib) StdoutLine: {'line': b'-- \n'}
+[5.550501] (UniCalib) StdoutLine: {'line': b'-- ========= UniCalib v2.0.0 \xe6\x9e\x84\xe5\xbb\xba\xe9\x85\x8d\xe7\xbd\xae =========\n'}
+[5.550536] (UniCalib) StdoutLine: {'line': b'--   Build type:    Release\n'}
+[5.550565] (UniCalib) StdoutLine: {'line': b'--   C++ standard:  17\n'}
+[5.550600] (UniCalib) StdoutLine: {'line': b'--   Eigen3:        3.4.0\n'}
+[5.550629] (UniCalib) StdoutLine: {'line': b'--   OpenCV:        4.5.4\n'}
+[5.550657] (UniCalib) StdoutLine: {'line': b'--   PCL:           1.12.1\n'}
+[5.550684] (UniCalib) StdoutLine: {'line': b'--   Ceres:         2.1.0\n'}
+[5.550711] (UniCalib) StdoutLine: {'line': b'--   spdlog:        1.9.2\n'}
+[5.550738] (UniCalib) StdoutLine: {'line': b'--   fmt:           8.1.1\n'}
+[5.550766] (UniCalib) StdoutLine: {'line': b'--   OpenMP:        TRUE\n'}
+[5.550792] (UniCalib) StdoutLine: {'line': b'--   opengv:        bundled headers ()\n'}
+[5.550818] (UniCalib) StdoutLine: {'line': b'--   ufomap:        1\n'}
+[5.550845] (UniCalib) StdoutLine: {'line': b'--   veta:          self-contained (veta-impl)\n'}
+[5.550871] (UniCalib) StdoutLine: {'line': b'--   Pangolin:      ON\n'}
+[5.550898] (UniCalib) StdoutLine: {'line': b'--   ROS2:          ON\n'}
+[5.550925] (UniCalib) StdoutLine: {'line': b'--   Build apps:    ON\n'}
+[5.550951] (UniCalib) StdoutLine: {'line': b'--   PCL viz:       ON\n'}
+[5.550977] (UniCalib) StdoutLine: {'line': b'-- =======================================================\n'}
+[5.551003] (UniCalib) StdoutLine: {'line': b'-- Configuring done\n'}
+[5.635967] (-) TimerEvent: {}
+[5.736155] (-) TimerEvent: {}
+[5.739507] (UniCalib) StdoutLine: {'line': b'-- Generating done\n'}
+[5.741200] (UniCalib) StderrLine: {'line': b'CMake Warning:\n'}
+[5.741245] (UniCalib) StderrLine: {'line': b'  Manually-specified variables were not used by the project:\n'}
+[5.741279] (UniCalib) StderrLine: {'line': b'\n'}
+[5.741311] (UniCalib) StderrLine: {'line': b'    USE_THIRDPARTY_LIBS\n'}
+[5.741341] (UniCalib) StderrLine: {'line': b'    USE_VETA_STUB\n'}
+[5.741368] (UniCalib) StderrLine: {'line': b'    glm_DIR\n'}
+[5.741395] (UniCalib) StderrLine: {'line': b'\n'}
+[5.741422] (UniCalib) StderrLine: {'line': b'\n'}
+[5.770507] (UniCalib) StdoutLine: {'line': b'-- Build files have been written to: /root/calib_ws/build/UniCalib\n'}
+[5.784442] (UniCalib) JobEnded: {'identifier': 'UniCalib', 'rc': 'SIGINT'}
+[5.836251] (-) TimerEvent: {}
+[5.936416] (-) TimerEvent: {}
+[5.939923] (unicalib_cpp) StdoutLine: {'line': b'[ 77%] Linking CXX static library libunicalib_cpp.a\n'}
+[5.963477] (unicalib_cpp) StdoutLine: {'line': b'[ 77%] Built target unicalib_cpp\n'}
+[5.969224] (unicalib_cpp) StdoutLine: {'line': b'[ 80%] Building CXX object CMakeFiles/unicalib_example.dir/examples/example_main.cpp.o\n'}
+[5.969446] (unicalib_cpp) StdoutLine: {'line': b'[ 83%] Building CXX object CMakeFiles/unicalib_viz_example.dir/examples/visualization_example.cpp.o\n'}
+[5.969474] (unicalib_cpp) StdoutLine: {'line': b'[ 88%] Building CXX object CMakeFiles/unicalib_realtime_example.dir/examples/realtime_visualization_example.cpp.o\n'}
+[5.969502] (unicalib_cpp) StdoutLine: {'line': b'[ 88%] Building CXX object CMakeFiles/unicalib_optimization_example.dir/examples/optimization_example.cpp.o\n'}
+[6.036511] (-) TimerEvent: {}
+[6.136706] (-) TimerEvent: {}
+[6.237092] (-) TimerEvent: {}
+[6.337290] (-) TimerEvent: {}
+[6.437531] (-) TimerEvent: {}
+[6.537733] (-) TimerEvent: {}
+[6.637914] (-) TimerEvent: {}
+[6.708812] (unicalib_cpp) StdoutLine: {'line': b'[ 91%] Linking CXX executable unicalib_example\n'}
+[6.738128] (-) TimerEvent: {}
+[6.806147] (unicalib_cpp) StdoutLine: {'line': b'[ 91%] Built target unicalib_example\n'}
+[6.838206] (-) TimerEvent: {}
+[6.938403] (-) TimerEvent: {}
+[7.038599] (-) TimerEvent: {}
+[7.138803] (-) TimerEvent: {}
+[7.150354] (unicalib_cpp) StdoutLine: {'line': b'[ 94%] Linking CXX executable unicalib_realtime_example\n'}
+[7.196786] (unicalib_cpp) StdoutLine: {'line': b'[ 94%] Built target unicalib_realtime_example\n'}
+[7.238908] (-) TimerEvent: {}
+[7.339216] (-) TimerEvent: {}
+[7.439428] (-) TimerEvent: {}
+[7.475600] (unicalib_cpp) StdoutLine: {'line': b'[ 97%] Linking CXX executable unicalib_optimization_example\n'}
+[7.519541] (unicalib_cpp) StdoutLine: {'line': b'[ 97%] Built target unicalib_optimization_example\n'}
+[7.539504] (-) TimerEvent: {}
+[7.589866] (unicalib_cpp) StdoutLine: {'line': b'[100%] Linking CXX executable unicalib_viz_example\n'}
+[7.639614] (-) TimerEvent: {}
+[7.652317] (unicalib_cpp) StdoutLine: {'line': b'[100%] Built target unicalib_viz_example\n'}
+[7.655262] (unicalib_cpp) JobEnded: {'identifier': 'unicalib_cpp', 'rc': 'SIGINT'}
+[7.739784] (-) TimerEvent: {}
+[7.840101] (-) TimerEvent: {}
+[7.940361] (-) TimerEvent: {}
+[8.040686] (-) TimerEvent: {}
+[8.140886] (-) TimerEvent: {}
+[8.241099] (-) TimerEvent: {}
+[8.341533] (-) TimerEvent: {}
+[8.441753] (-) TimerEvent: {}
+[8.541988] (-) TimerEvent: {}
+[8.642265] (-) TimerEvent: {}
+[8.742503] (-) TimerEvent: {}
+[8.842722] (-) TimerEvent: {}
+[8.942962] (-) TimerEvent: {}
+[9.043159] (-) TimerEvent: {}
+[9.143337] (-) TimerEvent: {}
+[9.243468] (-) TimerEvent: {}
+[9.343604] (-) TimerEvent: {}
+[9.443746] (-) TimerEvent: {}
+[9.505264] (unicalib) StdoutLine: {'line': b"  Installing build dependencies: finished with status 'done'\n"}
+[9.505756] (unicalib) StdoutLine: {'line': b'  Checking if build backend supports build_editable: started\n'}
+[9.543826] (-) TimerEvent: {}
+[9.643970] (-) TimerEvent: {}
+[9.676887] (unicalib) StdoutLine: {'line': b"  Checking if build backend supports build_editable: finished with status 'done'\n"}
+[9.677564] (unicalib) StdoutLine: {'line': b'  Getting requirements to build editable: started\n'}
+[9.744048] (-) TimerEvent: {}
+[9.796947] (unicalib) StdoutLine: {'line': b"  Getting requirements to build editable: finished with status 'done'\n"}
+[9.797678] (unicalib) StdoutLine: {'line': b'  Preparing editable metadata (pyproject.toml): started\n'}
+[9.844144] (-) TimerEvent: {}
+[9.897947] (unicalib) StdoutLine: {'line': b"  Preparing editable metadata (pyproject.toml): finished with status 'done'\n"}
+[9.899877] (unicalib) StdoutLine: {'line': b'Building wheels for collected packages: unicalib\n'}
+[9.900481] (unicalib) StdoutLine: {'line': b'  Building editable for unicalib (pyproject.toml): started\n'}
+[9.944360] (-) TimerEvent: {}
+[9.995483] (unicalib) StdoutLine: {'line': b"  Building editable for unicalib (pyproject.toml): finished with status 'done'\n"}
+[9.995958] (unicalib) StdoutLine: {'line': b'  Created wheel for unicalib: filename=unicalib-1.0.0-0.editable-py3-none-any.whl size=3239 sha256=1894ee65b31941be13052646f29300c31458df1d955525b3e9da3dd36cb53b7a\n'}
+[9.996059] (unicalib) StdoutLine: {'line': b'  Stored in directory: /tmp/pip-ephem-wheel-cache-ebl4ajoy/wheels/24/ca/58/04566a4f2e7e09df16ae2449b21c9f5b1c1100fe91713ad9ad\n'}
+[9.997376] (unicalib) StdoutLine: {'line': b'Successfully built unicalib\n'}
+[9.997479] (unicalib) StdoutLine: {'line': b'Installing collected packages: unicalib\n'}
+[9.997635] (unicalib) StdoutLine: {'line': b'  Attempting uninstall: unicalib\n'}
+[9.997816] (unicalib) StdoutLine: {'line': b'    Found existing installation: unicalib 1.0.0\n'}
+[9.997983] (unicalib) StderrLine: {'line': b"    WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.\n"}
+[9.998112] (unicalib) StderrLine: {'line': b"    WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.\n"}
+[9.998465] (unicalib) StderrLine: {'line': b"    WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.\n"}
+[9.998938] (unicalib) StderrLine: {'line': b"    WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.\n"}
+[9.999065] (unicalib) StderrLine: {'line': b"    WARNING: Could not access 'pyvenv.cfg' despite a virtual environment being active. Assuming global site-packages is not accessible in this environment.\n"}
+[9.999432] (unicalib) StdoutLine: {'line': b'    Uninstalling unicalib-1.0.0:\n'}
+[9.999782] (unicalib) StdoutLine: {'line': b'      Successfully uninstalled unicalib-1.0.0\n'}
+[10.007417] (unicalib) StdoutLine: {'line': b'Successfully installed unicalib-1.0.0\n'}
+[10.044464] (-) TimerEvent: {}
+[10.144629] (-) TimerEvent: {}
+[10.244818] (-) TimerEvent: {}
+[10.345033] (-) TimerEvent: {}
+[10.445286] (-) TimerEvent: {}
+[10.545546] (-) TimerEvent: {}
+[10.645810] (-) TimerEvent: {}
+[10.746022] (-) TimerEvent: {}
+[10.846289] (-) TimerEvent: {}
+[10.946496] (-) TimerEvent: {}
+[11.046783] (-) TimerEvent: {}
+[11.147004] (-) TimerEvent: {}
+[11.247323] (-) TimerEvent: {}
+[11.347586] (-) TimerEvent: {}
+[11.447767] (-) TimerEvent: {}
+[11.547952] (-) TimerEvent: {}
+[11.648150] (-) TimerEvent: {}
+[11.748340] (-) TimerEvent: {}
+[11.848602] (-) TimerEvent: {}
+[11.948881] (-) TimerEvent: {}
+[12.049160] (-) TimerEvent: {}
+[12.149403] (-) TimerEvent: {}
+[12.249577] (-) TimerEvent: {}
+[12.349754] (-) TimerEvent: {}
+[12.449943] (-) TimerEvent: {}
+[12.550178] (-) TimerEvent: {}
+[12.650456] (-) TimerEvent: {}
+[12.750677] (-) TimerEvent: {}
+[12.850883] (-) TimerEvent: {}
+[12.951087] (-) TimerEvent: {}
+[13.051284] (-) TimerEvent: {}
+[13.151508] (-) TimerEvent: {}
+[13.251708] (-) TimerEvent: {}
+[13.351905] (-) TimerEvent: {}
+[13.452155] (-) TimerEvent: {}
+[13.552394] (-) TimerEvent: {}
+[13.652629] (-) TimerEvent: {}
+[13.752951] (-) TimerEvent: {}
+[13.853280] (-) TimerEvent: {}
+[13.953453] (-) TimerEvent: {}
+[14.053621] (-) TimerEvent: {}
+[14.153783] (-) TimerEvent: {}
+[14.219206] (unicalib) StdoutLine: {'line': b'running symlink_data\n'}
+[14.250601] (unicalib) JobEnded: {'identifier': 'unicalib', 'rc': 'SIGINT'}
+[14.253907] (-) TimerEvent: {}
+[14.261040] (-) EventReactorShutdown: {}

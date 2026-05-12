@@ -1,0 +1,92 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from ikalibr/msg/SbgImuData.msg
+// generated code does not contain a copyright notice
+
+#include "geometry_msgs/msg/Vector3.idl"
+#include "ikalibr/msg/SbgImuStatus.idl"
+#include "std_msgs/msg/Header.idl"
+
+module ikalibr {
+  module msg {
+    @verbatim (language="comment", text=
+      "A copy format from 'https://github.com/SBG-Systems/sbg_ros_driver' (more detail, open link)" "\n"
+      "SBG Ellipse Messages")
+    struct SbgImuData {
+      std_msgs::msg::Header header;
+
+      @verbatim (language="comment", text=
+        "Time since sensor is powered up")
+      @unit (value="us")
+      uint32 time_stamp;
+
+      @verbatim (language="comment", text=
+        "IMU Status")
+      ikalibr::msg::SbgImuStatus imu_status;
+
+      @verbatim (language="comment", text=
+        "Filtered Accelerometer" "\n"
+        "" "\n"
+        "NED convention:" "\n"
+        "  x: X axis of device frame" "\n"
+        "  y: Y axis of device frame" "\n"
+        "  z: Z axis of device frame" "\n"
+        "" "\n"
+        "ENU convention:" "\n"
+        "  x: X axis of device frame" "\n"
+        "  y: -Y axis of device frame" "\n"
+        "  z: -Z axis of device frame")
+      @unit (value="m/s^2")
+      geometry_msgs::msg::Vector3 accel;
+
+      @verbatim (language="comment", text=
+        "Filtered Gyroscope" "\n"
+        "" "\n"
+        "NED convention:" "\n"
+        "  x: X axis of device frame" "\n"
+        "  y: Y axis of device frame" "\n"
+        "  z: Z axis of device frame" "\n"
+        "" "\n"
+        "ENU convention:" "\n"
+        "  x: X axis of device frame" "\n"
+        "  y: -Y axis of device frame" "\n"
+        "  z: -Z axis of device frame")
+      @unit (value="rad/s")
+      geometry_msgs::msg::Vector3 gyro;
+
+      @verbatim (language="comment", text=
+        "Internal Temperature")
+      @unit (value="°C")
+      float temp;
+
+      @verbatim (language="comment", text=
+        "Sculling output" "\n"
+        "" "\n"
+        "NED convention:" "\n"
+        "  x: X axis of device frame" "\n"
+        "  y: Y axis of device frame" "\n"
+        "  z: Z axis of device frame" "\n"
+        "" "\n"
+        "ENU convention:" "\n"
+        "  x: X axis of device frame" "\n"
+        "  y: -Y axis of device frame" "\n"
+        "  z: -Z axis of device frame")
+      @unit (value="m/s2")
+      geometry_msgs::msg::Vector3 delta_vel;
+
+      @verbatim (language="comment", text=
+        "Coning output" "\n"
+        "" "\n"
+        "NED convention:" "\n"
+        "  x: X axis of device frame" "\n"
+        "  y: Y axis of device frame" "\n"
+        "  z: Z axis of device frame" "\n"
+        "" "\n"
+        "ENU convention:" "\n"
+        "  x: X axis of device frame" "\n"
+        "  y: -Y axis of device frame" "\n"
+        "  z: -Z axis of device frame")
+      @unit (value="rad/s")
+      geometry_msgs::msg::Vector3 delta_angle;
+    };
+  };
+};

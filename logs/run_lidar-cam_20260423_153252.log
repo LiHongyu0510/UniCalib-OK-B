@@ -1,0 +1,502 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-23 15:32:52.956] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-23 15:32:52.956] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-23 15:32:52.956] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-23 15:32:52.956] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-23 15:32:52.956] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-23 15:32:52.956] [info] [LiDAR-Camera] [:] AI粗标定: true | 手动校准: true
+[2026-04-23 15:32:52.956] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-23 15:32:52.957] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-23 15:32:52.958] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [数据路径] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]   数据路径来源: 统一格式 (data.lidar.<id> / data.camera.<id>.images_dir)
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]   配置原始值 — lidar:  nya_02_slam_imu_to_lidar/lidar_horz.yaml
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]   配置原始值 — camera: lidar_camera_calibration-master/calibration_data/camera_calibration
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]   base_data_dir:  /root/calib_ws/data
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]   base 来源: 命令行 --data-dir
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]   lidar_dir:      /root/calib_ws/data/nya_02_slam_imu_to_lidar/lidar_horz.yaml
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]   camera_dir:     /root/calib_ws/data/lidar_camera_calibration-master/calibration_data/camera_calibration
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]   【数据就绪】是 — 点云与图像目录均存在，将执行精标定
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:]   说明: 使用 --dataset 时请将 data.lidar/data.camera 设为相对 base 的路径（如 pcd、images），不要使用 /path/to/... 占位符
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:] [LiDAR-Cam] use_config_extrinsic_only=true：跳过 AI 粗标定，将使用配置 initial_extrinsic 直接进入精标定/手动微调
+[2026-04-23 15:32:52.959] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-23 15:32:52.960] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-23 15:32:52.960] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-23 15:32:52.961] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-23 15:32:52.961] [info] [LiDAR-Camera] [:] 配置: 使用 ROS2 bag 模式（离线标定）
+[2026-04-23 15:32:52.961] [info] [LiDAR-Camera] [:]   Bag 路径: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[2026-04-23 15:32:52.961] [info] [LiDAR-Camera] [:]   LiDAR 话题: /os1_cloud_node1/points
+[2026-04-23 15:32:52.961] [info] [LiDAR-Camera] [:]   相机话题: /left/image_raw
+[2026-04-23 15:32:52.961] [info] [LiDAR-Camera] [:]   IMU 话题: /imu/imu
+[2026-04-23 15:32:52.961] [info] [LiDAR-Camera] [:] [数据源] 类型=ROS2_BAG  path=/root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2  lidar_topic=/os1_cloud_node1/points  camera_topic=/left/image_raw
+[2026-04-23 15:32:52.961] [info] [LiDAR-Camera] [:]   内参将从相机标定结果读取: ./results/camera_intrinsic/camera_intrinsic_cam_left.yaml (camera_id=cam_left)
+[2026-04-23 15:32:52.961] [info] [LiDAR-Camera] [:]   内参将从相机标定结果读取: ./results/camera_intrinsic/camera_intrinsic_cam_right.yaml (camera_id=cam_right)
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:] [CalibPipeline] 初始化 ID=pipeline_20260423_153252
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:] [CalibPipeline] 无目标优先: true
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:] [CalibPipeline] 任务掩码: 0x10
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:] ▶ Stage 2: 精标定 (方法=edge)
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:] ▶ Stage 3: 手动校准 (manual_threshold=2.00px)
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:]   使用 ManualCalibSession 进行 6-DOF 交互式调整
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:]   调用示例:
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:]     ManualCalibSession::SessionConfig sess_cfg;
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:]     sess_cfg.save_dir = "./results/manual_sessions";
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:]     ManualCalibSession session(sess_cfg);
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:]     auto result = session.run_lidar_cam(scan, image, intrin, auto_result, auto_rms);
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:] 
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:] ║   Pipeline ID: pipeline_20260423_153252       ║
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-23 15:32:52.962] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=true → do_coarse=true
+[15:32:52.962] [info] 
+[15:32:52.962] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:32:52.962] [info] ▶ 开始阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[15:32:52.962] [info]   描述: AI模型提供初始估计值
+[15:32:52.962] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:32:52.962] [info] [CALC] 粗标定阶段开始 task=lidar_cam_extrin
+[15:32:52.962] [info] [Coarse-AI/LiDAR-Cam] 使用配置粗标定初值作为粗标定结果 t=[0.123,0.040,-0.058]m，精标定将以此起步
+[15:32:52.962] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:32:52.962] [info] ■ 结束阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[15:32:52.962] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 0 ms
+[15:32:52.962] [info]   消息: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[15:32:52.962] [info] [CALC] 阶段结束 stage=Coarse-AI task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=0.0 threshold=-1.0000
+[15:32:52.962] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:32:52.962] [info] 
+[15:32:52.962] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:32:52.962] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[15:32:52.962] [info]   描述: 无目标优化
+[15:32:52.962] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:32:52.962] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[15:32:52.962] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[15:32:52.962] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[15:32:52.962] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[15:32:52.962] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[15:32:52.962] [info]   [精标定数据源] 类型=ROS2_BAG  lidar_id=lidar_front
+[15:32:52.962] [info]   ROS2 Bag: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2  LiDAR 话题: /os1_cloud_node1/points  相机话题: /left/image_raw
+[15:32:52.962] [info] [Fine-Auto/LiDAR-Cam] 从 ROS2 加载数据...
+[15:32:52.962] [info] [UnifiedDataLoader] 从 ROS2 加载数据...
+[15:32:52.962] [info]   Bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[15:32:52.962] [info]   实时模式: false
+[15:32:52.962] [info] [Ros2BagDataSource] 打开 bag 文件: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2
+[15:32:52.962] [info] [Ros2BagDataSource] 正在读取 metadata.yaml: /root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/metadata.yaml
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/imu (类型: sensor_msgs/msg/Imu, 消息数: 171462)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/attitude (类型: geometry_msgs/msg/QuaternionStamped, 消息数: 42866)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /os1_cloud_node2/imu (类型: sensor_msgs/msg/Imu, 消息数: 42862)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /os1_cloud_node1/imu (类型: sensor_msgs/msg/Imu, 消息数: 42862)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /imu/imu (类型: sensor_msgs/msg/Imu, 消息数: 166428)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /imu/magnetic_field (类型: sensor_msgs/msg/MagneticField, 消息数: 166428)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /imu/temperature (类型: sensor_msgs/msg/Temperature, 消息数: 166428)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/gps_position (类型: sensor_msgs/msg/NavSatFix, 消息数: 21433)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/height_above_takeoff (类型: std_msgs/msg/Float32, 消息数: 21433)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /dji_sdk/gps_health (类型: std_msgs/msg/UInt8, 消息数: 21433)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /uwb_endorange_info (类型: uwb_driver/msg/UwbRange, 消息数: 25172)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /left/image_raw (类型: sensor_msgs/msg/Image, 消息数: 4285)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /right/image_raw (类型: sensor_msgs/msg/Image, 消息数: 4285)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /os1_cloud_node1/points (类型: sensor_msgs/msg/PointCloud2, 消息数: 4287)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /os1_cloud_node2/points (类型: sensor_msgs/msg/PointCloud2, 消息数: 4286)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /uwb_exorange_info (类型: uwb_driver/msg/UwbEcho, 消息数: 2437)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /node_pos_marker_sc (类型: visualization_msgs/msg/Marker, 消息数: 2437)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /node_pos_sc (类型: nav_msgs/msg/Path, 消息数: 2437)
+[15:32:52.963] [debug] [Ros2BagDataSource] 找到话题: /leica/pose/relative (类型: geometry_msgs/msg/PoseStamped, 消息数: 7679)
+[15:32:52.963] [info] [Ros2BagDataSource] 使用配置的 LiDAR 话题: /os1_cloud_node1/points
+[15:32:52.963] [info] [Ros2BagDataSource] 使用配置的相机话题: /left/image_raw
+[15:32:52.963] [info] [Ros2BagDataSource] 使用配置的 IMU 话题: /imu/imu
+[INFO] [1776929572.967609669] [rosbag2_storage]: Opened database '/root/calib_ws/data/nya_02_slam_imu_to_lidar/nya_02_ros2/nya_02_ros2.db3' for READ_ONLY.
+[15:32:52.967] [info] [Ros2BagDataSource] Bag 已打开，开始读取消息...
+[15:32:52.967] [info] [Ros2BagDataSource] 找到 19 个话题
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /dji_sdk/imu  类型: sensor_msgs/msg/Imu  消息数: 171462
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /dji_sdk/attitude  类型: geometry_msgs/msg/QuaternionStamped  消息数: 42866
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/imu  类型: sensor_msgs/msg/Imu  消息数: 42862
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /imu/imu  类型: sensor_msgs/msg/Imu  消息数: 166428
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /imu/magnetic_field  类型: sensor_msgs/msg/MagneticField  消息数: 166428
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /imu/temperature  类型: sensor_msgs/msg/Temperature  消息数: 166428
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_position  类型: sensor_msgs/msg/NavSatFix  消息数: 21433
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /dji_sdk/height_above_takeoff  类型: std_msgs/msg/Float32  消息数: 21433
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /dji_sdk/gps_health  类型: std_msgs/msg/UInt8  消息数: 21433
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /uwb_endorange_info  类型: uwb_driver/msg/UwbRange  消息数: 25172
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /left/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /right/image_raw  类型: sensor_msgs/msg/Image  消息数: 4285
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /os1_cloud_node1/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4287
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /os1_cloud_node2/points  类型: sensor_msgs/msg/PointCloud2  消息数: 4286
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /uwb_exorange_info  类型: uwb_driver/msg/UwbEcho  消息数: 2437
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /node_pos_marker_sc  类型: visualization_msgs/msg/Marker  消息数: 2437
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /node_pos_sc  类型: nav_msgs/msg/Path  消息数: 2437
+[15:32:52.967] [info] [Ros2BagDataSource]  话题: /leica/pose/relative  类型: geometry_msgs/msg/PoseStamped  消息数: 7679
+[15:32:52.967] [info] [Ros2BagDataSource] 将加载 bag 内所有 IMU / LiDAR / 相机话题，加载后可通过 sensor_id 或话题名选择使用
+[15:32:53.382] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 5000
+[15:32:53.404] [debug]   收集 IMU [/imu/imu] 帧数: 5000
+[15:32:53.799] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 10000
+[15:32:53.849] [debug]   收集 IMU [/imu/imu] 帧数: 10000
+[15:32:54.203] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 15000
+[15:32:54.263] [debug]   收集 IMU [/imu/imu] 帧数: 15000
+[15:32:54.607] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 500
+[15:32:54.608] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 500
+[15:32:54.609] [debug]   收集相机 [/left/image_raw] 帧数: 500
+[15:32:54.609] [debug]   收集相机 [/right/image_raw] 帧数: 500
+[15:32:54.609] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 20000
+[15:32:54.609] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 5000
+[15:32:54.609] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 5000
+[15:32:54.670] [debug]   收集 IMU [/imu/imu] 帧数: 20000
+[15:32:55.001] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 25000
+[15:32:55.076] [debug]   收集 IMU [/imu/imu] 帧数: 25000
+[15:32:55.413] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 30000
+[15:32:55.529] [debug]   收集 IMU [/imu/imu] 帧数: 30000
+[15:32:55.867] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 35000
+[15:32:55.987] [debug]   收集 IMU [/imu/imu] 帧数: 35000
+[15:32:56.326] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 1000
+[15:32:56.327] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 1000
+[15:32:56.328] [debug]   收集相机 [/left/image_raw] 帧数: 1000
+[15:32:56.329] [debug]   收集相机 [/right/image_raw] 帧数: 1000
+[15:32:56.329] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 40000
+[15:32:56.329] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 10000
+[15:32:56.329] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 10000
+[15:32:56.458] [debug]   收集 IMU [/imu/imu] 帧数: 40000
+[15:32:56.748] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 45000
+[15:32:56.877] [debug]   收集 IMU [/imu/imu] 帧数: 45000
+[15:32:57.276] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 50000
+[15:32:57.463] [debug]   收集 IMU [/imu/imu] 帧数: 50000
+[15:32:57.753] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 55000
+[15:32:57.963] [debug]   收集 IMU [/imu/imu] 帧数: 55000
+[15:32:58.281] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 1500
+[15:32:58.282] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 1500
+[15:32:58.282] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 60000
+[15:32:58.283] [debug]   收集相机 [/left/image_raw] 帧数: 1500
+[15:32:58.284] [debug]   收集相机 [/right/image_raw] 帧数: 1500
+[15:32:58.284] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 15000
+[15:32:58.284] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 15000
+[15:32:58.438] [debug]   收集 IMU [/imu/imu] 帧数: 60000
+[15:32:58.680] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 65000
+[15:32:58.880] [debug]   收集 IMU [/imu/imu] 帧数: 65000
+[15:32:59.102] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 70000
+[15:32:59.331] [debug]   收集 IMU [/imu/imu] 帧数: 70000
+[15:32:59.597] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 75000
+[15:32:59.789] [debug]   收集 IMU [/imu/imu] 帧数: 75000
+[15:32:59.990] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 2000
+[15:32:59.993] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 2000
+[15:32:59.993] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 80000
+[15:32:59.993] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 20000
+[15:32:59.993] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 20000
+[15:32:59.995] [debug]   收集相机 [/left/image_raw] 帧数: 2000
+[15:32:59.995] [debug]   收集相机 [/right/image_raw] 帧数: 2000
+[15:33:00.230] [debug]   收集 IMU [/imu/imu] 帧数: 80000
+[15:33:00.427] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 85000
+[15:33:00.664] [debug]   收集 IMU [/imu/imu] 帧数: 85000
+[15:33:00.840] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 90000
+[15:33:01.124] [debug]   收集 IMU [/imu/imu] 帧数: 90000
+[15:33:01.352] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 95000
+[15:33:01.616] [debug]   收集 IMU [/imu/imu] 帧数: 95000
+[15:33:01.793] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 2500
+[15:33:01.795] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 2500
+[15:33:01.795] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 100000
+[15:33:01.795] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 25000
+[15:33:01.795] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 25000
+[15:33:01.797] [debug]   收集相机 [/left/image_raw] 帧数: 2500
+[15:33:01.797] [debug]   收集相机 [/right/image_raw] 帧数: 2500
+[15:33:02.078] [debug]   收集 IMU [/imu/imu] 帧数: 100000
+[15:33:02.251] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 105000
+[15:33:02.530] [debug]   收集 IMU [/imu/imu] 帧数: 105000
+[15:33:02.669] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 110000
+[15:33:02.945] [debug]   收集 IMU [/imu/imu] 帧数: 110000
+[15:33:03.075] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 115000
+[15:33:03.421] [debug]   收集 IMU [/imu/imu] 帧数: 115000
+[15:33:03.531] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 3000
+[15:33:03.534] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 3000
+[15:33:03.534] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 120000
+[15:33:03.535] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 30000
+[15:33:03.535] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 30000
+[15:33:03.536] [debug]   收集相机 [/left/image_raw] 帧数: 3000
+[15:33:03.537] [debug]   收集相机 [/right/image_raw] 帧数: 3000
+[15:33:03.829] [debug]   收集 IMU [/imu/imu] 帧数: 120000
+[15:33:03.957] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 125000
+[15:33:04.316] [debug]   收集 IMU [/imu/imu] 帧数: 125000
+[15:33:04.440] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 130000
+[15:33:04.989] [debug]   收集 IMU [/imu/imu] 帧数: 130000
+[15:33:05.127] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 135000
+[15:33:05.625] [debug]   收集 IMU [/imu/imu] 帧数: 135000
+[15:33:05.705] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 3500
+[15:33:05.706] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 3500
+[15:33:05.709] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 140000
+[15:33:05.713] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 35000
+[15:33:05.713] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 35000
+[15:33:05.717] [debug]   收集相机 [/left/image_raw] 帧数: 3500
+[15:33:05.717] [debug]   收集相机 [/right/image_raw] 帧数: 3500
+[15:33:06.099] [debug]   收集 IMU [/imu/imu] 帧数: 140000
+[15:33:06.189] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 145000
+[15:33:06.579] [debug]   收集 IMU [/imu/imu] 帧数: 145000
+[15:33:06.658] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 150000
+[15:33:07.077] [debug]   收集 IMU [/imu/imu] 帧数: 150000
+[15:33:07.118] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 155000
+[15:33:07.562] [debug]   收集 IMU [/imu/imu] 帧数: 155000
+[15:33:07.584] [debug]   收集 LiDAR [/os1_cloud_node1/points] 帧数: 4000
+[15:33:07.585] [debug]   收集 LiDAR [/os1_cloud_node2/points] 帧数: 4000
+[15:33:07.586] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 160000
+[15:33:07.587] [debug]   收集 IMU [/os1_cloud_node1/imu] 帧数: 40000
+[15:33:07.587] [debug]   收集 IMU [/os1_cloud_node2/imu] 帧数: 40000
+[15:33:07.589] [debug]   收集相机 [/left/image_raw] 帧数: 4000
+[15:33:07.590] [debug]   收集相机 [/right/image_raw] 帧数: 4000
+[15:33:08.036] [debug]   收集 IMU [/imu/imu] 帧数: 160000
+[15:33:08.055] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 165000
+[15:33:08.498] [debug]   收集 IMU [/imu/imu] 帧数: 165000
+[15:33:08.501] [debug]   收集 IMU [/dji_sdk/imu] 帧数: 170000
+[15:33:08.718] [info] [Ros2BagDataSource] 加载完成 (所有话题按话题名存储，可通过 sensor_id 或话题名选择):
+[15:33:08.718] [info]   LiDAR [/os1_cloud_node1/points]: 4287 帧
+[15:33:08.718] [info]   LiDAR [/os1_cloud_node2/points]: 4286 帧
+[15:33:08.718] [info]   相机 [/left/image_raw]: 4285 帧
+[15:33:08.718] [info]   相机 [/right/image_raw]: 4285 帧
+[15:33:08.718] [info]   IMU [/dji_sdk/imu]: 171462 帧
+[15:33:08.718] [info]   IMU [/imu/imu]: 166428 帧
+[15:33:08.718] [info]   IMU [/os1_cloud_node1/imu]: 42862 帧
+[15:33:08.718] [info]   IMU [/os1_cloud_node2/imu]: 42862 帧
+[15:33:08.718] [info]   选用 LiDAR  lidar_front -> /os1_cloud_node1/points
+[15:33:08.718] [info]   选用 相机  cam_left -> /left/image_raw
+[15:33:08.718] [info]   选用 IMU    imu_0 -> /imu/imu
+[15:33:08.719] [info]   时间范围: 1609045331.127 - 1609045759.771 秒
+[15:33:08.719] [info] [Ros2BagDataSource] 应用采样/帧数限制...
+[15:33:08.788] [info]   LiDAR /os1_cloud_node1/points 采样后: 800 帧
+[15:33:08.825] [info]   LiDAR /os1_cloud_node2/points 采样后: 800 帧
+[15:33:08.861] [info]   相机 /left/image_raw 采样后: 800 帧
+[15:33:08.909] [info]   相机 /right/image_raw 采样后: 800 帧
+[15:33:08.912] [info] [Fine-Auto/LiDAR-Cam] LiDAR 加载完成: 800 帧 (将按相机逐路取帧)
+[15:33:08.915] [info] 读取相机内参: ./results/camera_intrinsic/camera_intrinsic_cam_left.yaml
+[15:33:08.919] [info]   fx=425.03 fy=426.80 cx=386.02 cy=241.91 dist=4
+[15:33:08.919] [info] [Fine-Auto/LiDAR-Cam] 步骤: LiDAR-Camera 标定 相机=cam_left (方法: 边缘对齐)
+[15:33:08.923] [info] [CalibVisualizer] 初始化完成
+[15:33:08.923] [info] [Fine-Auto/LiDAR-Cam] 可视化已启用：仅标定结束后显示一帧「图像+点云投影」叠加，不创建 3D 窗口、不泵送其他帧
+[15:33:08.923] [info] [Fine-Auto/LiDAR-Cam] 使用粗标定初值 t=[0.123,0.040,-0.058]m
+[15:33:08.932] [info] [Fine-Auto] 结果已保存: ./results/lidar_camera_extrinsic/lidar_cam_cam_left_extrinsic.yaml
+[15:33:08.932] [info] [Viz] 即将生成投影图并保存到 ./results/lidar_camera_extrinsic/lidar_cam_cam_left_projection.png
+[15:33:08.965] [info] 投影可视化保存: ./results/lidar_camera_extrinsic/lidar_cam_cam_left_projection.png
+[15:33:08.965] [info] [Viz] 投影图已保存（仅使用配置初值，未做精标定）
+[15:33:08.965] [info] [Fine-Auto/LiDAR-Cam] 相机 cam_left 已使用配置初值跳过精标定，直接供手动微调
+[15:33:08.965] [info] [Viz/Display] 即将关闭可视化窗口 原因=用户关闭或流程结束 pangolin_running=false
+[15:33:08.965] [warning] [Fine-Auto/LiDAR-Cam] 相机 cam_right 无帧，跳过
+[15:33:08.965] [warning] [Fine-Auto/LiDAR-Cam] 相机 cam_front 无帧，跳过
+[15:33:08.965] [warning] [Fine-Auto/LiDAR-Cam] 相机 cam_rear 无帧，跳过
+[15:33:08.966] [info] [Fine-Auto/LiDAR-Cam] 精标定完成: 1 个相机  最大 RMS=0.0000 px
+[15:33:08.966] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 完成
+[15:33:08.966] [info] [Fine-Auto/LiDAR-Cam] RMS 阈值=2.00 px  最大 RMS=0.0000 px  在阈值内
+[15:33:09.246] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:33:09.246] [info] ■ 结束阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[15:33:09.246] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 16284 ms
+[15:33:09.246] [info]   消息: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=0.000000 px
+[15:33:09.246] [info] [CALC] 阶段结束 stage=Fine-Auto task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=16003.2 threshold=2.0000
+[15:33:09.246] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:33:09.247] [info] [Pipeline] 用户已启用手动校准 (--manual), 进入 6-DOF 调整
+[15:33:09.247] [info] 
+[15:33:09.247] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:33:09.247] [info] ▶ 开始阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[15:33:09.247] [info]   描述: 手动校准: 6-DOF 交互式调整
+[15:33:09.247] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:33:09.247] [info] [Manual-Refine] 任务: lidar_cam_extrin
+[15:33:09.247] [info] [Manual-Refine] 操作说明: Q/A Roll  W/S Pitch  E/D Yaw  R/F Tx  T/G Ty  Y/H Tz  U Undo  Enter 接受  Esc 取消
+[15:33:09.248] [info] [ManualSession] 会话ID: session_2026-04-23_15-33-09
+[15:33:09.248] [info] [ManualSession] 保存目录: ./results/manual_sessions
+[15:33:09.248] [info] [Manual-Refine] 已打开 6-DOF 可视化调整窗口，请在本窗口内按键微调后 Enter 接受或 Esc 取消
+[15:33:09.248] [info] [Manual-Refine] LiDAR-Camera 手动调整仅使用首帧匹配数据（第 0 帧点云 + 第 0 帧图像）
+[15:33:09.248] [info] [ManualSession] 启动 LiDAR-Camera 手动校准
+[15:33:09.248] [info] [ManualSession] 自动标定 RMS: 0.0000 px (阈值建议 < 2.0px)
+[15:33:09.248] [debug] [ManualSession] 事件: lidar_cam_start | auto_rms=0.000000
+[15:33:09.248] [info] [ManualAdjust] 初始外参:
+[15:33:09.248] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:33:09.248] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[15:33:09.248] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:33:09.248] [info] [ManualSession] ===== 手动校准操作说明 =====
+[15:33:09.248] [info]   Q/A: Roll ±0.1deg   W/S: Pitch ±0.1deg   E/D: Yaw ±0.1deg
+[15:33:09.248] [info]   R/F: Tx ±0.5cm   T/G: Ty ±0.5cm   Y/H: Tz ±0.5cm
+[15:33:09.248] [info]   Shift+键: 10倍步长
+[15:33:09.248] [info]   P: 进入点击精化模式  U: 撤销  Z: 重做
+[15:33:09.248] [info]   S: 保存  ESC: 接受并退出
+[15:33:09.248] [info]   点云投影质量越高 (边缘对齐越好) 表示标定越准确
+[15:33:09.258] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260423_153309_initial.yaml
+[15:33:09.258] [info] [ManualCalib] 交互窗口启动前已自动保存初始状态快照（备用）:
+[15:33:09.258] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260423_153309_initial.png
+[15:33:09.258] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260423_153309_initial.pcd
+[15:33:09.258] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260423_153309_initial.yaml
+
+(unicalib_lidar_camera:143): dbind-WARNING **: 15:33:09.304: Couldn't connect to accessibility bus: Failed to connect to socket /run/user/1000/at-spi/bus_1: No such file or directory
+[15:33:09.379] [info] [ManualCalib] 3D 点云窗口已禁用（避免 VTK 闪退），请在 2D 投影窗口进行微调。按下 'S' 键可手动保存当前微调结果图片和点云。
+[15:33:09.379] [info] [ManualCalib] 初始位姿 T_lidar_to_cam:
+[15:33:09.379] [info]   - Translation: 0.1230, 0.0399, -0.0577
+[15:33:09.379] [info]   - RPY (deg):   90.7545, -179.8846, 91.2509
+[15:39:03.574] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, 0.100)deg
+[15:39:03.574] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:03.574] [info]   旋转 RPY: (-60.7861, -88.4540, -29.0896) deg
+[15:39:03.574] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:04.575] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:04.575] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:04.575] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[15:39:04.575] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:04.790] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:04.790] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:04.790] [info]   旋转 RPY: (-56.7156, -88.6251, -33.1614) deg
+[15:39:04.790] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:04.982] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:04.982] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:04.982] [info]   旋转 RPY: (-54.2825, -88.7076, -35.5952) deg
+[15:39:04.982] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:05.206] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:05.206] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:05.206] [info]   旋转 RPY: (-51.5235, -88.7873, -38.3548) deg
+[15:39:05.206] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:05.470] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:05.470] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:05.470] [info]   旋转 RPY: (-48.3845, -88.8639, -41.4945) deg
+[15:39:05.470] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:05.726] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:05.726] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:05.726] [info]   旋转 RPY: (-44.8043, -88.9366, -45.0754) deg
+[15:39:05.726] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:05.942] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:05.942] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:05.942] [info]   旋转 RPY: (-40.7174, -89.0046, -49.1629) deg
+[15:39:05.942] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:06.174] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:06.174] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:06.174] [info]   旋转 RPY: (-36.0597, -89.0667, -53.8213) deg
+[15:39:06.174] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:06.430] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:06.430] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:06.430] [info]   旋转 RPY: (-30.7783, -89.1218, -59.1034) deg
+[15:39:06.430] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:06.686] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:06.686] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:06.686] [info]   旋转 RPY: (-24.8476, -89.1686, -65.0347) deg
+[15:39:06.686] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:08.502] [debug] [ManualAdjust] 旋转增量 RPY=(0.100, 0.000, 0.000)deg
+[15:39:08.502] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:08.502] [info]   旋转 RPY: (-24.7476, -89.1686, -65.0347) deg
+[15:39:08.502] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:09.238] [debug] [ManualAdjust] 旋转增量 RPY=(-0.100, 0.000, 0.000)deg
+[15:39:09.238] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:09.238] [info]   旋转 RPY: (-24.8476, -89.1686, -65.0347) deg
+[15:39:09.238] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:09.454] [debug] [ManualAdjust] 旋转增量 RPY=(-0.100, 0.000, 0.000)deg
+[15:39:09.454] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:09.454] [info]   旋转 RPY: (-24.9476, -89.1686, -65.0347) deg
+[15:39:09.454] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:09.646] [debug] [ManualAdjust] 旋转增量 RPY=(-0.100, 0.000, 0.000)deg
+[15:39:09.646] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:09.646] [info]   旋转 RPY: (-25.0476, -89.1686, -65.0347) deg
+[15:39:09.646] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:09.878] [debug] [ManualAdjust] 旋转增量 RPY=(-0.100, 0.000, 0.000)deg
+[15:39:09.878] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:09.878] [info]   旋转 RPY: (-25.1476, -89.1686, -65.0347) deg
+[15:39:09.878] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:10.296] [debug] [ManualAdjust] 旋转增量 RPY=(-0.100, 0.000, 0.000)deg
+[15:39:10.296] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:10.296] [info]   旋转 RPY: (-25.2476, -89.1686, -65.0347) deg
+[15:39:10.296] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:11.214] [debug] [ManualAdjust] 旋转增量 RPY=(-0.100, 0.000, 0.000)deg
+[15:39:11.214] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:11.214] [info]   旋转 RPY: (-25.3476, -89.1686, -65.0347) deg
+[15:39:11.214] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:11.502] [debug] [ManualAdjust] 旋转增量 RPY=(-0.100, 0.000, 0.000)deg
+[15:39:11.502] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:11.502] [info]   旋转 RPY: (-25.4476, -89.1686, -65.0347) deg
+[15:39:11.502] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:11.871] [debug] [ManualAdjust] 旋转增量 RPY=(-0.100, 0.000, 0.000)deg
+[15:39:11.871] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:11.871] [info]   旋转 RPY: (-25.5476, -89.1686, -65.0347) deg
+[15:39:11.871] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:13.086] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:13.086] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:13.086] [info]   旋转 RPY: (-19.0190, -89.2065, -71.5640) deg
+[15:39:13.086] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:13.526] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:13.526] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:13.526] [info]   旋转 RPY: (-11.9365, -89.2333, -78.6471) deg
+[15:39:13.526] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:14.350] [debug] [ManualAdjust] 旋转增量 RPY=(-0.100, 0.000, 0.000)deg
+[15:39:14.350] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:14.350] [info]   旋转 RPY: (-12.0365, -89.2333, -78.6471) deg
+[15:39:14.350] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:14.694] [debug] [ManualAdjust] 旋转增量 RPY=(-0.100, 0.000, 0.000)deg
+[15:39:14.694] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:14.694] [info]   旋转 RPY: (-12.1365, -89.2333, -78.6471) deg
+[15:39:14.694] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:15.342] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:15.342] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:15.342] [info]   旋转 RPY: (-4.6678, -89.2479, -86.1165) deg
+[15:39:15.342] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:15.718] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:15.718] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:15.718] [info]   旋转 RPY: (2.9624, -89.2494, -93.7473) deg
+[15:39:15.718] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:15.974] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.000, -0.100)deg
+[15:39:15.974] [info] [ManualAdjust] 当前外参 [lidar_front→cam_left]:
+[15:39:15.974] [info]   旋转 RPY: (10.4895, -89.2377, -101.2750) deg
+[15:39:15.974] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:39:18.547] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260423_153918_final.yaml
+[15:39:18.547] [info] [ManualCalib] 最终微调结果已自动保存:
+[15:39:18.547] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260423_153918_final.png
+[15:39:18.547] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260423_153918_final.pcd
+[15:39:18.547] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260423_153918_final.yaml
+[15:39:18.547] [info] [ManualSession] 用户接受手动调整结果
+[15:39:18.547] [info] [ManualSession] Cam-Cam 最终采用外参 RMS=0.000000 (manual if available, else auto=0.000000)
+[15:39:18.547] [debug] [ManualSession] 事件: lidar_cam_end | final_rms=0.000000
+[15:39:18.548] [info] [ManualSession] 会话已保存: ./results/manual_sessions/session_2026-04-23_15-33-09.yaml
+[15:39:18.548] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:39:18.548] [info] ■ 结束阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[15:39:18.548] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 369300 ms
+[15:39:18.548] [info]   消息: LiDAR-Camera 手动调整完成
+[15:39:18.548] [info] [CALC] 阶段结束 stage=Manual-Refine task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=369300.3 threshold=-1.0000
+[15:39:18.548] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:39:18.548] [info] ====== Pipeline Report: pipeline_20260423_153252 ======
+[15:39:18.548] [info]   Total time: 385303.5 ms
+[15:39:18.548] [info]   All stages succeeded: YES
+[15:39:18.548] [info]   标定质量: 各阶段 RMS 均在阈值内
+[15:39:18.548] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[15:39:18.548] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=0.0000 time=16003.2ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=0.000000 px
+[15:39:18.548] [info]   [Manual-Refine-lidar_cam_extrin] success=true rms=0.0000 time=369300.3ms: LiDAR-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   lidar_front->cam_left:
+║     R(RPY°): [10.49, -89.24, -101.28]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[15:39:18.548] [info] ================================
+[15:39:18.548] [info] Pipeline report saved: ./results/pipeline_report_20260423_153252.yaml
+[15:39:18.548] [info] ====== Pipeline Report: pipeline_20260423_153252 ======
+[15:39:18.549] [info]   Total time: 385303.5 ms
+[15:39:18.549] [info]   All stages succeeded: YES
+[15:39:18.549] [info]   标定质量: 各阶段 RMS 均在阈值内
+[15:39:18.549] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[15:39:18.549] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=0.0000 time=16003.2ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=0.000000 px
+[15:39:18.549] [info]   [Manual-Refine-lidar_cam_extrin] success=true rms=0.0000 time=369300.3ms: LiDAR-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   lidar_front->cam_left:
+║     R(RPY°): [10.49, -89.24, -101.28]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[15:39:18.549] [info] ================================
+[15:39:18.549] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:39:18.549] [info] LiDAR-Camera 标定流程完成
+[15:39:18.549] [info] 结果目录: ./results
+[15:39:18.549] [info] 标定流程正常退出 exit_code=0
+[15:39:18.549] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

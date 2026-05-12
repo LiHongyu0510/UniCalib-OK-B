@@ -1,0 +1,6 @@
+/root/calib_ws/iKalibr/thirdparty/veta-stub-build/CMakeFiles/edit_cache.dir
+/root/calib_ws/iKalibr/thirdparty/veta-stub-build/CMakeFiles/rebuild_cache.dir
+/root/calib_ws/iKalibr/thirdparty/veta-stub-build/CMakeFiles/list_install_components.dir
+/root/calib_ws/iKalibr/thirdparty/veta-stub-build/CMakeFiles/install.dir
+/root/calib_ws/iKalibr/thirdparty/veta-stub-build/CMakeFiles/install/local.dir
+/root/calib_ws/iKalibr/thirdparty/veta-stub-build/CMakeFiles/install/strip.dir

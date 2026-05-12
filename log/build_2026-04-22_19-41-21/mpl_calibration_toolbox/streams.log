@@ -1,0 +1,33 @@
+[0.012s] Invoking command in '/root/calib_ws/build/mpl_calibration_toolbox': /opt/cmake/bin/cmake /root/calib_ws/data/school_scooter/results/mpl_calibration_toolbox -DCMAKE_BUILD_TYPE=Release -DUSE_THIRDPARTY_LIBS=ON -DUSE_VETA_STUB=ON -Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm -DCATKIN_INSTALL_INTO_PREFIX_ROOT=0 -DCATKIN_SYMLINK_INSTALL=ON -DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/mpl_calibration_toolbox
+[0.145s] -- The C compiler identification is GNU 11.4.0
+[0.145s] -- The CXX compiler identification is GNU 11.4.0
+[0.150s] -- Detecting C compiler ABI info
+[0.189s] -- Detecting C compiler ABI info - done
+[0.198s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.198s] -- Detecting C compile features
+[0.199s] -- Detecting C compile features - done
+[0.202s] -- Detecting CXX compiler ABI info
+[0.257s] -- Detecting CXX compiler ABI info - done
+[0.266s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.266s] -- Detecting CXX compile features
+[0.267s] -- Detecting CXX compile features - done
+[0.281s] CMake Error at CMakeLists.txt:6 (find_package):
+[0.281s]   By not providing "Findcatkin.cmake" in CMAKE_MODULE_PATH this project has
+[0.281s]   asked CMake to find a package configuration file provided by "catkin", but
+[0.281s]   CMake did not find one.
+[0.281s] 
+[0.281s]   Could not find a package configuration file provided by "catkin" with any
+[0.281s]   of the following names:
+[0.281s] 
+[0.281s]     catkinConfig.cmake
+[0.281s]     catkin-config.cmake
+[0.282s] 
+[0.282s]   Add the installation prefix of "catkin" to CMAKE_PREFIX_PATH or set
+[0.282s]   "catkin_DIR" to a directory containing one of the above files.  If "catkin"
+[0.282s]   provides a separate development package or SDK, be sure it has been
+[0.282s]   installed.
+[0.282s] 
+[0.282s] 
+[0.282s] -- Configuring incomplete, errors occurred!
+[0.282s] See also "/root/calib_ws/build/mpl_calibration_toolbox/CMakeFiles/CMakeOutput.log".
+[0.284s] Invoked command in '/root/calib_ws/build/mpl_calibration_toolbox' returned '1': /opt/cmake/bin/cmake /root/calib_ws/data/school_scooter/results/mpl_calibration_toolbox -DCMAKE_BUILD_TYPE=Release -DUSE_THIRDPARTY_LIBS=ON -DUSE_VETA_STUB=ON -Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm -DCATKIN_INSTALL_INTO_PREFIX_ROOT=0 -DCATKIN_SYMLINK_INSTALL=ON -DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/mpl_calibration_toolbox

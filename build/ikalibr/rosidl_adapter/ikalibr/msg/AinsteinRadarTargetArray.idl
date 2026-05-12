@@ -1,0 +1,19 @@
+// generated from rosidl_adapter/resource/msg.idl.em
+// with input from ikalibr/msg/AinsteinRadarTargetArray.msg
+// generated code does not contain a copyright notice
+
+#include "ikalibr/msg/AinsteinRadarTarget.idl"
+#include "std_msgs/msg/Header.idl"
+
+module ikalibr {
+  module msg {
+    @verbatim (language="comment", text=
+      "A copy format from 'https://github.com/AinsteinAI/ainstein_radar' (more detail, open the link)" "\n"
+      "This message describes an array of targets with a timestamp.")
+    struct AinsteinRadarTargetArray {
+      std_msgs::msg::Header header;
+
+      sequence<ikalibr::msg::AinsteinRadarTarget> targets;
+    };
+  };
+};

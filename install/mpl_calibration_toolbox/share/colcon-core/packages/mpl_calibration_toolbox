@@ -1,0 +1,1 @@
+cv_bridge:eigen:geometry_msgs:libceres-dev:libopencv-dev:rosbag:roscpp:roslib:rospy:sensor_msgs:std_msgs:yaml-cpp

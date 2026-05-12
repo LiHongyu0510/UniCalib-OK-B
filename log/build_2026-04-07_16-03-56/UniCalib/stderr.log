@@ -1,0 +1,10 @@
+** WARNING ** io features related to pcap will be disabled
+** WARNING ** io features related to png will be disabled
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    USE_THIRDPARTY_LIBS
+    USE_VETA_STUB
+    glm_DIR
+
+

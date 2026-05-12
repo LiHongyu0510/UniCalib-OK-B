@@ -1,0 +1,1481 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-10 11:57:55.929] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-10 11:57:55.929] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-10 11:57:55.929] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-10 11:57:55.929] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-10 11:57:55.929] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-10 11:57:55.929] [info] [LiDAR-Camera] [:] AI粗标定: true | 手动校准: true
+[2026-04-10 11:57:55.929] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-10 11:57:55.931] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]   IMU: 0, LiDAR: 2, Camera: 1
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [数据路径] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]   数据路径来源: 统一格式 (data.lidar.<id> / data.camera.<id>.images_dir)
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]   配置原始值 — lidar:  drive_dusk/lidar
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]   配置原始值 — camera: drive_dusk/front
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]   base_data_dir:  /root/calib_ws/data
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]   base 来源: 命令行 --data-dir
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]   lidar_dir:      /root/calib_ws/data/drive_dusk/lidar
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]   camera_dir:     /root/calib_ws/data/drive_dusk/front
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]   【数据就绪】是 — 点云与图像目录均存在，将执行精标定
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:]   说明: 使用 --dataset 时请将 data.lidar/data.camera 设为相对 base 的路径（如 pcd、images），不要使用 /path/to/... 占位符
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:] [LiDAR-Cam] use_config_extrinsic_only=true：跳过 AI 粗标定，将使用配置 initial_extrinsic 直接进入精标定/手动微调
+[2026-04-10 11:57:55.932] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-10 11:57:55.933] [info] [LiDAR-Camera] [:]   IMU: 0, LiDAR: 2, Camera: 1
+[2026-04-10 11:57:55.933] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:]   IMU: 0, LiDAR: 2, Camera: 1
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] [数据源] 类型=FILES  lidar_dir=/root/calib_ws/data/drive_dusk/lidar  camera_dir=/root/calib_ws/data/drive_dusk/front
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:]   内参将从相机标定结果读取: ./results/camera_intrinsic/camera_intrinsic_cam_left.yaml (camera_id=cam_left)
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:]   内参将从相机标定结果读取: ./results/camera_intrinsic/camera_intrinsic_cam_right.yaml (camera_id=cam_right)
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] [CalibPipeline] 初始化 ID=pipeline_20260410_115755
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] [CalibPipeline] 无目标优先: true
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] [CalibPipeline] 任务掩码: 0x10
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] ▶ Stage 2: 精标定 (方法=edge)
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] ▶ Stage 3: 手动校准 (manual_threshold=2.00px)
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:]   使用 ManualCalibSession 进行 6-DOF 交互式调整
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:]   调用示例:
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:]     ManualCalibSession::SessionConfig sess_cfg;
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:]     sess_cfg.save_dir = "./results/manual_sessions";
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:]     ManualCalibSession session(sess_cfg);
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:]     auto result = session.run_lidar_cam(scan, image, intrin, auto_result, auto_rms);
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] 
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] ║   Pipeline ID: pipeline_20260410_115755       ║
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-10 11:57:55.934] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=true → do_coarse=true
+[11:57:55.935] [info] 
+[11:57:55.935] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:57:55.935] [info] ▶ 开始阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[11:57:55.935] [info]   描述: AI模型提供初始估计值
+[11:57:55.935] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:57:55.935] [info] [CALC] 粗标定阶段开始 task=lidar_cam_extrin
+[11:57:55.935] [info] [Coarse-AI/LiDAR-Cam] 使用配置粗标定初值作为粗标定结果 t=[0.123,0.040,-0.058]m，精标定将以此起步
+[11:57:55.935] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:57:55.935] [info] ■ 结束阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[11:57:55.935] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 0 ms
+[11:57:55.935] [info]   消息: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[11:57:55.935] [info] [CALC] 阶段结束 stage=Coarse-AI task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=0.0 threshold=-1.0000
+[11:57:55.935] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:57:55.935] [info] 
+[11:57:55.935] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:57:55.935] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[11:57:55.935] [info]   描述: 无目标优化
+[11:57:55.935] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:57:55.935] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[11:57:55.935] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[11:57:55.935] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[11:57:55.935] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[11:57:55.935] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[11:57:55.935] [info]   [精标定数据源] 类型=FILES  lidar_id=imu_0
+[11:57:55.935] [info]   文件目录: lidar=/root/calib_ws/data/drive_dusk/lidar  camera=/root/calib_ws/data/drive_dusk/front
+[11:57:55.935] [info] [Fine-Auto/LiDAR-Cam] 步骤: 从文件加载点云
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'x'.
+Failed to find match for field 'y'.
+Failed to find match for field 'z'.
+Failed to find match for field 'intensity'.
+[11:57:56.039] [info] [Fine-Auto/LiDAR-Cam] 点云加载完成 — 100 帧
+[11:57:56.972] [info] 读取相机内参: ./results/camera_intrinsic/camera_intrinsic_cam_left.yaml
+[11:57:56.972] [info]   fx=384.00 fy=384.00 cx=376.00 cy=240.00 dist=4
+[11:57:56.972] [info] [Fine-Auto/LiDAR-Cam] 步骤: LiDAR-Camera 标定 相机=cam_left (方法: 边缘对齐)
+[11:57:56.974] [info] [CalibVisualizer] 初始化完成
+[11:57:56.974] [info] [Fine-Auto/LiDAR-Cam] 可视化已启用：仅标定结束后显示一帧「图像+点云投影」叠加，不创建 3D 窗口、不泵送其他帧
+[11:57:56.974] [info] [Fine-Auto/LiDAR-Cam] 使用粗标定初值 t=[0.123,0.040,-0.058]m
+[11:57:56.975] [info] [Fine-Auto] 结果已保存: ./results/lidar_camera_extrinsic/lidar_cam_cam_left_extrinsic.yaml
+[11:57:56.975] [info] [Viz] 即将生成投影图并保存到 ./results/lidar_camera_extrinsic/lidar_cam_cam_left_projection.png
+[11:57:56.976] [info] [Viz] 投影图已保存（仅使用配置初值，未做精标定）
+[11:57:56.976] [info] [Fine-Auto/LiDAR-Cam] 相机 cam_left 已使用配置初值跳过精标定，直接供手动微调
+[11:57:56.976] [info] [Viz/Display] 即将关闭可视化窗口 原因=用户关闭或流程结束 pangolin_running=false
+[11:57:57.906] [info] 读取相机内参: ./results/camera_intrinsic/camera_intrinsic_cam_right.yaml
+[11:57:57.907] [info]   fx=384.00 fy=384.00 cx=376.00 cy=240.00 dist=4
+[11:57:57.907] [info] [Fine-Auto/LiDAR-Cam] 步骤: LiDAR-Camera 标定 相机=cam_right (方法: 边缘对齐)
+[11:57:57.907] [info] [CalibVisualizer] 初始化完成
+[11:57:57.907] [info] [Fine-Auto/LiDAR-Cam] 可视化已启用：仅标定结束后显示一帧「图像+点云投影」叠加，不创建 3D 窗口、不泵送其他帧
+[11:57:57.907] [info] [Fine-Auto/LiDAR-Cam] 使用粗标定初值 t=[0.123,0.040,-0.058]m
+[11:57:57.908] [info] [Fine-Auto] 结果已保存: ./results/lidar_camera_extrinsic/lidar_cam_cam_right_extrinsic.yaml
+[11:57:57.908] [info] [Viz] 即将生成投影图并保存到 ./results/lidar_camera_extrinsic/lidar_cam_cam_right_projection.png
+[11:57:57.911] [info] [Viz] 投影图已保存（仅使用配置初值，未做精标定）
+[11:57:57.911] [info] [Fine-Auto/LiDAR-Cam] 相机 cam_right 已使用配置初值跳过精标定，直接供手动微调
+[11:57:57.911] [info] [Viz/Display] 即将关闭可视化窗口 原因=用户关闭或流程结束 pangolin_running=false
+[11:57:58.912] [info] [Fine-Auto] 推断内参: 1280x720 fx=1152.0 fy=1152.0
+[11:57:58.912] [info] [Fine-Auto/LiDAR-Cam] 步骤: LiDAR-Camera 标定 相机=cam_front (方法: 边缘对齐)
+[11:57:58.912] [info] [CalibVisualizer] 初始化完成
+[11:57:58.912] [info] [Fine-Auto/LiDAR-Cam] 可视化已启用：仅标定结束后显示一帧「图像+点云投影」叠加，不创建 3D 窗口、不泵送其他帧
+[11:57:58.912] [info] [Fine-Auto/LiDAR-Cam] 使用粗标定初值 t=[0.123,0.040,-0.058]m
+[11:57:58.912] [info] [Fine-Auto] 结果已保存: ./results/lidar_camera_extrinsic/lidar_cam_cam_front_extrinsic.yaml
+[11:57:58.912] [info] [Viz] 即将生成投影图并保存到 ./results/lidar_camera_extrinsic/lidar_cam_cam_front_projection.png
+[11:57:58.913] [info] [Viz] 投影图已保存（仅使用配置初值，未做精标定）
+[11:57:58.913] [info] [Fine-Auto/LiDAR-Cam] 相机 cam_front 已使用配置初值跳过精标定，直接供手动微调
+[11:57:58.913] [info] [Viz/Display] 即将关闭可视化窗口 原因=用户关闭或流程结束 pangolin_running=false
+[11:57:59.852] [info] [Fine-Auto] 推断内参: 1280x720 fx=1152.0 fy=1152.0
+[11:57:59.852] [info] [Fine-Auto/LiDAR-Cam] 步骤: LiDAR-Camera 标定 相机=cam_rear (方法: 边缘对齐)
+[11:57:59.852] [info] [CalibVisualizer] 初始化完成
+[11:57:59.852] [info] [Fine-Auto/LiDAR-Cam] 可视化已启用：仅标定结束后显示一帧「图像+点云投影」叠加，不创建 3D 窗口、不泵送其他帧
+[11:57:59.852] [info] [Fine-Auto/LiDAR-Cam] 使用粗标定初值 t=[0.123,0.040,-0.058]m
+[11:57:59.852] [info] [Fine-Auto] 结果已保存: ./results/lidar_camera_extrinsic/lidar_cam_cam_rear_extrinsic.yaml
+[11:57:59.852] [info] [Viz] 即将生成投影图并保存到 ./results/lidar_camera_extrinsic/lidar_cam_cam_rear_projection.png
+[11:57:59.853] [info] [Viz] 投影图已保存（仅使用配置初值，未做精标定）
+[11:57:59.853] [info] [Fine-Auto/LiDAR-Cam] 相机 cam_rear 已使用配置初值跳过精标定，直接供手动微调
+[11:57:59.853] [info] [Viz/Display] 即将关闭可视化窗口 原因=用户关闭或流程结束 pangolin_running=false
+[11:57:59.861] [info] [Fine-Auto/LiDAR-Cam] 精标定完成: 4 个相机  最大 RMS=0.0000 px
+[11:57:59.861] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 完成
+[11:57:59.861] [info] [Fine-Auto/LiDAR-Cam] RMS 阈值=2.00 px  最大 RMS=0.0000 px  在阈值内
+[11:57:59.862] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:57:59.862] [info] ■ 结束阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[11:57:59.862] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 3927 ms
+[11:57:59.862] [info]   消息: LiDAR-Camera 精标定完成: 4 个相机, 最大 RMS=0.000000 px
+[11:57:59.862] [info] [CALC] 阶段结束 stage=Fine-Auto task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=3925.6 threshold=2.0000
+[11:57:59.862] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:57:59.863] [info] [Pipeline] 用户已启用手动校准 (--manual), 进入 6-DOF 调整
+[11:57:59.863] [info] 
+[11:57:59.863] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:57:59.863] [info] ▶ 开始阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[11:57:59.863] [info]   描述: 手动校准: 6-DOF 交互式调整
+[11:57:59.863] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:57:59.863] [info] [Manual-Refine] 任务: lidar_cam_extrin
+[11:57:59.863] [info] [Manual-Refine] 操作说明: Q/A Roll  W/S Pitch  E/D Yaw  R/F Tx  T/G Ty  Y/H Tz  U Undo  Enter 接受  Esc 取消
+[11:57:59.863] [info] [ManualSession] 会话ID: session_2026-04-10_11-57-59
+[11:57:59.863] [info] [ManualSession] 保存目录: ./results/manual_sessions
+[11:57:59.863] [info] [Manual-Refine] 已打开 6-DOF 可视化调整窗口，请在本窗口内按键微调后 Enter 接受或 Esc 取消
+[11:57:59.863] [info] [Manual-Refine] LiDAR-Camera 手动调整仅使用首帧匹配数据（第 0 帧点云 + 第 0 帧图像）
+[11:57:59.863] [info] [ManualSession] 启动 LiDAR-Camera 手动校准
+[11:57:59.863] [info] [ManualSession] 自动标定 RMS: 0.0000 px (阈值建议 < 2.0px)
+[11:57:59.863] [debug] [ManualSession] 事件: lidar_cam_start | auto_rms=0.000000
+[11:57:59.863] [info] [ManualAdjust] 初始外参:
+[11:57:59.863] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:57:59.863] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:57:59.863] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[11:57:59.863] [info] [ManualSession] ===== 手动校准操作说明 =====
+[11:57:59.863] [info]   Q/A: Roll ±0.1deg   W/S: Pitch ±0.1deg   E/D: Yaw ±0.1deg
+[11:57:59.863] [info]   R/F: Tx ±0.5cm   T/G: Ty ±0.5cm   Y/H: Tz ±0.5cm
+[11:57:59.863] [info]   Shift+键: 10倍步长
+[11:57:59.863] [info]   P: 进入点击精化模式  U: 撤销  Z: 重做
+[11:57:59.863] [info]   S: 保存  ESC: 接受并退出
+[11:57:59.863] [info]   点云投影质量越高 (边缘对齐越好) 表示标定越准确
+[11:57:59.879] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260410_115759_initial.yaml
+[11:57:59.880] [info] [ManualCalib] 交互窗口启动前已自动保存初始状态快照（备用）:
+[11:57:59.880] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260410_115759_initial.png
+[11:57:59.880] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260410_115759_initial.pcd
+[11:57:59.880] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260410_115759_initial.yaml
+
+(unicalib_lidar_camera:100): dbind-WARNING **: 11:57:59.882: Couldn't connect to accessibility bus: Failed to connect to socket /run/user/1000/at-spi/bus: No such file or directory
+[11:57:59.894] [info] [ManualCalib] 3D 点云窗口已禁用（避免 VTK 闪退），请在 2D 投影窗口进行微调。按下 'S' 键可手动保存当前微调结果图片和点云。
+[11:57:59.894] [info] [ManualCalib] 初始位姿 T_lidar_to_cam:
+[11:57:59.894] [info]   - Translation: 0.1230, 0.0399, -0.0577
+[11:57:59.894] [info]   - RPY (deg):   90.7545, -179.8846, 91.2509
+[11:58:03.399] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:03.399] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:03.399] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:03.399] [info]   平移 XYZ: (0.1230, 0.0399, -0.0527) m
+[11:58:04.749] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:04.749] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:04.749] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:04.749] [info]   平移 XYZ: (0.1230, 0.0399, -0.0477) m
+[11:58:05.265] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.265] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.265] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.265] [info]   平移 XYZ: (0.1230, 0.0399, -0.0427) m
+[11:58:05.316] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.316] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.316] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.316] [info]   平移 XYZ: (0.1230, 0.0399, -0.0377) m
+[11:58:05.350] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.350] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.350] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.350] [info]   平移 XYZ: (0.1230, 0.0399, -0.0327) m
+[11:58:05.383] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.383] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.383] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.383] [info]   平移 XYZ: (0.1230, 0.0399, -0.0277) m
+[11:58:05.421] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.421] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.421] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.421] [info]   平移 XYZ: (0.1230, 0.0399, -0.0227) m
+[11:58:05.447] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.447] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.447] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.447] [info]   平移 XYZ: (0.1230, 0.0399, -0.0177) m
+[11:58:05.478] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.478] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.478] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.478] [info]   平移 XYZ: (0.1230, 0.0399, -0.0127) m
+[11:58:05.507] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.507] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.507] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.507] [info]   平移 XYZ: (0.1230, 0.0399, -0.0077) m
+[11:58:05.538] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.538] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.538] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.538] [info]   平移 XYZ: (0.1230, 0.0399, -0.0027) m
+[11:58:05.573] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.574] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.574] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.574] [info]   平移 XYZ: (0.1230, 0.0399, 0.0023) m
+[11:58:05.610] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.610] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.610] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.610] [info]   平移 XYZ: (0.1230, 0.0399, 0.0073) m
+[11:58:05.636] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.636] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.636] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.636] [info]   平移 XYZ: (0.1230, 0.0399, 0.0123) m
+[11:58:05.666] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.666] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.666] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.666] [info]   平移 XYZ: (0.1230, 0.0399, 0.0173) m
+[11:58:05.696] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.696] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.696] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.696] [info]   平移 XYZ: (0.1230, 0.0399, 0.0223) m
+[11:58:05.743] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.743] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.743] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.743] [info]   平移 XYZ: (0.1230, 0.0399, 0.0273) m
+[11:58:05.781] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.781] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.781] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.781] [info]   平移 XYZ: (0.1230, 0.0399, 0.0323) m
+[11:58:05.811] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.811] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.811] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.811] [info]   平移 XYZ: (0.1230, 0.0399, 0.0373) m
+[11:58:05.840] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.840] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.840] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.840] [info]   平移 XYZ: (0.1230, 0.0399, 0.0423) m
+[11:58:05.870] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.870] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.870] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.870] [info]   平移 XYZ: (0.1230, 0.0399, 0.0473) m
+[11:58:05.902] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.902] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.902] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.902] [info]   平移 XYZ: (0.1230, 0.0399, 0.0523) m
+[11:58:05.931] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.931] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.931] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.931] [info]   平移 XYZ: (0.1230, 0.0399, 0.0573) m
+[11:58:05.961] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:05.961] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:05.961] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:05.961] [info]   平移 XYZ: (0.1230, 0.0399, 0.0623) m
+[11:58:06.000] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.000] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.000] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.000] [info]   平移 XYZ: (0.1230, 0.0399, 0.0673) m
+[11:58:06.037] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.037] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.037] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.037] [info]   平移 XYZ: (0.1230, 0.0399, 0.0723) m
+[11:58:06.063] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.063] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.063] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.063] [info]   平移 XYZ: (0.1230, 0.0399, 0.0773) m
+[11:58:06.093] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.093] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.093] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.093] [info]   平移 XYZ: (0.1230, 0.0399, 0.0823) m
+[11:58:06.124] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.124] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.124] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.124] [info]   平移 XYZ: (0.1230, 0.0399, 0.0873) m
+[11:58:06.156] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.156] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.156] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.156] [info]   平移 XYZ: (0.1230, 0.0399, 0.0923) m
+[11:58:06.185] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.185] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.185] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.185] [info]   平移 XYZ: (0.1230, 0.0399, 0.0973) m
+[11:58:06.228] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.228] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.228] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.228] [info]   平移 XYZ: (0.1230, 0.0399, 0.1023) m
+[11:58:06.262] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.262] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.262] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.262] [info]   平移 XYZ: (0.1230, 0.0399, 0.1073) m
+[11:58:06.292] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.292] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.292] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.292] [info]   平移 XYZ: (0.1230, 0.0399, 0.1123) m
+[11:58:06.324] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.324] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.324] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.324] [info]   平移 XYZ: (0.1230, 0.0399, 0.1173) m
+[11:58:06.356] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.356] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.356] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.356] [info]   平移 XYZ: (0.1230, 0.0399, 0.1223) m
+[11:58:06.386] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.386] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.386] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.386] [info]   平移 XYZ: (0.1230, 0.0399, 0.1273) m
+[11:58:06.417] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.417] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.417] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.417] [info]   平移 XYZ: (0.1230, 0.0399, 0.1323) m
+[11:58:06.460] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.460] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.460] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.460] [info]   平移 XYZ: (0.1230, 0.0399, 0.1373) m
+[11:58:06.486] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.486] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.486] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.486] [info]   平移 XYZ: (0.1230, 0.0399, 0.1423) m
+[11:58:06.533] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.533] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.533] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.533] [info]   平移 XYZ: (0.1230, 0.0399, 0.1473) m
+[11:58:06.565] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.565] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.565] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.565] [info]   平移 XYZ: (0.1230, 0.0399, 0.1523) m
+[11:58:06.593] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.593] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.593] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.593] [info]   平移 XYZ: (0.1230, 0.0399, 0.1573) m
+[11:58:06.629] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.629] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.629] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.629] [info]   平移 XYZ: (0.1230, 0.0399, 0.1623) m
+[11:58:06.659] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.659] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.659] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.659] [info]   平移 XYZ: (0.1230, 0.0399, 0.1673) m
+[11:58:06.688] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.688] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.688] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.688] [info]   平移 XYZ: (0.1230, 0.0399, 0.1723) m
+[11:58:06.721] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.721] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.721] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.721] [info]   平移 XYZ: (0.1230, 0.0399, 0.1773) m
+[11:58:06.763] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.763] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.763] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.763] [info]   平移 XYZ: (0.1230, 0.0399, 0.1823) m
+[11:58:06.786] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.786] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.786] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.786] [info]   平移 XYZ: (0.1230, 0.0399, 0.1873) m
+[11:58:06.816] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.816] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.816] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.816] [info]   平移 XYZ: (0.1230, 0.0399, 0.1923) m
+[11:58:06.858] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.858] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.858] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.858] [info]   平移 XYZ: (0.1230, 0.0399, 0.1973) m
+[11:58:06.892] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.892] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.892] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.892] [info]   平移 XYZ: (0.1230, 0.0399, 0.2023) m
+[11:58:06.925] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.925] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.925] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.925] [info]   平移 XYZ: (0.1230, 0.0399, 0.2073) m
+[11:58:06.964] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.964] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.964] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.964] [info]   平移 XYZ: (0.1230, 0.0399, 0.2123) m
+[11:58:06.989] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:06.989] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:06.989] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:06.989] [info]   平移 XYZ: (0.1230, 0.0399, 0.2173) m
+[11:58:07.020] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.020] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.020] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.020] [info]   平移 XYZ: (0.1230, 0.0399, 0.2223) m
+[11:58:07.061] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.061] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.061] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.061] [info]   平移 XYZ: (0.1230, 0.0399, 0.2273) m
+[11:58:07.100] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.100] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.100] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.100] [info]   平移 XYZ: (0.1230, 0.0399, 0.2323) m
+[11:58:07.125] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.125] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.125] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.125] [info]   平移 XYZ: (0.1230, 0.0399, 0.2373) m
+[11:58:07.161] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.161] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.161] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.161] [info]   平移 XYZ: (0.1230, 0.0399, 0.2423) m
+[11:58:07.192] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.192] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.192] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.192] [info]   平移 XYZ: (0.1230, 0.0399, 0.2473) m
+[11:58:07.225] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.225] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.225] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.225] [info]   平移 XYZ: (0.1230, 0.0399, 0.2523) m
+[11:58:07.256] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.256] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.256] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.256] [info]   平移 XYZ: (0.1230, 0.0399, 0.2573) m
+[11:58:07.295] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.295] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.295] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.295] [info]   平移 XYZ: (0.1230, 0.0399, 0.2623) m
+[11:58:07.322] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.322] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.322] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.322] [info]   平移 XYZ: (0.1230, 0.0399, 0.2673) m
+[11:58:07.363] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.363] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.363] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.363] [info]   平移 XYZ: (0.1230, 0.0399, 0.2723) m
+[11:58:07.402] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.402] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.402] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.402] [info]   平移 XYZ: (0.1230, 0.0399, 0.2773) m
+[11:58:07.427] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.427] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.427] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.427] [info]   平移 XYZ: (0.1230, 0.0399, 0.2823) m
+[11:58:07.463] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.463] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.463] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.463] [info]   平移 XYZ: (0.1230, 0.0399, 0.2873) m
+[11:58:07.491] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.491] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.491] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.491] [info]   平移 XYZ: (0.1230, 0.0399, 0.2923) m
+[11:58:07.534] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.534] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.534] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.534] [info]   平移 XYZ: (0.1230, 0.0399, 0.2973) m
+[11:58:07.562] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.562] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.562] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.562] [info]   平移 XYZ: (0.1230, 0.0399, 0.3023) m
+[11:58:07.592] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.592] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.592] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.592] [info]   平移 XYZ: (0.1230, 0.0399, 0.3073) m
+[11:58:07.633] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.633] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.633] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.633] [info]   平移 XYZ: (0.1230, 0.0399, 0.3123) m
+[11:58:07.663] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.663] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.663] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.663] [info]   平移 XYZ: (0.1230, 0.0399, 0.3173) m
+[11:58:07.703] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.703] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.703] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.703] [info]   平移 XYZ: (0.1230, 0.0399, 0.3223) m
+[11:58:07.734] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.734] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.734] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.734] [info]   平移 XYZ: (0.1230, 0.0399, 0.3273) m
+[11:58:07.763] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.763] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.763] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.763] [info]   平移 XYZ: (0.1230, 0.0399, 0.3323) m
+[11:58:07.811] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.811] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.811] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.811] [info]   平移 XYZ: (0.1230, 0.0399, 0.3373) m
+[11:58:07.846] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.846] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.846] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.846] [info]   平移 XYZ: (0.1230, 0.0399, 0.3423) m
+[11:58:07.872] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.872] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.872] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.872] [info]   平移 XYZ: (0.1230, 0.0399, 0.3473) m
+[11:58:07.906] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.906] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.906] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.906] [info]   平移 XYZ: (0.1230, 0.0399, 0.3523) m
+[11:58:07.935] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.935] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.935] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.935] [info]   平移 XYZ: (0.1230, 0.0399, 0.3573) m
+[11:58:07.965] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:07.965] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:07.965] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:07.965] [info]   平移 XYZ: (0.1230, 0.0399, 0.3623) m
+[11:58:08.004] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.004] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.004] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.004] [info]   平移 XYZ: (0.1230, 0.0399, 0.3673) m
+[11:58:08.034] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.034] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.034] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.034] [info]   平移 XYZ: (0.1230, 0.0399, 0.3723) m
+[11:58:08.071] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.071] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.071] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.071] [info]   平移 XYZ: (0.1230, 0.0399, 0.3773) m
+[11:58:08.102] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.102] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.102] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.102] [info]   平移 XYZ: (0.1230, 0.0399, 0.3823) m
+[11:58:08.137] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.137] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.137] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.137] [info]   平移 XYZ: (0.1230, 0.0399, 0.3873) m
+[11:58:08.185] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.185] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.185] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.185] [info]   平移 XYZ: (0.1230, 0.0399, 0.3923) m
+[11:58:08.220] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.220] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.220] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.220] [info]   平移 XYZ: (0.1230, 0.0399, 0.3973) m
+[11:58:08.246] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.246] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.246] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.246] [info]   平移 XYZ: (0.1230, 0.0399, 0.4023) m
+[11:58:08.294] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.294] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.294] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.294] [info]   平移 XYZ: (0.1230, 0.0399, 0.4073) m
+[11:58:08.325] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.325] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.325] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.325] [info]   平移 XYZ: (0.1230, 0.0399, 0.4123) m
+[11:58:08.366] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.366] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.366] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.366] [info]   平移 XYZ: (0.1230, 0.0399, 0.4173) m
+[11:58:08.396] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.397] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.397] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.397] [info]   平移 XYZ: (0.1230, 0.0399, 0.4223) m
+[11:58:08.434] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.434] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.434] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.434] [info]   平移 XYZ: (0.1230, 0.0399, 0.4273) m
+[11:58:08.474] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.474] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.474] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.474] [info]   平移 XYZ: (0.1230, 0.0399, 0.4323) m
+[11:58:08.503] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.503] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.503] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.503] [info]   平移 XYZ: (0.1230, 0.0399, 0.4373) m
+[11:58:08.539] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.541] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.541] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.541] [info]   平移 XYZ: (0.1230, 0.0399, 0.4423) m
+[11:58:08.568] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.568] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.568] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.568] [info]   平移 XYZ: (0.1230, 0.0399, 0.4473) m
+[11:58:08.604] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.604] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.604] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.604] [info]   平移 XYZ: (0.1230, 0.0399, 0.4523) m
+[11:58:08.634] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.634] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.634] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.634] [info]   平移 XYZ: (0.1230, 0.0399, 0.4573) m
+[11:58:08.677] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.677] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.677] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.677] [info]   平移 XYZ: (0.1230, 0.0399, 0.4623) m
+[11:58:08.703] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.703] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.703] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.703] [info]   平移 XYZ: (0.1230, 0.0399, 0.4673) m
+[11:58:08.748] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.748] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.748] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.748] [info]   平移 XYZ: (0.1230, 0.0399, 0.4723) m
+[11:58:08.778] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.778] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.778] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.778] [info]   平移 XYZ: (0.1230, 0.0399, 0.4773) m
+[11:58:08.807] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.807] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.807] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.807] [info]   平移 XYZ: (0.1230, 0.0399, 0.4823) m
+[11:58:08.840] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.840] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.840] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.840] [info]   平移 XYZ: (0.1230, 0.0399, 0.4873) m
+[11:58:08.868] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.868] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.868] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.868] [info]   平移 XYZ: (0.1230, 0.0399, 0.4923) m
+[11:58:08.907] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.907] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.907] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.907] [info]   平移 XYZ: (0.1230, 0.0399, 0.4973) m
+[11:58:08.934] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.934] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.934] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.934] [info]   平移 XYZ: (0.1230, 0.0399, 0.5023) m
+[11:58:08.982] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:08.982] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:08.982] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:08.982] [info]   平移 XYZ: (0.1230, 0.0399, 0.5073) m
+[11:58:09.020] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.020] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.020] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.020] [info]   平移 XYZ: (0.1230, 0.0399, 0.5123) m
+[11:58:09.047] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.048] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.048] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.048] [info]   平移 XYZ: (0.1230, 0.0399, 0.5173) m
+[11:58:09.084] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.084] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.084] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.084] [info]   平移 XYZ: (0.1230, 0.0399, 0.5223) m
+[11:58:09.111] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.111] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.111] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.111] [info]   平移 XYZ: (0.1230, 0.0399, 0.5273) m
+[11:58:09.143] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.143] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.143] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.143] [info]   平移 XYZ: (0.1230, 0.0399, 0.5323) m
+[11:58:09.172] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.172] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.172] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.172] [info]   平移 XYZ: (0.1230, 0.0399, 0.5373) m
+[11:58:09.221] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.221] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.221] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.221] [info]   平移 XYZ: (0.1230, 0.0399, 0.5423) m
+[11:58:09.251] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.251] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.251] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.251] [info]   平移 XYZ: (0.1230, 0.0399, 0.5473) m
+[11:58:09.284] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.284] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.284] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.284] [info]   平移 XYZ: (0.1230, 0.0399, 0.5523) m
+[11:58:09.315] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.315] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.315] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.315] [info]   平移 XYZ: (0.1230, 0.0399, 0.5573) m
+[11:58:09.349] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.349] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.349] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.349] [info]   平移 XYZ: (0.1230, 0.0399, 0.5623) m
+[11:58:09.379] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.379] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.379] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.379] [info]   平移 XYZ: (0.1230, 0.0399, 0.5673) m
+[11:58:09.418] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.418] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.418] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.418] [info]   平移 XYZ: (0.1230, 0.0399, 0.5723) m
+[11:58:09.450] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.450] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.450] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.450] [info]   平移 XYZ: (0.1230, 0.0399, 0.5773) m
+[11:58:09.481] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.481] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.481] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.481] [info]   平移 XYZ: (0.1230, 0.0399, 0.5823) m
+[11:58:09.511] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.511] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.511] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.511] [info]   平移 XYZ: (0.1230, 0.0399, 0.5873) m
+[11:58:09.548] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.548] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.548] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.548] [info]   平移 XYZ: (0.1230, 0.0399, 0.5923) m
+[11:58:09.587] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.587] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.587] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.587] [info]   平移 XYZ: (0.1230, 0.0399, 0.5973) m
+[11:58:09.615] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.615] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.615] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.615] [info]   平移 XYZ: (0.1230, 0.0399, 0.6023) m
+[11:58:09.655] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.655] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.655] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.655] [info]   平移 XYZ: (0.1230, 0.0399, 0.6073) m
+[11:58:09.686] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.686] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.686] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.686] [info]   平移 XYZ: (0.1230, 0.0399, 0.6123) m
+[11:58:09.725] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.725] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.725] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.725] [info]   平移 XYZ: (0.1230, 0.0399, 0.6173) m
+[11:58:09.749] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.749] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.749] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.749] [info]   平移 XYZ: (0.1230, 0.0399, 0.6223) m
+[11:58:09.787] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.787] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.787] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.787] [info]   平移 XYZ: (0.1230, 0.0399, 0.6273) m
+[11:58:09.820] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.820] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.820] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.820] [info]   平移 XYZ: (0.1230, 0.0399, 0.6323) m
+[11:58:09.873] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.873] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.873] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.873] [info]   平移 XYZ: (0.1230, 0.0399, 0.6373) m
+[11:58:09.911] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.911] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.911] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.911] [info]   平移 XYZ: (0.1230, 0.0399, 0.6423) m
+[11:58:09.936] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.936] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.936] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.936] [info]   平移 XYZ: (0.1230, 0.0399, 0.6473) m
+[11:58:09.987] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:09.987] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:09.987] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:09.987] [info]   平移 XYZ: (0.1230, 0.0399, 0.6523) m
+[11:58:10.022] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.022] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.022] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.022] [info]   平移 XYZ: (0.1230, 0.0399, 0.6573) m
+[11:58:10.050] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.050] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.050] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.050] [info]   平移 XYZ: (0.1230, 0.0399, 0.6623) m
+[11:58:10.086] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.086] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.086] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.086] [info]   平移 XYZ: (0.1230, 0.0399, 0.6673) m
+[11:58:10.113] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.113] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.113] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.113] [info]   平移 XYZ: (0.1230, 0.0399, 0.6723) m
+[11:58:10.144] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.144] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.144] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.144] [info]   平移 XYZ: (0.1230, 0.0399, 0.6773) m
+[11:58:10.173] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.173] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.173] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.173] [info]   平移 XYZ: (0.1230, 0.0399, 0.6823) m
+[11:58:10.207] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.207] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.207] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.207] [info]   平移 XYZ: (0.1230, 0.0399, 0.6873) m
+[11:58:10.233] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.233] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.233] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.233] [info]   平移 XYZ: (0.1230, 0.0399, 0.6923) m
+[11:58:10.276] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.276] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.276] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.276] [info]   平移 XYZ: (0.1230, 0.0399, 0.6973) m
+[11:58:10.306] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.306] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.306] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.306] [info]   平移 XYZ: (0.1230, 0.0399, 0.7023) m
+[11:58:10.337] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.337] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.337] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.337] [info]   平移 XYZ: (0.1230, 0.0399, 0.7073) m
+[11:58:10.369] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.370] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.370] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.370] [info]   平移 XYZ: (0.1230, 0.0399, 0.7123) m
+[11:58:10.405] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.405] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.405] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.405] [info]   平移 XYZ: (0.1230, 0.0399, 0.7173) m
+[11:58:10.437] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.437] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.437] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.437] [info]   平移 XYZ: (0.1230, 0.0399, 0.7223) m
+[11:58:10.467] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.467] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.467] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.467] [info]   平移 XYZ: (0.1230, 0.0399, 0.7273) m
+[11:58:10.507] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.507] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.507] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.507] [info]   平移 XYZ: (0.1230, 0.0399, 0.7323) m
+[11:58:10.531] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.531] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.531] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.531] [info]   平移 XYZ: (0.1230, 0.0399, 0.7373) m
+[11:58:10.577] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.577] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.577] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.577] [info]   平移 XYZ: (0.1230, 0.0399, 0.7423) m
+[11:58:10.607] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.607] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.607] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.607] [info]   平移 XYZ: (0.1230, 0.0399, 0.7473) m
+[11:58:10.653] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.653] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.653] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.653] [info]   平移 XYZ: (0.1230, 0.0399, 0.7523) m
+[11:58:10.683] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.683] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.684] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.684] [info]   平移 XYZ: (0.1230, 0.0399, 0.7573) m
+[11:58:10.713] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.713] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.713] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.713] [info]   平移 XYZ: (0.1230, 0.0399, 0.7623) m
+[11:58:10.758] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.758] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.758] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.758] [info]   平移 XYZ: (0.1230, 0.0399, 0.7673) m
+[11:58:10.804] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.804] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.804] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.804] [info]   平移 XYZ: (0.1230, 0.0399, 0.7723) m
+[11:58:10.827] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.827] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.827] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.827] [info]   平移 XYZ: (0.1230, 0.0399, 0.7773) m
+[11:58:10.861] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.861] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.861] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.861] [info]   平移 XYZ: (0.1230, 0.0399, 0.7823) m
+[11:58:10.890] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.890] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.890] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.890] [info]   平移 XYZ: (0.1230, 0.0399, 0.7873) m
+[11:58:10.919] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.919] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.919] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.919] [info]   平移 XYZ: (0.1230, 0.0399, 0.7923) m
+[11:58:10.950] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.950] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.950] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.950] [info]   平移 XYZ: (0.1230, 0.0399, 0.7973) m
+[11:58:10.988] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:10.988] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:10.988] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:10.988] [info]   平移 XYZ: (0.1230, 0.0399, 0.8023) m
+[11:58:11.021] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.021] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.021] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.021] [info]   平移 XYZ: (0.1230, 0.0399, 0.8073) m
+[11:58:11.049] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.049] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.049] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.049] [info]   平移 XYZ: (0.1230, 0.0399, 0.8123) m
+[11:58:11.084] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.084] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.084] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.084] [info]   平移 XYZ: (0.1230, 0.0399, 0.8173) m
+[11:58:11.115] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.115] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.115] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.115] [info]   平移 XYZ: (0.1230, 0.0399, 0.8223) m
+[11:58:11.160] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.160] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.160] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.160] [info]   平移 XYZ: (0.1230, 0.0399, 0.8273) m
+[11:58:11.206] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.206] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.206] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.206] [info]   平移 XYZ: (0.1230, 0.0399, 0.8323) m
+[11:58:11.228] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.228] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.228] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.228] [info]   平移 XYZ: (0.1230, 0.0399, 0.8373) m
+[11:58:11.260] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.260] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.260] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.260] [info]   平移 XYZ: (0.1230, 0.0399, 0.8423) m
+[11:58:11.299] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.299] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.299] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.299] [info]   平移 XYZ: (0.1230, 0.0399, 0.8473) m
+[11:58:11.329] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.329] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.329] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.329] [info]   平移 XYZ: (0.1230, 0.0399, 0.8523) m
+[11:58:11.366] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.366] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.366] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.366] [info]   平移 XYZ: (0.1230, 0.0399, 0.8573) m
+[11:58:11.404] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.404] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.404] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.404] [info]   平移 XYZ: (0.1230, 0.0399, 0.8623) m
+[11:58:11.430] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.430] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.430] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.430] [info]   平移 XYZ: (0.1230, 0.0399, 0.8673) m
+[11:58:11.480] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.480] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.480] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.480] [info]   平移 XYZ: (0.1230, 0.0399, 0.8723) m
+[11:58:11.512] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.512] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.512] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.512] [info]   平移 XYZ: (0.1230, 0.0399, 0.8773) m
+[11:58:11.549] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.549] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.549] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.549] [info]   平移 XYZ: (0.1230, 0.0399, 0.8823) m
+[11:58:11.581] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.581] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.581] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.581] [info]   平移 XYZ: (0.1230, 0.0399, 0.8873) m
+[11:58:11.618] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.618] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.618] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.618] [info]   平移 XYZ: (0.1230, 0.0399, 0.8923) m
+[11:58:11.652] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.652] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.652] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.652] [info]   平移 XYZ: (0.1230, 0.0399, 0.8973) m
+[11:58:11.684] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.684] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.684] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.684] [info]   平移 XYZ: (0.1230, 0.0399, 0.9023) m
+[11:58:11.715] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.715] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.715] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.715] [info]   平移 XYZ: (0.1230, 0.0399, 0.9073) m
+[11:58:11.745] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.745] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.745] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.745] [info]   平移 XYZ: (0.1230, 0.0399, 0.9123) m
+[11:58:11.786] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.786] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.786] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.786] [info]   平移 XYZ: (0.1230, 0.0399, 0.9173) m
+[11:58:11.815] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.815] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.815] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.815] [info]   平移 XYZ: (0.1230, 0.0399, 0.9223) m
+[11:58:11.865] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.865] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.865] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.865] [info]   平移 XYZ: (0.1230, 0.0399, 0.9273) m
+[11:58:11.902] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.902] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.902] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.902] [info]   平移 XYZ: (0.1230, 0.0399, 0.9323) m
+[11:58:11.928] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.928] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.928] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.928] [info]   平移 XYZ: (0.1230, 0.0399, 0.9373) m
+[11:58:11.969] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.969] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.969] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.969] [info]   平移 XYZ: (0.1230, 0.0399, 0.9423) m
+[11:58:11.993] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:11.993] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:11.993] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:11.993] [info]   平移 XYZ: (0.1230, 0.0399, 0.9473) m
+[11:58:12.024] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:12.024] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:12.024] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:12.024] [info]   平移 XYZ: (0.1230, 0.0399, 0.9523) m
+[11:58:12.066] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:12.066] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:12.066] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:12.066] [info]   平移 XYZ: (0.1230, 0.0399, 0.9573) m
+[11:58:12.107] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:12.107] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:12.107] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:12.107] [info]   平移 XYZ: (0.1230, 0.0399, 0.9623) m
+[11:58:12.135] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:12.135] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:12.135] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:12.135] [info]   平移 XYZ: (0.1230, 0.0399, 0.9673) m
+[11:58:12.184] [debug] [ManualAdjust] 平移增量 dxyz=(0.0000, 0.0000, 0.0050)m
+[11:58:12.184] [info] [ManualAdjust] 当前外参 [imu_0→cam_left]:
+[11:58:12.184] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[11:58:12.184] [info]   平移 XYZ: (0.1230, 0.0399, 0.9723) m
+[11:58:12.647] [info] [ManualSession] 用户取消，保留自动标定结果
+[11:58:12.647] [debug] [ManualSession] 事件: lidar_cam_end | final_rms=0.000000
+[11:58:12.647] [info] [ManualSession] 会话已保存: ./results/manual_sessions/session_2026-04-10_11-57-59.yaml
+[11:58:12.647] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:58:12.647] [info] ■ 结束阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[11:58:12.647] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 12783 ms
+[11:58:12.647] [info]   消息: LiDAR-Camera 手动调整完成
+[11:58:12.647] [info] [CALC] 阶段结束 stage=Manual-Refine task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=12783.9 threshold=-1.0000
+[11:58:12.647] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:58:12.647] [info] ====== Pipeline Report: pipeline_20260410_115755 ======
+[11:58:12.647] [info]   Total time: 16709.5 ms
+[11:58:12.647] [info]   All stages succeeded: YES
+[11:58:12.647] [info]   标定质量: 各阶段 RMS 均在阈值内
+[11:58:12.647] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[11:58:12.647] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=0.0000 time=3925.6ms: LiDAR-Camera 精标定完成: 4 个相机, 最大 RMS=0.000000 px
+[11:58:12.647] [info]   [Manual-Refine-lidar_cam_extrin] success=true rms=0.0000 time=12783.9ms: LiDAR-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   imu_0->cam_front:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+║   imu_0->cam_left:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+║   imu_0->cam_rear:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+║   imu_0->cam_right:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[11:58:12.647] [info] ================================
+[11:58:12.647] [info] Pipeline report saved: ./results/pipeline_report_20260410_115755.yaml
+[11:58:12.647] [info] ====== Pipeline Report: pipeline_20260410_115755 ======
+[11:58:12.647] [info]   Total time: 16709.5 ms
+[11:58:12.647] [info]   All stages succeeded: YES
+[11:58:12.647] [info]   标定质量: 各阶段 RMS 均在阈值内
+[11:58:12.647] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[11:58:12.647] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=0.0000 time=3925.6ms: LiDAR-Camera 精标定完成: 4 个相机, 最大 RMS=0.000000 px
+[11:58:12.647] [info]   [Manual-Refine-lidar_cam_extrin] success=true rms=0.0000 time=12783.9ms: LiDAR-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   imu_0->cam_front:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+║   imu_0->cam_left:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+║   imu_0->cam_rear:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+║   imu_0->cam_right:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[11:58:12.647] [info] ================================
+[11:58:12.647] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[11:58:12.647] [info] LiDAR-Camera 标定流程完成
+[11:58:12.647] [info] 结果目录: ./results
+[11:58:12.647] [info] 标定流程正常退出 exit_code=0
+[11:58:12.647] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

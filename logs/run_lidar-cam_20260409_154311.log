@@ -1,0 +1,525 @@
+
+ ╔═══════════════════════════════════════════════════════╗
+ ║   UniCalib — LiDAR-Camera 外参标定                    ║
+ ║   两阶段: AI粗标定(MIAS-LCEC) → 无目标边缘精标定      ║
+ ║   手动校准: --manual 触发 6-DOF 交互式调整             ║
+ ╚═══════════════════════════════════════════════════════╝
+
+[2026-04-09 15:43:11.905] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 15:43:11.905] [info] [LiDAR-Camera] [:] 配置文件: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 15:43:11.905] [info] [LiDAR-Camera] [:] 输出目录: /root/calib_ws/results
+[2026-04-09 15:43:11.905] [info] [LiDAR-Camera] [:] 数据根目录: /root/calib_ws/data (--data-dir 或 CALIB_DATA_DIR)
+[2026-04-09 15:43:11.905] [info] [LiDAR-Camera] [:] 精标定方法: edge (无目标优先=true)
+[2026-04-09 15:43:11.905] [info] [LiDAR-Camera] [:] AI粗标定: true | 手动校准: true
+[2026-04-09 15:43:11.905] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 15:43:11.906] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ [数据路径] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]   数据路径来源: 统一格式 (data.lidar.<id> / data.camera.<id>.images_dir)
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]   配置原始值 — lidar:  lidar_pcd
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]   配置原始值 — camera: Image/cam_left
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]   base_data_dir:  /root/calib_ws/data
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]   base 来源: 命令行 --data-dir
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]   lidar_dir:      /root/calib_ws/data/lidar_pcd
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]   camera_dir:     /root/calib_ws/data/Image/cam_left
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]     → 相对路径，已与 base 拼接
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]     → 存在: 是
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]   【数据就绪】是 — 点云与图像目录均存在，将执行精标定
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:]   说明: 使用 --dataset 时请将 data.lidar/data.camera 设为相对 base 的路径（如 pcd、images），不要使用 /path/to/... 占位符
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:] [LiDAR-Cam] use_config_extrinsic_only=true：跳过 AI 粗标定，将使用配置 initial_extrinsic 直接进入精标定/手动微调
+[2026-04-09 15:43:11.907] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 15:43:11.908] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-09 15:43:11.908] [info] [LiDAR-Camera] [:] 读取系统配置: /root/calib_ws/calib_unified/config/unicalib_example.yaml
+[2026-04-09 15:43:11.909] [info] [LiDAR-Camera] [:]   IMU: 1, LiDAR: 2, Camera: 2
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] [数据源] 类型=FILES  lidar_dir=/root/calib_ws/data/lidar_pcd  camera_dir=/root/calib_ws/data/Image/cam_left
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:]   内参将从相机标定结果读取: ./results/camera_intrinsic/camera_intrinsic_cam_left.yaml (camera_id=cam_left)
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] [CalibPipeline] 初始化 ID=pipeline_20260409_154311
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] [CalibPipeline] 输出目录: ./results
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] [CalibPipeline] 无目标优先: true
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] [CalibPipeline] 任务掩码: 0x10
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] ▶ Stage 2: 精标定 (方法=edge)
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] ▶ Stage 3: 手动校准 (manual_threshold=2.00px)
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:]   使用 ManualCalibSession 进行 6-DOF 交互式调整
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:]   调用示例:
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:]     ManualCalibSession::SessionConfig sess_cfg;
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:]     sess_cfg.save_dir = "./results/manual_sessions";
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:]     ManualCalibSession session(sess_cfg);
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:]     auto result = session.run_lidar_cam(scan, image, intrin, auto_result, auto_rms);
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] 
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] ╔═══════════════════════════════════════════════╗
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] ║   UniCalib 两阶段标定流水线 — 开始            ║
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] ║   Pipeline ID: pipeline_20260409_154311       ║
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] ╚═══════════════════════════════════════════════╝
+[2026-04-09 15:43:11.910] [info] [LiDAR-Camera] [:] [Coarse-AI/LiDAR-Cam] enable_coarse_lidar_cam=true → do_coarse=true
+[15:43:11.910] [info] 
+[15:43:11.910] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:11.910] [info] ▶ 开始阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[15:43:11.910] [info]   描述: AI模型提供初始估计值
+[15:43:11.910] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:11.910] [info] [CALC] 粗标定阶段开始 task=lidar_cam_extrin
+[15:43:11.910] [info] [Coarse-AI/LiDAR-Cam] 使用配置粗标定初值作为粗标定结果 t=[0.123,0.040,-0.058]m，精标定将以此起步
+[15:43:11.910] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:11.910] [info] ■ 结束阶段: [Coarse-AI] 任务: [lidar_cam_extrin]
+[15:43:11.910] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 0 ms
+[15:43:11.910] [info]   消息: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[15:43:11.910] [info] [CALC] 阶段结束 stage=Coarse-AI task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=0.0 threshold=-1.0000
+[15:43:11.910] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:11.910] [info] 
+[15:43:11.910] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:11.910] [info] ▶ 开始阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[15:43:11.910] [info]   描述: 无目标优化
+[15:43:11.910] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:11.910] [info] [CALC] 精标定阶段开始 task=lidar_cam_extrin
+[15:43:11.910] [info] [Fine-Auto] 任务: lidar_cam_extrin | 无目标优先: true
+[15:43:11.910] [info] [Fine-Auto] 方法: 边缘对齐互信息 (EDGE_ALIGNMENT, 无目标)
+[15:43:11.910] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 开始
+[15:43:11.910] [info] [Fine-Auto/LiDAR-Cam] 开始执行精标定...
+[15:43:11.910] [info]   [精标定数据源] 类型=FILES  lidar_id=lidar_front
+[15:43:11.910] [info]   文件目录: lidar=/root/calib_ws/data/lidar_pcd  camera=/root/calib_ws/data/Image/cam_left
+[15:43:11.910] [info] [Fine-Auto/LiDAR-Cam] 步骤: 从文件加载点云
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+Failed to find match for field 'intensity'.
+[15:43:13.597] [info] [Fine-Auto/LiDAR-Cam] 点云加载完成 — 22 帧
+[15:43:13.930] [info] [Fine-Auto] 推断内参: 1024x768 fx=921.6 fy=921.6
+[15:43:13.930] [info] [Fine-Auto/LiDAR-Cam] 步骤: LiDAR-Camera 标定 相机=camera_list (方法: 边缘对齐)
+[15:43:13.932] [info] [CalibVisualizer] 初始化完成
+[15:43:13.932] [info] [Fine-Auto/LiDAR-Cam] 可视化已启用：仅标定结束后显示一帧「图像+点云投影」叠加，不创建 3D 窗口、不泵送其他帧
+[15:43:13.932] [info] [Fine-Auto/LiDAR-Cam] 使用粗标定初值 t=[0.123,0.040,-0.058]m
+[15:43:13.934] [info] [Fine-Auto] 结果已保存: ./results/lidar_cam_camera_list_extrinsic.yaml
+[15:43:13.934] [info] [Viz] 即将生成投影图并保存到 ./results/lidar_cam_camera_list_projection.png
+[15:43:13.963] [info] 投影可视化保存: ./results/lidar_cam_camera_list_projection.png
+[15:43:13.963] [info] [Viz] 投影图已保存（仅使用配置初值，未做精标定）
+[15:43:13.963] [info] [Fine-Auto/LiDAR-Cam] 相机 camera_list 已使用配置初值跳过精标定，直接供手动微调
+[15:43:13.963] [info] [Viz/Display] 即将关闭可视化窗口 原因=用户关闭或流程结束 pangolin_running=false
+[15:43:13.969] [info] [Fine-Auto/LiDAR-Cam] 精标定完成: 1 个相机  最大 RMS=0.0000 px
+[15:43:13.969] [info] [STAGE=lidar_cam_fine_auto] LiDAR-Camera 精标定 完成
+[15:43:13.969] [info] [Fine-Auto/LiDAR-Cam] RMS 阈值=2.00 px  最大 RMS=0.0000 px  在阈值内
+[15:43:13.971] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:13.971] [info] ■ 结束阶段: [Fine-Auto] 任务: [lidar_cam_extrin]
+[15:43:13.971] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 2061 ms
+[15:43:13.971] [info]   消息: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=0.000000 px
+[15:43:13.971] [info] [CALC] 阶段结束 stage=Fine-Auto task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=2059.1 threshold=2.0000
+[15:43:13.971] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:13.971] [info] [Pipeline] 用户已启用手动校准 (--manual), 进入 6-DOF 调整
+[15:43:13.971] [info] 
+[15:43:13.971] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:13.971] [info] ▶ 开始阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[15:43:13.971] [info]   描述: 手动校准: 6-DOF 交互式调整
+[15:43:13.971] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:13.971] [info] [Manual-Refine] 任务: lidar_cam_extrin
+[15:43:13.971] [info] [Manual-Refine] 操作说明: Q/A Roll  W/S Pitch  E/D Yaw  R/F Tx  T/G Ty  Y/H Tz  U Undo  Enter 接受  Esc 取消
+[15:43:13.971] [info] [ManualSession] 会话ID: session_2026-04-09_15-43-13
+[15:43:13.971] [info] [ManualSession] 保存目录: ./results/manual_sessions
+[15:43:13.971] [info] [Manual-Refine] 已打开 6-DOF 可视化调整窗口，请在本窗口内按键微调后 Enter 接受或 Esc 取消
+[15:43:13.971] [info] [Manual-Refine] LiDAR-Camera 手动调整仅使用首帧匹配数据（第 0 帧点云 + 第 0 帧图像）
+[15:43:13.971] [info] [ManualSession] 启动 LiDAR-Camera 手动校准
+[15:43:13.971] [info] [ManualSession] 自动标定 RMS: 0.0000 px (阈值建议 < 2.0px)
+[15:43:13.971] [debug] [ManualSession] 事件: lidar_cam_start | auto_rms=0.000000
+[15:43:13.971] [info] [ManualAdjust] 初始外参:
+[15:43:13.971] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:13.971] [info]   旋转 RPY: (-58.8701, -88.5405, -31.0062) deg
+[15:43:13.971] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:13.971] [info] [ManualSession] ===== 手动校准操作说明 =====
+[15:43:13.971] [info]   Q/A: Roll ±0.1deg   W/S: Pitch ±0.1deg   E/D: Yaw ±0.1deg
+[15:43:13.971] [info]   R/F: Tx ±0.5cm   T/G: Ty ±0.5cm   Y/H: Tz ±0.5cm
+[15:43:13.971] [info]   Shift+键: 10倍步长
+[15:43:13.971] [info]   P: 进入点击精化模式  U: 撤销  Z: 重做
+[15:43:13.971] [info]   S: 保存  ESC: 接受并退出
+[15:43:13.971] [info]   点云投影质量越高 (边缘对齐越好) 表示标定越准确
+[15:43:13.990] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154313_initial.yaml
+[15:43:13.990] [info] [ManualCalib] 交互窗口启动前已自动保存初始状态快照（备用）:
+[15:43:13.990] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154313_initial.png
+[15:43:13.990] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154313_initial.pcd
+[15:43:13.990] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154313_initial.yaml
+
+(unicalib_lidar_camera:100): dbind-WARNING **: 15:43:13.992: Couldn't connect to accessibility bus: Failed to connect to socket /run/user/1000/at-spi/bus: No such file or directory
+[15:43:14.005] [info] [ManualCalib] 3D 点云窗口已禁用（避免 VTK 闪退），请在 2D 投影窗口进行微调。按下 'S' 键可手动保存当前微调结果图片和点云。
+[15:43:14.005] [info] [ManualCalib] 初始位姿 T_lidar_to_cam:
+[15:43:14.005] [info]   - Translation: 0.1230, 0.0399, -0.0577
+[15:43:14.005] [info]   - RPY (deg):   90.7545, -179.8846, 91.2509
+[15:43:27.766] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:27.766] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:27.766] [info]   旋转 RPY: (-62.3489, -88.5896, -27.5264) deg
+[15:43:27.766] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:27.821] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154327.yaml
+[15:43:27.821] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:27.821] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154327.png
+[15:43:27.821] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154327.pcd
+[15:43:27.821] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154327.yaml
+[15:43:28.270] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.270] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.270] [info]   旋转 RPY: (-66.0638, -88.6331, -23.8104) deg
+[15:43:28.270] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.289] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.289] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.289] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.289] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.289] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.304] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.304] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.304] [info]   旋转 RPY: (-70.0053, -88.6706, -19.8678) deg
+[15:43:28.304] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.328] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.328] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.328] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.328] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.328] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.332] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.332] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.332] [info]   旋转 RPY: (-74.1542, -88.7014, -15.7178) deg
+[15:43:28.332] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.354] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.354] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.354] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.354] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.354] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.369] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.369] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.369] [info]   旋转 RPY: (-78.4807, -88.7250, -11.3902) deg
+[15:43:28.369] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.388] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.388] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.388] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.388] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.388] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.396] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.396] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.396] [info]   旋转 RPY: (-82.9444, -88.7412, -6.9255) deg
+[15:43:28.396] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.421] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.421] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.421] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.421] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.421] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.435] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.435] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.436] [info]   旋转 RPY: (-87.4956, -88.7495, -2.3731) deg
+[15:43:28.436] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.458] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.458] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.458] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.458] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.458] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.463] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.463] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.463] [info]   旋转 RPY: (-92.0787, -88.7499, 2.2110) deg
+[15:43:28.463] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.481] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.481] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.481] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.481] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.481] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.505] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.505] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.505] [info]   旋转 RPY: (-96.6353, -88.7423, 6.7687) deg
+[15:43:28.505] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.525] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.526] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.526] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.526] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.526] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.539] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.539] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.539] [info]   旋转 RPY: (-101.1093, -88.7269, 11.2438) deg
+[15:43:28.539] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.560] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.561] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.561] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.561] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.561] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.566] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.566] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.566] [info]   旋转 RPY: (-105.4504, -88.7039, 15.5860) deg
+[15:43:28.566] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.585] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.585] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.585] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.585] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.585] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.599] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.599] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.599] [info]   旋转 RPY: (-109.6172, -88.6737, 19.7540) deg
+[15:43:28.599] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.623] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.623] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.623] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.623] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.623] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.627] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.627] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.627] [info]   旋转 RPY: (-113.5790, -88.6369, 23.7168) deg
+[15:43:28.627] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.650] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.650] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.650] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.650] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.650] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.663] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.663] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.663] [info]   旋转 RPY: (-117.3155, -88.5939, 27.4544) deg
+[15:43:28.663] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.684] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.684] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.684] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.684] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.684] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.691] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.691] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.691] [info]   旋转 RPY: (-120.8164, -88.5453, 30.9564) deg
+[15:43:28.691] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.715] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.715] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.715] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.715] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.715] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.726] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.726] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.726] [info]   旋转 RPY: (-124.0797, -88.4916, 34.2207) deg
+[15:43:28.726] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.746] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.746] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.746] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.746] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.746] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.754] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.754] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.754] [info]   旋转 RPY: (-127.1096, -88.4334, 37.2517) deg
+[15:43:28.754] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.773] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.773] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.773] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.773] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.773] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.790] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.790] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.790] [info]   旋转 RPY: (-129.9151, -88.3711, 40.0583) deg
+[15:43:28.790] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.808] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.808] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.808] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.808] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.808] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.818] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.818] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.818] [info]   旋转 RPY: (-132.5082, -88.3052, 42.6526) deg
+[15:43:28.818] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.841] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.841] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.841] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.841] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.841] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.858] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.858] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.858] [info]   旋转 RPY: (-134.9027, -88.2361, 45.0482) deg
+[15:43:28.858] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.883] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.883] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.883] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.883] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.883] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.886] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.886] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.886] [info]   旋转 RPY: (-137.1131, -88.1641, 47.2597) deg
+[15:43:28.886] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.907] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.907] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.907] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.907] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.907] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.917] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.917] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.917] [info]   旋转 RPY: (-139.1540, -88.0897, 49.3016) deg
+[15:43:28.917] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.935] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.935] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.935] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.935] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.935] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.946] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.946] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.946] [info]   旋转 RPY: (-141.0395, -88.0129, 51.1882) deg
+[15:43:28.946] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.967] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.967] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.967] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.967] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.967] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.980] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:28.980] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:28.980] [info]   旋转 RPY: (-142.7830, -87.9342, 52.9328) deg
+[15:43:28.980] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:28.997] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:28.997] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:28.997] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154328.png
+[15:43:28.997] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154328.pcd
+[15:43:28.997] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154328.yaml
+[15:43:29.007] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:29.007] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:29.007] [info]   旋转 RPY: (-144.3971, -87.8537, 54.5480) deg
+[15:43:29.007] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:29.028] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.028] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:29.028] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154329.png
+[15:43:29.028] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154329.pcd
+[15:43:29.028] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.043] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:29.043] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:29.044] [info]   旋转 RPY: (-145.8935, -87.7717, 56.0454) deg
+[15:43:29.044] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:29.067] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.067] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:29.067] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154329.png
+[15:43:29.067] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154329.pcd
+[15:43:29.067] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.071] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:29.071] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:29.071] [info]   旋转 RPY: (-147.2826, -87.6882, 57.4357) deg
+[15:43:29.071] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:29.090] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.090] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:29.090] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154329.png
+[15:43:29.090] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154329.pcd
+[15:43:29.090] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.103] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:29.103] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:29.103] [info]   旋转 RPY: (-148.5742, -87.6034, 58.7283) deg
+[15:43:29.103] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:29.123] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.123] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:29.123] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154329.png
+[15:43:29.123] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154329.pcd
+[15:43:29.123] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.132] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:29.132] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:29.132] [info]   旋转 RPY: (-149.7770, -87.5176, 59.9322) deg
+[15:43:29.132] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:29.152] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.152] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:29.152] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154329.png
+[15:43:29.152] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154329.pcd
+[15:43:29.152] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.166] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:29.166] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:29.166] [info]   旋转 RPY: (-150.8988, -87.4307, 61.0552) deg
+[15:43:29.166] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:29.184] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.184] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:29.184] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154329.png
+[15:43:29.184] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154329.pcd
+[15:43:29.184] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.194] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:29.194] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:29.194] [info]   旋转 RPY: (-151.9469, -87.3428, 62.1043) deg
+[15:43:29.194] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:29.211] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.211] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:29.211] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154329.png
+[15:43:29.211] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154329.pcd
+[15:43:29.211] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.238] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, -0.100, 0.000)deg
+[15:43:29.238] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:29.238] [info]   旋转 RPY: (-152.9275, -87.2542, 63.0861) deg
+[15:43:29.238] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:29.259] [info] [ManualAdjust] 结果已保存: ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:29.259] [info] [ManualCalib] 手动微调快照已保存:
+[15:43:29.259] [info]   - 投影图: ./results/lidar_camera_extrinsic/manual_projection_20260409_154329.png
+[15:43:29.259] [info]   - 点云:   ./results/lidar_camera_extrinsic/manual_cloud_20260409_154329.pcd
+[15:43:29.259] [info]   - 外参:   ./results/lidar_camera_extrinsic/manual_extrinsic_20260409_154329.yaml
+[15:43:30.968] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.100, 0.000)deg
+[15:43:30.968] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:30.968] [info]   旋转 RPY: (-151.9469, -87.3428, 62.1043) deg
+[15:43:30.968] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:31.365] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.100, 0.000)deg
+[15:43:31.365] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:31.365] [info]   旋转 RPY: (-150.8988, -87.4307, 61.0552) deg
+[15:43:31.365] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:31.782] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.100, 0.000)deg
+[15:43:31.782] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:31.782] [info]   旋转 RPY: (-149.7770, -87.5176, 59.9322) deg
+[15:43:31.782] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:32.022] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.100, 0.000)deg
+[15:43:32.022] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:32.022] [info]   旋转 RPY: (-148.5742, -87.6034, 58.7283) deg
+[15:43:32.022] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:32.522] [debug] [ManualAdjust] 旋转增量 RPY=(0.000, 0.100, 0.000)deg
+[15:43:32.522] [info] [ManualAdjust] 当前外参 [lidar_front→camera_list]:
+[15:43:32.522] [info]   旋转 RPY: (-147.2826, -87.6882, 57.4357) deg
+[15:43:32.522] [info]   平移 XYZ: (0.1230, 0.0399, -0.0577) m
+[15:43:40.182] [info] [ManualSession] 用户取消，保留自动标定结果
+[15:43:40.183] [debug] [ManualSession] 事件: lidar_cam_end | final_rms=0.000000
+[15:43:40.183] [info] [ManualSession] 会话已保存: ./results/manual_sessions/session_2026-04-09_15-43-13.yaml
+[15:43:40.183] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:40.183] [info] ■ 结束阶段: [Manual-Refine] 任务: [lidar_cam_extrin]
+[15:43:40.183] [info]   结果: ✓ 成功 | 残差RMS: 0.0000 | 耗时: 26211 ms
+[15:43:40.183] [info]   消息: LiDAR-Camera 手动调整完成
+[15:43:40.183] [info] [CALC] 阶段结束 stage=Manual-Refine task=lidar_cam_extrin success=true residual_rms=0.000000 elapsed_ms=26211.3 threshold=-1.0000
+[15:43:40.183] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:40.183] [info] ====== Pipeline Report: pipeline_20260409_154311 ======
+[15:43:40.183] [info]   Total time: 28270.3 ms
+[15:43:40.183] [info]   All stages succeeded: YES
+[15:43:40.183] [info]   标定质量: 各阶段 RMS 均在阈值内
+[15:43:40.183] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[15:43:40.183] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=0.0000 time=2059.1ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=0.000000 px
+[15:43:40.183] [info]   [Manual-Refine-lidar_cam_extrin] success=true rms=0.0000 time=26211.3ms: LiDAR-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   lidar_front->camera_list:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[15:43:40.183] [info] ================================
+[15:43:40.183] [info] Pipeline report saved: ./results/pipeline_report_20260409_154311.yaml
+[15:43:40.183] [info] ====== Pipeline Report: pipeline_20260409_154311 ======
+[15:43:40.183] [info]   Total time: 28270.3 ms
+[15:43:40.183] [info]   All stages succeeded: YES
+[15:43:40.183] [info]   标定质量: 各阶段 RMS 均在阈值内
+[15:43:40.183] [info]   [Coarse-AI-lidar_cam_extrin] success=true rms=0.0000 time=0.0ms: 使用配置 initial_extrinsic 作为粗标定结果，精标定将以此起步
+[15:43:40.183] [info]   [Fine-Auto-lidar_cam_extrin] success=true rms=0.0000 time=2059.1ms: LiDAR-Camera 精标定完成: 1 个相机, 最大 RMS=0.000000 px
+[15:43:40.183] [info]   [Manual-Refine-lidar_cam_extrin] success=true rms=0.0000 time=26211.3ms: LiDAR-Camera 手动调整完成
+
+╔══════════════════════════════════════════════════════╗
+║              标定参数汇总                            ║
+╠══════════════════════════════════════════════════════╣
+║ 外参:
+║   lidar_front->camera_list:
+║     R(RPY°): [-58.87, -88.54, -31.01]
+║     T(m):    [0.12, 0.04, -0.06]
+║     时偏(s): 0.00
+║     RMS:     0.00 ✗
+╚══════════════════════════════════════════════════════╝
+
+[15:43:40.183] [info] ================================
+[15:43:40.183] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+[15:43:40.183] [info] LiDAR-Camera 标定流程完成
+[15:43:40.183] [info] 结果目录: ./results
+[15:43:40.183] [info] 标定流程正常退出 exit_code=0
+[15:43:40.183] [info] ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

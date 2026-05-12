@@ -1,0 +1,208 @@
+[0.019s] Invoking command in '/root/calib_ws/build/UniCalib': /opt/cmake/bin/cmake /root/calib_ws/calib_unified -DCMAKE_BUILD_TYPE=Release -DUSE_THIRDPARTY_LIBS=ON -DUSE_VETA_STUB=ON -Dglm_DIR=/root/calib_ws/docker/deps/glm/cmake/glm -DCMAKE_INSTALL_PREFIX=/root/calib_ws/install/UniCalib
+[0.196s] -- The C compiler identification is GNU 11.4.0
+[0.196s] -- The CXX compiler identification is GNU 11.4.0
+[0.196s] -- Detecting C compiler ABI info
+[0.196s] -- Detecting C compiler ABI info - done
+[0.196s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.196s] -- Detecting C compile features
+[0.196s] -- Detecting C compile features - done
+[0.196s] -- Detecting CXX compiler ABI info
+[0.198s] -- Detecting CXX compiler ABI info - done
+[0.202s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.203s] -- Detecting CXX compile features
+[0.203s] -- Detecting CXX compile features - done
+[0.208s] -- Eigen3 found: /usr/include/eigen3
+[0.212s] -- Sophus: found in system
+[0.212s] -- veta: using self-contained veta-impl at /root/calib_ws/calib_unified/thirdparty/veta-impl/include
+[0.212s] -- basalt-headers: ✓ Found at /root/calib_ws/calib_unified/thirdparty/basalt-headers/include
+[0.212s] --   • Features: Se3Spline, So3Spline, RdSpline, CeresHelper
+[0.284s] -- libpng Found and Enabled
+[0.317s] -- libjpeg Found and Enabled
+[0.321s] -- libtiff Found and Enabled
+[0.322s] -- libopenexr Found and Enabled
+[0.323s] -- liblz4 Found and Enabled
+[0.324s] -- libzstd Found and Enabled
+[0.334s] -- Found Eigen: '/usr/include/eigen3'
+[1.595s] -- Performing Test HAS_FLTO
+[1.881s] -- Performing Test HAS_FLTO - Success
+[2.132s] -- Selected Python: '/usr/bin/python3.10'. cmake --build . -t pypangolin_pip_install to use pypangolin module.
+[2.135s] -- libdc1394 Found and Enabled
+[2.139s] -- V4L Found and Enabled
+[2.141s] -- Performing Test HAVE_FFMPEG_MAX_ANALYZE_DURATION
+[2.381s] -- Performing Test HAVE_FFMPEG_MAX_ANALYZE_DURATION - Success
+[2.382s] -- Performing Test HAVE_FFMPEG_AVFORMAT_ALLOC_OUTPUT_CONTEXT2
+[2.624s] -- Performing Test HAVE_FFMPEG_AVFORMAT_ALLOC_OUTPUT_CONTEXT2 - Success
+[2.624s] -- Performing Test HAVE_FFMPEG_AVPIXELFORMAT
+[2.694s] -- Performing Test HAVE_FFMPEG_AVPIXELFORMAT - Success
+[2.698s] -- ffmpeg Found and Enabled: /usr/include/x86_64-linux-gnu;/usr/include/x86_64-linux-gnu;/usr/include/x86_64-linux-gnu;/usr/include/x86_64-linux-gnu;/usr/include/x86_64-linux-gnu
+[2.702s] -- Found PkgConfig: /usr/bin/pkg-config (found version "0.29.2") 
+[2.767s] -- OpenNI Found and Enabled
+[2.782s] -- OpenNI2 Found and Enabled
+[3.232s] -- Checking for module 'wayland-egl'
+[3.240s] --   Found wayland-egl, version 18.1.0
+[3.264s] -- Checking for module 'wayland-cursor'
+[3.271s] --   Found wayland-cursor, version 1.20.0
+[3.292s] -- Checking for module 'xkbcommon'
+[3.302s] --   Found xkbcommon, version 1.4.0
+[3.330s] -- Pangolin: building from /root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0
+[3.330s] -- Pangolin include paths: /root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_core/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_display/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_opengl/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_windowing/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_vars/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_image/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_plot/include;/root/calib_ws/calib_unified/thirdparty/Pangolin/Pangolin-0.9.0/components/pango_video/include
+[3.330s] -- basalt-headers: using /root/calib_ws/calib_unified/thirdparty/basalt-headers/include
+[3.330s] -- ctraj: using basalt-headers + ctraj_basalt_compat (replacing ctraj_full)
+[3.334s] -- Found Threads: TRUE  
+[3.352s] -- Found CXSparse: /usr/include/suitesparse (found suitable version "3.2.0", minimum required is "3.2.0") 
+[3.647s] -- Found AMD headers in: /usr/include/suitesparse
+[3.648s] -- Found AMD library: /usr/lib/x86_64-linux-gnu/libamd.so
+[3.649s] -- Found CAMD headers in: /usr/include/suitesparse
+[3.649s] -- Found CAMD library: /usr/lib/x86_64-linux-gnu/libcamd.so
+[3.650s] -- Found CCOLAMD headers in: /usr/include/suitesparse
+[3.651s] -- Found CCOLAMD library: /usr/lib/x86_64-linux-gnu/libccolamd.so
+[3.651s] -- Found CHOLMOD headers in: /usr/include/suitesparse
+[3.651s] -- Found CHOLMOD library: /usr/lib/x86_64-linux-gnu/libcholmod.so
+[3.652s] -- Found COLAMD headers in: /usr/include/suitesparse
+[3.652s] -- Found COLAMD library: /usr/lib/x86_64-linux-gnu/libcolamd.so
+[3.652s] -- Found SPQR headers in: /usr/include/suitesparse
+[3.653s] -- Found SPQR library: /usr/lib/x86_64-linux-gnu/libspqr.so
+[3.653s] -- Found Config headers in: /usr/include/suitesparse
+[3.654s] -- Found Config library: /usr/lib/x86_64-linux-gnu/libsuitesparseconfig.so
+[3.658s] -- Found Intel Thread Building Blocks (TBB) library (2021.5 / ) include location: . Assuming SuiteSparseQR was compiled with TBB.
+[3.658s] -- Looking for shm_open in rt
+[3.699s] -- Looking for shm_open in rt - found
+[3.699s] -- Adding librt to SuiteSparse_config libraries (required on Linux & Unix [not OSX] if SuiteSparse is compiled with timing).
+[3.704s] -- Found METIS: /usr/include (found version "5.1.0") 
+[3.705s] -- Found SuiteSparse: /usr/include/suitesparse (found suitable version "5.10.1", minimum required is "5.10.1") found components: AMD CAMD CCOLAMD CHOLMOD COLAMD SPQR Config 
+[3.706s] -- Found required Ceres dependency: Eigen version 3.4.0 in /usr/share/eigen3/cmake
+[3.714s] -- Found required Ceres dependency: glog
+[3.715s] -- Found required Ceres dependency: gflags
+[3.715s] -- Found Ceres version: 2.1.0 installed in: /usr/local with components: [EigenSparse, SparseLinearAlgebraLibrary, LAPACK, SuiteSparse, CXSparse, SchurSpecializations, Multithreading]
+[3.715s] -- Ceres: 2.1.0
+[3.737s] -- Found CUDA: /usr/local/cuda (found suitable exact version "11.8") 
+[3.745s] -- Found OpenCV: /usr/local (found suitable version "4.8.0", minimum required is "4") found components: core imgproc calib3d highgui features2d video 
+[3.745s] -- OpenCV: 4.8.0
+[3.759s] -- Checking for module 'eigen3'
+[3.765s] --   Found eigen3, version 3.4.0
+[3.782s] -- Found Eigen: /usr/include/eigen3 (Required is at least version "3.1") 
+[3.782s] -- Eigen found (include: /usr/include/eigen3, version: 3.4.0)
+[3.791s] -- Found Boost: /usr/lib/x86_64-linux-gnu/cmake/Boost-1.74.0/BoostConfig.cmake (found suitable version "1.74.0", minimum required is "1.65.0") found components: system filesystem date_time iostreams serialization 
+[3.823s] -- Checking for module 'libusb-1.0'
+[3.831s] --   Found libusb-1.0, version 1.0.25
+[3.845s] -- Found libusb: /usr/lib/x86_64-linux-gnu/libusb-1.0.so  
+[3.846s] -- Found OpenNI: /usr/lib/libOpenNI.so;libusb::libusb (found version "1.5.4.0") 
+[3.846s] -- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+[3.871s] -- Found OpenNI2: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb (found version "2.2.0.33") 
+[3.871s] -- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)
+[3.872s] ** WARNING ** io features related to pcap will be disabled
+[3.872s] ** WARNING ** io features related to png will be disabled
+[3.898s] -- Found GLEW: /usr/lib/x86_64-linux-gnu/libGLEW.so  
+[3.900s] -- Found OpenGL: /usr/lib/x86_64-linux-gnu/libOpenGL.so  found components: OpenGL GLX 
+[3.980s] -- Found MPI_C: /usr/lib/x86_64-linux-gnu/libmpi.so (found version "3.1") 
+[3.981s] -- Found MPI: TRUE (found version "3.1") found components: C 
+[3.982s] -- Found JsonCpp: /usr/lib/x86_64-linux-gnu/libjsoncpp.so (found suitable version "1.9.5", minimum required is "0.7.0") 
+[3.989s] -- Found ZLIB: /usr/lib/x86_64-linux-gnu/libz.so (found version "1.2.11") 
+[4.003s] -- Found PNG: /usr/lib/x86_64-linux-gnu/libpng.so (found version "1.6.37") 
+[4.012s] -- Found Eigen3: /usr/include/eigen3 (found version "3.4.0") 
+[4.033s] -- Found X11: /usr/include   
+[4.091s] -- Found EXPAT: /usr/lib/x86_64-linux-gnu/libexpat.so (found version "2.4.7") 
+[4.093s] -- Found double-conversion: /usr/lib/x86_64-linux-gnu/libdouble-conversion.so  
+[4.095s] -- Found LZ4: /usr/lib/x86_64-linux-gnu/liblz4.so (found version "1.9.3") 
+[4.096s] -- Found LZMA: /usr/lib/x86_64-linux-gnu/liblzma.so (found version "5.2.5") 
+[4.105s] -- Found JPEG: /usr/lib/x86_64-linux-gnu/libjpeg.so (found version "80") 
+[4.108s] -- Found TIFF: /usr/lib/x86_64-linux-gnu/libtiff.so (found version "4.3.0")  
+[4.113s] -- Found Freetype: /usr/lib/x86_64-linux-gnu/libfreetype.so (found version "2.11.1") 
+[4.117s] -- Found utf8cpp: /usr/include/utf8cpp  
+[4.142s] -- Eigen found (include: /usr/include/eigen3, version: 3.4.0)
+[4.160s] -- Checking for module 'flann'
+[4.167s] --   Found flann, version 1.9.1
+[4.193s] -- Found FLANN: /usr/lib/x86_64-linux-gnu/libflann_cpp.so  
+[4.193s] -- FLANN found (include: /usr/include, lib: /usr/lib/x86_64-linux-gnu/libflann_cpp.so)
+[4.465s] -- OpenNI found (version: 1.5.4.0, include: /usr/include/ni, lib: /usr/lib/libOpenNI.so;libusb::libusb)
+[4.470s] -- OpenNI2 found (version: 2.2.0.33, include: /usr/include/openni2, lib: /usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb)
+[4.601s] -- looking for PCL_COMMON
+[4.601s] -- Found PCL_COMMON: /usr/lib/x86_64-linux-gnu/libpcl_common.so  
+[4.601s] -- looking for PCL_OCTREE
+[4.602s] -- Found PCL_OCTREE: /usr/lib/x86_64-linux-gnu/libpcl_octree.so  
+[4.602s] -- looking for PCL_IO
+[4.603s] -- Found PCL_IO: /usr/lib/x86_64-linux-gnu/libpcl_io.so  
+[4.603s] -- looking for PCL_SAMPLE_CONSENSUS
+[4.604s] -- Found PCL_SAMPLE_CONSENSUS: /usr/lib/x86_64-linux-gnu/libpcl_sample_consensus.so  
+[4.604s] -- looking for PCL_FILTERS
+[4.605s] -- Found PCL_FILTERS: /usr/lib/x86_64-linux-gnu/libpcl_filters.so  
+[4.605s] -- looking for PCL_KDTREE
+[4.606s] -- Found PCL_KDTREE: /usr/lib/x86_64-linux-gnu/libpcl_kdtree.so  
+[4.606s] -- looking for PCL_SEARCH
+[4.607s] -- Found PCL_SEARCH: /usr/lib/x86_64-linux-gnu/libpcl_search.so  
+[4.607s] -- looking for PCL_GEOMETRY
+[4.607s] -- Found PCL_GEOMETRY: /usr/include/pcl-1.12  
+[4.607s] -- looking for PCL_ML
+[4.608s] -- Found PCL_ML: /usr/lib/x86_64-linux-gnu/libpcl_ml.so  
+[4.608s] -- looking for PCL_SEGMENTATION
+[4.609s] -- Found PCL_SEGMENTATION: /usr/lib/x86_64-linux-gnu/libpcl_segmentation.so  
+[4.609s] -- looking for PCL_REGISTRATION
+[4.610s] -- Found PCL_REGISTRATION: /usr/lib/x86_64-linux-gnu/libpcl_registration.so  
+[4.610s] -- looking for PCL_2D
+[4.610s] -- Found PCL_2D: /usr/include/pcl-1.12  
+[4.611s] -- looking for PCL_FEATURES
+[4.611s] -- Found PCL_FEATURES: /usr/lib/x86_64-linux-gnu/libpcl_features.so  
+[4.612s] -- looking for PCL_VISUALIZATION
+[4.612s] -- Found PCL_VISUALIZATION: /usr/lib/x86_64-linux-gnu/libpcl_visualization.so  
+[4.613s] -- Found PCL: pcl_common;pcl_octree;pcl_io;pcl_sample_consensus;pcl_filters;pcl_kdtree;pcl_search;pcl_ml;pcl_segmentation;pcl_registration;pcl_features;pcl_visualization;Boost::system;Boost::filesystem;Boost::date_time;Boost::iostreams;Boost::serialization;/usr/lib/libOpenNI.so;libusb::libusb;/usr/lib/x86_64-linux-gnu/libOpenNI2.so;libusb::libusb;VTK::ChartsCore;VTK::CommonColor;VTK::CommonComputationalGeometry;VTK::CommonCore;VTK::CommonDataModel;VTK::CommonExecutionModel;VTK::CommonMath;VTK::CommonMisc;VTK::CommonTransforms;VTK::FiltersCore;VTK::FiltersExtraction;VTK::FiltersGeneral;VTK::FiltersGeometry;VTK::FiltersModeling;VTK::FiltersSources;VTK::ImagingCore;VTK::ImagingSources;VTK::InteractionImage;VTK::InteractionStyle;VTK::InteractionWidgets;VTK::IOCore;VTK::IOGeometry;VTK::IOImage;VTK::IOLegacy;VTK::IOPLY;VTK::RenderingAnnotation;VTK::RenderingCore;VTK::RenderingContext2D;VTK::RenderingLOD;VTK::RenderingFreeType;VTK::ViewsCore;VTK::ViewsContext2D;VTK::RenderingOpenGL2;VTK::GUISupportQt;FLANN::FLANN  
+[4.613s] -- PCL: 1.12.1
+[4.621s] -- spdlog: 1.9.2
+[4.621s] -- fmt: 8.1.1
+[4.624s] -- yaml-cpp: 0.7.0
+[4.768s] -- Found OpenMP_C: -fopenmp (found version "4.5") 
+[4.817s] -- Found OpenMP_CXX: -fopenmp (found version "4.5") 
+[4.817s] -- Found OpenMP: TRUE (found version "4.5")  
+[4.817s] -- OpenMP: found, version 4.5
+[5.069s] -- Found Python3: /usr/bin/python3 (found version "3.10.12") found components: Interpreter 
+[5.202s] -- Found rosidl_generator_c: 3.1.8 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[5.209s] -- Found rosidl_adapter: 3.1.8 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[5.219s] -- Found rosidl_generator_cpp: 3.1.8 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[5.233s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[5.251s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[5.303s] -- Found rmw_implementation_cmake: 6.1.2 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[5.306s] -- Found rmw_fastrtps_cpp: 6.2.10 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[5.383s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  
+[5.411s] -- Found FastRTPS: /opt/ros/humble/include  
+[5.455s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[5.547s] -- ROS2: found rclcpp, enabling full ROS2 integration
+[5.547s] -- ufomap: found new API (surfel_map) at /root/calib_ws/iKalibr/thirdparty-install/ufomap-install/include
+[5.548s] -- opengv: found prebuilt via cmake config
+[5.548s] -- Python bridge: enabled (DM-Calib/MIAS-LCEC/Transformer-IMU/L2Calib)
+[5.548s] -- iKalibr: checking dependencies...
+[5.548s] -- iKalibr: dependencies ✓ (Ceres, Sophus, Eigen3)
+[5.548s] -- Visualization: ✓ Pangolin 3D backend (interactive OpenGL)
+[5.548s] -- iKalibr: ✓ Enabled (B-spline solver via basalt-headers)
+[5.548s] --   • Spline backend: basalt-headers
+[5.548s] --   • Visualization backend: PANGOLIN
+[5.548s] -- unicalib: ✓ Library configured (PANGOLIN backend)
+[5.549s] -- lz4 library: /usr/lib/x86_64-linux-gnu/liblz4.so
+[5.550s] -- 
+[5.550s] -- ========= UniCalib v2.0.0 构建配置 =========
+[5.550s] --   Build type:    Release
+[5.550s] --   C++ standard:  17
+[5.550s] --   Eigen3:        3.4.0
+[5.550s] --   OpenCV:        4.5.4
+[5.550s] --   PCL:           1.12.1
+[5.550s] --   Ceres:         2.1.0
+[5.550s] --   spdlog:        1.9.2
+[5.550s] --   fmt:           8.1.1
+[5.550s] --   OpenMP:        TRUE
+[5.550s] --   opengv:        bundled headers ()
+[5.550s] --   ufomap:        1
+[5.550s] --   veta:          self-contained (veta-impl)
+[5.551s] --   Pangolin:      ON
+[5.551s] --   ROS2:          ON
+[5.551s] --   Build apps:    ON
+[5.551s] --   PCL viz:       ON
+[5.551s] -- =======================================================
+[5.551s] -- Configuring done
+[5.739s] -- Generating done
+[5.741s] CMake Warning:
+[5.741s]   Manually-specified variables were not used by the project:
+[5.741s] 
+[5.741s]     USE_THIRDPARTY_LIBS
+[5.741s]     USE_VETA_STUB
+[5.741s]     glm_DIR
+[5.741s] 
+[5.741s] 
+[5.770s] -- Build files have been written to: /root/calib_ws/build/UniCalib
