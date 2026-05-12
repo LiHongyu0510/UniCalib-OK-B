@@ -1,0 +1,47 @@
+# build
+build/
+install/
+log/
+
+# ROS
+*.bag
+*.db3
+
+# CMake
+CMakeFiles/
+CMakeCache.txt
+cmake-build-*/
+
+# vscode
+.vscode/
+
+# idea
+.idea/
+
+# binary
+*.so
+*.a
+*.o
+
+# python
+__pycache__/
+*.pyc
+
+# docker
+*.tar
+
+# datasets
+data/
+dataset/
+datasets/
+
+# pointcloud
+*.pcd
+
+# image
+*.png
+*.jpg
+
+# calibration output
+output/
+results/
