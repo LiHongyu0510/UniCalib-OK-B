@@ -20,6 +20,7 @@ struct DecodedLidarFrame {
  * - Livox/Hesai：单文件字节流
  * - Blindspot：AACC 分隔的自定义帧流
  * - RoboSense RS-Helios：MSOP + DIFOP（可先 decode_file 自动按文件名推断 DIFOP）
+ * - 现已透明支持 .gz / .pcd.gz 压缩文件（内部 zlib 解压后走原有解码路径）
  */
 class LidarPacketReader {
 public:

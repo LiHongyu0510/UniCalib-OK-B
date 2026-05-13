@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iterator>
 #include <vector>
+#include <zlib.h>
 
 namespace ns_unicalib {
 
@@ -845,55 +846,74 @@ bool LidarPacketReader::decode_rs_msop_difop(const std::string& msop_path,
  * @param max_frames 最大帧数限制
  * @return true表示解码成功
  */
+namespace {
+bool decompress_gzip_to_temp(const std::string& gz_path, std::string& out_temp_path) {
+    gzFile gz = gzopen(gz_path.c_str(), "rb");
+    if (!gz) return false;
+    std::filesystem::path tmp = std::filesystem::temp_directory_path() / ("unicalib_lidar_" + std::to_string(std::hash<std::string>{}(gz_path)) + ".tmp");
+    std::ofstream ofs(tmp, std::ios::binary);
+    if (!ofs) { gzclose(gz); return false; }
+    std::vector<char> buf(4096);
+    int n;
+    while ((n = gzread(gz, buf.data(), buf.size())) > 0) {
+        ofs.write(buf.data(), n);
+    }
+    gzclose(gz);
+    ofs.close();
+    out_temp_path = tmp.string();
+    return true;
+}
+}  // namespace
+
 bool LidarPacketReader::decode_file(const std::string& file_path, 
                                     std::vector<DecodedLidarFrame>& frames,
                                     std::size_t max_frames,
                                     double blindspot_timestamp_unit_scale) {
     frames.clear();
-    std::ifstream ifs(file_path, std::ios::binary);
-    if (!ifs.is_open()) {
-        UNICALIB_WARN("[LidarPacketReader] 打开文件失败: {}", file_path);
-        return false;
-    }
+    std::string actual_path = file_path;
+    std::string temp_path;
+    bool is_compressed = false;
 
-    // 自动识别顺序：
-    // 1) 先尝试 Livox/Hesai 单文件流
-    // 2) 再尝试 Blindspot AACC 自定义帧流
-    // 3) 失败再按 RS MSOP 尝试，并自动推断同目录 DIFOP 文件名
-    if (decode_livox_or_hesai_stream(ifs, frames, max_frames)) {
-        UNICALIB_INFO("[LidarPacketReader] Livox/Hesai 解码完成: {} 帧 ({})", frames.size(), file_path);
-        return true;
-    }
-
-    // 重置文件流，尝试 AACC 补盲格式
-    ifs.clear();
-    ifs.seekg(0);
-    if (decode_blindspot_aacc_stream(ifs, frames, max_frames, blindspot_timestamp_unit_scale)) {
-        UNICALIB_INFO("[LidarPacketReader] Blindspot(AACC) 解码完成: {} 帧 ({})", frames.size(), file_path);
-        return true;
-    }
-
-    // 重置文件流，尝试RS格式
-    ifs.clear();
-    ifs.seekg(0);
-
-    // 自动推测DIFOP文件路径
-    std::string difop = guess_difop_from_msop_path(file_path);
-    {
-        namespace fs = std::filesystem;
-        if (difop.empty() || !fs::exists(difop)) {
-            difop.clear();
+    if (file_path.size() > 3 && file_path.substr(file_path.size()-3) == ".gz") {
+        if (decompress_gzip_to_temp(file_path, temp_path)) {
+            actual_path = temp_path;
+            is_compressed = true;
+        } else {
+            UNICALIB_WARN("[LidarPacketReader] gzip 解压失败: {}", file_path);
+            return false;
         }
     }
 
-    std::vector<DecodedLidarFrame> rs_frames;
-    if (decode_rs_msop_difop(file_path, difop, rs_frames, max_frames)) {
-        frames = std::move(rs_frames);
-        return true;
+    std::ifstream ifs(actual_path, std::ios::binary);
+    if (!ifs.is_open()) {
+        UNICALIB_WARN("[LidarPacketReader] 打开文件失败: {}", actual_path);
+        if (is_compressed) std::filesystem::remove(temp_path);
+        return false;
     }
 
-    UNICALIB_WARN("[LidarPacketReader] 解码失败: {}", file_path);
-    return false;
+    bool ok = false;
+    if (decode_livox_or_hesai_stream(ifs, frames, max_frames)) {
+        ok = true;
+    } else {
+        ifs.clear(); ifs.seekg(0);
+        if (decode_blindspot_aacc_stream(ifs, frames, max_frames, blindspot_timestamp_unit_scale)) {
+            ok = true;
+        } else {
+            ifs.clear(); ifs.seekg(0);
+            std::string difop = guess_difop_from_msop_path(actual_path);
+            namespace fs = std::filesystem;
+            if (difop.empty() || !fs::exists(difop)) difop.clear();
+            std::vector<DecodedLidarFrame> rs_frames;
+            if (decode_rs_msop_difop(actual_path, difop, rs_frames, max_frames)) {
+                frames = std::move(rs_frames);
+                ok = true;
+            }
+        }
+    }
+
+    if (is_compressed) std::filesystem::remove(temp_path);
+    if (!ok) UNICALIB_WARN("[LidarPacketReader] 解码失败: {}", file_path);
+    return ok;
 }
 
 }  // namespace ns_unicalib

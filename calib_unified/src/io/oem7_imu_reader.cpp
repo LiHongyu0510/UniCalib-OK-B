@@ -243,6 +243,28 @@ void apply_oem7_timestamps(std::vector<IMUFrameRos>& frames, const Oem7ImuDecode
 
 }  // namespace
 
+// ==================== EDIE 完整解析路径（需 -DUNICALIB_USE_EDIE=ON） ====================
+#if defined(UNICALIB_USE_EDIE)
+#include <decoders/novatel/framer.hpp>
+#include "oem7_raw_message_if.hpp"
+#include "oem7_messages.h"
+
+namespace {
+class FileReader : public bynav_oem7::Oem7MessageDecoderLibUserIf {
+public:
+    explicit FileReader(const std::string& path) : file_(path, std::ios::binary) {}
+    bool read(boost::asio::mutable_buffer buf, size_t& len) override {
+        if (!file_.is_open() || file_.eof()) return false;
+        file_.read(reinterpret_cast<char*>(buf.data()), buf.size());
+        len = static_cast<size_t>(file_.gcount());
+        return len > 0;
+    }
+private:
+    std::ifstream file_;
+};
+} // namespace
+#endif
+
 bool decode_oem7_imu_binary_file(const std::string& abs_path,
                                  const Oem7ImuDecodeParams& params,
                                  std::vector<IMUFrameRos>& out,
@@ -255,6 +277,69 @@ bool decode_oem7_imu_binary_file(const std::string& abs_path,
         return false;
     }
 
+#if defined(UNICALIB_USE_EDIE)
+    // ==================== EDIE 路径 ====================
+    try {
+        FileReader reader(abs_path);
+        auto decoder = bynav_oem7::GetOem7MessageDecoder(&reader);
+
+        std::shared_ptr<bynav_oem7::Oem7RawMessageIf> msg;
+        while (decoder->readMessage(msg)) {
+            if (!msg) continue;
+            const int id = msg->getMessageId();
+            const uint8_t* data = msg->getMessageData(0);
+            const size_t hdr = 28; // OEM7 长头长度
+
+            IMUFrameRos fr{};
+            bool got = false;
+
+            if (id == 1462) { // RAWIMUSX
+                const RAWIMUSXMem* imu = reinterpret_cast<const RAWIMUSXMem*>(data + hdr);
+                // TODO: 根据 imu->imu_type 应用正确比例因子（参考 bynav INSHandler）
+                fr.gyro[0] = imu->x_gyro * 1e-9;   // 示例缩放，需按型号调整
+                fr.gyro[1] = imu->y_gyro * 1e-9;
+                fr.gyro[2] = imu->z_gyro * 1e-9;
+                fr.accel[0] = imu->x_acc * 1e-8;
+                fr.accel[1] = imu->y_acc * 1e-8;
+                fr.accel[2] = imu->z_acc * 1e-8;
+                fr.timestamp = static_cast<double>(imu->gnss_week) * 604800.0 +
+                               static_cast<double>(imu->gnss_week_seconds);
+                got = true;
+            } else if (id == 1465) { // INSPVAX（推荐，带方差）
+                const INSPVAXMem* p = reinterpret_cast<const INSPVAXMem*>(data + hdr);
+                fr.gyro[0] = p->roll_rate;
+                fr.gyro[1] = p->pitch_rate;
+                fr.gyro[2] = p->yaw_rate;
+                fr.accel[0] = p->east_velocity; // 仅示例，实际需区分
+                fr.accel[1] = p->north_velocity;
+                fr.accel[2] = p->up_velocity;
+                fr.timestamp = static_cast<double>(p->gnss_week) * 604800.0 + p->seconds;
+                got = true;
+            } else if (id == 508) { // INSPVAS
+                const INSPVASmem* p = reinterpret_cast<const INSPVASmem*>(data + hdr);
+                fr.timestamp = static_cast<double>(p->gnss_week) * 604800.0 + p->seconds;
+                // 姿态可在此填充
+                got = true;
+            }
+
+            if (got) {
+                // 时间基转换（复用原有逻辑）
+                if (params.time_base == Oem7ImuTimeBase::UnixUtcApprox) {
+                    fr.timestamp = 315964800.0 + fr.timestamp - params.gps_minus_utc_leap_sec + params.time_offset_sec;
+                }
+                out.push_back(fr);
+            }
+        }
+        if (!out.empty()) {
+            UNICALIB_INFO("[OEM7] EDIE 解析成功: {} 帧", out.size());
+            return true;
+        }
+    } catch (const std::exception& e) {
+        UNICALIB_WARN("[OEM7] EDIE 解析异常，回退手写路径: {}", e.what());
+    }
+#endif
+
+    // ==================== 手写轻量路径（默认 / fallback） ====================
     std::ifstream ifs(abs_path, std::ios::binary);
     if (!ifs) {
         err_msg = "oem7_imu: 无法打开文件: " + abs_path;

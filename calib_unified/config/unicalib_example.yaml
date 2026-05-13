@@ -38,7 +38,7 @@
 auto_tasks:                 false
 do_imu_intrinsic:           true
 do_camera_intrinsic:        true
-do_imu_lidar_extrinsic:     false   # 当前 pipeline 仍要求 ROS2 bag；若后续接入 NEW_FORMAT 再打开
+do_imu_lidar_extrinsic:     true   # 当前 pipeline 仍要求 ROS2 bag；若后续接入 NEW_FORMAT 再打开
 do_lidar_lidar_extrinsic:   false   # 多 LiDAR 时置 true，并按 lidar_lidar.pairs 标定
 do_lidar_camera_extrinsic:  true
 do_cam_cam_extrinsic:       false
@@ -198,24 +198,27 @@ data:
     lidar_blind_2: ""
 
   # 相机：sensor_id -> { images_dir（必填文件模式）, intrinsic_yaml（可选）, reference_intrinsic_yaml（可选）}
-  # intrinsic_yaml：从 results 目录读取内参（相对 output_dir 或 --data-dir 解析，与 unicalib_camera_intrinsic 输出一致）
+  # intrinsic_yaml：跑完 unicalib_camera_intrinsic 后填写；相对 --data-dir 或与主配置一致的工程目录。
+  # 默认落盘路径：<output_dir>/<results.camera_intrinsic>/camera_intrinsic_<sensor_id>.yaml（见本文件 results 段；与 sensors[].id 一致）
+  # 例：output_dir=./results、results.camera_intrinsic=camera_intrinsic → results/camera_intrinsic/camera_intrinsic_center_front.yaml
+  # 仓库不提交内参文件，示例留空；需要时再填。
   camera:
     camera_num: 5
     center_front:
       images_dir: ""
-      intrinsic_yaml: results/camera_intrinsic/camera_intrinsic_center_front.yaml
+      intrinsic_yaml: ""
     surrounding_front:
       images_dir: ""
-      intrinsic_yaml: results/camera_intrinsic/camera_intrinsic_surrounding_front.yaml
+      intrinsic_yaml: ""
     surrounding_back:
       images_dir: ""
-      intrinsic_yaml: results/camera_intrinsic/camera_intrinsic_surrounding_back.yaml
+      intrinsic_yaml: ""
     surrounding_left:
       images_dir: ""
-      intrinsic_yaml: results/camera_intrinsic/camera_intrinsic_surrounding_left.yaml
+      intrinsic_yaml: ""
     surrounding_right:
       images_dir: ""
-      intrinsic_yaml: results/camera_intrinsic/camera_intrinsic_surrounding_right.yaml
+      intrinsic_yaml: ""
 
 # =============================================================================
 # 5. ROS2 数据源（与 data 段二选一或混用：未提供文件路径时从 bag 读）
@@ -262,8 +265,10 @@ ros2:
 # - path 推荐写相对 root_dir 的路径（如 pcd/xxx.pcd, images/xxx.png）
 new_format:
   enable: true
-  root_dir:
-  timestamp_unit: us   # s | ms | us | ns
+  # 与一键脚本配合建议写 "."：最终解析为 CALIB_DATA_DIR（容器内通常是 /root/calib_ws/data）
+  # 若不走脚本直接本机运行，可改成绝对路径（如 /data 或 /path/to/dataset）
+  root_dir: .
+  timestamp_unit: us   # s | ms | us | ns（大小写不敏感）
   # Bynav / NovAtel OEM7 短二进制 CORRIMUDATAS（索引 CSV 两列：占位,oem7.bin）时的 IMU 输出频率 Hz，与 INSHandler 的 imu_rate 一致
   oem7_imu_rate_hz: 200
   # OEM7 解码后 IMU 时间戳：gps=自 GPS 历元连续秒（与报文一致）；unix=近似 UTC 的 Unix 秒（与索引里 Unix 时间对齐，需正确 leap）
@@ -351,8 +356,11 @@ imu_lidar:
   # 键: "imu_id__lidar_id" 或 "T_imu_id__lidar_id"。值支持两种形式（可混用）：
   #   1) 文件路径（字符串）：YAML 文件内需含 T_Imu_Lidar 或 T_Body_Lidar 的 4x4。
   #   2) 内联 4x4：含 rows: 4, cols: 4, data: [16 个数行优先]。不写或 null 表示该对手眼粗标定+精标定。
-  # 主雷达相对 IMU（安装表 mm→m，与车体轴平行假设）：T_lidar_in_imu 平移 t = r_lidar - r_imu
-  #   r_imu=(792.7,569.8,0), r_lidar_main=(776.16,876.11,0) → t=(-0.01654, 0.30631, 0) m
+  # 安装表 mm→m（惯性导航单元盒子中心 r_imu；与 IMU 轴 Y前 X右 Z上 平行假设 R=I）：T_lidar_in_imu，t = (r_lidar - r_imu)/1000 [m]
+  #   r_imu=(792.7, 569.8, 0)
+  #   主雷达 r=(776.16, 876.11, 0)     → t=(-0.01654,  0.30631,  0.0)
+  #   补盲1   r=(-37.49, 530.31, 430.63) → t=(-0.83019, -0.03949,  0.43063)
+  #   补盲2   r=(1539.14, 705.48, -501.01) → t=(0.74644, 0.13568, -0.50101)
   initial_extrinsics:
     T_imu_0__lidar_main:
       rows: 4
@@ -362,7 +370,22 @@ imu_lidar:
              0.0, 1.0, 0.0,  0.30631,
              0.0, 0.0, 1.0,  0.0,
              0.0, 0.0, 0.0,  1.0]
-    # imu_0 ↔ lidar_blind_* 无表内坐标 → 不填键，手眼自动初值
+    T_imu_0__lidar_blind_1:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0, -0.83019,
+             0.0, 1.0, 0.0, -0.03949,
+             0.0, 0.0, 1.0,  0.43063,
+             0.0, 0.0, 0.0,  1.0]
+    T_imu_0__lidar_blind_2:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0,  0.74644,
+             0.0, 1.0, 0.0,  0.13568,
+             0.0, 0.0, 1.0, -0.50101,
+             0.0, 0.0, 0.0,  1.0]
 
   ndt_resolution: 1.0
   ndt_max_iter: 30
@@ -414,16 +437,32 @@ lidar_lidar:
     - [lidar_main, lidar_blind_1]
     - [lidar_main, lidar_blind_2]
   lidar_list: [lidar_main, lidar_blind_1, lidar_blind_2]
-  # 与「主雷达+五相机」安装表无关：补盲相对主雷达需单独测量/CAD。若 pairs 多对共用本矩阵会告警；仅示例占位。
-  # T_target_in_ref：p_ref = T * p_target；平移/旋转需由 T_Body 链式推导后填入。
-  initial_extrinsic: !!opencv-matrix
-    rows: 4
-    cols: 4
-    dt: d
-    data: [1.0, 0.0, 0.0, 0.81360000,
-           0.0, 1.0, 0.0, 0.34580000,
-           0.0, 0.0, 1.0, -0.43060000,
-           0.0, 0.0, 0.0, 1.00000000]
+  # 安装表 mm→m（与 IMU/雷达同一车体坐标、轴平行 R=I）：pairs [ref,target] → T_target_in_ref，t = (r_target - r_ref)/1000 [m]
+  #   r_main=(776.16,876.11,0), r_blind1=(-37.49,530.31,430.63), r_blind2=(1539.14,705.48,-501.01)
+  #   main→blind1: (-0.81365,-0.3458,0.43063)  main→blind2: (0.76298,-0.17063,-0.50101)
+  initial_extrinsics:
+    lidar_main__lidar_blind_1:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0, -0.81365,
+             0.0, 1.0, 0.0, -0.34580,
+             0.0, 0.0, 1.0,  0.43063,
+             0.0, 0.0, 0.0,  1.0]
+    lidar_main__lidar_blind_2:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0,  0.76298,
+             0.0, 1.0, 0.0, -0.17063,
+             0.0, 0.0, 1.0, -0.50101,
+             0.0, 0.0, 0.0,  1.0]
+  # 兼容旧配置：单块 initial_extrinsic 对所有 pairs 共用（多对时建议用上方 initial_extrinsics）
+  # initial_extrinsic: !!opencv-matrix
+  #   rows: 4
+  #   cols: 4
+  #   dt: d
+  #   data: [ ... ]
 
   # 粗标定参数 (P0: FPFH+鲁棒位姿 默认开启，失败回退 NDT)
   coarse:
@@ -617,17 +656,71 @@ cam_cam:
   # 前视中心 pinhole + 周视前 fisheye：视场更易重叠，对极线/棋盘格标定比左右周视对更易对齐；勿用 surrounding_left/right 作一对（朝向差过大）。
   pairs:
     - [center_front, surrounding_front]
+    - [center_front, surrounding_left]
+    - [center_front, surrounding_right]
+    - [surrounding_front, surrounding_left]
+    - [surrounding_front, surrounding_right]
+    - [surrounding_left, surrounding_back]
+    - [surrounding_right, surrounding_back]
 
-  # 与安装表一致（mm→m，轴与车体平行假设）：pairs [center_front, surrounding_front] → T_surrounding_front_in_center_front
-  # t = r_surrounding_front - r_center_front（说明书中心坐标差）
-  initial_extrinsic: !!opencv-matrix
-    rows: 4
-    cols: 4
-    dt: d
-    data: [1.0, 0.0, 0.0, -0.00506,
-           0.0, 1.0, 0.0,  0.00313,
-           0.0, 0.0, 1.0, -0.03987,
-           0.0, 0.0, 0.0,  1.0]
+  # 与安装表一致（mm→m，车体轴平行假设 R=I）：pairs [ref,target] → T_target_in_ref，平移 t = r_target - r_ref（表中为说明书输出中心，相机1=surrounding_front … 相机5=center_front）
+  initial_extrinsics:
+    center_front__surrounding_front:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0, -0.00506,
+             0.0, 1.0, 0.0,  0.00313,
+             0.0, 0.0, 1.0, -0.03987,
+             0.0, 0.0, 0.0,  1.0]
+    center_front__surrounding_left:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0,  0.77187,
+             0.0, 1.0, 0.0,  0.05662,
+             0.0, 0.0, 1.0,  0.50058,
+             0.0, 0.0, 0.0,  1.0]
+    center_front__surrounding_right:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0,  0.77187,
+             0.0, 1.0, 0.0,  0.05662,
+             0.0, 0.0, 1.0, -0.53876,
+             0.0, 0.0, 0.0,  1.0]
+    surrounding_front__surrounding_left:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0,  0.77693,
+             0.0, 1.0, 0.0,  0.05349,
+             0.0, 0.0, 1.0,  0.54045,
+             0.0, 0.0, 0.0,  1.0]
+    surrounding_front__surrounding_right:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0,  0.77693,
+             0.0, 1.0, 0.0,  0.05349,
+             0.0, 0.0, 1.0, -0.49889,
+             0.0, 0.0, 0.0,  1.0]
+    surrounding_left__surrounding_back:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0,  0.83208,
+             0.0, 1.0, 0.0,  0.0,
+             0.0, 0.0, 1.0, -0.51967,
+             0.0, 0.0, 0.0,  1.0]
+    surrounding_right__surrounding_back:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0,  0.83208,
+             0.0, 1.0, 0.0,  0.0,
+             0.0, 0.0, 1.0,  0.51967,
+             0.0, 0.0, 0.0,  1.0]
 
   fix_intrinsics: true
   max_rms_px: 2.0

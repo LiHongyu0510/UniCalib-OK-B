@@ -514,4 +514,22 @@ void YamlIO::save_imu_intrinsics(
     UNICALIB_INFO("IMU 内参已保存: {}", yaml_path);
 }
 
+// ===================================================================
+// 解析 YAML 4×4 行优先矩阵节点
+// ===================================================================
+std::vector<double> parse_4x4_matrix_from_yaml(const YAML::Node& node) {
+    if (!node || !node["rows"] || !node["cols"] || !node["data"] || !node["data"].IsSequence())
+        return {};
+    if (node["rows"].as<int>() != 4 || node["cols"].as<int>() != 4)
+        return {};
+    const auto& data = node["data"];
+    if (data.size() < 16)
+        return {};
+    std::vector<double> v;
+    v.reserve(16);
+    for (size_t i = 0; i < 16; ++i)
+        v.push_back(data[i].as<double>());
+    return v;
+}
+
 }  // namespace ns_unicalib

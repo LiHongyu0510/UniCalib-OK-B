@@ -1,0 +1,56 @@
+// ============================================================
+// UniCalib Cyber 标定结果消息定义
+// ============================================================
+// 启用方法：
+//   1. 使用 Cyber 10.0.0 的 protoc 生成 pb.h / pb.cc
+//   2. 在 CMake 中把生成的 .pb.cc 加入编译
+//   3. 取消本文件顶部的 #if 0（如果使用了条件编译）
+// ============================================================
+
+syntax = "proto3";
+
+package unicalib.cyber;
+
+// 单个外参（SE3）
+message ExtrinsicSE3 {
+    string ref_sensor_id   = 1;   // 参考传感器 ID
+    string target_sensor_id = 2;  // 目标传感器 ID
+    repeated double transform = 3; // 行优先 4x4 矩阵 (16 个 double)
+    double residual_rms      = 4;  // 标定残差 RMS
+    bool   is_converged      = 5;  // 是否收敛
+}
+
+// 单个相机内参
+message CameraIntrinsic {
+    string camera_id         = 1;
+    repeated double K        = 2;  // 3x3 内参矩阵 (9 个 double)
+    repeated double D        = 3;  // 畸变系数 (通常 5 个)
+    uint32 width             = 4;
+    uint32 height            = 5;
+    double reprojection_error = 6;
+}
+
+// IMU 内参
+message ImuIntrinsic {
+    string imu_id            = 1;
+    repeated double bias_acc = 2;  // 加速度计零偏 (3)
+    repeated double bias_gyro = 3; // 陀螺零偏 (3)
+    double noise_density     = 4;
+    double random_walk       = 5;
+    double allan_fit_rms     = 6;
+}
+
+// 完整标定结果
+message CalibrationResult {
+    uint64 timestamp_ns      = 1;  // 标定完成时间
+    string vehicle_id        = 2;  // 车辆 ID（可选）
+    string session_id        = 3;  // 本次标定会话 ID
+
+    repeated ExtrinsicSE3    extrinsics      = 10;
+    repeated CameraIntrinsic camera_intrinsics = 11;
+    repeated ImuIntrinsic    imu_intrinsics   = 12;
+
+    double overall_quality   = 20; // 综合质量分数 [0,1]
+    bool   needs_manual_refine = 21;
+    string message           = 22; // 人类可读状态
+}

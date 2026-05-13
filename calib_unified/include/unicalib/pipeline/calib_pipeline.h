@@ -186,6 +186,8 @@ struct PipelineConfig {
     std::map<std::string, std::string> camera_images_dirs;
     // Camera-Camera 标定对：[(id0, id1), ...]，空则按 camera_topics 顺序两两标定
     std::vector<std::pair<std::string, std::string>> cam_cam_pairs;
+    /** Cam-Cam 每对初值（可选）：key="ref__target" 或 "T_ref__target"，与 pairs 中 [ref,target] 一致；value=4×4 行优先 16 个数 */
+    std::map<std::string, std::vector<double>> cam_cam_initial_extrinsic_inline;
 
     // ─── 多传感器话题（全可配置）：sensor_id -> ROS2 话题；非空时用于数据加载与标定
     std::map<std::string, std::string> lidar_topics;
@@ -390,6 +392,20 @@ public:
     // 运行完整流水线
     // -----------------------------------------------------------------------
     PipelineReport run();
+
+    // -----------------------------------------------------------------------
+    // Cyber 流式接口（预留，当前未启用）
+    // -----------------------------------------------------------------------
+    // 说明：当启用 Cyber 集成时，外部 Component 可持续调用 feed_* 把实时数据
+    //       喂入流水线，而不需要预先加载整个数据集。
+    //       这些接口目前为空实现，取消注释后即可逐步填充。
+    // -----------------------------------------------------------------------
+#if 0   // <--- 取消这行即可启用流式接口
+    void feed_lidar_frame(const std::string& lidar_id, const LiDARScan& scan);
+    void feed_camera_frame(const std::string& cam_id, const Frame& frame);
+    void feed_imu_data(const ImuData& imu);
+    std::optional<StageResult> try_auto_calibrate(CalibTaskType tasks);
+#endif
 
     // -----------------------------------------------------------------------
     // 单阶段入口 (细粒度控制)

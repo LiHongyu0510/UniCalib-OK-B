@@ -39,4 +39,7 @@ public:
         const std::string& yaml_path);
 };
 
+/// 解析 YAML 4×4 行优先矩阵节点（rows/cols/data），返回 16 个 double 的 vector，格式无效时返回空
+std::vector<double> parse_4x4_matrix_from_yaml(const YAML::Node& node);
+
 }  // namespace ns_unicalib

@@ -122,6 +122,8 @@ bool UnifiedDataLoader::load_from_new_format() {
     UNICALIB_INFO("[UnifiedDataLoader] 从新采集格式加载数据...");
     UNICALIB_INFO("  root_dir: {}", cfg.root_dir);
     UNICALIB_INFO("  timestamp_unit: {}", cfg.timestamp_unit);
+    UNICALIB_INFO("  oem7: rate={} Hz time_base={} leap={} offset={} s", cfg.oem7_imu_output_rate_hz,
+                  cfg.oem7_time_base, cfg.oem7_gps_utc_leap_sec, cfg.oem7_time_offset_sec);
 
     new_format_source_ = std::make_shared<NewFormatDataSource>(cfg);
     if (!new_format_source_->load()) {

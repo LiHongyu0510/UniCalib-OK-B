@@ -211,6 +211,23 @@ int main(int argc, char** argv) {
     pipe_cfg.log_level         = log_level;
 
     load_cam_cam_pairs_from_cfg(cfg, pipe_cfg);
+    if (cfg["cam_cam"]) {
+        const auto& cc = cfg["cam_cam"];
+        if (cc["initial_extrinsics"] && cc["initial_extrinsics"].IsMap()) {
+            for (const auto& kv : cc["initial_extrinsics"]) {
+                const std::string key = kv.first.as<std::string>();
+                if (!kv.second || !kv.second.IsMap()) continue;
+                std::vector<double> v = parse_4x4_matrix_from_yaml(kv.second);
+                if (v.size() >= 16u)
+                    pipe_cfg.cam_cam_initial_extrinsic_inline[key] = std::move(v);
+                else
+                    UNICALIB_WARN("[Cam-Cam] initial_extrinsics['{}'] 无效，已忽略", key);
+            }
+            if (!pipe_cfg.cam_cam_initial_extrinsic_inline.empty())
+                UNICALIB_INFO("[Cam-Cam] cam_cam.initial_extrinsics 已加载 {} 组",
+                              pipe_cfg.cam_cam_initial_extrinsic_inline.size());
+        }
+    }
 
     std::string base_data_dir = data_dir.empty() ? (std::getenv("CALIB_DATA_DIR") ? std::getenv("CALIB_DATA_DIR") : "") : data_dir;
 

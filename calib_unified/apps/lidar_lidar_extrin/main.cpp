@@ -536,15 +536,34 @@ int main(int argc, char** argv) {
     }
 
     std::optional<Sophus::SE3d> lidar_lidar_init_from_config;
+    std::map<std::string, Sophus::SE3d> lidar_lidar_init_per_pair;
+    if (ll["initial_extrinsics"] && ll["initial_extrinsics"].IsMap()) {
+        for (const auto& kv : ll["initial_extrinsics"]) {
+            const std::string key = kv.first.as<std::string>();
+            if (!kv.second || !kv.second.IsMap()) continue;
+            auto se3 = parse_se3_from_yaml_4x4(kv.second);
+            if (se3.has_value())
+                lidar_lidar_init_per_pair[key] = *se3;
+            else
+                UNICALIB_WARN("[LiDAR-LiDAR] initial_extrinsics['{}'] 解析失败，已忽略", key);
+        }
+        if (!lidar_lidar_init_per_pair.empty())
+            UNICALIB_INFO("[LiDAR-LiDAR] initial_extrinsics 已加载 {} 组（按 ref__target 或 T_ref__target 匹配 pairs）",
+                          lidar_lidar_init_per_pair.size());
+    }
     if (ll["initial_extrinsic"])
         lidar_lidar_init_from_config = parse_se3_from_yaml_4x4(ll["initial_extrinsic"]);
-    if (lidar_lidar_init_from_config.has_value()) {
+    if (lidar_lidar_init_from_config.has_value() && lidar_lidar_init_per_pair.empty()) {
         UNICALIB_INFO("lidar_lidar.initial_extrinsic 已加载，将跳过粗标定并以该初值进入精标定/手动微调");
         if (pairs.size() > 1)
-            UNICALIB_WARN("pairs 含多对雷达：当前对所有对共用同一 initial_extrinsic，若不对请改为仅一对或扩展配置");
-    } else if (ll["initial_extrinsic"])
+            UNICALIB_WARN("pairs 含多对雷达：共用同一 initial_extrinsic；建议改用 initial_extrinsics 为每对单独初值");
+    } else if (ll["initial_extrinsic"] && !lidar_lidar_init_from_config.has_value()) {
         UNICALIB_WARN("lidar_lidar.initial_extrinsic 存在但解析失败，将使用自动粗标定");
-
+    } else if (lidar_lidar_init_per_pair.empty() && ll["initial_extrinsics"] && ll["initial_extrinsics"].IsMap()) {
+        UNICALIB_WARN("[LiDAR-LiDAR] initial_extrinsics 已配置但未解析出任何有效初值，将使用粗标定自动初值");
+    } else if (lidar_lidar_init_per_pair.empty()) {
+        UNICALIB_INFO("[LiDAR-LiDAR] 未配置 initial_extrinsic/initial_extrinsics，使用粗标定自动初值");
+    }
     // 数据路径: data.lidar.<id> 可为 PCD 目录，或传感器 YAML（pointcloud_topic，见 data/.../lidar_horz.yaml）
     YAML::Node data = cfg["data"];
     auto get_lidar_pcd_dir = [&](const std::string& id) -> std::string {
@@ -644,8 +663,20 @@ int main(int argc, char** argv) {
         UNICALIB_INFO_EX("[LiDAR-LiDAR][Fine] main: calling calibrate_two_stage pair {} -> {}", ref_id, target_id);
         Logger::flush();
 
-        auto result = calibrator.calibrate_two_stage(scans_ref, scans_target, ref_id, target_id,
-                                                     lidar_lidar_init_from_config);
+        std::optional<Sophus::SE3d> pair_init = lidar_lidar_init_from_config;
+        const std::string k_inline = ref_id + "__" + target_id;
+        const std::string k_t = std::string("T_") + ref_id + "__" + target_id;
+        if (!lidar_lidar_init_per_pair.empty()) {
+            auto it = lidar_lidar_init_per_pair.find(k_inline);
+            if (it == lidar_lidar_init_per_pair.end()) it = lidar_lidar_init_per_pair.find(k_t);
+            if (it != lidar_lidar_init_per_pair.end()) {
+                pair_init = it->second;
+                UNICALIB_INFO("[LiDAR-LiDAR] 使用 initial_extrinsics['{}'] 作为 {} -> {} 初值",
+                              it->first, ref_id, target_id);
+            }
+        }
+
+        auto result = calibrator.calibrate_two_stage(scans_ref, scans_target, ref_id, target_id, pair_init);
         UNICALIB_INFO_EX("[LiDAR-LiDAR][Fine] main: calibrate_two_stage returned best={}",
                          result.best() ? "yes" : "no");
         Logger::flush();

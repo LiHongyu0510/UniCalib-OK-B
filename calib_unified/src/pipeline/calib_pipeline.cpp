@@ -37,6 +37,7 @@
 #include <Eigen/SVD>
 #include <pcl/io/pcd_io.h>
 #include <opencv2/imgcodecs.hpp>
+#include <opencv2/features2d.hpp>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
@@ -1634,6 +1635,41 @@ StageResult CalibPipeline::run_fine_cam_cam() {
     std::error_code ec;
     fs::create_directories(result_subdir, ec);
 
+    auto cam_cam_init_from_cfg = [&](const std::string& id0, const std::string& id1) -> std::optional<ExtrinsicSE3> {
+        if (cfg_.cam_cam_initial_extrinsic_inline.empty())
+            return std::nullopt;
+        const std::string keys[2] = {id0 + "__" + id1, std::string("T_") + id0 + "__" + id1};
+        const std::vector<double>* pdata = nullptr;
+        for (const auto& k : keys) {
+            auto it = cfg_.cam_cam_initial_extrinsic_inline.find(k);
+            if (it != cfg_.cam_cam_initial_extrinsic_inline.end() && it->second.size() >= 16u) {
+                pdata = &it->second;
+                break;
+            }
+        }
+        if (!pdata)
+            return std::nullopt;
+        Eigen::Matrix4d Tm;
+        for (int i = 0; i < 4; ++i)
+            for (int j = 0; j < 4; ++j)
+                Tm(i, j) = (*pdata)[static_cast<size_t>(i * 4 + j)];
+        Eigen::Matrix3d Rm = Tm.block<3, 3>(0, 0);
+        double ortho_err = (Rm.transpose() * Rm - Eigen::Matrix3d::Identity()).norm();
+        if (ortho_err > 1e-6) {
+            UNICALIB_WARN("[Cam-Cam] initial_extrinsics 旋转矩阵非正交 (error={:.2e})，已自动正交化",
+                          ortho_err);
+        }
+        Eigen::JacobiSVD<Eigen::Matrix3d> svd(Rm, Eigen::ComputeFullU | Eigen::ComputeFullV);
+        Eigen::Matrix3d R = svd.matrixU() * svd.matrixV().transpose();
+        if (R.determinant() < 0.0)
+            R.col(2) *= -1.0;
+        ExtrinsicSE3 ex;
+        ex.ref_sensor_id = id0;
+        ex.target_sensor_id = id1;
+        ex.set_SE3(Sophus::SE3d(Sophus::SO3d(R), Tm.block<3, 1>(0, 3)));
+        return ex;
+    };
+
     auto run_pair = [&](const std::string& id0, const std::string& id1) {
         if (!frames_per_cam.count(id0) || !frames_per_cam.count(id1)) {
             UNICALIB_WARN("[Fine-Auto/Cam-Cam] 跳过 {}->{}: 无帧数据", id0, id1);
@@ -1646,11 +1682,34 @@ StageResult CalibPipeline::run_fine_cam_cam() {
             return;
         }
         std::optional<ExtrinsicSE3> init_extrin;
+        auto cfg_ext = cam_cam_init_from_cfg(id0, id1);
+        if (cfg_ext.has_value())
+            init_extrin = std::move(cfg_ext);
         if (cfg_.use_cam_cam_initial_from_params) {
             auto ext_ptr = params_->get_extrinsic(id0, id1);
             if (ext_ptr)
                 init_extrin = *ext_ptr;
         }
+        {
+            cv::Ptr<cv::Feature2D> detector = cv::ORB::create(500);
+            std::vector<cv::KeyPoint> kp0, kp1;
+            cv::Mat desc0, desc1;
+            detector->detectAndCompute(frames_per_cam.at(id0)[0].image, cv::noArray(), kp0, desc0);
+            detector->detectAndCompute(frames_per_cam.at(id1)[0].image, cv::noArray(), kp1, desc1);
+            size_t matches = 0;
+            if (!desc0.empty() && !desc1.empty()) {
+                cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create("BruteForce-Hamming");
+                std::vector<cv::DMatch> raw_matches;
+                matcher->match(desc0, desc1, raw_matches);
+                matches = raw_matches.size();
+            }
+            if (matches < 20u) {
+                UNICALIB_WARN("[Cam-Cam] 跳过 {}->{}: 特征匹配仅 {} 组，视场可能无重叠", id0, id1, matches);
+                return;
+            }
+            UNICALIB_INFO("[Cam-Cam] {}->{} 特征匹配 {} 组", id0, id1, matches);
+        }
+
         CamCamCalibrator calib(calib_cfg);
 #if UNICALIB_WITH_PANGOLIN
         if (cam_cam_viz) {

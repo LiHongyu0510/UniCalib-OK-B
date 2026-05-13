@@ -48,6 +48,7 @@ option(UNICALIB_WITH_PCL_VIZ    "Enable PCL visualizer"                ON)
 option(UNICALIB_WITH_OPENMP     "Enable OpenMP parallelism"            ON)
 option(UNICALIB_WITH_PYTHON_BRIDGE "Enable AI coarse calib (Python)"   ON)
 option(UNICALIB_BUILD_TESTS      "Build unit tests"                     OFF)
+option(UNICALIB_USE_EDIE         "Use NovAtel EDIE for full OEM7 .bin parsing (needs thirdparty/bynav_edie)" OFF)
 
 # B-样条求解器（基于 basalt-headers）
 # - 无 ROS 强制依赖，仅需 Ceres
@@ -576,6 +577,28 @@ set(UNICALIB_NEW_SOURCES
 # ROS2 bag/话题数据源（仅 UNICALIB_WITH_ROS2）；UnifiedDataLoader 主体见 unified_data_loader.cpp（始终编译）
 if(UNICALIB_WITH_ROS2)
     list(APPEND UNICALIB_NEW_SOURCES src/io/ros2_data_source.cpp)
+endif()
+
+# OEM7 EDIE 完整解析器（默认关闭，需第三方库）
+if(UNICALIB_USE_EDIE)
+    set(EDIE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/thirdparty/bynav_edie)
+    if(NOT EXISTS ${EDIE_ROOT})
+        message(FATAL_ERROR "UNICALIB_USE_EDIE=ON 但 ${EDIE_ROOT} 不存在，请拷贝 bynav_driver/dependencies/novatel_edie 到此处")
+    endif()
+    if(CMAKE_SYSTEM_PROCESSOR STREQUAL "aarch64")
+        set(EDIE_LIB_DIR ${EDIE_ROOT}/usr/lib/arm64)
+    else()
+        set(EDIE_LIB_DIR ${EDIE_ROOT}/usr/lib/x86)
+    endif()
+    include_directories(${EDIE_ROOT}/usr/include/novatel/edie)
+    list(APPEND UNICALIB_EXTRA_LIBS
+        ${EDIE_LIB_DIR}/libNovatel.a
+        ${EDIE_LIB_DIR}/libStreamInterface.a
+        ${EDIE_LIB_DIR}/libCommon.a
+        pthread
+    )
+    add_compile_definitions(UNICALIB_USE_EDIE)
+    message(STATUS "OEM7 EDIE 解析器已启用: ${EDIE_LIB_DIR}")
 endif()
 
 # 最小 iKalibr 依赖：供 IMU-LiDAR 外参标定使用 (LiDAROdometer / LiDARFrame / _1_)

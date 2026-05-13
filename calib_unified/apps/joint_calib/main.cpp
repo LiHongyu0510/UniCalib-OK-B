@@ -798,6 +798,23 @@ int main(int argc, char** argv) {
                               pipe_cfg.lidar_camera_initial_extrinsic_inline.size());
         }
     }
+    if (cfg["cam_cam"]) {
+        const auto& cc = cfg["cam_cam"];
+        if (cc["initial_extrinsics"] && cc["initial_extrinsics"].IsMap()) {
+            for (const auto& kv : cc["initial_extrinsics"]) {
+                const std::string key = kv.first.as<std::string>();
+                if (!kv.second || !kv.second.IsMap()) continue;
+                std::vector<double> v = parse_4x4_matrix_from_yaml(kv.second);
+                if (v.size() >= 16u)
+                    pipe_cfg.cam_cam_initial_extrinsic_inline[key] = std::move(v);
+                else
+                    UNICALIB_WARN("[Joint/Cam-Cam] initial_extrinsics['{}'] 无效，已忽略", key);
+            }
+            if (!pipe_cfg.cam_cam_initial_extrinsic_inline.empty())
+                UNICALIB_INFO("[Joint] cam_cam.initial_extrinsics 已加载 {} 组",
+                              pipe_cfg.cam_cam_initial_extrinsic_inline.size());
+        }
+    }
     // cam_cam_pairs 已由 load_calib_pairs_from_yaml + load_cam_cam_pairs_compat 填充，此处不再重复解析
     // 多 IMU 内参文件：未做 IMU 内参时从 results/imu_intrinsic/ 读取，供 IMU-LiDAR 等外参使用
     std::string results_imu_intrinsic = "imu_intrinsic";

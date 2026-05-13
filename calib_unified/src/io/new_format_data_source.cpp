@@ -20,18 +20,35 @@ namespace ns_unicalib {
 
 namespace {
 
+void trim_ascii_in_place(std::string& s) {
+    while (!s.empty() && std::isspace(static_cast<unsigned char>(s.front()))) {
+        s.erase(s.begin());
+    }
+    while (!s.empty() && std::isspace(static_cast<unsigned char>(s.back()))) {
+        s.pop_back();
+    }
+}
+
 /**
- * 解析CSV行，按逗号分割
- * @param line CSV行字符串
- * @return 分割后的字符串向量
+ * 解析CSV行，按逗号分割（字段首尾空白已去除，兼容 Windows CRLF 行尾）
  */
 std::vector<std::string> split_csv_line(const std::string& line) {
     std::vector<std::string> out;
-    std::stringstream ss(line);
-    std::string token;
-    while (std::getline(ss, token, ',')) {
-        out.push_back(token);
+    std::string field;
+    bool in_quotes = false;
+    for (char c : line) {
+        if (c == '"') {
+            in_quotes = !in_quotes;
+        } else if (c == ',' && !in_quotes) {
+            trim_ascii_in_place(field);
+            out.push_back(std::move(field));
+            field.clear();
+        } else {
+            field.push_back(c);
+        }
     }
+    trim_ascii_in_place(field);
+    out.push_back(std::move(field));
     return out;
 }
 
@@ -57,12 +74,22 @@ double timestamp_unit_scale_from_string(const std::string& unit) {
 
 Oem7ImuTimeBase oem7_time_base_from_cfg_string(const std::string& s) {
     std::string t = s;
+    trim_ascii_in_place(t);
     for (char& c : t) {
         c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
     }
-    if (t == "unix" || t == "unix_utc" || t == "utc" || t == "unix_sec") {
+    if (t == "unix" || t == "unix_utc" || t == "utc" || t == "unix_sec" || t == "unix_utc_approx") {
         return Oem7ImuTimeBase::UnixUtcApprox;
     }
+    if (t.empty()) {
+        UNICALIB_WARN("[NewFormatDataSource] new_format.oem7_time_base 未配置，默认 gps_since_epoch");
+        return Oem7ImuTimeBase::GpsSinceEpoch;
+    }
+    if (t == "gps" || t == "gps_since_epoch" || t == "gpst") {
+        return Oem7ImuTimeBase::GpsSinceEpoch;
+    }
+    UNICALIB_WARN(
+        "[NewFormatDataSource] 未知 new_format.oem7_time_base=\"{}\"，按 gps_since_epoch 处理（可用: gps | unix）", s);
     return Oem7ImuTimeBase::GpsSinceEpoch;
 }
 
@@ -81,7 +108,11 @@ Oem7ImuDecodeParams make_oem7_decode_params(const NewFormatConfig& cfg) {
  * 构造函数
  * @param cfg 新格式数据源配置
  */
-NewFormatDataSource::NewFormatDataSource(const NewFormatConfig& cfg) : cfg_(cfg) {}
+NewFormatDataSource::NewFormatDataSource(const NewFormatConfig& cfg) : cfg_(cfg) {
+    for (char& c : cfg_.timestamp_unit) {
+        c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+    }
+}
 
 /**
  * 将时间戳转换为秒为单位
@@ -159,6 +190,7 @@ bool NewFormatDataSource::load() {
             size_t line_no = 0;
             while (std::getline(ifs, line)) {
                 ++line_no;
+                trim_ascii_in_place(line);
                 // 跳过空行和注释行
                 if (line.empty() || line[0] == '#') continue;
                 auto cols = split_csv_line(line);
@@ -236,6 +268,7 @@ bool NewFormatDataSource::load() {
             size_t line_no = 0;
             while (std::getline(ifs, line)) {
                 ++line_no;
+                trim_ascii_in_place(line);
                 if (line.empty() || line[0] == '#') continue;
                 auto cols = split_csv_line(line);
                 if (cols.size() < 2) {
@@ -290,6 +323,7 @@ bool NewFormatDataSource::load() {
             size_t line_no = 0;
             while (std::getline(ifs, line)) {
                 ++line_no;
+                trim_ascii_in_place(line);
                 if (line.empty() || line[0] == '#') continue;
                 auto cols = split_csv_line(line);
 

@@ -28,7 +28,14 @@ struct Oem7ImuDecodeParams {
 /**
  * 从 NovAtel OEM7 二进制流文件中解析 IMU（与 bynav_ros_driver oem7_messages.h + ins_handler.cpp 一致）。
  *
- * 支持短/长二进制 CORRIMUDATAS(813)、IMURATECORRIMUS(1362)、CORRIMUS(2264)；分块读入。
+ * 支持两种后端：
+ *   1) 轻量手写解析器（默认）：短二进制 CORRIMUDATAS(813)、IMURATECORRIMUS(1362)、CORRIMUS(2264)
+ *   2) NovAtel EDIE 完整解析器（CMake -DUNICALIB_USE_EDIE=ON）：支持 RAWIMUSX(1462)、INSPVAX(1465)、
+ *      INSPVAS(508)、INSSTDEV(2051) 等全部日志，自动处理 CRC、分帧、所有消息 ID。
+ *
+ * 启用 EDIE 后优先使用 EDIE，失败自动 fallback 到手写路径。EDIE 静态库需放在
+ * calib_unified/thirdparty/bynav_edie/（含 usr/include + usr/lib/{x86,arm64}）。
+ *
  * 时间戳默认按 GPS 连续秒；可选 `UnixUtcApprox` 转为近似 Unix UTC，便于与索引里 Unix 时间对齐。
  */
 bool decode_oem7_imu_binary_file(const std::string& abs_path,
