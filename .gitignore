@@ -61,6 +61,10 @@ weights/
 
 calib_unified/dag/dumps/
 
+# 日志文件
+*.log
+logs/
+
 # IDE 配置
 .vscode/
 .idea/
