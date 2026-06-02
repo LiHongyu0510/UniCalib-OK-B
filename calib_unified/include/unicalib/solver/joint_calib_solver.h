@@ -213,6 +213,14 @@ public:
     // Phase3 辅助: iKalibr 参数回写
     // 用于将 iKalibr 优化结果写回 params_
     struct iKalibrResultWriter {
+        // sensor_id → ROS topic 映射，用于在 iKalibr 参数管理器中查找对应传感器
+        std::map<std::string, std::string> sensor_topic_map;
+
+        iKalibrResultWriter() = default;
+        explicit iKalibrResultWriter(
+            const std::map<std::string, std::string>& topic_map)
+            : sensor_topic_map(topic_map) {}
+
         void write_extrinsics(
             const ns_ikalibr::CalibParamManager::Ptr& ikalibr_param_mgr,
             CalibParamManager::Ptr& unicalib_params);

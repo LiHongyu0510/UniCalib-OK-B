@@ -19,9 +19,36 @@
 #include "unicalib/common/calib_param.h"
 #include "unicalib/extrinsic/imu_lidar_calib.h"
 #include "unicalib/intrinsic/imu_intrinsic_calib.h"
+#if defined(UNICALIB_WITH_ROS2) && UNICALIB_WITH_ROS2
+#include <builtin_interfaces/msg/time.hpp>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <sensor_msgs/msg/image.hpp>
 #include <sensor_msgs/msg/imu.hpp>
+#else
+#include <cstdint>
+#include <memory>
+namespace builtin_interfaces {
+namespace msg {
+struct Time {
+    int32_t sec = 0;
+    uint32_t nanosec = 0;
+};
+}  // namespace msg
+}  // namespace builtin_interfaces
+namespace sensor_msgs {
+namespace msg {
+struct PointCloud2 {
+    using SharedPtr = std::shared_ptr<PointCloud2>;
+};
+struct Image {
+    using SharedPtr = std::shared_ptr<Image>;
+};
+struct Imu {
+    using SharedPtr = std::shared_ptr<Imu>;
+};
+}  // namespace msg
+}  // namespace sensor_msgs
+#endif
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <opencv2/core.hpp>
@@ -45,6 +72,11 @@ namespace rclcpp {
     class Node;
     class Executor;
     class SubscriptionBase;
+#if !defined(UNICALIB_WITH_ROS2) || !UNICALIB_WITH_ROS2
+    namespace executors {
+        class SingleThreadedExecutor;
+    }
+#endif
 }
 
 namespace rosbag2_cpp {
@@ -355,6 +387,10 @@ public:
         std::string lidar_data_dir;
         std::string camera_images_dir;
         std::string camera_intrinsic_file;
+        /** 多 LiDAR：sensor_id -> PCD 目录（非空时优先于 lidar_data_dir） */
+        std::map<std::string, std::string> file_lidar_dirs;
+        /** 多 IMU：sensor_id -> CSV 文件或含 imu.csv 的目录 */
+        std::map<std::string, std::string> file_imu_paths;
         
         // ROS2 模式
         RosDataSourceConfig ros_config;
@@ -369,6 +405,8 @@ public:
         std::string new_format_oem7_time_base = "gps";       // gps | unix（与 LiDAR/相机 Unix 时间对齐）
         int new_format_oem7_gps_utc_leap_sec = 18;           // unix 模式下 GPS-UTC 闰秒差
         double new_format_oem7_time_offset_sec = 0.0;      // 解码后再加上的秒偏移
+        double new_format_oem7_gyro_scale_factor = 0.0;
+        double new_format_oem7_accel_scale_factor = 0.0;
 
         // 通用参数
         size_t max_frames = 100;
@@ -412,6 +450,7 @@ private:
     // 从文件加载的数据
     std::map<std::string, std::vector<LiDARScanRos>> file_lidar_data_;
     std::map<std::string, std::vector<CameraFrameRos>> file_camera_data_;
+    std::map<std::string, IMURawData> file_imu_raw_data_;
     
     // 内参
     std::map<std::string, CameraIntrinsics> camera_intrinsics_;

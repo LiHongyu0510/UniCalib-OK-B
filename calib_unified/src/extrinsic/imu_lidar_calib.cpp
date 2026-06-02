@@ -20,12 +20,78 @@
 #include <ceres/ceres.h>
 #include <basalt/spline/se3_spline.h>
 #include <basalt/utils/sophus_utils.hpp>
+#include <chrono>
 #include <cmath>
+#include <limits>
 #include <random>
 
 namespace ns_unicalib {
 
 namespace {
+
+// Unix 秒 → 纳秒：避免 (double)*1e9 在大时间戳上丢失精度导致样条 st_ns<0
+int64_t timestamp_sec_to_ns(double t_sec) {
+    const double sec_floor = std::floor(t_sec);
+    const double frac = t_sec - sec_floor;
+    const int64_t sec_i = static_cast<int64_t>(sec_floor);
+    const int64_t frac_ns = static_cast<int64_t>(std::llround(frac * 1e9));
+    return sec_i * 1000000000LL + frac_ns;
+}
+
+std::pair<double, double> imu_time_range(const std::vector<IMUFrame>& imu) {
+    double lo = std::numeric_limits<double>::infinity();
+    double hi = -std::numeric_limits<double>::infinity();
+    for (const auto& f : imu) {
+        lo = std::min(lo, f.timestamp);
+        hi = std::max(hi, f.timestamp);
+    }
+    return {lo, hi};
+}
+
+std::pair<double, double> lidar_time_range(const std::vector<LiDARScan>& lidar) {
+    double lo = std::numeric_limits<double>::infinity();
+    double hi = -std::numeric_limits<double>::infinity();
+    for (const auto& s : lidar) {
+        lo = std::min(lo, s.timestamp);
+        hi = std::max(hi, s.timestamp);
+    }
+    return {lo, hi};
+}
+
+bool trim_imu_lidar_to_overlap(std::vector<IMUFrame>& imu,
+                               std::vector<LiDARScan>& lidar,
+                               double margin_s) {
+    if (imu.empty() || lidar.empty()) return false;
+
+    const auto [imu_lo, imu_hi] = imu_time_range(imu);
+    const auto [lidar_lo, lidar_hi] = lidar_time_range(lidar);
+    const double overlap_begin = std::max(imu_lo, lidar_lo) - margin_s;
+    const double overlap_end = std::min(imu_hi, lidar_hi) + margin_s;
+    if (overlap_end <= overlap_begin) {
+        UNICALIB_WARN("[Time-Align] 重叠区间无效 [{:.3f}, {:.3f}]，未截取", overlap_begin, overlap_end);
+        return false;
+    }
+
+    const size_t imu_n0 = imu.size();
+    const size_t lidar_n0 = lidar.size();
+    imu.erase(std::remove_if(imu.begin(), imu.end(),
+                             [&](const IMUFrame& f) {
+                                 return f.timestamp < overlap_begin || f.timestamp > overlap_end;
+                             }),
+              imu.end());
+    lidar.erase(std::remove_if(lidar.begin(), lidar.end(),
+                               [&](const LiDARScan& s) {
+                                   return s.timestamp < overlap_begin || s.timestamp > overlap_end;
+                               }),
+                lidar.end());
+
+    UNICALIB_INFO("[Time-Align] 截取重叠区间 [{:.3f}, {:.3f}] 跨度 {:.2f}s (margin={:.3f}s)",
+                  overlap_begin, overlap_end, overlap_end - overlap_begin, margin_s);
+    UNICALIB_INFO("[Time-Align] IMU  {} -> {} 帧 | LiDAR {} -> {} 帧",
+                  imu_n0, imu.size(), lidar_n0, lidar.size());
+    return !imu.empty() && !lidar.empty();
+}
+
 // RANSAC 手眼辅助：从指定下标旋转对构建约束矩阵 M，解出 X，或计算全量残差
 Eigen::MatrixXd buildHandeyeM(const std::vector<LiDARRotPair>& pairs,
                               const std::vector<size_t>& indices,
@@ -103,15 +169,25 @@ std::optional<ExtrinsicSE3> IMULiDARCalibrator::calibrate(
         return std::nullopt;
     }
 
+    std::vector<IMUFrame> imu_work = imu_data;
+    std::vector<LiDARScan> lidar_work = lidar_scans;
+    if (cfg_.trim_to_overlap) {
+        trim_imu_lidar_to_overlap(imu_work, lidar_work, cfg_.trim_overlap_margin_s);
+    }
+    if (imu_work.empty() || lidar_work.empty()) {
+        UNICALIB_ERROR("[IMU-LiDAR] 截取重叠后 IMU 或 LiDAR 为空");
+        return std::nullopt;
+    }
+
     UNICALIB_INFO("[IMU-LiDAR] 开始两阶段标定");
-    UNICALIB_INFO("  IMU 数据: {} 帧", imu_data.size());
-    UNICALIB_INFO("  LiDAR 数据: {} 帧", lidar_scans.size());
+    UNICALIB_INFO("  IMU 数据: {} 帧{}", imu_work.size(),
+                  cfg_.trim_to_overlap ? " (已裁至重叠时段)" : "");
+    UNICALIB_INFO("  LiDAR 数据: {} 帧{}", lidar_work.size(),
+                  cfg_.trim_to_overlap ? " (已裁至重叠时段)" : "");
 
     // ---------- 时间戳对齐诊断（标定要求 IMU 与 LiDAR 同一时间基准，未对齐会导致旋转对错误、约 180° 等偏差）----------
-    const double imu_t_min = imu_data.front().timestamp;
-    const double imu_t_max = imu_data.back().timestamp;
-    const double lidar_t_min = lidar_scans.front().timestamp;
-    const double lidar_t_max = lidar_scans.back().timestamp;
+    const auto [imu_t_min, imu_t_max] = imu_time_range(imu_work);
+    const auto [lidar_t_min, lidar_t_max] = lidar_time_range(lidar_work);
     const double overlap_begin = std::max(imu_t_min, lidar_t_min);
     const double overlap_end = std::min(imu_t_max, lidar_t_max);
     const double imu_span = imu_t_max - imu_t_min;
@@ -143,7 +219,7 @@ std::optional<ExtrinsicSE3> IMULiDARCalibrator::calibrate(
 
     try {
     // Step 1: 运行 LiDAR 里程计
-    if (!run_lidar_odometry(lidar_scans)) {
+    if (!run_lidar_odometry(lidar_work)) {
         UNICALIB_ERROR("[IMU-LiDAR] LiDAR 里程计失败");
         return std::nullopt;
     }
@@ -185,12 +261,12 @@ std::optional<ExtrinsicSE3> IMULiDARCalibrator::calibrate(
     IMUIntrinsics imu_intrin_with_estimated_bias;
     if (imu_intrin) {
         imu_intrin_with_estimated_bias = *imu_intrin;
-        estimated_bias = estimate_gyro_bias_online(imu_data);
+        estimated_bias = estimate_gyro_bias_online(imu_work);
         imu_intrin_with_estimated_bias.bias_gyro += estimated_bias;
     }
 
     // Step 2: 构建旋转对 (传入 imu_intrin_with_estimated_bias 以便积分时扣除陀螺零偏)
-    auto rot_pairs = build_rotation_pairs(imu_data, &imu_intrin_with_estimated_bias);
+    auto rot_pairs = build_rotation_pairs(imu_work, &imu_intrin_with_estimated_bias);
 
     // 运动激励诊断（车辆等自由度受限时，仅对激励充足的参数精确标定）
     ObservabilityDiagnosis obs = compute_motion_excitation(rot_pairs);
@@ -203,26 +279,39 @@ std::optional<ExtrinsicSE3> IMULiDARCalibrator::calibrate(
 
     // Step 3: 手眼旋转标定（若有初值则用于 180° 歧义时选与初值旋转更接近的解）
     std::optional<Sophus::SO3d> handeye_prior = coarse_init.has_value() ? std::make_optional(coarse_init->so3()) : std::nullopt;
-    auto rot_result = solve_handeye_rotation(rot_pairs, handeye_prior);
-    if (!rot_result.has_value()) {
-        UNICALIB_WARN("[IMU-LiDAR] 手眼旋转标定失败");
-        return std::nullopt;
-    }
-    UNICALIB_INFO("  手眼旋转标定成功");
-    const double handeye_residual_deg = rot_result->second;
-    UNICALIB_CALC("IMU-LiDAR 手眼旋转 平均残差={:.4f} deg 旋转对数={}", handeye_residual_deg, rot_pairs.size());
-
-    // 按激励施加先验：激励不足的 roll/pitch 置 0，仅对激励充足的自由度保留标定值
-    Sophus::SO3d R_final = apply_excitation_prior_to_rotation(rot_result->first, obs);
-    if (cfg_.use_planar_prior && (obs.roll_motion_deg < cfg_.min_roll_motion_deg || obs.pitch_motion_deg < cfg_.min_pitch_motion_deg)) {
-        double roll_deg = std::atan2(R_final.matrix()(2, 1), R_final.matrix()(2, 2)) * (180.0 / M_PI);
-        double pitch_deg = std::asin(std::max(-1.0, std::min(1.0, -R_final.matrix()(2, 0)))) * (180.0 / M_PI);
-        UNICALIB_INFO("[Motion-Excitation] 已施加先验: R(RPY°)=[{:.3f}, {:.3f}, *] (激励不足分量已置0)", roll_deg, pitch_deg);
+    double handeye_residual_deg = -1.0;
+    Sophus::SO3d R_final;
+    if (coarse_init.has_value() && cfg_.trust_initial_rotation) {
+        R_final = coarse_init->so3();
+        auto rot_result = solve_handeye_rotation(rot_pairs, handeye_prior);
+        if (rot_result.has_value()) {
+            handeye_residual_deg = rot_result->second;
+            const double diff_deg = (rot_result->first * R_final.inverse()).log().norm() * (180.0 / M_PI);
+            UNICALIB_INFO("[IMU-LiDAR] trust_initial_rotation=true：旋转采用配置/CAD 初值，手眼旋转与之相差 {:.2f}°（未覆盖）", diff_deg);
+            UNICALIB_CALC("IMU-LiDAR 手眼旋转 平均残差={:.4f} deg 旋转对数={} (仅诊断)", handeye_residual_deg, rot_pairs.size());
+        } else {
+            UNICALIB_WARN("[IMU-LiDAR] 手眼旋转标定失败，仍采用配置初值旋转");
+        }
+    } else {
+        auto rot_result = solve_handeye_rotation(rot_pairs, handeye_prior);
+        if (!rot_result.has_value()) {
+            UNICALIB_WARN("[IMU-LiDAR] 手眼旋转标定失败");
+            return std::nullopt;
+        }
+        UNICALIB_INFO("  手眼旋转标定成功");
+        handeye_residual_deg = rot_result->second;
+        UNICALIB_CALC("IMU-LiDAR 手眼旋转 平均残差={:.4f} deg 旋转对数={}", handeye_residual_deg, rot_pairs.size());
+        R_final = apply_excitation_prior_to_rotation(rot_result->first, obs);
+        if (cfg_.use_planar_prior && (obs.roll_motion_deg < cfg_.min_roll_motion_deg || obs.pitch_motion_deg < cfg_.min_pitch_motion_deg)) {
+            double roll_deg = std::atan2(R_final.matrix()(2, 1), R_final.matrix()(2, 2)) * (180.0 / M_PI);
+            double pitch_deg = std::asin(std::max(-1.0, std::min(1.0, -R_final.matrix()(2, 0)))) * (180.0 / M_PI);
+            UNICALIB_INFO("[Motion-Excitation] 已施加先验: R(RPY°)=[{:.3f}, {:.3f}, *] (激励不足分量已置0)", roll_deg, pitch_deg);
+        }
     }
 
     // Step 4: 估计平移（使用施加先验后的旋转）
     auto trans_result = estimate_translation(
-        imu_data, R_final, 0.0);
+        imu_work, R_final, 0.0);
 
     Eigen::Vector3d trans = trans_result.has_value() ? trans_result->first : Eigen::Vector3d::Zero();
     if (coarse_init.has_value() && trans.norm() < 0.05 && coarse_init->translation().norm() > 0.05)
@@ -249,7 +338,10 @@ std::optional<ExtrinsicSE3> IMULiDARCalibrator::calibrate(
     const double abs_roll_deg = std::abs(roll_rad * (180.0 / M_PI));
     if (abs_roll_deg > 170.0 && std::abs(pitch_rad * (180.0 / M_PI)) < 5.0 && std::abs(yaw_rad * (180.0 / M_PI)) < 5.0)
         UNICALIB_WARN("[IMU-LiDAR] 粗标定结果约 180° (RPY≈±180°,0°,0°)。若 IMU 与 LiDAR 同向安装，请检查时间对齐或设置 handeye_prefer_identity_when_ambiguous: true");
-    UNICALIB_INFO("  四元数 (xyzw): {}", extrinsic.SO3_TargetInRef.unit_quaternion().coeffs().transpose());
+    {
+        const Eigen::Quaterniond q = extrinsic.SO3_TargetInRef.unit_quaternion();
+        UNICALIB_INFO("  四元数 (xyzw): {:.6f} {:.6f} {:.6f} {:.6f}", q.x(), q.y(), q.z(), q.w());
+    }
     UNICALIB_INFO("  平移: [{:.6f}, {:.6f}, {:.6f}] m",
                   extrinsic.POS_TargetInRef.x(),
                   extrinsic.POS_TargetInRef.y(),
@@ -293,12 +385,18 @@ IMULiDARCalibrator::TwoStageResult IMULiDARCalibrator::calibrate_two_stage(
     TwoStageResult result;
     result.fine_method  = "bspline_full";
 
+    std::vector<IMUFrame> imu_work = imu_data;
+    std::vector<LiDARScan> lidar_work = lidar_scans;
+    if (cfg_.trim_to_overlap) {
+        trim_imu_lidar_to_overlap(imu_work, lidar_work, cfg_.trim_overlap_margin_s);
+    }
+
     Sophus::SE3d init_se3;
     if (coarse_init.has_value()) {
         // 粗标定以提供的初始值开始：先用手眼+平移得到粗结果，若偏离初值过远则粗结果取初值
         result.coarse_method = "handeye_from_initial";
         UNICALIB_INFO("[IMU-LiDAR] 粗标定以配置初值为先验开始 (手眼 180° 消解与平移回退)，得到粗标定结果后精标定");
-        auto extrinsic = calibrate(imu_data, lidar_scans, imu_id, lidar_id, imu_intrin, coarse_init);
+        auto extrinsic = calibrate(imu_work, lidar_work, imu_id, lidar_id, imu_intrin, coarse_init);
         if (!extrinsic.has_value()) {
             result.needs_manual = true;
             return result;
@@ -322,7 +420,7 @@ IMULiDARCalibrator::TwoStageResult IMULiDARCalibrator::calibrate_two_stage(
         }
     } else {
         result.coarse_method = "handeye_only";
-        auto extrinsic = calibrate(imu_data, lidar_scans, imu_id, lidar_id, imu_intrin, std::nullopt);
+        auto extrinsic = calibrate(imu_work, lidar_work, imu_id, lidar_id, imu_intrin, std::nullopt);
         if (!extrinsic.has_value()) {
             result.needs_manual = true;
             return result;
@@ -333,8 +431,11 @@ IMULiDARCalibrator::TwoStageResult IMULiDARCalibrator::calibrate_two_stage(
     }
 
     // 精标定：在粗标定结果上做 B 样条精细优化
+    const bool trans_ok = result.coarse && result.coarse->trans_rms_m_s >= 0.0;
+    if (!trans_ok)
+        UNICALIB_INFO("[IMU-LiDAR] 平移估计有效约束不足 (trans_rms<0)，B样条将按配置固定/限幅平移");
     ExtrinsicSE3 refined = refine_with_spline(
-        imu_data, lidar_scans, init_se3, imu_id, lidar_id, imu_intrin);
+        imu_work, lidar_work, init_se3, imu_id, lidar_id, imu_intrin, trans_ok);
     // 将粗标定的精度指标带入精标定结果，便于写入标定文件
     if (result.coarse && result.coarse->handeye_rot_residual_deg >= 0.0)
         refined.handeye_rot_residual_deg = result.coarse->handeye_rot_residual_deg;
@@ -366,6 +467,9 @@ bool IMULiDARCalibrator::run_lidar_odometry(const std::vector<LiDARScan>& scans)
     lidar_odom_.reserve(scans.size());
 
     size_t valid_frames = 0;
+    const size_t total = scans.size();
+    const size_t progress_step = std::max<size_t>(1, total / 20);  // ~5% 一条日志
+    auto odom_t0 = std::chrono::steady_clock::now();
     for (size_t i = 0; i < scans.size(); ++i) {
         if (!scans[i].cloud || scans[i].cloud->empty()) {
             UNICALIB_WARN("[LiDAR-Odom] 帧 {} 点云为空", i);
@@ -411,7 +515,15 @@ bool IMULiDARCalibrator::run_lidar_odometry(const std::vector<LiDARScan>& scans)
         valid_frames++;
 
         if (progress_cb_) {
-            progress_cb_("LiDAR-Odom", static_cast<double>(i + 1) / scans.size());
+            progress_cb_("LiDAR-Odom", static_cast<double>(i + 1) / total);
+        }
+        if ((i + 1) % progress_step == 0 || i + 1 == total) {
+            const double elapsed_s = std::chrono::duration<double>(
+                std::chrono::steady_clock::now() - odom_t0).count();
+            const double pct = 100.0 * static_cast<double>(i + 1) / static_cast<double>(total);
+            double eta_s = (pct > 1e-6) ? elapsed_s * (100.0 - pct) / pct : 0.0;
+            UNICALIB_INFO("[LiDAR-Odom] NDT 进度 {}/{} ({:.1f}%), 已用 {:.1f}s, 预计剩余 {:.0f}s",
+                          i + 1, total, pct, elapsed_s, eta_s);
         }
     }
 
@@ -429,6 +541,20 @@ bool IMULiDARCalibrator::run_lidar_odometry(const std::vector<LiDARScan>& scans)
         UNICALIB_INFO("[LiDAR-Odom] 点云规模: 每帧点数 min={} med≈{} max={}",
                       pts_min, static_cast<size_t>(pts_sum / valid_frames), pts_max);
     return valid_frames > 0;
+}
+
+bool IMULiDARCalibrator::lidar_odom_is_planar_motion() const {
+    if (lidar_odom_.size() < 2) return false;
+    double sum_norm = 0.0, sum_z_abs = 0.0;
+    const Sophus::SO3d R0 = lidar_odom_.front().second.so3();
+    for (size_t i = 1; i < lidar_odom_.size(); ++i) {
+        const Eigen::Vector3d dt =
+            lidar_odom_[i].second.translation() - lidar_odom_[i - 1].second.translation();
+        sum_norm += dt.norm();
+        sum_z_abs += std::abs((R0.inverse() * dt).z());
+    }
+    const double z_ratio = (sum_norm > 1e-6) ? (sum_z_abs / sum_norm) : 0.0;
+    return z_ratio <= cfg_.max_z_trans_ratio;
 }
 
 // ===================================================================
@@ -525,10 +651,9 @@ std::vector<LiDARRotPair> IMULiDARCalibrator::build_rotation_pairs(
     const double frame_dt_med = (lidar_odom_.size() > 1)
         ? (t_max - t_min) / static_cast<double>(lidar_odom_.size() - 1) : 0;
 
-    // 短时窗旋转对：用插值位姿 + 短时陀螺积分，降低长时积分漂移（研究结论：误差∝sqrt(dt)）
-    // 放宽触发条件：只要帧间隔 > dt_target 即启用（原 frame_dt_med > 1.0 导致 0.5s 间隔时短时窗未启用）
+    // 短时窗旋转对：插值位姿 + 短时陀螺积分。10Hz LiDAR(frame_dt≈0.1s)时相邻帧 NDT 转角常≈0，必须补短时窗。
     if (cfg_.rot_pair_dt_target_s > 0 && lidar_odom_.size() >= 2 &&
-        (frame_dt_med > cfg_.rot_pair_dt_target_s || n_consecutive == 0)) {
+        (n_consecutive < 50 || frame_dt_med > cfg_.rot_pair_dt_target_s * 0.95)) {
         auto interp_pose = [this](double t) -> Sophus::SE3d {
             if (lidar_odom_.empty()) return Sophus::SE3d();
             if (t <= lidar_odom_.front().first) return lidar_odom_.front().second;
@@ -700,16 +825,64 @@ Sophus::SO3d IMULiDARCalibrator::integrate_imu_rotation(
     double t_end,
     const IMUIntrinsics* imu_intrin,
     IntegrationStats* out_stats) {
-    // 找到时间范围内的 IMU 数据
-    std::vector<IMUFrame> segment;
-    for (const auto& frame : imu_data) {
-        if (frame.timestamp >= t_begin && frame.timestamp <= t_end) {
-            segment.push_back(frame);
+    constexpr double k_dt_dup_threshold_s = 0.0001;  // 0.1ms
+    const double margin = std::max(0.0, cfg_.imu_integrate_margin_s);
+    const double t_lo = t_begin - margin;
+    const double t_hi = t_end + margin;
+
+    static thread_local int s_integrate_warn_count = 0;
+    auto warn_integrate = [](const char* msg) {
+        if (s_integrate_warn_count < 8) {
+            UNICALIB_WARN("{}", msg);
+            ++s_integrate_warn_count;
         }
+    };
+
+    if (imu_data.empty() || t_end <= t_begin) {
+        warn_integrate("[IMU-Integrate] IMU 数据为空或时间区间无效");
+        return Sophus::SO3d();
     }
 
-    // 过小 dt 视为重复/近重复时间戳，不参与积分（仅统计为跳过）
-    constexpr double k_dt_dup_threshold_s = 0.0001;  // 0.1ms，小于此视为重复时间戳
+    auto lerp_gyro = [](const IMUFrame& a, const IMUFrame& b, double t) -> Eigen::Vector3d {
+        const double dt = b.timestamp - a.timestamp;
+        if (dt < 1e-9) return a.gyro;
+        const double alpha = std::max(0.0, std::min(1.0, (t - a.timestamp) / dt));
+        return (1.0 - alpha) * a.gyro + alpha * b.gyro;
+    };
+
+    std::vector<IMUFrame> segment;
+    for (const auto& frame : imu_data) {
+        if (frame.timestamp >= t_lo && frame.timestamp <= t_hi)
+            segment.push_back(frame);
+    }
+    if (segment.size() < 2) {
+        warn_integrate("[IMU-Integrate] 时间范围内无 IMU 数据");
+        return Sophus::SO3d();
+    }
+
+    // 在区间两端插入插值样本，使积分覆盖 [t_begin, t_end]
+    if (segment.front().timestamp > t_begin) {
+        const auto it = std::lower_bound(imu_data.begin(), imu_data.end(), t_begin,
+                                         [](const IMUFrame& f, double t) { return f.timestamp < t; });
+        if (it != imu_data.begin() && it != imu_data.end()) {
+            IMUFrame boundary;
+            boundary.timestamp = t_begin;
+            boundary.gyro = lerp_gyro(*(it - 1), *it, t_begin);
+            boundary.accel = Eigen::Vector3d::Zero();
+            segment.insert(segment.begin(), boundary);
+        }
+    }
+    if (segment.back().timestamp < t_end) {
+        const auto it = std::upper_bound(imu_data.begin(), imu_data.end(), t_end,
+                                         [](double t, const IMUFrame& f) { return t < f.timestamp; });
+        if (it != imu_data.begin() && it != imu_data.end()) {
+            IMUFrame boundary;
+            boundary.timestamp = t_end;
+            boundary.gyro = lerp_gyro(*(it - 1), *it, t_end);
+            boundary.accel = Eigen::Vector3d::Zero();
+            segment.push_back(boundary);
+        }
+    }
 
     if (out_stats) {
         out_stats->dt_s = t_end - t_begin;
@@ -734,12 +907,12 @@ Sophus::SO3d IMULiDARCalibrator::integrate_imu_rotation(
     }
 
     if (segment.empty()) {
-        UNICALIB_WARN("[IMU-Integrate] 时间范围内无 IMU 数据");
+        warn_integrate("[IMU-Integrate] 时间范围内无 IMU 数据");
         return Sophus::SO3d();
     }
 
     if (segment.size() < 2) {
-        UNICALIB_WARN("[IMU-Integrate] IMU 数据点太少");
+        warn_integrate("[IMU-Integrate] IMU 数据点太少");
         return Sophus::SO3d();
     }
 
@@ -759,12 +932,16 @@ Sophus::SO3d IMULiDARCalibrator::integrate_imu_rotation(
 
     for (size_t i = 1; i < segment.size(); ++i) {
         // 直接使用 IMU 话题时间戳计算本步间隔
-        double dt = segment[i].timestamp - segment[i - 1].timestamp;
+        const double t_step0 = std::max(t_begin, segment[i - 1].timestamp);
+        const double t_step1 = std::min(t_end, segment[i].timestamp);
+        double dt = t_step1 - t_step0;
+        if (dt <= 0) continue;
 
-        if (dt <= 0 || dt > 1.0) {
+        if (dt > 1.0) {
             if (out_stats) out_stats->num_skipped++;
             num_skipped++;
-            UNICALIB_WARN("[IMU-Integrate] 异常时间间隔: dt={:.6f}s 步 [{},{}]", dt, i - 1, i);
+            if (s_integrate_warn_count < 8)
+                UNICALIB_WARN("[IMU-Integrate] 异常时间间隔: dt={:.6f}s 步 [{},{}]", dt, i - 1, i);
             continue;
         }
         if (dt < k_dt_dup_threshold_s) {
@@ -1546,7 +1723,8 @@ ExtrinsicSE3 IMULiDARCalibrator::refine_with_spline(
     const Sophus::SE3d& init_extrinsic,
     const std::string& imu_id,
     const std::string& lidar_id,
-    const IMUIntrinsics* imu_intrin) {
+    const IMUIntrinsics* imu_intrin,
+    bool trans_estimation_ok) {
 
     UNICALIB_INFO("[IMU-LiDAR] 步骤: B样条精细优化开始 (LiDAR {} 帧)", lidar_scans.size());
     ExtrinsicSE3 result;
@@ -1581,16 +1759,30 @@ ExtrinsicSE3 IMULiDARCalibrator::refine_with_spline(
     double t_min = T_w_imu_poses.front().first;
     double t_max = T_w_imu_poses.back().first;
     double dt_s = std::max(0.05, cfg_.spline_dt_s);
-    const int64_t dt_ns = static_cast<int64_t>(dt_s * 1e9);
-    const int64_t t0_ns = static_cast<int64_t>(t_min * 1e9);
+    const int64_t dt_ns = timestamp_sec_to_ns(dt_s);
+    int64_t t0_ns = std::numeric_limits<int64_t>::max();
+    for (const auto& [t, _] : T_w_imu_poses)
+        t0_ns = std::min(t0_ns, timestamp_sec_to_ns(t));
+    for (const auto& [t, _] : lidar_odom_)
+        t0_ns = std::min(t0_ns, timestamp_sec_to_ns(t));
+    // 大 Unix 时间戳转 ns 可能有 ±数 ns 误差，略前移起点避免 st_ns<0
+    constexpr int64_t k_spline_time_margin_ns = 10000000;  // 10ms
+    if (t0_ns > k_spline_time_margin_ns)
+        t0_ns -= k_spline_time_margin_ns;
 
-    basalt::Se3Spline<4> spline(static_cast<int64_t>(dt_s * 1e9), t0_ns);
+    basalt::Se3Spline<4> spline(dt_ns, t0_ns);
     int num_knots = static_cast<int>(std::ceil((t_max - t_min) / dt_s)) + 4;
     num_knots = std::max(num_knots, 8);
 
     for (int i = 0; i < num_knots; ++i) {
         double t = t_min + i * dt_s;
         spline.knotsPushBack(interpolate_pose(T_w_imu_poses, t));
+    }
+    const int64_t t_last_lidar_ns = timestamp_sec_to_ns(lidar_odom_.back().first);
+    while (spline.maxTimeNs() < t_last_lidar_ns && num_knots < 20000) {
+        double t = t_min + num_knots * dt_s;
+        spline.knotsPushBack(interpolate_pose(T_w_imu_poses, t));
+        ++num_knots;
     }
 
     // Step 2: Ceres 优化外参 (6) + 时间偏移 (1)
@@ -1605,17 +1797,76 @@ ExtrinsicSE3 IMULiDARCalibrator::refine_with_spline(
     ceres::Problem problem;
     ceres::LossFunction* loss = new ceres::HuberLoss(1.0);
 
+    size_t n_residual_blocks = 0;
     for (size_t i = 0; i < lidar_odom_.size(); ++i) {
-        int64_t t_ns = static_cast<int64_t>(lidar_odom_[i].first * 1e9);
-        if (t_ns < spline.minTimeNs() || t_ns > spline.maxTimeNs())
-            continue;
+        int64_t t_ns = timestamp_sec_to_ns(lidar_odom_[i].first);
+        if (t_ns > spline.maxTimeNs()) continue;
+        if (t_ns < spline.minTimeNs()) t_ns = spline.minTimeNs();
         ceres::CostFunction* cost =
             new SplineExtrinsicAnalyticCost(&spline, t_ns, lidar_odom_[i].second);
         problem.AddResidualBlock(cost, loss, extr, &time_offset_s);
+        ++n_residual_blocks;
     }
+    if (n_residual_blocks == 0) {
+        UNICALIB_WARN("[B-spline] 无有效残差块 (样条时间域 [{}, {}] ns)，跳过 Ceres 优化",
+                      spline.minTimeNs(), spline.maxTimeNs());
+        return result;
+    }
+    UNICALIB_INFO("[B-spline] Ceres 残差块 {} 个 (样条 ns [{}, {}])",
+                  n_residual_blocks, spline.minTimeNs(), spline.maxTimeNs());
 
     problem.SetParameterLowerBound(&time_offset_s, 0, -cfg_.time_offset_max_s);
     problem.SetParameterUpperBound(&time_offset_s, 0, cfg_.time_offset_max_s);
+
+    // Ceres 将 extr[6] 注册为单个 6 维参数块，须用 (extr, 分量下标) 设界，不能对 &extr[i] 单独设界
+    auto freeze_ceres_component = [&](int idx, double value, const char* name) {
+        extr[idx] = value;
+        problem.SetParameterLowerBound(extr, idx, value);
+        problem.SetParameterUpperBound(extr, idx, value);
+        UNICALIB_INFO("[B-spline] 固定 {}={:.6f}", name, value);
+    };
+
+    // 旋转：trust_initial_rotation 时锁定 CAD/粗标定旋转
+    if (cfg_.trust_initial_rotation) {
+        Eigen::Vector3d rvec_init = init_extrinsic.so3().log();
+        freeze_ceres_component(0, rvec_init(0), "rot_x");
+        freeze_ceres_component(1, rvec_init(1), "rot_y");
+        freeze_ceres_component(2, rvec_init(2), "rot_z");
+    }
+
+    const Eigen::Vector3d t_init = init_extrinsic.translation();
+    const double tx_init = t_init.x(), ty_init = t_init.y(), tz_init = t_init.z();
+
+    const bool auto_freeze_xy = cfg_.bspline_auto_freeze_trans_when_underconstrained && !trans_estimation_ok;
+    const bool freeze_all_trans = cfg_.trust_initial_translation;
+    const bool freeze_xy = freeze_all_trans || cfg_.bspline_freeze_trans_xy || auto_freeze_xy;
+    const bool freeze_tz = freeze_all_trans ||
+                           (cfg_.bspline_freeze_trans_z &&
+                            (!cfg_.use_planar_prior || lidar_odom_is_planar_motion()));
+
+    if (auto_freeze_xy && !cfg_.bspline_freeze_trans_xy && !cfg_.trust_initial_translation)
+        UNICALIB_INFO("[B-spline] 平移有效约束不足，自动固定 trans_x/trans_y 为初值");
+
+    if (freeze_xy) {
+        freeze_ceres_component(3, tx_init, "trans_x");
+        freeze_ceres_component(4, ty_init, "trans_y");
+    }
+    if (freeze_tz) {
+        freeze_ceres_component(5, tz_init, "trans_z");
+    } else if (cfg_.bspline_max_trans_delta_m > 0.0) {
+        const double d = cfg_.bspline_max_trans_delta_m;
+        problem.SetParameterLowerBound(extr, 5, tz_init - d);
+        problem.SetParameterUpperBound(extr, 5, tz_init + d);
+        UNICALIB_INFO("[B-spline] trans_z 限幅 ±{:.4f} m 相对初值 {:.6f}", d, tz_init);
+    }
+    if (!freeze_xy && cfg_.bspline_max_trans_delta_m > 0.0) {
+        const double d = cfg_.bspline_max_trans_delta_m;
+        problem.SetParameterLowerBound(extr, 3, tx_init - d);
+        problem.SetParameterUpperBound(extr, 3, tx_init + d);
+        problem.SetParameterLowerBound(extr, 4, ty_init - d);
+        problem.SetParameterUpperBound(extr, 4, ty_init + d);
+        UNICALIB_INFO("[B-spline] trans_x/y 限幅 ±{:.4f} m 相对初值", d);
+    }
 
     ceres::Solver::Options options;
     options.max_num_iterations = cfg_.ceres_max_iter;
@@ -1663,13 +1914,97 @@ ExtrinsicSE3 IMULiDARCalibrator::refine_with_spline(
 // 手动校准验证
 // ===================================================================
 ExtrinsicSE3 IMULiDARCalibrator::calibrate_manual_verify(
-    const std::vector<IMUFrame>& /*imu_data*/,
-    const std::vector<LiDARScan>& /*lidar_scans*/,
+    const std::vector<IMUFrame>& imu_data,
+    const std::vector<LiDARScan>& lidar_scans,
     const ExtrinsicSE3& init_extrin) {
-    // 最小实现：返回初值并打日志。完整实现需可视化旋转对比 + 增量调整或单步 B 样条 refine。
-    UNICALIB_INFO("[IMU-LiDAR] calibrate_manual_verify: 使用初值（完整手动验证 TODO）");
+    UNICALIB_INFO("[IMU-LiDAR] 手动验证开始");
+
     ExtrinsicSE3 out = init_extrin;
-    out.is_converged = false;  // 未做验证步骤，不标记为已收敛
+    out.is_converged = false;
+
+    try {
+        // 1. 运行 LiDAR 里程计（若尚未运行）
+        if (lidar_odom_.empty()) {
+            if (!run_lidar_odometry(lidar_scans)) {
+                UNICALIB_WARN("[IMU-LiDAR] 手动验证: LiDAR 里程计失败，返回初值");
+                return out;
+            }
+        }
+
+        // 2. 构建旋转对
+        auto rot_pairs = build_rotation_pairs(imu_data, nullptr);
+        if (rot_pairs.empty()) {
+            UNICALIB_WARN("[IMU-LiDAR] 手动验证: 旋转对为空，返回初值");
+            return out;
+        }
+
+        // 3. 用当前外参计算手眼残差
+        Sophus::SO3d X = out.SO3_TargetInRef;
+        auto residuals_deg = handeyeResidualsDeg(rot_pairs, X);
+
+        double mean_res = 0.0, max_res = 0.0;
+        auto sorted = residuals_deg;
+        std::sort(sorted.begin(), sorted.end());
+        double p50 = 0.0, p90 = 0.0;
+        if (!sorted.empty()) {
+            p50 = sorted[sorted.size() / 2];
+            p90 = sorted[sorted.size() * 9 / 10];
+            for (double r : residuals_deg) {
+                mean_res += r;
+                if (r > max_res) max_res = r;
+            }
+            mean_res /= static_cast<double>(residuals_deg.size());
+        }
+        out.handeye_rot_residual_deg = mean_res;
+
+        UNICALIB_INFO("[IMU-LiDAR] 手动验证: 旋转一致性 ({} 对): mean={:.4f}° max={:.4f}° p50={:.4f}° p90={:.4f}°",
+                       residuals_deg.size(), mean_res, max_res, p50, p90);
+        if (mean_res > 5.0)
+            UNICALIB_WARN("[IMU-LiDAR] 旋转残差偏大 ({:.4f}° > 5°), 建议检查时间对齐或调整外参", mean_res);
+
+        // 4. 用当前旋转重估平移
+        auto trans_result = estimate_translation(imu_data, X, out.time_offset_s);
+        if (trans_result.has_value()) {
+            out.POS_TargetInRef = trans_result->first;
+            out.trans_rms_m_s = trans_result->second;
+            UNICALIB_INFO("[IMU-LiDAR] 手动验证: 平移到 [{:.4f}, {:.4f}, {:.4f}] m (RMS={:.4f})",
+                           out.POS_TargetInRef.x(), out.POS_TargetInRef.y(),
+                           out.POS_TargetInRef.z(), out.trans_rms_m_s);
+        }
+
+        // 5. B 样条精化（帧数足够时）
+        if (lidar_scans.size() >= 10) {
+            const bool trans_ok_manual = trans_result.has_value() && trans_result->second >= 0.0;
+            ExtrinsicSE3 spline_result = refine_with_spline(
+                imu_data, lidar_scans, out.SE3_TargetInRef(),
+                out.ref_sensor_id.empty() ? "imu" : out.ref_sensor_id,
+                out.target_sensor_id.empty() ? "lidar" : out.target_sensor_id,
+                nullptr, trans_ok_manual);
+            out.SO3_TargetInRef = spline_result.SO3_TargetInRef;
+            out.POS_TargetInRef = spline_result.POS_TargetInRef;
+            out.time_offset_s = spline_result.time_offset_s;
+            out.bspline_final_cost = spline_result.bspline_final_cost;
+            out.is_converged = spline_result.is_converged;
+            UNICALIB_INFO("[IMU-LiDAR] 手动验证: B样条优化 dt={:.6f}s cost={:.6f} converged={}",
+                           out.time_offset_s, out.bspline_final_cost,
+                           out.is_converged ? "yes" : "no");
+        } else {
+            out.is_converged = true;
+            UNICALIB_INFO("[IMU-LiDAR] 手动验证: 帧数不足 ({}<10), 跳过 B样条", lidar_scans.size());
+        }
+
+        const Eigen::Matrix3d R = out.SO3_TargetInRef.matrix();
+        UNICALIB_INFO("[IMU-LiDAR] 手动验证完成: R(RPY°)=[{:.3f}, {:.3f}, {:.3f}] t=[{:.4f}, {:.4f}, {:.4f}] dt={:.4f}s",
+                       std::atan2(R(2,1), R(2,2)) * (180.0 / M_PI),
+                       std::asin(std::max(-1.0, std::min(1.0, -R(2,0)))) * (180.0 / M_PI),
+                       std::atan2(R(1,0), R(0,0)) * (180.0 / M_PI),
+                       out.POS_TargetInRef.x(), out.POS_TargetInRef.y(), out.POS_TargetInRef.z(),
+                       out.time_offset_s);
+    } catch (const std::exception& e) {
+        UNICALIB_WARN("[IMU-LiDAR] 手动验证异常: {}, 返回初值", e.what());
+        out = init_extrin;
+        out.is_converged = false;
+    }
     return out;
 }
 

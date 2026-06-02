@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# parse_lidar - 激光雷达 MSOP 解析工具（独立入口）
+#
+# 用法:
+#   ./parse_lidar <输入目录或文件> <输出目录> [选项]
+#
+# 选项:
+#   --per-frame     每帧单独保存（默认合并为一个 PCD）
+#   --name-difop    输出文件名使用配对的 DIFOP 基名
+#   -h, --help      显示帮助
+#
+# 示例:
+#   ./parse_lidar ./data/lidar_main/msop/top_front ./output_pcd
+#   ./parse_lidar --per-frame ./data/lidar ./output_frames
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# 可能的二进制路径（按优先级尝试）
+CANDIDATES=(
+    "$SCRIPT_DIR/calib_unified/build_readtest/bin/unicalib_lidar_parse"
+    "$SCRIPT_DIR/calib_unified/build/bin/unicalib_lidar_parse"
+    "$SCRIPT_DIR/build/bin/unicalib_lidar_parse"
+)
+
+LIDAR_PARSE_BIN=""
+for bin in "${CANDIDATES[@]}"; do
+    if [ -x "$bin" ]; then
+        LIDAR_PARSE_BIN="$bin"
+        break
+    fi
+done
+
+if [ -z "$LIDAR_PARSE_BIN" ]; then
+    echo "[ERROR] 未找到 unicalib_lidar_parse 可执行文件"
+    echo "请先编译项目: cd calib_unified && mkdir -p build && cd build && cmake .. && make -j"
+    exit 1
+fi
+
+# 转发所有参数给真正的解析工具
+exec "$LIDAR_PARSE_BIN" "$@"

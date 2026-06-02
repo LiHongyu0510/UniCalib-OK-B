@@ -14,11 +14,81 @@
 
 #include <algorithm>
 #include <cctype>
-#include <filesystem>
+#include <cmath>
+#include <cstdlib>
 
 namespace fs = std::filesystem;
 
 namespace ns_unicalib {
+
+namespace {
+
+double parse_pcd_timestamp_from_stem(const std::string& stem) {
+    auto pos = stem.rfind('_');
+    std::string ts_part = (pos != std::string::npos) ? stem.substr(pos + 1) : stem;
+    try {
+        double v = std::stod(ts_part);
+        if (v > 1e18) return v / 1e9;
+        if (v > 1e15) return v / 1e6;
+        if (v > 1e12) return v / 1e3;
+        if (v > 1e9) return v;
+        return v;
+    } catch (...) {
+        return -1.0;
+    }
+}
+
+std::string resolve_imu_csv_path(const std::string& path) {
+    if (path.empty() || !fs::exists(path)) return "";
+    if (fs::is_regular_file(path)) return path;
+    if (!fs::is_directory(path)) return "";
+    std::string best;
+    for (const auto& entry : fs::directory_iterator(path)) {
+        if (!entry.is_regular_file()) continue;
+        std::string ext = entry.path().extension().string();
+        std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+        if (ext != ".csv") continue;
+        std::string name = entry.path().filename().string();
+        if (name.find("index") != std::string::npos) continue;
+        std::string lower = name;
+        std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+        if (lower == "imu.csv") return entry.path().string();
+        if (best.empty()) best = entry.path().string();
+    }
+    return best;
+}
+
+bool load_lidar_pcd_dir(const std::string& sensor_id, const std::string& dir,
+                        size_t max_frames, double sample_interval,
+                        std::map<std::string, std::vector<LiDARScanRos>>& out) {
+    if (dir.empty() || !fs::exists(dir) || !fs::is_directory(dir)) {
+        UNICALIB_WARN("[UnifiedDataLoader] LiDAR 目录无效: {} ({})", sensor_id, dir);
+        return false;
+    }
+    std::vector<fs::path> pcd_files;
+    for (const auto& entry : fs::directory_iterator(dir)) {
+        if (entry.path().extension() == ".pcd") pcd_files.push_back(entry.path());
+    }
+    std::sort(pcd_files.begin(), pcd_files.end());
+    auto& scans = out[sensor_id];
+    size_t loaded = 0;
+    double last_ts = -1e30;
+    for (const auto& pcd_path : pcd_files) {
+        if (max_frames > 0 && loaded >= max_frames) break;
+        pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
+        if (pcl::io::loadPCDFile<pcl::PointXYZI>(pcd_path.string(), *cloud) != 0) continue;
+        double ts = parse_pcd_timestamp_from_stem(pcd_path.stem().string());
+        if (ts < 0.0) ts = static_cast<double>(scans.size()) * 0.1;
+        if (sample_interval > 0.0 && !scans.empty() && (ts - last_ts) < sample_interval) continue;
+        scans.push_back(LiDARScanRos(ts, cloud));
+        last_ts = ts;
+        ++loaded;
+    }
+    UNICALIB_INFO("  [{}] 加载 {} 帧 LiDAR 点云 ({})", sensor_id, scans.size(), dir);
+    return !scans.empty();
+}
+
+}  // namespace
 
 UnifiedDataLoader::UnifiedDataLoader(const Config& cfg) : cfg_(cfg) {
     status_msg_ = "未加载";
@@ -29,32 +99,30 @@ UnifiedDataLoader::~UnifiedDataLoader() = default;
 bool UnifiedDataLoader::load_from_files() {
     status_msg_ = "从文件加载数据...";
 
-    UNICALIB_INFO("[UnifiedDataLoader] 从文件加载 LiDAR: {}", cfg_.lidar_data_dir);
-    UNICALIB_INFO("[UnifiedDataLoader] 从文件加载相机: {}", cfg_.camera_images_dir);
+    UNICALIB_INFO("[UnifiedDataLoader] 文件模式: LiDAR 传感器 {} 个, IMU 传感器 {} 个",
+                  cfg_.file_lidar_dirs.size() + (cfg_.lidar_data_dir.empty() ? 0u : 1u),
+                  cfg_.file_imu_paths.size());
 
     try {
-        if (!cfg_.lidar_data_dir.empty() && fs::exists(cfg_.lidar_data_dir)) {
-            std::vector<fs::path> pcd_files;
-            for (const auto& entry : fs::directory_iterator(cfg_.lidar_data_dir)) {
-                if (entry.path().extension() == ".pcd") {
-                    pcd_files.push_back(entry.path());
-                }
-            }
-            std::sort(pcd_files.begin(), pcd_files.end());
+        if (!cfg_.file_lidar_dirs.empty()) {
+            for (const auto& [sid, dir] : cfg_.file_lidar_dirs)
+                load_lidar_pcd_dir(sid, dir, cfg_.max_frames, cfg_.sample_interval, file_lidar_data_);
+        } else if (!cfg_.lidar_data_dir.empty()) {
+            load_lidar_pcd_dir("lidar_front", cfg_.lidar_data_dir, cfg_.max_frames,
+                               cfg_.sample_interval, file_lidar_data_);
+        }
 
-            for (const auto& pcd_path : pcd_files) {
-                pcl::PointCloud<pcl::PointXYZI>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZI>);
-                if (pcl::io::loadPCDFile<pcl::PointXYZI>(pcd_path.string(), *cloud) == 0) {
-                    double ts;
-                    try {
-                        ts = std::stod(pcd_path.stem().string());
-                    } catch (...) {
-                        ts = static_cast<double>(file_lidar_data_["lidar_front"].size()) * 0.1;
-                    }
-                    file_lidar_data_["lidar_front"].push_back(LiDARScanRos(ts, cloud));
-                }
+        for (const auto& [sid, imu_path] : cfg_.file_imu_paths) {
+            std::string csv = resolve_imu_csv_path(imu_path);
+            if (csv.empty()) {
+                UNICALIB_WARN("[UnifiedDataLoader] 未找到 IMU CSV: {} ({})", sid, imu_path);
+                continue;
             }
-            UNICALIB_INFO("  加载 {} 帧 LiDAR 点云", file_lidar_data_["lidar_front"].size());
+            IMURawData raw = YamlIO::load_imu_csv(csv);
+            if (cfg_.max_frames > 0 && raw.size() > cfg_.max_frames)
+                raw.resize(cfg_.max_frames);
+            file_imu_raw_data_[sid] = std::move(raw);
+            UNICALIB_INFO("  [{}] IMU {} 帧 ({})", sid, file_imu_raw_data_[sid].size(), csv);
         }
 
         if (!cfg_.camera_images_dir.empty() && fs::exists(cfg_.camera_images_dir)) {
@@ -116,14 +184,17 @@ bool UnifiedDataLoader::load_from_new_format() {
     cfg.oem7_time_base = cfg_.new_format_oem7_time_base;
     cfg.oem7_gps_utc_leap_sec = cfg_.new_format_oem7_gps_utc_leap_sec;
     cfg.oem7_time_offset_sec = cfg_.new_format_oem7_time_offset_sec;
+    cfg.oem7_imu_gyro_scale_factor = cfg_.new_format_oem7_gyro_scale_factor;
+    cfg.oem7_imu_accel_scale_factor = cfg_.new_format_oem7_accel_scale_factor;
     cfg.max_frames = cfg_.max_frames;
     cfg.sample_interval = cfg_.sample_interval;
 
     UNICALIB_INFO("[UnifiedDataLoader] 从新采集格式加载数据...");
     UNICALIB_INFO("  root_dir: {}", cfg.root_dir);
     UNICALIB_INFO("  timestamp_unit: {}", cfg.timestamp_unit);
-    UNICALIB_INFO("  oem7: rate={} Hz time_base={} leap={} offset={} s", cfg.oem7_imu_output_rate_hz,
-                  cfg.oem7_time_base, cfg.oem7_gps_utc_leap_sec, cfg.oem7_time_offset_sec);
+    UNICALIB_INFO("  oem7: rate={} Hz time_base={} leap={} offset={} s gyro_scale={} accel_scale={}",
+                  cfg.oem7_imu_output_rate_hz, cfg.oem7_time_base, cfg.oem7_gps_utc_leap_sec,
+                  cfg.oem7_time_offset_sec, cfg.oem7_imu_gyro_scale_factor, cfg.oem7_imu_accel_scale_factor);
 
     new_format_source_ = std::make_shared<NewFormatDataSource>(cfg);
     if (!new_format_source_->load()) {
@@ -183,7 +254,22 @@ std::vector<CameraFrameRos> UnifiedDataLoader::get_camera_frames(const std::stri
 
 std::vector<IMUFrameRos> UnifiedDataLoader::get_imu_frames(const std::string& sensor_id) const {
     if (cfg_.source_type == SourceType::FILES) {
-        return {};
+        auto it = file_imu_raw_data_.find(sensor_id);
+        if (it == file_imu_raw_data_.end()) return {};
+        std::vector<IMUFrameRos> frames;
+        frames.reserve(it->second.size());
+        for (const auto& f : it->second) {
+            IMUFrameRos ros_f;
+            ros_f.timestamp = f.timestamp;
+            ros_f.gyro[0] = f.gyro[0];
+            ros_f.gyro[1] = f.gyro[1];
+            ros_f.gyro[2] = f.gyro[2];
+            ros_f.accel[0] = f.accel[0];
+            ros_f.accel[1] = f.accel[1];
+            ros_f.accel[2] = f.accel[2];
+            frames.push_back(ros_f);
+        }
+        return frames;
     }
     if (cfg_.source_type == SourceType::NEW_FORMAT) {
         return new_format_source_ ? new_format_source_->get_imu_frames(sensor_id) : std::vector<IMUFrameRos>();

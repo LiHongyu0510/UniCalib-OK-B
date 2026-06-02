@@ -1,0 +1,48 @@
+#!/bin/bash
+#
+# parse_imu - Bynav 惯导 .log / OEM7 二进制 → CSV
+#
+# 用法:
+#   ./parse_imu <输入.log> <输出.csv> [rate_hz] [gps|unix]
+#   ./parse_imu <日志目录> <输出目录> [rate_hz] [gps|unix]
+#
+# 示例:
+#   ./parse_imu ./data/imu/.../log/RAWIMU_data_2026-05-14_15-41-14.log ./data/imu/raw.csv
+#   ./parse_imu ./data/imu/.../log ./data/imu/parsed 100
+
+set -e
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+CANDIDATES=(
+    "$SCRIPT_DIR/calib_unified/build/bin/unicalib_imu_parse"
+    "$SCRIPT_DIR/calib_unified/build_test/bin/unicalib_imu_parse"
+    "$SCRIPT_DIR/calib_unified/build_readtest/bin/unicalib_imu_parse"
+    "$SCRIPT_DIR/build/bin/unicalib_imu_parse"
+)
+
+IMU_PARSE_BIN=""
+for bin in "${CANDIDATES[@]}"; do
+    if [ -x "$bin" ]; then
+        IMU_PARSE_BIN="$bin"
+        break
+    fi
+done
+
+if [ -z "$IMU_PARSE_BIN" ]; then
+    echo "[ERROR] 未找到 unicalib_imu_parse"
+    echo "请先编译: ./calib_unified_run.sh --build-only"
+    echo "或: cd calib_unified/build && cmake .. && make -j unicalib_imu_parse"
+    exit 1
+fi
+
+if [ $# -lt 2 ]; then
+    exec "$IMU_PARSE_BIN"
+fi
+
+# 目录 → 批量
+if [ -d "$1" ]; then
+    exec "$IMU_PARSE_BIN" --batch "$1" "$2" "${@:3}"
+fi
+
+exec "$IMU_PARSE_BIN" "$@"

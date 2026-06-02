@@ -130,6 +130,31 @@ static std::string resolve_data_path(const std::string& base, const std::string&
     return (b / p).lexically_normal().string();
 }
 
+static void resolve_path_map(const std::string& base, std::map<std::string, std::string>& paths) {
+    if (base.empty()) return;
+    for (auto& [k, v] : paths) {
+        if (!v.empty()) v = resolve_data_path(base, v);
+    }
+}
+
+static void resolve_pipeline_data_paths(PipelineConfig& pipe_cfg, const std::string& base) {
+    if (base.empty()) return;
+    auto resolve_one = [&](std::string& p) {
+        if (!p.empty()) p = resolve_data_path(base, p);
+    };
+    resolve_one(pipe_cfg.lidar_data_dir);
+    resolve_one(pipe_cfg.camera_images_dir);
+    resolve_path_map(base, pipe_cfg.lidar_data_paths);
+    resolve_path_map(base, pipe_cfg.camera_images_dirs);
+    resolve_path_map(base, pipe_cfg.camera_intrinsic_files);
+    resolve_path_map(base, pipe_cfg.imu_data_paths);
+    if (!pipe_cfg.lidar_id.empty()) {
+        auto it = pipe_cfg.lidar_data_paths.find(pipe_cfg.lidar_id);
+        if (it != pipe_cfg.lidar_data_paths.end() && !it->second.empty())
+            pipe_cfg.lidar_data_dir = it->second;
+    }
+}
+
 static void print_banner() {
     std::cout << R"(
  ╔═══════════════════════════════════════════════════════╗
@@ -413,6 +438,14 @@ int main(int argc, char** argv) {
         for (const auto& v : cfg["lidar_camera"]["camera_list"])
             pipe_cfg.lidar_camera_camera_list.push_back(v.as<std::string>());
     }
+    if (cfg["lidar_camera"] && cfg["lidar_camera"]["pairs"] && cfg["lidar_camera"]["pairs"].IsSequence()) {
+        for (const auto& p : cfg["lidar_camera"]["pairs"]) {
+            if (p.IsSequence() && p.size() >= 2)
+                pipe_cfg.lidar_camera_pairs.emplace_back(p[0].as<std::string>(), p[1].as<std::string>());
+        }
+        if (!pipe_cfg.lidar_camera_pairs.empty())
+            UNICALIB_INFO("[LiDAR-Cam] 配置 pairs: {} 对", pipe_cfg.lidar_camera_pairs.size());
+    }
     if (cfg["lidar_camera"]) {
         const auto& lc = cfg["lidar_camera"];
         if (lc["board_cols"])   pipe_cfg.board_cols   = lc["board_cols"].as<int>();
@@ -650,7 +683,14 @@ int main(int argc, char** argv) {
             UNICALIB_DEBUG("从系统配置读取 ROS2 话题失败，沿用命令行或 ros2 段: {}", e.what());
         }
     }
-    
+    // pairs 优先于 sensors[] 默认的第一个 LiDAR/相机（文件模式标定对须与 initial_extrinsics 键一致）
+    if (!pipe_cfg.lidar_camera_pairs.empty()) {
+        const auto& [lid, cam] = pipe_cfg.lidar_camera_pairs.front();
+        pipe_cfg.lidar_id = lid;
+        pipe_cfg.camera_id = cam;
+        UNICALIB_INFO("[LiDAR-Cam] 标定对（pairs）: lidar_id={} camera_id={}", lid, cam);
+    }
+
     // 设置数据源配置（在线=实时话题，离线=bag 文件；话题名以 config 中 ros2/sensors 为准）
     if (use_new_format) {
         pipe_cfg.use_new_format = true;
@@ -679,8 +719,26 @@ int main(int argc, char** argv) {
         UNICALIB_INFO("  相机话题: {}", pipe_cfg.camera_ros2_topic.empty() ? "(未设置)" : pipe_cfg.camera_ros2_topic);
         UNICALIB_INFO("  最大等待: {:.1f}s, 最大帧数: {}", pipe_cfg.ros2_max_wait_time, pipe_cfg.ros2_max_frames);
     } else {
+        try {
+            SystemConfig sys_cfg_paths = YamlIO::load_system_config(config_file);
+            pipe_cfg.lidar_data_paths = sys_cfg_paths.lidar_data_paths;
+            if (pipe_cfg.camera_images_dirs.empty())
+                pipe_cfg.camera_images_dirs = sys_cfg_paths.camera_images_dirs;
+        } catch (const std::exception& e) {
+            UNICALIB_DEBUG("加载 data 路径映射失败: {}", e.what());
+        }
         pipe_cfg.lidar_data_dir    = lidar_dir_resolved;
         pipe_cfg.camera_images_dir = camera_dir_resolved;
+        if (!pipe_cfg.lidar_id.empty()) {
+            auto itl = pipe_cfg.lidar_data_paths.find(pipe_cfg.lidar_id);
+            if (itl != pipe_cfg.lidar_data_paths.end() && !itl->second.empty())
+                pipe_cfg.lidar_data_dir = itl->second;
+        }
+        if (!pipe_cfg.camera_id.empty()) {
+            auto itc = pipe_cfg.camera_images_dirs.find(pipe_cfg.camera_id);
+            if (itc != pipe_cfg.camera_images_dirs.end() && !itc->second.empty())
+                pipe_cfg.camera_images_dir = itc->second;
+        }
     }
 
     // 统一日志：当前数据源类型（便于 grep 与排障）
@@ -700,32 +758,54 @@ int main(int argc, char** argv) {
                       pipe_cfg.camera_images_dir.empty() ? "(未设置)" : pipe_cfg.camera_images_dir);
     }
 
-    // 相机内参：显式配置 camera_intrinsic_file 时填入 pipeline；否则从相机标定结果目录 results.camera_intrinsic 读取
+    // 相机内参（与 joint_calib 一致，读取 data.camera.<id>.intrinsic_yaml）：
+    //   1) data.camera.<id>.intrinsic_yaml（相对 --data-dir；多路可共用 cameras 映射 YAML）
+    //   2) 根键 camera_intrinsic_file 覆盖当前 camera_id
+    //   3) 若存在 results/camera_intrinsic/camera_intrinsic_<id>.yaml 则兜底
+    std::string results_camera_intrinsic = "camera_intrinsic";
+    if (cfg["results"] && cfg["results"]["camera_intrinsic"])
+        results_camera_intrinsic = cfg["results"]["camera_intrinsic"].as<std::string>();
+    if (cfg["data"] && cfg["data"]["camera"]) {
+        for (const auto& it : cfg["data"]["camera"]) {
+            if (!it.second.IsMap()) continue;
+            const std::string cam_id = it.first.as<std::string>();
+            if (it.second["intrinsic_yaml"]) {
+                pipe_cfg.camera_intrinsic_files[cam_id] =
+                    it.second["intrinsic_yaml"].as<std::string>();
+                UNICALIB_INFO("[LiDAR-Cam] 内参 data.camera.{}.intrinsic_yaml: {}",
+                              cam_id, pipe_cfg.camera_intrinsic_files[cam_id]);
+            } else {
+                pipe_cfg.camera_intrinsic_files[cam_id] =
+                    output_dir + "/" + results_camera_intrinsic + "/camera_intrinsic_" + cam_id + ".yaml";
+            }
+        }
+    }
     if (cfg["camera_intrinsic_file"]) {
         std::string p = cfg["camera_intrinsic_file"].as<std::string>();
         if (!base_data_dir.empty() && !fs::path(p).is_absolute())
             p = resolve_data_path(base_data_dir, p);
         pipe_cfg.camera_intrinsic_file = p;
         pipe_cfg.camera_intrinsic_files[pipe_cfg.camera_id] = p;
-    } else if (pipe_cfg.camera_intrinsic_files.empty()) {
-        std::string results_camera_intrinsic = "camera_intrinsic";
-        if (cfg["results"] && cfg["results"]["camera_intrinsic"])
-            results_camera_intrinsic = cfg["results"]["camera_intrinsic"].as<std::string>();
-        auto try_add = [&](const std::string& cam_id) {
-            std::string p = output_dir + "/" + results_camera_intrinsic + "/camera_intrinsic_" + cam_id + ".yaml";
-            if (fs::exists(p)) {
-                pipe_cfg.camera_intrinsic_files[cam_id] = p;
-                UNICALIB_INFO("  内参将从相机标定结果读取: {} (camera_id={})", p, cam_id);
-            }
-        };
-        try_add(pipe_cfg.camera_id);
-        for (const auto& cid : pipe_cfg.lidar_camera_camera_list)
-            if (pipe_cfg.camera_intrinsic_files.count(cid) == 0) try_add(cid);
+        UNICALIB_INFO("[LiDAR-Cam] 内参覆盖 camera_intrinsic_file: {} (camera_id={})",
+                      p, pipe_cfg.camera_id);
     }
+    auto try_add_results_intrinsic = [&](const std::string& cam_id) {
+        if (pipe_cfg.camera_intrinsic_files.count(cam_id) != 0) return;
+        std::string p = output_dir + "/" + results_camera_intrinsic + "/camera_intrinsic_" + cam_id + ".yaml";
+        if (fs::exists(p)) {
+            pipe_cfg.camera_intrinsic_files[cam_id] = p;
+            UNICALIB_INFO("[LiDAR-Cam] 内参从标定结果: {} (camera_id={})", p, cam_id);
+        }
+    };
+    try_add_results_intrinsic(pipe_cfg.camera_id);
+    for (const auto& cid : pipe_cfg.lidar_camera_camera_list)
+        try_add_results_intrinsic(cid);
 
     // 与 cam-intrin 一致：Docker/容器内 NumPy 2.x 时由 run 脚本设置 UNICALIB_MIAS_LCEC_PYTHON（NumPy 1.x wrapper），粗标定子进程使用该解释器以便 cv2/PnP 可用
     const char* mias_py = std::getenv("UNICALIB_MIAS_LCEC_PYTHON");
     if (mias_py && mias_py[0]) pipe_cfg.mias_lcec_python_exe = mias_py;
+
+    resolve_pipeline_data_paths(pipe_cfg, base_data_dir);
 
     CalibPipeline pipeline(pipe_cfg);
 

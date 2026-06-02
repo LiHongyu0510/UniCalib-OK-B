@@ -20,6 +20,23 @@
 #   ./calib_unified_run.sh --clean                 # 清理后重新编译
 #   ./calib_unified_run.sh --task-help             # 各标定任务详细说明与数据要求
 #
+# 雷达原始包解析 (容器内 unicalib_lidar_parse，MSOP/补盲/Livox 等 → PCD):
+#   ./calib_unified_run.sh --parse-lidar data/lidar_main/lidar_main_log/lidar_main/msop/lidar_main data/output/lidar_main
+#   ./calib_unified_run.sh --parse-lidar data/lidar_main/msop/top_front/lidarMSOP0_xxx out.pcd
+#   ./calib_unified_run.sh --parse-lidar <msop目录> <pcd输出目录> [max_frames] --per-frame
+#
+# RoboSense MSOP+DIFOP 专用解码 (容器内 unicalib_rslidar_decode):
+#   ./calib_unified_run.sh --decode-rslidar data/lidar_main/lidar_main/lidar_main data/lidar_main/
+#
+# 惯导数据解析 (OEM7 短二进制 → CSV，或 ROS2 bag 导出 IMU):
+#   ./calib_unified_run.sh --parse-imu data/imu/imu_in/bynav_X2D_driver_0519/log data/imu/imu
+#   ./calib_unified_run.sh --parse-imu path/to/CORRIMU.log out.csv 200 unix  # 默认已是 unix，与 LiDAR 对齐
+#   ./calib_unified_run.sh --parse-imu --from-ros2-bag data/ros2_bag_dir --topic /dji_sdk/imu data/imu/imu_0.csv
+#
+# 合并三路 LiDAR 到 lidar_main 坐标系
+# python3 scripts/merge_three_lidars_to_main.py --data-dir data --align-time --color --use-config-extrinsics
+
+
 # 手动标定: 使用 --manual 时，运行后终端会打印「手动标定操作说明」(按键与步骤)；
 #           详细文档见 calib_unified/docs/MANUAL_EXTRINSIC_ADJUSTMENT.md
 #
@@ -66,7 +83,20 @@ DOCKER_IMAGE="calib_env:humble"
 DOCKER_GPU_FLAGS="${DOCKER_GPU_FLAGS:---gpus all}"
 
 # ─── 运行模式 ──────────────────────────────────────────────────────────────────
-MODE="default"   # default | build-only | test-only | run | shell | check-deps | download-numpy | download-diffusers | download-sd21 | download-dm-calib | download-mobile-sam
+MODE="default"   # default | build-only | test-only | run | shell | check-deps | parse-lidar | decode-rslidar | parse-imu | ...
+# 雷达 / 惯导一键解析参数
+PARSE_LIDAR_IN=""
+PARSE_LIDAR_OUT=""
+PARSE_LIDAR_MAX=""
+PARSE_LIDAR_PER_FRAME=false
+PARSE_RSLIDAR_IN=""
+PARSE_RSLIDAR_OUT=""
+PARSE_IMU_IN=""
+PARSE_IMU_OUT=""
+PARSE_IMU_RATE="200"
+PARSE_IMU_TIME_BASE="unix"
+PARSE_IMU_FROM_ROS2=false
+PARSE_IMU_ROS2_TOPIC="/imu/data"
 CALIB_TASK="all"
 CALIB_CONFIG=""
 CALIB_DATASET=""   # 可选，如 nya_02_ros2 → 数据目录为 $CALIB_DATA_DIR/$CALIB_DATASET
@@ -141,6 +171,16 @@ print_help() {
   --pangolin-panel  LiDAR-Camera 手动时使用 Pangolin 点云叠加+6-DOF 面板 (需先 --manual)
 
   --task-help    显示各标定任务的详细说明与数据要求
+
+数据解析 (容器内解码，需已编译 parse 工具):
+  --parse-lidar <输入> <输出> [max_frames] [--per-frame]
+               雷达原始包 → PCD (unicalib_lidar_parse；输入为文件或目录)
+  --decode-rslidar <msop目录> <pcd输出目录>
+               RoboSense MSOP+DIFOP 批量 → PCD (unicalib_rslidar_decode)
+  --parse-imu <输入> <输出.csv> [rate_hz] [gps|unix]
+               OEM7 二进制 / Bynav 文本 → CSV (unicalib_imu_parse)
+  --parse-imu --from-ros2-bag <bag目录> --topic <topic> <输出.csv>
+               从 ROS2 bag 导出 IMU 为 CSV
 
 编译:
   --debug        Debug 模式 (默认 Release)
@@ -296,6 +336,82 @@ parse_args() {
             --download-sd21)      MODE="download-sd21" ;;
             --download-dm-calib)  MODE="download-dm-calib" ;;
             --download-mobile-sam) MODE="download-mobile-sam" ;;
+            --parse-lidar)
+                MODE="parse-lidar"
+                shift
+                while [[ $# -gt 0 ]]; do
+                    case "$1" in
+                        --per-frame)
+                            PARSE_LIDAR_PER_FRAME=true
+                            shift
+                            ;;
+                        --*)
+                            log_warn "parse-lidar 未知选项: $1"
+                            shift
+                            ;;
+                        *)
+                            if [[ -z "${PARSE_LIDAR_IN}" ]]; then
+                                PARSE_LIDAR_IN="$1"
+                            elif [[ -z "${PARSE_LIDAR_OUT}" ]]; then
+                                PARSE_LIDAR_OUT="$1"
+                            elif [[ "${PARSE_LIDAR_MAX}" == "" ]] && [[ "$1" =~ ^[0-9]+$ ]]; then
+                                PARSE_LIDAR_MAX="$1"
+                            else
+                                log_warn "parse-lidar 忽略多余参数: $1"
+                            fi
+                            shift
+                            ;;
+                    esac
+                done
+                continue
+                ;;
+            --decode-rslidar)
+                MODE="decode-rslidar"
+                shift
+                PARSE_RSLIDAR_IN="${1:-}"; [[ -n "${1:-}" ]] && shift
+                PARSE_RSLIDAR_OUT="${1:-}"; [[ -n "${1:-}" ]] && shift
+                continue
+                ;;
+            --parse-imu)
+                MODE="parse-imu"
+                shift
+                while [[ $# -gt 0 ]]; do
+                    case "$1" in
+                        --from-ros2-bag)
+                            PARSE_IMU_FROM_ROS2=true
+                            shift
+                            PARSE_IMU_IN="${1:-}"; [[ -n "${1:-}" ]] && shift
+                            ;;
+                        --topic)
+                            shift
+                            PARSE_IMU_ROS2_TOPIC="${1:-/imu/data}"
+                            [[ -n "${1:-}" ]] && shift
+                            ;;
+                        --*)
+                            log_warn "parse-imu 未知选项: $1"
+                            shift
+                            ;;
+                        *)
+                            if [[ -z "${PARSE_IMU_OUT}" ]] && [[ "${PARSE_IMU_FROM_ROS2}" == "true" ]]; then
+                                PARSE_IMU_OUT="$1"
+                            elif [[ -z "${PARSE_IMU_IN}" ]] && [[ "${PARSE_IMU_FROM_ROS2}" != "true" ]]; then
+                                PARSE_IMU_IN="$1"
+                            elif [[ -z "${PARSE_IMU_OUT}" ]]; then
+                                PARSE_IMU_OUT="$1"
+                            elif [[ "$1" =~ ^[0-9]+$ ]]; then
+                                PARSE_IMU_RATE="$1"
+                            elif [[ "$1" == "gps" || "$1" == "unix" ]]; then
+                                PARSE_IMU_TIME_BASE="$1"
+                            else
+                                log_warn "parse-imu 忽略: $1"
+                            fi
+                            shift
+                            ;;
+                    esac
+                done
+                continue
+                ;;
+            --per-frame)   PARSE_LIDAR_PER_FRAME=true ;;
             --clean)       CLEAN_BUILD=true ;;
             --coarse)      DO_COARSE=true;  COARSE_EXPLICIT=true ;;
             --no-coarse)   DO_COARSE=false; COARSE_EXPLICIT=true ;;
@@ -372,6 +488,325 @@ init_dirs() {
              "${CALIB_RESULTS_DIR}" \
              "${CALIB_LOGS_DIR}" \
              "${SCRIPTS_TMPDIR}"
+}
+
+# ─── 宿主机路径 → 容器内路径（解析模式挂载整个项目根目录）────────────────────
+resolve_host_path() {
+    local p="$1"
+    if [[ -z "${p}" ]]; then
+        echo ""
+        return
+    fi
+    if [[ "${p}" != /* ]]; then
+        p="${PROJECT_ROOT}/${p}"
+    fi
+    if command -v realpath &>/dev/null; then
+        p="$(realpath -m "${p}")"
+    fi
+    echo "${p}"
+}
+
+resolve_container_path() {
+    local host_path
+    host_path="$(resolve_host_path "$1")"
+    [[ -z "${host_path}" ]] && echo "" && return
+    local proj data results
+    proj="$(resolve_host_path "${PROJECT_ROOT}")"
+    data="$(resolve_host_path "${CALIB_DATA_DIR}")"
+    results="$(resolve_host_path "${CALIB_RESULTS_DIR}")"
+    if [[ "${host_path}" == "${proj}" ]] || [[ "${host_path}" == "${proj}/"* ]]; then
+        local rel="${host_path#"${proj}"}"
+        rel="${rel#/}"
+        echo "${CONTAINER_WS}/${rel}"
+    elif [[ "${host_path}" == "${data}" ]] || [[ "${host_path}" == "${data}/"* ]]; then
+        local rel="${host_path#"${data}"}"
+        rel="${rel#/}"
+        echo "${CONTAINER_DATA}/${rel}"
+    elif [[ "${host_path}" == "${results}" ]] || [[ "${host_path}" == "${results}/"* ]]; then
+        local rel="${host_path#"${results}"}"
+        rel="${rel#/}"
+        echo "${CONTAINER_RESULTS}/${rel}"
+    else
+        log_error "路径须在项目根、数据或结果目录内: $1 (解析为 ${host_path})"
+        exit 1
+    fi
+}
+
+# 解析前检查宿主机输入路径（避免 inu_in 等笔误进容器后才失败）
+validate_parse_input_path() {
+    local p="$1"
+    local host
+    host="$(resolve_host_path "${p}")"
+    if [[ -e "${host}" ]]; then
+        return 0
+    fi
+    log_error "输入路径不存在: ${p}"
+    if [[ "${p}" == *inu_in* || "${host}" == *inu_in* ]]; then
+        local alt="${p//inu_in/imu_in}"
+        local alt_host="${host//inu_in/imu_in}"
+        if [[ -e "${alt_host}" ]]; then
+            log_warn "常见笔误 inu_in → imu_in，请改用: ${alt}"
+        fi
+    fi
+    exit 1
+}
+
+ensure_parse_tools() {
+    local missing=0
+    for bin in unicalib_lidar_parse unicalib_rslidar_decode unicalib_imu_parse; do
+        if [[ ! -f "${BUILD_DIR}/bin/${bin}" ]]; then
+            missing=1
+            break
+        fi
+    done
+    if [[ "${missing}" -eq 1 ]]; then
+        log_warn "未找到解析工具，先编译..."
+        do_build
+    fi
+}
+
+# 解析类任务：额外挂载项目根目录，便于 data/... 与 results/... 路径解析
+write_and_run_parse() {
+    local script_name="$1"
+    local script_content="$2"
+    local host_script="${SCRIPTS_TMPDIR}/${script_name}"
+    local container_script="${CONTAINER_SCRIPTS}/${script_name}"
+    mkdir -p "${SCRIPTS_TMPDIR}"
+    chmod a+rx "${SCRIPTS_TMPDIR}"
+    printf '%s' "${script_content}" > "${host_script}"
+    chmod a+rx "${host_script}"
+    sync 2>/dev/null || true
+
+    local host_uid host_gid
+    if [[ -n "${SUDO_UID:-}" && -n "${SUDO_GID:-}" ]]; then
+        host_uid="${SUDO_UID}"
+        host_gid="${SUDO_GID}"
+    else
+        host_uid="$(id -u)"
+        host_gid="$(id -g)"
+    fi
+
+    local x11_args=()
+    if [[ -n "${DISPLAY:-}" ]]; then
+        xhost +local:docker &>/dev/null || true
+        x11_args=(-e "DISPLAY=${DISPLAY}" -v "/tmp/.X11-unix:/tmp/.X11-unix:rw")
+    fi
+
+    # 容器内以 root 运行（避免 --user 与 subuid 映射导致无法执行挂载脚本）；
+    # 解析结束后在脚本内 chown 到 HOST_UID/HOST_GID，输出文件在宿主机可写。
+    docker run --rm \
+        ${DOCKER_GPU_FLAGS} \
+        --ipc=host --network=host \
+        "${x11_args[@]}" \
+        -e HOST_UID="${host_uid}" \
+        -e HOST_GID="${host_gid}" \
+        -e CALIB_DATA_DIR="${CONTAINER_DATA}" \
+        -e CALIB_RESULTS_DIR="${CONTAINER_RESULTS}" \
+        -e CALIB_LOGS_DIR="${CONTAINER_LOGS}" \
+        -v "${PROJECT_ROOT}:${CONTAINER_WS}:rw" \
+        -v "${CALIB_UNIFIED_DIR}:${CONTAINER_CALIB}:rw" \
+        -v "${BUILD_DIR}:${CONTAINER_BUILD}:rw" \
+        -v "${CALIB_DATA_DIR}:${CONTAINER_DATA}:rw" \
+        -v "${CALIB_RESULTS_DIR}:${CONTAINER_RESULTS}:rw" \
+        -v "${CALIB_LOGS_DIR}:${CONTAINER_LOGS}:rw" \
+        -v "${SCRIPTS_TMPDIR}:${CONTAINER_SCRIPTS}:rw" \
+        "${DOCKER_IMAGE}" \
+        bash "${container_script}"
+}
+
+gen_parse_lidar_script() {
+    local c_in c_out max_f per_frame
+    c_in="$(resolve_container_path "${PARSE_LIDAR_IN}")"
+    c_out="$(resolve_container_path "${PARSE_LIDAR_OUT}")"
+    max_f="${PARSE_LIDAR_MAX:-0}"
+    per_frame="${PARSE_LIDAR_PER_FRAME}"
+    cat << SCRIPTEOF
+#!/usr/bin/env bash
+set -eo pipefail
+source /opt/ros/humble/setup.bash 2>/dev/null || true
+EXE="${CONTAINER_BIN}/unicalib_lidar_parse"
+if [[ ! -x "\${EXE}" ]]; then
+    echo "[ERROR] 未找到 \${EXE}，请先: ./calib_unified_run.sh --build-only"
+    exit 1
+fi
+echo "╔══════════════════════════════════════════╗"
+echo "║  雷达原始包解析 (unicalib_lidar_parse)   ║"
+echo "╚══════════════════════════════════════════╝"
+echo "  输入: ${c_in}"
+echo "  输出: ${c_out}"
+PER_FRAME_ARGS=()
+[[ "${per_frame}" == "true" ]] && PER_FRAME_ARGS+=(--per-frame)
+if [[ -d "${c_in}" ]]; then
+    mkdir -p "${c_out}"
+    "\${EXE}" "${c_in}" "${c_out}" ${max_f} "\${PER_FRAME_ARGS[@]}"
+else
+    mkdir -p "\$(dirname "${c_out}")"
+    "\${EXE}" "${c_in}" "${c_out}" ${max_f} "\${PER_FRAME_ARGS[@]}"
+fi
+if [[ -n "\${HOST_UID:-}" && -n "\${HOST_GID:-}" ]]; then
+    chown -R "\${HOST_UID}:\${HOST_GID}" "${c_out}" 2>/dev/null || true
+fi
+echo "[OK] 雷达解析完成"
+SCRIPTEOF
+}
+
+gen_decode_rslidar_script() {
+    local c_in c_out
+    c_in="$(resolve_container_path "${PARSE_RSLIDAR_IN}")"
+    c_out="$(resolve_container_path "${PARSE_RSLIDAR_OUT}")"
+    cat << SCRIPTEOF
+#!/usr/bin/env bash
+set -eo pipefail
+source /opt/ros/humble/setup.bash 2>/dev/null || true
+EXE="${CONTAINER_BIN}/unicalib_rslidar_decode"
+if [[ ! -x "\${EXE}" ]]; then
+    echo "[ERROR] 未找到 \${EXE}"
+    exit 1
+fi
+echo "╔══════════════════════════════════════════╗"
+echo "║  RS MSOP+DIFOP 解码 (unicalib_rslidar_decode) ║"
+echo "╚══════════════════════════════════════════╝"
+echo "  输入目录: ${c_in}"
+echo "  输出目录: ${c_out}"
+mkdir -p "${c_out}"
+"\${EXE}" "${c_in}" "${c_out}"
+if [[ -n "\${HOST_UID:-}" && -n "\${HOST_GID:-}" ]]; then
+    chown -R "\${HOST_UID}:\${HOST_GID}" "${c_out}" 2>/dev/null || true
+fi
+echo "[OK] RS 雷达解码完成 → ${c_out}/pcd/"
+SCRIPTEOF
+}
+
+gen_parse_imu_script() {
+    local c_in c_out rate tb ros2 topic
+    c_out="$(resolve_container_path "${PARSE_IMU_OUT}")"
+    rate="${PARSE_IMU_RATE}"
+    tb="${PARSE_IMU_TIME_BASE}"
+    ros2="${PARSE_IMU_FROM_ROS2}"
+    topic="${PARSE_IMU_ROS2_TOPIC}"
+    if [[ "${ros2}" == "true" ]]; then
+        c_in="$(resolve_container_path "${PARSE_IMU_IN}")"
+        cat << SCRIPTEOF
+#!/usr/bin/env bash
+set -eo pipefail
+source /opt/ros/humble/setup.bash
+echo "╔══════════════════════════════════════════╗"
+echo "║  IMU: ROS2 bag → CSV                       ║"
+echo "╚══════════════════════════════════════════╝"
+echo "  bag:   ${c_in}"
+echo "  topic: ${topic}"
+echo "  输出:  ${c_out}"
+python3 << 'PY'
+import sys, csv
+bag_uri = "${c_in}"
+topic = "${topic}"
+out_path = "${c_out}"
+try:
+    from rosbag2_py import SequentialReader, StorageOptions, ConverterOptions
+    from rclpy.serialization import deserialize_message
+    from rosidl_runtime_py.utilities import get_message
+except ImportError as e:
+    print("[FAIL] 需要 rosbag2_py:", e)
+    sys.exit(1)
+storage = StorageOptions(uri=bag_uri, storage_id="sqlite3")
+converter = ConverterOptions(input_serialization_format="cdr", output_serialization_format="cdr")
+reader = SequentialReader()
+reader.open(storage, converter)
+topics = reader.get_all_topics_and_types()
+type_map = {t.name: t.type for t in topics}
+if topic not in type_map:
+    print("[FAIL] topic 不存在:", topic)
+    print("可用:", list(type_map.keys())[:20])
+    sys.exit(1)
+msg_type = get_message(type_map[topic])
+rows = []
+while reader.has_next():
+    tname, data, t = reader.read_next()
+    if tname != topic:
+        continue
+    msg = deserialize_message(data, msg_type)
+    rows.append((t * 1e-9, msg.angular_velocity.x, msg.angular_velocity.y, msg.angular_velocity.z,
+                 msg.linear_acceleration.x, msg.linear_acceleration.y, msg.linear_acceleration.z))
+with open(out_path, "w", newline="") as f:
+    f.write("# timestamp,gx,gy,gz,ax,ay,az\\n")
+    w = csv.writer(f)
+    for r in rows:
+        w.writerow(r)
+print(f"[OK] 导出 {len(rows)} 行 → {out_path}")
+PY
+if [[ -n "\${HOST_UID:-}" && -n "\${HOST_GID:-}" ]]; then
+    chown "\${HOST_UID}:\${HOST_GID}" "${c_out}" 2>/dev/null || true
+fi
+SCRIPTEOF
+        return
+    fi
+    c_in="$(resolve_container_path "${PARSE_IMU_IN}")"
+    cat << SCRIPTEOF
+#!/usr/bin/env bash
+set -eo pipefail
+EXE="${CONTAINER_BIN}/unicalib_imu_parse"
+if [[ ! -x "\${EXE}" ]]; then
+    echo "[ERROR] 未找到 \${EXE}"
+    exit 1
+fi
+echo "╔══════════════════════════════════════════╗"
+echo "║  IMU 解析 (unicalib_imu_parse)            ║"
+echo "╚══════════════════════════════════════════╝"
+echo "  输入: ${c_in}"
+echo "  输出: ${c_out}"
+OUT_DIR="${c_out}"
+if [[ "${c_out}" == *.csv ]]; then
+    OUT_DIR="\$(dirname "${c_out}")"
+fi
+mkdir -p "\${OUT_DIR}"
+if [[ -d "${c_in}" ]]; then
+    "\${EXE}" --batch "${c_in}" "\${OUT_DIR}" ${rate} ${tb}
+    echo "[OK] 批量 CSV 已写入 \${OUT_DIR}"
+else
+    "\${EXE}" "${c_in}" "${c_out}" ${rate} ${tb}
+fi
+if [[ -n "\${HOST_UID:-}" && -n "\${HOST_GID:-}" ]]; then
+    chown -R "\${HOST_UID}:\${HOST_GID}" "\${OUT_DIR}" 2>/dev/null || true
+fi
+SCRIPTEOF
+}
+
+do_parse_lidar() {
+    log_step "雷达原始包解析"
+    [[ -n "${PARSE_LIDAR_IN}" && -n "${PARSE_LIDAR_OUT}" ]] || {
+        log_error "用法: ./calib_unified_run.sh --parse-lidar <输入文件或目录> <输出.pcd或目录> [max_frames] [--per-frame]"
+        exit 1
+    }
+    ensure_parse_tools
+    write_and_run_parse "parse_lidar.sh" "$(gen_parse_lidar_script)"
+}
+
+do_decode_rslidar() {
+    log_step "RoboSense MSOP+DIFOP 解码"
+    [[ -n "${PARSE_RSLIDAR_IN}" && -n "${PARSE_RSLIDAR_OUT}" ]] || {
+        log_error "用法: ./calib_unified_run.sh --decode-rslidar <msop目录> <pcd输出目录>"
+        exit 1
+    }
+    ensure_parse_tools
+    write_and_run_parse "decode_rslidar.sh" "$(gen_decode_rslidar_script)"
+}
+
+do_parse_imu() {
+    log_step "惯导数据解析"
+    if [[ "${PARSE_IMU_FROM_ROS2}" == "true" ]]; then
+        [[ -n "${PARSE_IMU_IN}" && -n "${PARSE_IMU_OUT}" ]] || {
+            log_error "用法: ./calib_unified_run.sh --parse-imu --from-ros2-bag <bag目录> --topic <topic> <输出.csv>"
+            exit 1
+        }
+    else
+        [[ -n "${PARSE_IMU_IN}" && -n "${PARSE_IMU_OUT}" ]] || {
+            log_error "用法: ./calib_unified_run.sh --parse-imu <输入> <输出.csv> [rate_hz] [gps|unix]"
+            exit 1
+        }
+        validate_parse_input_path "${PARSE_IMU_IN}"
+    fi
+    ensure_parse_tools
+    write_and_run_parse "parse_imu.sh" "$(gen_parse_imu_script)"
 }
 
 # ─── 写脚本到挂载目录并在容器内执行 ───────────────────────────────────────────
@@ -1548,6 +1983,12 @@ main() {
             do_download_mobile_sam ;;
         shell)
             do_shell ;;
+        parse-lidar)
+            do_parse_lidar ;;
+        decode-rslidar)
+            do_decode_rslidar ;;
+        parse-imu)
+            do_parse_imu ;;
         test-only)
             do_test ;;
         build-only)

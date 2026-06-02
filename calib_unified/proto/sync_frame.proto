@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package unicalib.cyber;
+
+// 同步后的多传感器帧（由 Sync Component 发布）
+message SyncFrame {
+    uint64 timestamp_ns = 1;           // 主时间戳（通常取 LiDAR 或参考传感器）
+    string frame_id = 2;               // 本帧唯一标识
+
+    // LiDAR 数据（可多雷达）
+    repeated LidarFrame lidars = 10;
+
+    // 相机数据（可多相机）
+    repeated CameraFrame cameras = 11;
+
+    // IMU 数据（最近一段）
+    repeated ImuSample imus = 12;
+
+    message LidarFrame {
+        string sensor_id = 1;
+        bytes pointcloud_data = 2;     // 序列化后的 PointCloud（或直接用 Cyber PointCloud2）
+        double timestamp = 3;
+    }
+
+    message CameraFrame {
+        string sensor_id = 1;
+        bytes image_data = 2;          // JPEG 或原始
+        double timestamp = 3;
+    }
+
+    message ImuSample {
+        double timestamp = 1;
+        double ax = 2;
+        double ay = 3;
+        double az = 4;
+        double gx = 5;
+        double gy = 6;
+        double gz = 7;
+    }
+}

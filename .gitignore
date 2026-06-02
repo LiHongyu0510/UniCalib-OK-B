@@ -25,11 +25,14 @@ build/
 # ROS2 / CMake 构建目录
 build/
 calib_unified/build/
+calib_unified/build_local/
+calib_unified/build_opt/
 calib_unified/install/
 calib_unified/log/
 */build/
 */install/
 */log/
+log/
 
 # 数据文件（大文件不推送）
 *.bag
@@ -37,6 +40,7 @@ calib_unified/log/
 *.db3
 data/
 results/
+merged_lidar_main/
 
 # 本地/构建产物（备份仓库不镜像；与 data/results 无关）
 .tmp_excel_env/
@@ -55,9 +59,7 @@ install/mpl_calibration_toolbox/
 models/
 weights/
 
-# 日志文件
-*.log
-logs/
+calib_unified/dag/dumps/
 
 # IDE 配置
 .vscode/

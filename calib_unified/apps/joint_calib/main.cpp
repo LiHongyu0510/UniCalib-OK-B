@@ -101,6 +101,9 @@ static void fill_solver_config_from_yaml(const YAML::Node& root,
         out.imu_lidar_cfg.handeye_180_decision = YG(n, "handeye_180_decision", std::string("prefer_identity"));
         out.imu_lidar_cfg.handeye_prefer_identity_when_ambiguous = YG(n, "handeye_prefer_identity_when_ambiguous", true);
         out.imu_lidar_cfg.handeye_180_residual_margin_deg = YG(n, "handeye_180_residual_margin_deg", 3.0);
+        out.imu_lidar_cfg.trim_to_overlap = YG(n, "trim_to_overlap", true);
+        out.imu_lidar_cfg.trim_overlap_margin_s = YG(n, "trim_overlap_margin_s", 0.0);
+        out.imu_lidar_cfg.bspline_freeze_trans_z = YG(n, "bspline_freeze_trans_z", true);
         out.imu_lidar_cfg.handeye_outlier_reject_quantile = YG(n, "handeye_outlier_reject_quantile", 0.0);
         out.imu_lidar_cfg.handeye_outlier_max_iter = YG(n, "handeye_outlier_max_iter", 2);
         out.imu_lidar_cfg.handeye_outlier_min_pairs = YG(n, "handeye_outlier_min_pairs", 20);
@@ -278,6 +281,31 @@ static std::string resolve_data_path(const std::string& base, const std::string&
     fs::path p(work);
     if (p.is_absolute()) return path;
     return (fs::path(base) / p).lexically_normal().string();
+}
+
+static void resolve_path_map(const std::string& base, std::map<std::string, std::string>& paths) {
+    if (base.empty()) return;
+    for (auto& [k, v] : paths) {
+        if (!v.empty()) v = resolve_data_path(base, v);
+    }
+}
+
+static void resolve_pipeline_data_paths(PipelineConfig& pipe_cfg, const std::string& base) {
+    if (base.empty()) return;
+    auto resolve_one = [&](std::string& p) {
+        if (!p.empty()) p = resolve_data_path(base, p);
+    };
+    resolve_one(pipe_cfg.lidar_data_dir);
+    resolve_one(pipe_cfg.camera_images_dir);
+    resolve_path_map(base, pipe_cfg.lidar_data_paths);
+    resolve_path_map(base, pipe_cfg.camera_images_dirs);
+    resolve_path_map(base, pipe_cfg.camera_intrinsic_files);
+    resolve_path_map(base, pipe_cfg.imu_data_paths);
+    if (!pipe_cfg.lidar_id.empty()) {
+        auto it = pipe_cfg.lidar_data_paths.find(pipe_cfg.lidar_id);
+        if (it != pipe_cfg.lidar_data_paths.end() && !it->second.empty())
+            pipe_cfg.lidar_data_dir = it->second;
+    }
 }
 
 // 打印任务选择摘要
@@ -479,9 +507,15 @@ int main(int argc, char** argv) {
     pipe_cfg.imu_lidar_pairs = calib_pairs.imu_lidar_pairs;
     if (cfg["imu_lidar"]) {
         const auto& il = cfg["imu_lidar"];
+        load_imu_lidar_calib_from_yaml(il, pipe_cfg.imu_lidar_calib);
         if (il["handeye_180_decision"]) pipe_cfg.imu_lidar_handeye_180_decision = il["handeye_180_decision"].as<std::string>();
         if (il["handeye_prefer_identity_when_ambiguous"]) pipe_cfg.imu_lidar_handeye_prefer_identity_when_ambiguous = il["handeye_prefer_identity_when_ambiguous"].as<bool>();
         if (il["handeye_180_residual_margin_deg"]) pipe_cfg.imu_lidar_handeye_180_residual_margin_deg = il["handeye_180_residual_margin_deg"].as<double>();
+        if (il["trim_to_overlap"]) pipe_cfg.imu_lidar_trim_to_overlap = il["trim_to_overlap"].as<bool>();
+        if (il["trim_overlap_margin_s"]) pipe_cfg.imu_lidar_trim_overlap_margin_s = il["trim_overlap_margin_s"].as<double>();
+        if (il["bspline_freeze_trans_z"]) pipe_cfg.imu_lidar_bspline_freeze_trans_z = il["bspline_freeze_trans_z"].as<bool>();
+        if (il["use_planar_prior"]) pipe_cfg.imu_lidar_use_planar_prior = il["use_planar_prior"].as<bool>();
+        if (il["trust_initial_rotation"]) pipe_cfg.imu_lidar_trust_initial_rotation = il["trust_initial_rotation"].as<bool>();
         if (il["initial_extrinsics"] && il["initial_extrinsics"].IsMap()) {
             for (const auto& kv : il["initial_extrinsics"]) {
                 std::string key = kv.first.as<std::string>();
@@ -489,11 +523,13 @@ int main(int argc, char** argv) {
                 std::string storage_key = (key.size() > 2 && key.substr(0, 2) == "T_") ? key.substr(2) : key;
                 if (kv.second.IsScalar()) {
                     pipe_cfg.imu_lidar_initial_extrinsic_files[storage_key] = kv.second.as<std::string>();
-                } else if (kv.second.IsMap() && kv.second["data"].IsSequence()) {
-                    const auto& data = kv.second["data"];
-                    std::vector<double> v;
-                    for (size_t i = 0; i < data.size() && i < 16u; ++i) v.push_back(data[i].as<double>());
-                    if (v.size() >= 16u) pipe_cfg.imu_lidar_initial_extrinsic_inline[storage_key] = std::move(v);
+                } else if (kv.second.IsMap()) {
+                    std::vector<double> v = parse_se3_matrix_from_yaml(kv.second);
+                    if (v.size() >= 16u) {
+                        pipe_cfg.imu_lidar_initial_extrinsic_inline[storage_key] = std::move(v);
+                    } else {
+                        UNICALIB_WARN("[Joint/IMU-LiDAR] initial_extrinsics['{}'] 需 4x4 或 3x3(+translation)，已忽略", key);
+                    }
                 }
             }
         }
@@ -657,6 +693,14 @@ int main(int argc, char** argv) {
             pipe_cfg.new_format_oem7_gps_utc_leap_sec = new_format_node["oem7_gps_utc_leap_sec"].as<int>();
         if (new_format_node["oem7_time_offset_sec"])
             pipe_cfg.new_format_oem7_time_offset_sec = new_format_node["oem7_time_offset_sec"].as<double>();
+        if (new_format_node["oem7_imu_gyro_scale_factor"])
+            pipe_cfg.new_format_oem7_gyro_scale_factor = new_format_node["oem7_imu_gyro_scale_factor"].as<double>();
+        if (new_format_node["oem7_imu_accel_scale_factor"])
+            pipe_cfg.new_format_oem7_accel_scale_factor = new_format_node["oem7_imu_accel_scale_factor"].as<double>();
+        if (new_format_node["sample_interval"])
+            pipe_cfg.new_format_sample_interval = new_format_node["sample_interval"].as<double>();
+        if (new_format_node["max_frames"])
+            pipe_cfg.new_format_max_frames = new_format_node["max_frames"].as<size_t>();
         if (new_format_node["lidar_index_files"] && new_format_node["lidar_index_files"].IsMap()) {
             for (const auto& kv : new_format_node["lidar_index_files"])
                 pipe_cfg.new_format_lidar_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
@@ -716,10 +760,14 @@ int main(int argc, char** argv) {
         results_camera_intrinsic = cfg["results"]["camera_intrinsic"].as<std::string>();
     pipe_cfg.results_camera_intrinsic = results_camera_intrinsic;
     pipe_cfg.camera_images_dirs = sys_cfg.camera_images_dirs;
+    pipe_cfg.lidar_data_paths = sys_cfg.lidar_data_paths;
+    pipe_cfg.imu_data_paths = sys_cfg.imu_data_paths;
     if (cfg["data"] && cfg["data"]["camera"]) {
         for (const auto& it : cfg["data"]["camera"]) {
             if (!it.second.IsMap()) continue;
             std::string cam_id = it.first.as<std::string>();
+            if (it.second["images_dir"])
+                pipe_cfg.camera_images_dirs[cam_id] = it.second["images_dir"].as<std::string>();
             if (it.second["intrinsic_yaml"]) {
                 pipe_cfg.camera_intrinsic_files[cam_id] = it.second["intrinsic_yaml"].as<std::string>();
             } else {
@@ -842,6 +890,8 @@ int main(int argc, char** argv) {
     // 与 cam-intrin 一致：Docker 内 NumPy 2.x 时由 run 脚本设置 UNICALIB_MIAS_LCEC_PYTHON，粗标定子进程使用该解释器
     const char* mias_py = std::getenv("UNICALIB_MIAS_LCEC_PYTHON");
     if (mias_py && mias_py[0]) pipe_cfg.mias_lcec_python_exe = mias_py;
+
+    resolve_pipeline_data_paths(pipe_cfg, base_data_dir);
 
     CalibPipeline pipeline(pipe_cfg);
 

@@ -889,6 +889,24 @@ LiDARLiDARTwoStageResult LiDARLiDARCalibrator::calibrate_two_stage(
         init_se3 = coarse->SE3_TargetInRef();
     }
 
+    if (use_user_init && cfg_.use_config_extrinsic_only) {
+        ExtrinsicSE3 ext;
+        ext.ref_sensor_id = ref_id;
+        ext.target_sensor_id = target_id;
+        ext.SO3_TargetInRef = init_se3.so3();
+        ext.POS_TargetInRef = init_se3.translation();
+        ext.is_converged = true;
+        ext.residual_rms = 0.0;
+        result.fine = ext;
+        result.fine_quality.converged = true;
+        result.fine_quality.fitness_score = 0.0;
+        result.fine_method = "CONFIG_INIT_SKIP_FINE";
+        UNICALIB_INFO(
+            "[LiDAR-LiDAR] use_config_extrinsic_only=true：跳过精标定/B样条，直接使用 initial_extrinsics 作为 {} -> {} 手动微调起点",
+            ref_id, target_id);
+        return result;
+    }
+
     UNICALIB_INFO_EX(
         "[LiDAR-LiDAR][Fine] calibrate_two_stage: about to calibrate_fine ref={} tgt={} n_ref={} n_tgt={} "
         "init_se3_ok={}",

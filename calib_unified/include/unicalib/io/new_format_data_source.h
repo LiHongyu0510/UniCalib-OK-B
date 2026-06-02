@@ -14,7 +14,8 @@ namespace ns_unicalib {
  *   <root_dir>/lidar/<sensor_id>.csv   (timestamp,path)
  *   <root_dir>/camera/<sensor_id>.csv  (timestamp,path)
  *   <root_dir>/imu/<sensor_id>.csv     (timestamp,gx,gy,gz,ax,ay,az)
- *   或 OEM7 短二进制：索引每行两列「占位,oem7_log.bin」（首列可填 0），见 oem7_imu_reader.h
+ *   或 Bynav 惯导日志：索引两列「占位, path/to/RAWIMU_data_*.log」或 CORRIMU_data_*.log（ASCII，见 oem7_imu_reader.h）
+ *   或 NovAtel OEM7 二进制 .bin/.log（0xAA 0x44 帧）
  */
 struct NewFormatConfig {
     std::string root_dir;
@@ -30,8 +31,11 @@ struct NewFormatConfig {
     int oem7_gps_utc_leap_sec = 18;
     /// 在选定时间基上再叠加的秒偏移（细调与 LiDAR/相机时钟差）
     double oem7_time_offset_sec = 0.0;
+    /// RAWIMUSX 比例因子覆盖（与 bynav config.yaml 一致；>0 时优先于 INSCONFIG 查表）
+    double oem7_imu_gyro_scale_factor = 0.0;
+    double oem7_imu_accel_scale_factor = 0.0;
     size_t max_frames = 0;             // 0=无限制
-    double sample_interval = 0.0;      // 秒，0=不抽样
+    double sample_interval = 0.0;      // 秒，仅 LiDAR/相机降采样；IMU 保持原采样率（手眼积分需要 100Hz）
 };
 
 class NewFormatDataSource {
@@ -60,7 +64,8 @@ private:
     std::map<std::string, std::vector<IMUFrameRos>> imu_data_;
 
     double to_seconds(double ts) const;
-    bool should_keep(double ts, double& last_kept_ts, size_t kept_count) const;
+    bool should_keep(double ts, double& last_kept_ts, size_t kept_count,
+                    bool apply_sample_interval = true) const;
 };
 
 }  // namespace ns_unicalib

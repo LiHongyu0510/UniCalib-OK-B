@@ -93,6 +93,19 @@ public:
 
         bool   use_planar_prior = true;     // 平面运动先验 (约束 z 方向)
 
+        // 数据与时间对齐
+        bool   trim_to_overlap = true;           // 仅标定 IMU/LiDAR 时间重叠段
+        double trim_overlap_margin_s = 0.0;      // 重叠区间两端扩展 [s]
+        double imu_integrate_margin_s = 0.05;   // LiDAR 帧时刻外扩取 IMU [s]
+
+        // 初值与 B样条约束
+        bool   trust_initial_rotation = false;   // true=旋转锁定为初值，手眼不覆盖；B样条亦固定旋转
+        bool   trust_initial_translation = false; // true=B样条固定 tx/ty/tz 为粗标定初值
+        bool   bspline_freeze_trans_xy = false;  // true=B样条固定 tx/ty（横向不可观时保 CAD）
+        bool   bspline_freeze_trans_z = true;    // B样条固定 tz 为初值（平面标定）
+        bool   bspline_auto_freeze_trans_when_underconstrained = true; // 平移有效约束<8 时自动固定 tx/ty
+        double bspline_max_trans_delta_m = 0.0;  // >0 时限制平移相对初值的最大偏差 [m]，0=不限制
+
         // B样条优化
         double spline_dt_s  = 0.1;          // 样条结时间间隔 [s]
         int    spline_order = 4;            // B样条阶数 (4=cubic)
@@ -229,6 +242,9 @@ private:
     // Step 1: 运行 LiDAR 里程计
     bool run_lidar_odometry(const std::vector<LiDARScan>& scans);
 
+    // 由里程计相对平移估计是否为平面运动（用于 bspline_freeze_trans_z 等）
+    bool lidar_odom_is_planar_motion() const;
+
     // Step 2: 构建旋转对 (imu_intrin 可选，用于积分时扣除陀螺零偏)
     std::vector<LiDARRotPair> build_rotation_pairs(
         const std::vector<IMUFrame>& imu_data,
@@ -253,7 +269,8 @@ private:
         const Sophus::SE3d& init_extrinsic,
         const std::string& imu_id,
         const std::string& lidar_id,
-        const IMUIntrinsics* imu_intrin);
+        const IMUIntrinsics* imu_intrin,
+        bool trans_estimation_ok = true);
 
     // Step 辅助: IMU 旋转积分 (imu_intrin 非空时扣除 bias_gyro)
     // 可选 out_stats: 输出积分时长、采样数、1σ 漂移估计(ARW)，用于日志与漂移分析

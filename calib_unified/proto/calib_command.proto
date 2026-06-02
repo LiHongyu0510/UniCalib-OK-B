@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package unicalib.cyber;
+
+// 标定控制指令（用于远程触发或配置）
+message CalibCommand {
+    enum CommandType {
+        START = 0;
+        STOP = 1;
+        RESET = 2;
+        SET_CONFIG = 3;
+    }
+    CommandType type = 1;
+    string config_yaml = 2;   // 当 type = SET_CONFIG 时携带新配置
+    string session_id = 3;
+}

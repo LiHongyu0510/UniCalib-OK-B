@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module_config>
+  <module_library>libunicalib_cyber.so</module_library>
+
+  <components>
+    <component>
+      <class_name>ns_unicalib::modules::LidarComponent</class_name>
+      <config>
+        <name>lidar_component</name>
+      </config>
+    </component>
+
+    <component>
+      <class_name>ns_unicalib::modules::CalibComponent</class_name>
+      <config>
+        <name>calib_component</name>
+      </config>
+    </component>
+  </components>
+</module_config>

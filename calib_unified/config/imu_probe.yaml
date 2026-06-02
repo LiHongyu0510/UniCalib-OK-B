@@ -1,0 +1,21 @@
+# 仅用于验证 data/imu 惯导数据读取（NewFormatDataSource）
+new_format:
+  enable: true
+  root_dir: "."
+  timestamp_unit: s
+  oem7_imu_rate_hz: 100
+  oem7_imu_gyro_scale_factor: 1.9073486328125e-07
+  oem7_imu_accel_scale_factor: 3.05071567298197e-08
+  oem7_time_base: gps
+  imu_index_files:
+    imu_0: imu/imu_0.csv
+
+sensors:
+  - id: imu_0
+    type: imu
+
+data:
+  imu:
+    imu_0: imu/imu_0.csv
+
+output_dir: /home/lihongyu/Unicalib/UniCalib-OK/data/imu/_probe_out

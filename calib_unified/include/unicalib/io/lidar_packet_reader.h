@@ -20,6 +20,8 @@ struct DecodedLidarFrame {
  * - Livox/Hesai：单文件字节流
  * - Blindspot：AACC 分隔的自定义帧流
  * - RoboSense RS-Helios：MSOP + DIFOP（可先 decode_file 自动按文件名推断 DIFOP）
+ * - RS 默认与 thirdparty/sensor_decode/lidar_decode 一致（57600 点/帧、Trigon 查表、跳过 28B 记录头）。
+ *   UNICALIB_RS_ANGLE_SPLIT=1 改为按 0° 方位切帧；UNICALIB_RS_FRAME_POINTS 可调每帧点数。
  * - 现已透明支持 .gz / .pcd.gz 压缩文件（内部 zlib 解压后走原有解码路径）
  */
 class LidarPacketReader {

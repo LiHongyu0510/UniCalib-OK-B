@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package unicalib.cyber;
+
+// 标定状态反馈
+message CalibStatus {
+    enum Status {
+        IDLE = 0;
+        RUNNING = 1;
+        SUCCESS = 2;
+        FAILED = 3;
+        DRIFT_DETECTED = 4;
+    }
+    Status status = 1;
+    string message = 2;
+    double overall_rms = 3;
+    bool needs_manual = 4;
+    string session_id = 5;
+}

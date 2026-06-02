@@ -324,6 +324,42 @@ static bool try_load_lidar_pair_from_ros2_bag(
 }
 #endif
 
+static std::optional<Eigen::Matrix4d> matrix4d_from_yaml_node(const YAML::Node& node) {
+    const std::vector<double> flat = parse_se3_matrix_from_yaml(node);
+    if (flat.size() < 16) return std::nullopt;
+    Eigen::Matrix4d T;
+    for (int i = 0; i < 4; ++i)
+        for (int j = 0; j < 4; ++j)
+            T(i, j) = flat[i * 4 + j];
+    return T;
+}
+
+static void update_extrinsic_from_matrix4(ExtrinsicSE3& ext, const Eigen::Matrix4d& T) {
+    const Eigen::Matrix3d R = project_to_so3(T.block<3, 3>(0, 0));
+    ext.set_SE3(Sophus::SE3d(Sophus::SO3d(R), T.block<3, 1>(0, 3)));
+}
+
+// calibration_param.yaml 风格（opencv-matrix: rows/cols/dt/data）
+static void save_opencv_matrix_yaml(const std::string& path, const std::string& key,
+                                    const Eigen::Matrix4d& T) {
+    YAML::Emitter out;
+    out << YAML::BeginMap;
+    out << YAML::Key << key;
+    out << YAML::BeginMap;
+    out << YAML::Key << "rows" << YAML::Value << 4;
+    out << YAML::Key << "cols" << YAML::Value << 4;
+    out << YAML::Key << "dt" << YAML::Value << "d";
+    out << YAML::Key << "data" << YAML::Value << YAML::Flow << YAML::BeginSeq;
+    for (int i = 0; i < 4; ++i)
+        for (int j = 0; j < 4; ++j)
+            out << T(i, j);
+    out << YAML::EndSeq;
+    out << YAML::EndMap;
+    out << YAML::EndMap;
+    std::ofstream f(path);
+    if (f.is_open()) f << out.c_str();
+}
+
 static void save_extrinsic_yaml(const ExtrinsicSE3& ext, const std::string& path) {
     YAML::Emitter out;
     out << YAML::BeginMap;
@@ -341,6 +377,7 @@ static void save_extrinsic_yaml(const ExtrinsicSE3& ext, const std::string& path
 
     // 添加 4x4 变换矩阵
     Eigen::Matrix4d mat = ext.SE3_TargetInRef().matrix();
+
     out << YAML::Key << "transformation_matrix" << YAML::BeginSeq;
     for (int i = 0; i < 4; ++i) {
         out << YAML::Flow << YAML::BeginSeq
@@ -493,6 +530,15 @@ int main(int argc, char** argv) {
         if (f["optimize_time_offset"]) calib_cfg.optimize_time_offset = f["optimize_time_offset"].as<bool>();
     }
     if (ll["use_ndt"]) calib_cfg.use_ndt = ll["use_ndt"].as<bool>();
+    if (ll["use_bspline_refinement"]) calib_cfg.use_bspline_refinement = ll["use_bspline_refinement"].as<bool>();
+    if (ll["use_config_extrinsic_only"]) {
+        calib_cfg.use_config_extrinsic_only = ll["use_config_extrinsic_only"].as<bool>();
+        if (calib_cfg.use_config_extrinsic_only) {
+            UNICALIB_INFO(
+                "[LiDAR-LiDAR] use_config_extrinsic_only=true：对已配置 initial_extrinsics 的标定对跳过精标定/B样条，"
+                "直接以配置初值进入手动微调");
+        }
+    }
 
     bool use_new_format = false;
     std::unique_ptr<UnifiedDataLoader> loader_new_format;
@@ -718,6 +764,53 @@ int main(int argc, char** argv) {
             UNICALIB_INFO("[LiDAR-LiDAR][Manual] 手动微调结束，rpy_deg={} xyz_m={}",
                           final_ext.euler_deg().transpose(), final_ext.translation().transpose());
         }
+
+        // 标定 4x4：T_target_in_ref（p_ref = T_calib * p_target）
+        const Eigen::Matrix4d T_calib = final_ext.SE3_TargetInRef().matrix();
+
+        // IMU 链式：先对雷达标定结果求逆得 T_ref_in_target，再与 T_imu_to_ref 组合
+        // T_imu_to_target = T_imu_to_ref * inv(T_target_in_ref)
+        if (ref_id == YG(ll, "chain_imu_ref", std::string("lidar_main")) && cfg["imu_lidar"] &&
+            cfg["imu_lidar"]["initial_extrinsics"]) {
+            const YAML::Node& imu_init = cfg["imu_lidar"]["initial_extrinsics"];
+            std::string imu_id = YG(ll, "chain_imu_id", std::string("imu_0"));
+            if (imu_id.empty() && cfg["imu_lidar"]["pairs"] && cfg["imu_lidar"]["pairs"].IsSequence() &&
+                cfg["imu_lidar"]["pairs"].size() > 0 && cfg["imu_lidar"]["pairs"][0].IsSequence() &&
+                cfg["imu_lidar"]["pairs"][0].size() >= 1) {
+                imu_id = cfg["imu_lidar"]["pairs"][0][0].as<std::string>();
+            }
+            if (imu_id.empty()) imu_id = "imu_0";
+
+            const std::string imu_keys[2] = {"T_" + imu_id + "__" + ref_id, imu_id + "__" + ref_id};
+            std::optional<Eigen::Matrix4d> T_imu_to_ref;
+            for (const auto& ik : imu_keys) {
+                if (imu_init[ik]) {
+                    T_imu_to_ref = matrix4d_from_yaml_node(imu_init[ik]);
+                    if (T_imu_to_ref) break;
+                }
+            }
+            if (T_imu_to_ref) {
+                const Eigen::Matrix4d T_calib_inv = final_ext.SE3_TargetInRef().inverse().matrix();
+                const Eigen::Matrix4d T_imu_tgt =T_calib_inv * (*T_imu_to_ref);
+                ExtrinsicSE3 imu_ext = final_ext;
+                imu_ext.ref_sensor_id = imu_id;
+                imu_ext.target_sensor_id = target_id;
+                update_extrinsic_from_matrix4(imu_ext, T_imu_tgt);
+
+                const std::string chain_dir = result_subdir + "/imu_lidar_chained";
+                fs::create_directories(chain_dir);
+                const std::string imu_out = chain_dir + "/" + imu_id + "_to_" + target_id + ".yaml";
+                save_extrinsic_yaml(imu_ext, imu_out);
+                const std::string opencv_key = "T_" + imu_id + "__" + target_id;
+                save_opencv_matrix_yaml(chain_dir + "/" + opencv_key + ".yaml", opencv_key, T_imu_tgt);
+                UNICALIB_INFO("[LiDAR-LiDAR] T_{}__{} 已写: {} (T_imu_to_{} * inv(T_{}__{}))",
+                              imu_id, target_id, imu_out, ref_id, ref_id, target_id);
+            } else {
+                UNICALIB_WARN("[LiDAR-LiDAR] 未解析 imu_lidar.initial_extrinsics T_{}__{} / {}__{}",
+                              imu_id, ref_id, imu_id, ref_id);
+            }
+        }
+
         std::string out_key = ref_id + "_to_" + target_id + ".yaml";
         std::string out_path = result_subdir + "/" + out_key;
         save_extrinsic_yaml(final_ext, out_path);

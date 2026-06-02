@@ -2,6 +2,7 @@
 
 #include "unicalib/common/logger.h"
 
+#include <algorithm>
 #include <arpa/inet.h>
 #include <array>
 #include <cmath>
@@ -10,6 +11,8 @@
 #include <filesystem>
 #include <fstream>
 #include <iterator>
+#include <cstdlib>
+#include <optional>
 #include <vector>
 #include <zlib.h>
 
@@ -18,16 +21,10 @@ namespace ns_unicalib {
 namespace {
 
 constexpr double kPi = 3.14159265358979323846;
-
-// RS雷达角度转换：协议中以0.01度为单位存储（如1234表示12.34度）
-// 将0.01度单位转换为弧度
-inline double deg001_to_rad(double angle_001deg) { return angle_001deg * (kPi / 18000.0); }
-// 预计算cos和sin值以提高性能
-inline float rs_cos_001(double a) { return static_cast<float>(std::cos(deg001_to_rad(a))); }
-inline float rs_sin_001(double a) { return static_cast<float>(std::sin(deg001_to_rad(a))); }
+#define DEGREE_TO_RADIAN(deg) ((deg)*kPi / 180.0)
 
 // ---------- RoboSense Helios MSOP/DIFOP 数据包结构定义 ----------
-// 参考自 sensor_decode/lidar_decode/src/main.cpp，无ROS依赖
+// 与 thirdparty/sensor_decode/lidar_decode/src/main.cpp 一致（无 ROS 依赖）
 
 #pragma pack(push, 1)  // 字节对齐为1，确保结构体与网络包完全一致
 
@@ -43,15 +40,16 @@ struct RSTimestampUTC {
     uint8_t ss[4];       // 微秒数，4字节大端整数
 };
 
-// MSOP包头部
+// MSOP包头部（42 字节，与 sensor_decode 一致）
 struct RSHELIOSMsopHeader {
-    uint8_t id[4];               // 包头标识
-    uint16_t protocol_version;   // 协议版本号
-    uint8_t reserved1[14];       // 保留字段
-    RSTimestampUTC timestamp;    // UTC时间戳
-    uint8_t lidar_type;          // 激光雷达类型
-    uint8_t reserved2[11];       // 保留字段
+    uint8_t header[4];
+    uint32_t packet_count;
+    RSTimestampUTC timestamp;
+    uint8_t lidar_type;
+    uint8_t lidar_model;
+    uint8_t others[22];
 };
+static_assert(sizeof(RSHELIOSMsopHeader) == 42, "RSHELIOSMsopHeader must be 42 bytes");
 
 // MSOP数据块（每个块包含32个通道的数据）
 struct RSHELIOSMsopBlock {
@@ -163,6 +161,51 @@ struct RSHELIOSDifopPkt {
 };
 #pragma pack(pop)  // 恢复默认对齐方式
 
+/** 与 sensor_decode Trigon：角度以 0.01° 为单位的 sin/cos 查表 */
+class Trigon {
+public:
+    static constexpr int32_t ANGLE_MIN = -9000;
+    static constexpr int32_t ANGLE_MAX = 45000;
+
+    Trigon() {
+        const int32_t range = ANGLE_MAX - ANGLE_MIN;
+        o_sins_ = static_cast<float*>(std::malloc(static_cast<std::size_t>(range) * sizeof(float)));
+        o_coss_ = static_cast<float*>(std::malloc(static_cast<std::size_t>(range) * sizeof(float)));
+        for (int32_t i = ANGLE_MIN, j = 0; i < ANGLE_MAX; i++, j++) {
+            const double rad = DEGREE_TO_RADIAN(static_cast<double>(i) * 0.01);
+            o_sins_[j] = static_cast<float>(std::sin(rad));
+            o_coss_[j] = static_cast<float>(std::cos(rad));
+        }
+        sins_ = o_sins_ - ANGLE_MIN;
+        coss_ = o_coss_ - ANGLE_MIN;
+    }
+
+    ~Trigon() {
+        std::free(o_coss_);
+        std::free(o_sins_);
+    }
+
+    float sin(int32_t angle) const {
+        if (angle < ANGLE_MIN || angle >= ANGLE_MAX) {
+            angle = 0;
+        }
+        return sins_[angle];
+    }
+
+    float cos(int32_t angle) const {
+        if (angle < ANGLE_MIN || angle >= ANGLE_MAX) {
+            angle = 0;
+        }
+        return coss_[angle];
+    }
+
+private:
+    float* o_sins_ = nullptr;
+    float* o_coss_ = nullptr;
+    float* sins_ = nullptr;
+    float* coss_ = nullptr;
+};
+
 /**
  * 帧分割策略基类
  * 用于确定何时开始新的一帧点云
@@ -233,6 +276,8 @@ public:
           BLOCK_DURATION(block_duration),
           BLOCK_AZ_DURATION(block_az_duration),
           FOV_BLIND_DURATION(fov_blind_duration) {
+        std::fill_n(az_diffs, MAX_BLOCKS_PER_PKT, 0);
+        std::fill_n(tss, MAX_BLOCKS_PER_PKT, 0.0);
         uint16_t blk = 0;
         double tss_acc = 0;
         
@@ -254,7 +299,8 @@ public:
             this->tss[blk] = tss_acc;
             tss_acc += ts_diff;
         }
-        // 最后一个块使用默认值
+        // 最后一包块：时间与 sensor_decode/lidar_decode BlockIterator 一致，取累计到本块起始的偏移
+        this->tss[blk] = tss_acc;
         this->az_diffs[blk] = this->BLOCK_AZ_DURATION;
     }
 
@@ -319,8 +365,38 @@ uint64_t rs_get_timestamp_us(const RSTimestampUTC& tsUtc) {
  * @param distance 距离值（米）
  * @return true表示有效距离
  */
-bool rs_distance_ok(float distance) { 
-    return (0.2f <= distance) && (distance <= 200.f);  // 有效范围0.2-200米
+bool rs_distance_ok(float distance) {
+    // 与 sensor_decode kDistanceSectionMinM 一致
+    return (0.05f <= distance) && (distance <= 200.f);
+}
+
+constexpr float kFilterMinRadialDistanceM = 0.05f;
+constexpr bool kApplyEgoWedgeFilter = false;
+
+constexpr std::streamoff kRsRecordHeaderSize = 28;
+
+void skip_rs_msop_record_header_if_present(std::ifstream& in_msop) {
+    const auto mark = in_msop.tellg();
+    uint8_t magic[4]{};
+    if (!in_msop.read(reinterpret_cast<char*>(magic), 4)) {
+        in_msop.clear();
+        in_msop.seekg(mark);
+        return;
+    }
+    in_msop.clear();
+    // 标准 RS MSOP 同步字在文件头：55 aa 05 5a — 无需跳过
+    if (magic[0] == 0x55 && magic[1] == 0xaa && magic[2] == 0x05 && magic[3] == 0x5a) {
+        in_msop.seekg(mark);
+        return;
+    }
+    // 车端录制自定义头（55 aa 但非 05 5a）：跳过 28 字节后为裸 MSOP
+    if (magic[0] == 0x55 && magic[1] == 0xaa) {
+        in_msop.seekg(kRsRecordHeaderSize, std::ios::beg);
+        UNICALIB_INFO("[LidarPacketReader] 检测到 MSOP 自定义记录头 (55 aa ?? ??)，跳过 {} 字节",
+                      static_cast<long long>(kRsRecordHeaderSize));
+        return;
+    }
+    in_msop.seekg(mark);
 }
 
 /**
@@ -339,6 +415,14 @@ bool rs_azimuth_section_ok(int angle) {
         return (angle >= start_) || (angle < end_);
     }
     return (angle >= start_) && (angle < end_);
+}
+
+/** 水平角（0.01° 单位，可为非整数）归一化到 [0,36000) 再作扇区判断，避免 double→int 截断误删点 */
+inline int rs_horiz_001deg_to_sector_bin(double angle_001deg) {
+    long long a = std::llround(angle_001deg);
+    a %= 36000;
+    if (a < 0) a += 36000;
+    return static_cast<int>(a);
 }
 
 /**
@@ -384,9 +468,49 @@ bool looks_like_rs_msop_packet(const RSHELIOSMsopPkt& pkt) {
     return false;
 }
 
+// 录制文件可能在裸 MSOP UDP 载荷前带自定义头；在文件头若干字节内搜索首个可对齐的 RS 包。
+constexpr std::size_t kRsMsopSyncSearchMaxBytes = 262144;
+
+std::optional<std::streampos> find_rs_msop_stream_start(std::ifstream& in) {
+    in.clear();
+    in.seekg(0, std::ios::end);
+    const std::streamoff file_end = in.tellg();
+    in.seekg(0, std::ios::beg);
+    if (file_end <= 0) return std::nullopt;
+    const std::size_t pkt_sz = sizeof(RSHELIOSMsopPkt);
+    const std::streamoff search_span =
+        std::min(static_cast<std::streamoff>(kRsMsopSyncSearchMaxBytes), file_end);
+    const std::size_t to_read = static_cast<std::size_t>(search_span);
+    if (to_read < 2 * pkt_sz) return std::nullopt;
+    std::vector<char> buf(to_read);
+    if (!in.read(buf.data(), static_cast<std::streamsize>(to_read))) {
+        in.clear();
+        in.seekg(0, std::ios::beg);
+        return std::nullopt;
+    }
+    for (std::size_t off = 0; off + 2 * pkt_sz <= to_read; ++off) {
+        const auto* p1 = reinterpret_cast<const RSHELIOSMsopPkt*>(buf.data() + off);
+        const auto* p2 = reinterpret_cast<const RSHELIOSMsopPkt*>(buf.data() + off + pkt_sz);
+        if (looks_like_rs_msop_packet(*p1) && looks_like_rs_msop_packet(*p2)) {
+            in.clear();
+            in.seekg(0, std::ios::beg);
+            return std::streampos(static_cast<std::streamoff>(off));
+        }
+    }
+    in.clear();
+    in.seekg(0, std::ios::beg);
+    return std::nullopt;
+}
+
 /**
  * 解码RS MSOP数据流为点云帧
- * 使用与原始工具相同的方法：以方位角0°为帧分割点
+ *
+ * 与 sensor_decode/lidar_decode（RslidarDecode::parsePointCloud2）的关系：
+ * - 默认：按方位角 0°（SplitStrategyByAngle）切帧，每帧点数随数据变化；不过滤车体近距/扇区点。
+ * - sensor_decode：仅在累计点数为 57600 时写出一帧；每到方位角 0° 若点数不足则整段丢弃；且丢弃近距/局部扇区点。
+ * - 默认与 sensor_decode 一致：57600 点/帧（12×32×150 包）。可用 UNICALIB_RS_ANGLE_SPLIT=1 改回按 0° 方位切帧。
+ * - 可选 UNICALIB_RS_FRAME_POINTS=57600 调整每帧点数。
+ *
  * @param in_msop MSOP文件输入流
  * @param vert_angles 垂直角度标定
  * @param horiz_angles 水平角度标定
@@ -398,10 +522,23 @@ bool decode_rs_msop_stream(std::ifstream& in_msop, const double vert_angles[32],
                            const double horiz_angles[32],
                            std::vector<DecodedLidarFrame>& frames, 
                            std::size_t max_frames) {
-    // 创建点云对象
+    // 默认对齐 sensor_decode（57600 点/帧）；UNICALIB_RS_ANGLE_SPLIT=1 时按 0° 切帧
+    const char* angle_split_env = std::getenv("UNICALIB_RS_ANGLE_SPLIT");
+    const bool match_sensor_decode =
+        !(angle_split_env && angle_split_env[0] == '1' &&
+          (angle_split_env[1] == '\0' || angle_split_env[1] == ' '));
+
+    std::size_t points_per_frame = 57600;
+    if (const char* pf = std::getenv("UNICALIB_RS_FRAME_POINTS")) {
+        char* end = nullptr;
+        unsigned long v = std::strtoul(pf, &end, 10);
+        if (end != pf && v > 1000 && v < 1000000) {
+            points_per_frame = static_cast<std::size_t>(v);
+        }
+    }
+
     pcl::PointCloud<pcl::PointXYZI>::Ptr pcl_cloud(new pcl::PointCloud<pcl::PointXYZI>);
     
-    // 刷新当前点云到帧列表的lambda函数
     auto flush_cloud = [&](double timestamp_sec) -> bool {
         if (pcl_cloud->empty()) {
             pcl_cloud = pcl::PointCloud<pcl::PointXYZI>::Ptr(new pcl::PointCloud<pcl::PointXYZI>);
@@ -416,112 +553,163 @@ bool decode_rs_msop_stream(std::ifstream& in_msop, const double vert_angles[32],
         frames.push_back(std::move(frame));
         pcl_cloud = pcl::PointCloud<pcl::PointXYZI>::Ptr(new pcl::PointCloud<pcl::PointXYZI>);
         if (max_frames > 0 && frames.size() >= max_frames) {
-            return true;  // 达到最大帧数，停止处理
+            return true;
         }
         return false;
     };
 
-    // 使用0°作为帧分割点
     SplitStrategyByAngle split_strategy(0);
-    bool first_run = false;
     double first_pts_time_ms = -1.0;
+    bool decode_started = !match_sensor_decode;
+    constexpr std::array<uint8_t, 2> kRsBlockId{{0xFF, 0xEE}};
+    Trigon trigon;
 
-    // 激光发射时序参数
-    constexpr float blk_ts = 55.56f;  // 每个块的时间（微秒）
+    constexpr float blk_ts = 55.56f;
     const double BLOCK_DURATION = static_cast<double>(blk_ts) / 1000000.0;
-    // 32个通道的发射时间偏移（微秒）
     constexpr float firing_tss[] = {0.00f,  1.57f,  3.15f,  4.72f,  6.30f,  7.87f,  9.45f,  11.36f, 13.26f, 15.17f,
                                     17.08f, 18.99f, 20.56f, 22.14f, 23.71f, 25.29f, 26.53f, 29.01f, 27.77f, 30.25f,
                                     31.49f, 33.98f, 32.73f, 35.22f, 36.46f, 37.70f, 38.94f, 40.18f, 41.42f, 42.67f,
                                     43.91f, 45.15f};
-    float CHAN_AZIS[32];      // 通道角度偏移系数
-    double CHAN_TSS[32];      // 通道时间偏移（秒）
+    float CHAN_AZIS[32];
+    double CHAN_TSS[32];
     for (uint16_t i = 0; i < sizeof(firing_tss) / sizeof(firing_tss[0]); i++) {
         CHAN_AZIS[i] = firing_tss[i] / blk_ts;
         CHAN_TSS[i] = static_cast<double>(firing_tss[i]) / 1000000.0;
     }
 
-    RSHELIOSMsopPkt pkt{};
-    // 循环读取MSOP包
-    while (in_msop.read(reinterpret_cast<char*>(&pkt), sizeof(RSHELIOSMsopPkt))) {
-        // 验证数据包有效性
-        if (!looks_like_rs_msop_packet(pkt)) {
-            UNICALIB_WARN("[LidarPacketReader] RS MSOP 包块标记异常，停止解析");
+    std::streamoff file_end_off = 0;
+    {
+        const std::streampos mark = in_msop.tellg();
+        in_msop.seekg(0, std::ios::end);
+        file_end_off = static_cast<std::streamoff>(in_msop.tellg());
+        in_msop.seekg(mark);
+    }
+
+    constexpr std::size_t kRsMsopMaxResyncSkips = 1048576;
+    std::size_t resync_skips = 0;
+    bool logged_resync = false;
+
+    while (true) {
+        const std::streampos pos_before_read = in_msop.tellg();
+        if (pos_before_read == std::streampos(-1)) {
             break;
         }
-        
+        if (static_cast<std::streamoff>(pos_before_read) >= file_end_off) {
+            break;
+        }
+
+        RSHELIOSMsopPkt pkt{};
+        if (!in_msop.read(reinterpret_cast<char*>(&pkt), sizeof(RSHELIOSMsopPkt))) {
+            break;
+        }
+
+        if (!looks_like_rs_msop_packet(pkt)) {
+            in_msop.clear();
+            in_msop.seekg(pos_before_read + std::streamoff(1));
+            if (++resync_skips > kRsMsopMaxResyncSkips) {
+                UNICALIB_WARN("[LidarPacketReader] RS MSOP 重同步超过 {} 字节，停止解析",
+                              static_cast<unsigned long long>(kRsMsopMaxResyncSkips));
+                break;
+            }
+            if (!logged_resync) {
+                UNICALIB_WARN(
+                    "[LidarPacketReader] RS MSOP 包对齐失败，启用逐字节重同步（录制中若夹杂非 MSOP 数据仍可能丢段）");
+                logged_resync = true;
+            }
+            continue;
+        }
+
         BlockIterator iter(pkt, 12, BLOCK_DURATION, 20, 0.0);
 
-        // 处理每个数据块
         for (size_t blocks_i = 0; blocks_i < std::size(pkt.blocks); ++blocks_i) {
             const RSHELIOSMsopBlock& block = pkt.blocks[blocks_i];
-            const float azimuth = static_cast<float>(ntohs(block.azimuth)) / 100.0f;
+            if (std::memcmp(kRsBlockId.data(), block.id, 2) != 0) {
+                UNICALIB_WARN("[LidarPacketReader] RS MSOP 块 id 非 0xFFEE，跳过本包剩余块");
+                break;
+            }
+
             const int32_t block_az = ntohs(block.azimuth);
-            const int azimuth_int = static_cast<int>(std::floor(azimuth));
+            if (match_sensor_decode) {
+                const int az_deg_int = static_cast<int>(std::floor(static_cast<double>(block_az) / 100.0));
+                if (!decode_started) {
+                    if (az_deg_int != 0) {
+                        continue;
+                    }
+                    decode_started = true;
+                }
+            }
+
             int32_t az_diff = 0;
             double block_ts_off = 0.0;
             iter.get(static_cast<uint16_t>(blocks_i), az_diff, block_ts_off);
 
-            // 检测到0°方位角时启动第一帧
-            if (azimuth_int == 0) {
-                first_run = true;
-            }
-
-            if (!first_run) {
-                continue;  // 跳过第一帧开始前的数据
-            }
-
-            // 计算当前块的时间戳
             const double pkt_ts = static_cast<double>(rs_get_timestamp_us(pkt.header.timestamp)) * 1e-6;
             const double block_ts = pkt_ts + block_ts_off;
 
-            // 检查是否需要开始新帧
-            if (split_strategy.newBlock(block_az)) {
-                // 使用当前帧首点时间作为帧时间戳
-                const double frame_ts_sec = (first_pts_time_ms >= 0.0) ? (first_pts_time_ms * 0.001) : block_ts;
-                if (flush_cloud(frame_ts_sec)) {
-                    return true;  // 达到最大帧数
+            if (!match_sensor_decode) {
+                if (split_strategy.newBlock(block_az)) {
+                    const double frame_ts_sec =
+                        (first_pts_time_ms >= 0.0) ? (first_pts_time_ms * 0.001) : block_ts;
+                    if (flush_cloud(frame_ts_sec)) {
+                        return true;
+                    }
+                    first_pts_time_ms = -1.0;
                 }
-                first_pts_time_ms = -1.0;
             }
 
-            // 处理32个激光通道
             for (size_t chan = 0; chan < std::size(block.channels); ++chan) {
                 const double point_timestamp = block_ts + CHAN_TSS[chan];
                 const RSChannel& channel = block.channels[chan];
-                const float distance = ntohs(channel.distance) * 0.0025f;  // 距离转换为米
-                
-                // 计算水平和垂直角度
-                double angle_horiz = static_cast<double>(block_az + 
+                const float distance = ntohs(channel.distance) * 0.0025f;
+
+                double angle_horiz = static_cast<double>(block_az +
                     static_cast<int32_t>(static_cast<float>(az_diff) * CHAN_AZIS[chan]));
                 const double angle_vert = vert_angles[chan];
                 const double angle_horiz_final = angle_horiz + horiz_angles[chan];
 
-                // 过滤无效距离和角度
-                if (!rs_distance_ok(distance) || !rs_azimuth_section_ok(static_cast<int>(angle_horiz_final))) {
+                if (!rs_distance_ok(distance) ||
+                    !rs_azimuth_section_ok(rs_horiz_001deg_to_sector_bin(angle_horiz_final))) {
                     continue;
                 }
 
-                // 极坐标转直角坐标
-                // 考虑雷达偏心距补偿（0.03498米）
-                const float x = distance * rs_cos_001(angle_vert) * rs_cos_001(angle_horiz_final) + 
-                               0.03498f * rs_cos_001(angle_horiz);
-                const float y = -distance * rs_cos_001(angle_vert) * rs_sin_001(angle_horiz_final) - 
-                                0.03498f * rs_sin_001(angle_horiz);
-                const float z = distance * rs_sin_001(angle_vert);
+                const int32_t angle_vert_i = static_cast<int32_t>(angle_vert);
+                const int32_t angle_horiz_i = static_cast<int32_t>(angle_horiz);
+                const int32_t angle_horiz_final_i = static_cast<int32_t>(angle_horiz_final);
+                const float x = distance * trigon.cos(angle_vert_i) * trigon.cos(angle_horiz_final_i) +
+                                0.03498f * trigon.cos(angle_horiz_i);
+                const float y = -distance * trigon.cos(angle_vert_i) * trigon.sin(angle_horiz_final_i) -
+                                0.03498f * trigon.sin(angle_horiz_i);
+                const float z = distance * trigon.sin(angle_vert_i);
                 const float intensity = static_cast<float>(channel.intensity);
-                
-                // 检查数值有效性
+
                 if (std::isnan(x) || std::isnan(y) || std::isnan(z) || std::isnan(intensity)) {
                     continue;
                 }
-                
-                // 记录帧首点时间戳
+
+                const double dist_filter =
+                    std::sqrt(static_cast<double>(x) * x + static_cast<double>(y) * y +
+                              static_cast<double>(z) * z);
+                if (kApplyEgoWedgeFilter) {
+                    const double azimuth_filter = std::atan2(y, x) * 57.2958;
+                    const double pitch =
+                        std::atan2(z, std::sqrt(x * x + y * y)) * 57.2958;
+                    const bool wedge_drop =
+                        ((azimuth_filter >= 145.0 && azimuth_filter <= 180.0) &&
+                         (pitch >= -90.0 && pitch <= -0.1) && (dist_filter <= 3.5)) ||
+                        ((azimuth_filter >= -180.0 && azimuth_filter <= -145.0) &&
+                         (pitch >= -90.0 && pitch <= -0.1) && (dist_filter <= 3.5));
+                    if (wedge_drop) {
+                        continue;
+                    }
+                }
+                if (dist_filter < kFilterMinRadialDistanceM) {
+                    continue;
+                }
+
                 if (first_pts_time_ms < 0.0) {
                     first_pts_time_ms = point_timestamp * 1000.0;
                 }
-                
-                // 添加点到点云
+
                 pcl::PointXYZI point;
                 point.x = x;
                 point.y = y;
@@ -529,13 +717,40 @@ bool decode_rs_msop_stream(std::ifstream& in_msop, const double vert_angles[32],
                 point.intensity = intensity;
                 pcl_cloud->push_back(point);
             }
+
+            if (match_sensor_decode) {
+                while (pcl_cloud->size() >= points_per_frame) {
+                    const double frame_ts_sec =
+                        (first_pts_time_ms >= 0.0) ? (first_pts_time_ms * 0.001) : block_ts;
+                    pcl::PointCloud<pcl::PointXYZI>::Ptr out(new pcl::PointCloud<pcl::PointXYZI>);
+                    out->points.assign(pcl_cloud->points.begin(),
+                                       pcl_cloud->points.begin() +
+                                           static_cast<std::ptrdiff_t>(points_per_frame));
+                    pcl_cloud->points.erase(
+                        pcl_cloud->points.begin(),
+                        pcl_cloud->points.begin() + static_cast<std::ptrdiff_t>(points_per_frame));
+                    DecodedLidarFrame df;
+                    df.timestamp_sec = frame_ts_sec;
+                    out->width = out->size();
+                    out->height = 1;
+                    out->is_dense = false;
+                    df.cloud = out;
+                    frames.push_back(std::move(df));
+                    first_pts_time_ms = -1.0;
+                    if (max_frames > 0 && frames.size() >= max_frames) {
+                        return true;
+                    }
+                }
+            }
         }
     }
 
-    // 处理最后一帧
     if (!pcl_cloud->empty()) {
-        const double frame_ts_sec = (first_pts_time_ms >= 0.0) ? (first_pts_time_ms * 0.001) : 0.0;
-        flush_cloud(frame_ts_sec);
+        if (!match_sensor_decode) {
+            const double frame_ts_sec = (first_pts_time_ms >= 0.0) ? (first_pts_time_ms * 0.001) : 0.0;
+            flush_cloud(frame_ts_sec);
+        }
+        // match 模式：末尾不足 N 点的残段丢弃（与 lidar_decode 不落盘残帧一致）
     }
     return !frames.empty();
 }
@@ -800,6 +1015,16 @@ bool LidarPacketReader::decode_rs_msop_difop(const std::string& msop_path,
         return false;
     }
 
+    skip_rs_msop_record_header_if_present(in_msop);
+
+    if (auto sync_off = find_rs_msop_stream_start(in_msop)) {
+        in_msop.seekg(*sync_off);
+        UNICALIB_INFO("[LidarPacketReader] RS MSOP 流同步偏移: {} bytes",
+                      static_cast<long long>(std::streamoff(*sync_off)));
+    } else {
+        in_msop.seekg(0, std::ios::beg);
+    }
+
     // 验证MSOP文件格式
     RSHELIOSMsopPkt probe{};
     const std::streampos start = in_msop.tellg();
@@ -815,15 +1040,111 @@ bool LidarPacketReader::decode_rs_msop_difop(const std::string& msop_path,
     }
 
     // 如果提供了DIFOP文件，读取角度标定数据
-    if (!difop_path.empty()) {
-        std::ifstream in_difop(difop_path, std::ios::binary);
-        if (!in_difop) {
-            UNICALIB_WARN("[LidarPacketReader] 打开 DIFOP 失败，使用零角度标定: {}", difop_path);
-        } else {
-            RSHELIOSDifopPkt pkt_difop{};
-            in_difop.read(reinterpret_cast<char*>(&pkt_difop), sizeof(RSHELIOSDifopPkt));
-            parse_rs_angle_calibration(pkt_difop, vert_angles, horiz_angles);
+    // 录制文件带 28 字节自定义记录头（MSOP 55 aa，DIFOP a5 ff），需跳过
+    constexpr std::streamoff kRecordHeaderSize = 28;
+
+    auto try_read_cali_3byte = [&](std::ifstream& in, std::streamoff base_off) -> bool {
+        in.clear();
+        in.seekg(base_off, std::ios::beg);
+        RSHELIOSDifopPkt pkt{};
+        if (!in.read(reinterpret_cast<char*>(&pkt), sizeof(pkt))) return false;
+        parse_rs_angle_calibration(pkt, vert_angles, horiz_angles);
+        return true;
+    };
+
+    auto try_read_cali_flat_int16 = [&](std::ifstream& in, std::streamoff base_off, bool big_endian) -> bool {
+        in.clear();
+        in.seekg(base_off, std::ios::beg);
+        bool ok = true;
+        for (int i = 0; i < 32; ++i) {
+            uint16_t raw;
+            if (!in.read(reinterpret_cast<char*>(&raw), 2)) { ok = false; break; }
+            int16_t v = big_endian ? static_cast<int16_t>(ntohs(raw))
+                                   : static_cast<int16_t>((raw >> 8) | ((raw & 0xff) << 8));
+            vert_angles[i] = v;
         }
+        for (int i = 0; i < 32; ++i) {
+            uint16_t raw;
+            if (!in.read(reinterpret_cast<char*>(&raw), 2)) { ok = false; break; }
+            int16_t v = big_endian ? static_cast<int16_t>(ntohs(raw))
+                                   : static_cast<int16_t>((raw >> 8) | ((raw & 0xff) << 8));
+            horiz_angles[i] = v;
+        }
+        return ok;
+    };
+
+    // 标准 RoboSense Helios 32 线垂直角度表（单位：0.01°），当 DIFOP 标定无效时使用
+    static const int16_t kHeliosDefaultVertAngles[32] = {
+        -2500, -2250, -2000, -1750, -1500, -1250, -1000, -750,
+        -500,  -250,   0,     250,   500,   750,   1000,  1250,
+        1500,  1750,  2000,  2250,  2500,  2750,  3000,  3250,
+        3500,  3750,  4000,  4250,  4500,  4750,  5000,  5250
+    };
+
+    auto load_difop_angles = [&](const std::string& path) -> bool {
+        std::ifstream in(path, std::ios::binary);
+        if (!in) return false;
+
+        uint8_t magic[4]{};
+        in.read(reinterpret_cast<char*>(magic), 4);
+        std::streamoff payload_start = 0;
+        if ((magic[0] == 0x55 && magic[1] == 0xaa) || (magic[0] == 0xa5 && magic[1] == 0xff)) {
+            payload_start = kRecordHeaderSize;
+            UNICALIB_INFO("[LidarPacketReader] 检测到 DIFOP 自定义记录头，跳过 {} 字节", static_cast<long long>(kRecordHeaderSize));
+        }
+
+        bool loaded = false;
+
+        // 策略 1: 标准 3 字节结构体布局
+        if (try_read_cali_3byte(in, payload_start)) {
+            bool vert_ok = true;
+            for (int i = 0; i < 32; ++i) if (std::abs(vert_angles[i]) > 3000) { vert_ok = false; break; }
+            if (vert_ok) loaded = true;
+        }
+
+        // 策略 2: flat int16 布局搜索
+        if (!loaded) {
+            std::vector<std::streamoff> candidates = {payload_start + 630, payload_start + 500, payload_start + 400, payload_start + 800};
+            in.seekg(0, std::ios::end);
+            candidates.push_back(static_cast<std::streamoff>(in.tellg()) - 128);
+
+            for (auto off : candidates) {
+                if (off < 0) continue;
+                if (try_read_cali_flat_int16(in, off, true)) {
+                    bool reasonable = false;
+                    for (int i = 0; i < 32; ++i) if (std::abs(vert_angles[i]) > 5 && std::abs(vert_angles[i]) < 2000) { reasonable = true; break; }
+                    if (reasonable) { loaded = true; break; }
+                }
+            }
+        }
+
+        // 最终兜底：使用标准 Helios 垂直角度表（水平角度保持 0）
+        // 判定条件：至少有 8 个通道的垂直角度在合理范围内且有明显变化
+        int good_count = 0;
+        int16_t min_v = 32767, max_v = -32768;
+        for (int i = 0; i < 32; ++i) {
+            int16_t v = static_cast<int16_t>(vert_angles[i]);
+            if (std::abs(v) > 30 && std::abs(v) < 3000) {
+                good_count++;
+                if (v < min_v) min_v = v;
+                if (v > max_v) max_v = v;
+            }
+        }
+        bool calibration_is_bad = (good_count < 8) || ((max_v - min_v) < 300);
+
+        if (calibration_is_bad) {
+            for (int i = 0; i < 32; ++i) vert_angles[i] = kHeliosDefaultVertAngles[i];
+            std::fill(horiz_angles, horiz_angles + 32, 0.0);
+            UNICALIB_WARN("[LidarPacketReader] DIFOP 标定数据无效（good_count={}，范围={}），已使用标准 Helios 32 线垂直角度表",
+                          good_count, (max_v - min_v));
+        } else {
+            UNICALIB_INFO("[LidarPacketReader] DIFOP 角度标定加载成功 (vert[0]={:.2f}, 有效通道数={})", vert_angles[0], good_count);
+        }
+        return true;
+    };
+
+    if (!difop_path.empty()) {
+        load_difop_angles(difop_path);
     } else {
         UNICALIB_INFO("[LidarPacketReader] RS 未指定 DIFOP，使用零角度标定");
     }

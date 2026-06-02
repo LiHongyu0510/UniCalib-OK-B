@@ -99,6 +99,8 @@ Oem7ImuDecodeParams make_oem7_decode_params(const NewFormatConfig& cfg) {
     p.time_base = oem7_time_base_from_cfg_string(cfg.oem7_time_base);
     p.gps_minus_utc_leap_sec = cfg.oem7_gps_utc_leap_sec;
     p.time_offset_sec = cfg.oem7_time_offset_sec;
+    p.imu_gyro_scale_factor = cfg.oem7_imu_gyro_scale_factor;
+    p.imu_accel_scale_factor = cfg.oem7_imu_accel_scale_factor;
     return p;
 }
 
@@ -134,12 +136,14 @@ double NewFormatDataSource::to_seconds(double ts) const {
  * @param kept_count 已保留的帧数
  * @return true表示应该保留
  */
-bool NewFormatDataSource::should_keep(double ts, double& last_kept_ts, size_t kept_count) const {
-    // 检查是否达到最大帧数限制
+bool NewFormatDataSource::should_keep(double ts, double& last_kept_ts, size_t kept_count,
+                                      bool apply_sample_interval) const {
     if (cfg_.max_frames > 0 && kept_count >= cfg_.max_frames) return false;
-    // 检查采样间隔（降采样）
-    if (cfg_.sample_interval > 0.0 && last_kept_ts > 0.0 && 
-        (ts - last_kept_ts) < cfg_.sample_interval) return false;
+    // sample_interval 仅用于 LiDAR/相机；IMU 需全率供帧间陀螺积分
+    if (apply_sample_interval && cfg_.sample_interval > 0.0 && last_kept_ts > 0.0 &&
+        (ts - last_kept_ts) < cfg_.sample_interval) {
+        return false;
+    }
     return true;
 }
 
@@ -306,7 +310,7 @@ bool NewFormatDataSource::load() {
 
         // ========== 加载IMU数据 ==========
         // 索引格式 A：timestamp,gx,gy,gz,ax,ay,az（陀螺 rad/s，加速度 m/s²）
-        // 索引格式 B：占位,timestamp_ignored,oem7_short_binary_path（两列：与 LiDAR 索引类似，首列可填 0）
+        // 索引格式 B：仅两列「任意占位, oem7_binary_path」；整文件解码为 IMU 序列（首列可填 0）
         for (const auto& [sensor_id, idx_rel] : cfg_.imu_index_files) {
             std::string idx_path = resolve_path(root, idx_rel);
             std::ifstream ifs(idx_path);
@@ -347,7 +351,7 @@ bool NewFormatDataSource::load() {
                     }
                     oem7_paths_emitted.insert(bin_path);
                     for (const IMUFrameRos& fr : decoded) {
-                        if (!should_keep(fr.timestamp, last_kept_ts, kept)) continue;
+                        if (!should_keep(fr.timestamp, last_kept_ts, kept, false)) continue;
                         imu_data_[sensor_id].push_back(fr);
                         last_kept_ts = fr.timestamp;
                         ++kept;
@@ -371,7 +375,7 @@ bool NewFormatDataSource::load() {
                                   sensor_id, idx_path, line_no, e.what(), line);
                     continue;
                 }
-                if (!should_keep(ts, last_kept_ts, kept)) continue;
+                if (!should_keep(ts, last_kept_ts, kept, false)) continue;
 
                 IMUFrameRos frame;
                 try {

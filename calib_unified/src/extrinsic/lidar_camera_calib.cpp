@@ -22,6 +22,142 @@
 #include <algorithm>
 #include <ceres/ceres.h>
 #include <ceres/rotation.h>
+#include <map>
+#include <optional>
+#include <random>
+#include <tuple>
+
+namespace {
+
+struct LidarPlaneModel {
+    Eigen::Vector3d normal = Eigen::Vector3d::UnitZ();
+    double d = 0.0;
+    std::vector<int> inliers;
+    double score = 0.0;
+};
+
+pcl::PointCloud<pcl::PointXYZI>::Ptr voxel_downsample_xyzI(
+    const pcl::PointCloud<pcl::PointXYZI>::Ptr& cloud,
+    double voxel_size) {
+    pcl::PointCloud<pcl::PointXYZI>::Ptr out(new pcl::PointCloud<pcl::PointXYZI>);
+    if (!cloud) return out;
+    std::map<std::tuple<int, int, int>, pcl::PointXYZI> voxel_map;
+    for (const auto& pt : cloud->points) {
+        if (std::isnan(pt.x) || std::isnan(pt.y) || std::isnan(pt.z)) continue;
+        const int vx = static_cast<int>(std::floor(pt.x / voxel_size));
+        const int vy = static_cast<int>(std::floor(pt.y / voxel_size));
+        const int vz = static_cast<int>(std::floor(pt.z / voxel_size));
+        const auto key = std::make_tuple(vx, vy, vz);
+        if (voxel_map.find(key) == voxel_map.end() || pt.intensity > voxel_map[key].intensity)
+            voxel_map[key] = pt;
+    }
+    out->reserve(voxel_map.size());
+    for (const auto& [key, pt] : voxel_map)
+        out->push_back(pt);
+    return out;
+}
+
+// 标定板仅占点云一小部分：按绝对内点数筛选平面，不用全云内点占比。
+std::vector<LidarPlaneModel> ransac_plane_candidates(
+    const pcl::PointCloud<pcl::PointXYZI>::Ptr& cloud_filtered,
+    size_t min_plane_inliers,
+    double distance_threshold,
+    int ransac_iterations,
+    unsigned rng_seed) {
+    std::vector<LidarPlaneModel> candidates;
+    if (!cloud_filtered || cloud_filtered->empty()) return candidates;
+
+    std::mt19937 rng(rng_seed);
+    std::uniform_int_distribution<int> dist(0, static_cast<int>(cloud_filtered->size()) - 1);
+
+    for (int iter = 0; iter < ransac_iterations; ++iter) {
+        int i1 = dist(rng), i2 = dist(rng), i3 = dist(rng);
+        if (i1 == i2 || i2 == i3 || i1 == i3) continue;
+
+        const auto& p1 = cloud_filtered->points[i1];
+        const auto& p2 = cloud_filtered->points[i2];
+        const auto& p3 = cloud_filtered->points[i3];
+        Eigen::Vector3d v1(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
+        Eigen::Vector3d v2(p3.x - p1.x, p3.y - p1.y, p3.z - p1.z);
+        Eigen::Vector3d normal = v1.cross(v2);
+        const double norm_len = normal.norm();
+        if (norm_len < 1e-6) continue;
+
+        normal /= norm_len;
+        const double d_plane = -normal.dot(Eigen::Vector3d(p1.x, p1.y, p1.z));
+
+        std::vector<int> inliers;
+        inliers.reserve(cloud_filtered->size() / 10);
+        for (size_t i = 0; i < cloud_filtered->size(); ++i) {
+            const auto& pt = cloud_filtered->points[i];
+            if (std::abs(normal.dot(Eigen::Vector3d(pt.x, pt.y, pt.z)) + d_plane) < distance_threshold)
+                inliers.push_back(static_cast<int>(i));
+        }
+
+        if (inliers.size() < min_plane_inliers) continue;
+
+        LidarPlaneModel model;
+        model.normal = normal;
+        model.d = d_plane;
+        model.inliers = std::move(inliers);
+        model.score = static_cast<double>(model.inliers.size());
+        candidates.push_back(std::move(model));
+    }
+    return candidates;
+}
+
+std::optional<LidarPlaneModel> select_calibration_board_plane(
+    std::vector<LidarPlaneModel> candidates,
+    const pcl::PointCloud<pcl::PointXYZI>::Ptr& cloud_filtered,
+    int board_cols,
+    int board_rows,
+    double square_size_m) {
+    if (candidates.empty() || !cloud_filtered || board_cols < 2 || board_rows < 2 || square_size_m <= 0)
+        return std::nullopt;
+
+    const double expected_w = square_size_m * (board_cols - 1);
+    const double expected_h = square_size_m * (board_rows - 1);
+
+    for (auto& model : candidates) {
+        Eigen::Vector3d centroid = Eigen::Vector3d::Zero();
+        for (int idx : model.inliers) {
+            const auto& pt = cloud_filtered->points[idx];
+            centroid += Eigen::Vector3d(pt.x, pt.y, pt.z);
+        }
+        centroid /= static_cast<double>(model.inliers.size());
+
+        Eigen::Vector3d u_axis = Eigen::Vector3d::UnitX();
+        if (std::abs(model.normal.dot(u_axis)) > 0.9)
+            u_axis = Eigen::Vector3d::UnitY();
+        const Eigen::Vector3d v_axis = model.normal.cross(u_axis).normalized();
+        u_axis = v_axis.cross(model.normal).normalized();
+
+        double u_min = 1e9, u_max = -1e9, v_min = 1e9, v_max = -1e9;
+        for (int idx : model.inliers) {
+            const auto& pt = cloud_filtered->points[idx];
+            const Eigen::Vector3d local = Eigen::Vector3d(pt.x, pt.y, pt.z) - centroid;
+            u_min = std::min(u_min, local.dot(u_axis));
+            u_max = std::max(u_max, local.dot(u_axis));
+            v_min = std::min(v_min, local.dot(v_axis));
+            v_max = std::max(v_max, local.dot(v_axis));
+        }
+
+        const double w = u_max - u_min;
+        const double h = v_max - v_min;
+        const double w_err = std::abs(w - expected_w) / expected_w;
+        const double h_err = std::abs(h - expected_h) / expected_h;
+        const double size_err = w_err + h_err;
+        // 指数衰减：地面/墙面等大平面内点多但尺寸不符时得分接近 0
+        const double size_weight = std::exp(-size_err);
+        model.score = static_cast<double>(model.inliers.size()) * size_weight;
+    }
+
+    std::sort(candidates.begin(), candidates.end(),
+              [](const LidarPlaneModel& a, const LidarPlaneModel& b) { return a.score > b.score; });
+    return candidates.front();
+}
+
+}  // namespace
 
 namespace ns_unicalib {
 
@@ -82,118 +218,51 @@ bool LiDARCameraCalibrator::detect_board_in_lidar(
     }
 
     const auto& cloud = scan.cloud;
-    const size_t MIN_POINTS = 100;
     const size_t EXPECTED_CORNERS = static_cast<size_t>(cfg_.board_cols * cfg_.board_rows);
+    const size_t MIN_PLANE_INLIERS = std::max(
+        static_cast<size_t>(30),
+        static_cast<size_t>(std::max(1, cfg_.board_cols * cfg_.board_rows / 2)));
+    const size_t MIN_CLOUD_POINTS = std::max(static_cast<size_t>(50), MIN_PLANE_INLIERS);
 
-    if (cloud->size() < MIN_POINTS) {
-        UNICALIB_WARN("[DetectBoard] 点数不足: {} < {}", cloud->size(), MIN_POINTS);
+    if (cloud->size() < MIN_CLOUD_POINTS) {
+        UNICALIB_WARN("[DetectBoard] 点数不足: {} < {}", cloud->size(), MIN_CLOUD_POINTS);
         return false;
     }
 
     // =================================================================
     // Step 1: 体素下采样 (加速 RANSAC)
     // =================================================================
-    pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_filtered(new pcl::PointCloud<pcl::PointXYZI>);
-    
-    // 简单网格下采样 (避免引入 pcl::VoxelGrid 依赖)
     const double VOXEL_SIZE = 0.02;  // 2cm
-    std::map<std::tuple<int, int, int>, pcl::PointXYZI> voxel_map;
-    
-    for (const auto& pt : cloud->points) {
-        if (std::isnan(pt.x) || std::isnan(pt.y) || std::isnan(pt.z)) continue;
-        int vx = static_cast<int>(std::floor(pt.x / VOXEL_SIZE));
-        int vy = static_cast<int>(std::floor(pt.y / VOXEL_SIZE));
-        int vz = static_cast<int>(std::floor(pt.z / VOXEL_SIZE));
-        auto key = std::make_tuple(vx, vy, vz);
-        // 保留强度最大的点
-        if (voxel_map.find(key) == voxel_map.end() || pt.intensity > voxel_map[key].intensity) {
-            voxel_map[key] = pt;
-        }
-    }
-    
-    cloud_filtered->reserve(voxel_map.size());
-    for (const auto& [key, pt] : voxel_map) {
-        cloud_filtered->push_back(pt);
-    }
-    
+    pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_filtered =
+        voxel_downsample_xyzI(cloud, VOXEL_SIZE);
+
     UNICALIB_INFO("[DetectBoard] 步骤1 体素下采样完成: {} -> {} 点", cloud->size(), cloud_filtered->size());
 
-    if (cloud_filtered->size() < MIN_POINTS) {
-        UNICALIB_WARN("[DetectBoard] 下采样后点数不足");
+    if (cloud_filtered->size() < MIN_CLOUD_POINTS) {
+        UNICALIB_WARN("[DetectBoard] 下采样后点数不足: {} < {}", cloud_filtered->size(), MIN_CLOUD_POINTS);
         return false;
     }
 
     // =================================================================
-    // Step 2: RANSAC 平面拟合
+    // Step 2: RANSAC 平面拟合（标定板平面内点少，不能用全云 30% 占比阈值）
     // =================================================================
-    // 平面方程: ax + by + cz + d = 0，其中 (a,b,c) 为单位法向量
-    struct PlaneModel {
-        Eigen::Vector3d normal;  // 单位法向量
-        double d;                // 平面偏移
-        std::vector<int> inliers;
-        double score = 0.0;
-    };
-
-    const int RANSAC_ITERATIONS = 1000;
+    const int RANSAC_ITERATIONS = 2000;
     const double DISTANCE_THRESHOLD = 0.02;  // 2cm
-    const double MIN_INLIER_RATIO = 0.3;
-    
-    std::vector<PlaneModel> candidate_planes;
-    std::mt19937 rng(42);  // 固定种子保证可重复性
-    std::uniform_int_distribution<int> dist(0, static_cast<int>(cloud_filtered->size()) - 1);
 
-    for (int iter = 0; iter < RANSAC_ITERATIONS; ++iter) {
-        // 随机选择3个点
-        int i1 = dist(rng), i2 = dist(rng), i3 = dist(rng);
-        if (i1 == i2 || i2 == i3 || i1 == i3) continue;
+    auto candidate_planes = ransac_plane_candidates(
+        cloud_filtered, MIN_PLANE_INLIERS, DISTANCE_THRESHOLD, RANSAC_ITERATIONS, 42u);
+    auto best_plane_opt = select_calibration_board_plane(
+        std::move(candidate_planes), cloud_filtered,
+        cfg_.board_cols, cfg_.board_rows, cfg_.square_size_m);
 
-        const auto& p1 = cloud_filtered->points[i1];
-        const auto& p2 = cloud_filtered->points[i2];
-        const auto& p3 = cloud_filtered->points[i3];
-
-        Eigen::Vector3d v1(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
-        Eigen::Vector3d v2(p3.x - p1.x, p3.y - p1.y, p3.z - p1.z);
-        Eigen::Vector3d normal = v1.cross(v2);
-
-        double norm_len = normal.norm();
-        if (norm_len < 1e-6) continue;  // 共线点
-
-        normal /= norm_len;
-        double d_plane = -normal.dot(Eigen::Vector3d(p1.x, p1.y, p1.z));
-
-        // 计算内点
-        std::vector<int> inliers;
-        for (size_t i = 0; i < cloud_filtered->size(); ++i) {
-            const auto& pt = cloud_filtered->points[i];
-            double dist_to_plane = std::abs(normal.dot(Eigen::Vector3d(pt.x, pt.y, pt.z)) + d_plane);
-            if (dist_to_plane < DISTANCE_THRESHOLD) {
-                inliers.push_back(static_cast<int>(i));
-            }
-        }
-
-        if (inliers.size() >= MIN_POINTS && 
-            static_cast<double>(inliers.size()) / cloud_filtered->size() >= MIN_INLIER_RATIO) {
-            PlaneModel model;
-            model.normal = normal;
-            model.d = d_plane;
-            model.inliers = std::move(inliers);
-            model.score = static_cast<double>(model.inliers.size());
-            candidate_planes.push_back(std::move(model));
-        }
-    }
-
-    if (candidate_planes.empty()) {
-        UNICALIB_WARN("[DetectBoard] RANSAC 未找到有效平面");
+    if (!best_plane_opt) {
+        UNICALIB_WARN("[DetectBoard] RANSAC 未找到有效平面 (需平面内点≥{})", MIN_PLANE_INLIERS);
         return false;
     }
 
-    // 选择内点最多的平面
-    std::sort(candidate_planes.begin(), candidate_planes.end(),
-              [](const PlaneModel& a, const PlaneModel& b) { return a.score > b.score; });
-
-    const auto& best_plane = candidate_planes[0];
-    UNICALIB_INFO("[DetectBoard] 步骤2 RANSAC 平面拟合完成: inliers={}",
-                  best_plane.inliers.size());
+    const LidarPlaneModel& best_plane = *best_plane_opt;
+    UNICALIB_INFO("[DetectBoard] 步骤2 RANSAC 平面拟合完成: inliers={} score={:.2f}",
+                  best_plane.inliers.size(), best_plane.score);
 
     // =================================================================
     // Step 3: 投影到平面，构建局部2D坐标系
@@ -423,77 +492,43 @@ bool LiDARCameraCalibrator::detect_circles_in_lidar(
         return false;
     }
     const auto& cloud = scan.cloud;
-    const size_t MIN_POINTS = 100;
     const size_t EXPECTED = static_cast<size_t>(cfg_.board_cols * cfg_.board_rows);
-    if (cloud->size() < MIN_POINTS) return false;
+    const size_t MIN_PLANE_INLIERS = std::max(
+        static_cast<size_t>(30),
+        static_cast<size_t>(std::max(1, cfg_.board_cols * cfg_.board_rows / 2)));
+    const size_t MIN_CLOUD_POINTS = std::max(static_cast<size_t>(50), MIN_PLANE_INLIERS);
+    if (cloud->size() < MIN_CLOUD_POINTS) return false;
 
-    pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_filtered(new pcl::PointCloud<pcl::PointXYZI>);
     const double VOXEL_SIZE = 0.02;
-    std::map<std::tuple<int, int, int>, pcl::PointXYZI> voxel_map;
-    for (const auto& pt : cloud->points) {
-        if (std::isnan(pt.x) || std::isnan(pt.y) || std::isnan(pt.z)) continue;
-        int vx = static_cast<int>(std::floor(pt.x / VOXEL_SIZE));
-        int vy = static_cast<int>(std::floor(pt.y / VOXEL_SIZE));
-        int vz = static_cast<int>(std::floor(pt.z / VOXEL_SIZE));
-        auto key = std::make_tuple(vx, vy, vz);
-        if (voxel_map.find(key) == voxel_map.end() || pt.intensity > voxel_map[key].intensity)
-            voxel_map[key] = pt;
-    }
-    for (const auto& [key, pt] : voxel_map) cloud_filtered->push_back(pt);
-    if (cloud_filtered->size() < MIN_POINTS) return false;
+    pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_filtered = voxel_downsample_xyzI(cloud, VOXEL_SIZE);
+    if (cloud_filtered->size() < MIN_CLOUD_POINTS) return false;
 
-    const int RANSAC_ITERATIONS = 1000;
-    const double DISTANCE_THRESHOLD = 0.02;
-    const double MIN_INLIER_RATIO = 0.3;
-    std::vector<std::pair<Eigen::Vector3d, std::vector<int>>> candidate_planes;
-    std::mt19937 rng(42);
-    std::uniform_int_distribution<int> dist(0, static_cast<int>(cloud_filtered->size()) - 1);
-
-    for (int iter = 0; iter < RANSAC_ITERATIONS; ++iter) {
-        int i1 = dist(rng), i2 = dist(rng), i3 = dist(rng);
-        if (i1 == i2 || i2 == i3 || i1 == i3) continue;
-        const auto& p1 = cloud_filtered->points[i1];
-        const auto& p2 = cloud_filtered->points[i2];
-        const auto& p3 = cloud_filtered->points[i3];
-        Eigen::Vector3d v1(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
-        Eigen::Vector3d v2(p3.x - p1.x, p3.y - p1.y, p3.z - p1.z);
-        Eigen::Vector3d normal = v1.cross(v2);
-        double norm_len = normal.norm();
-        if (norm_len < 1e-6) continue;
-        normal /= norm_len;
-        double d_plane = -normal.dot(Eigen::Vector3d(p1.x, p1.y, p1.z));
-        std::vector<int> inliers;
-        for (size_t i = 0; i < cloud_filtered->size(); ++i) {
-            const auto& pt = cloud_filtered->points[i];
-            if (std::abs(normal.dot(Eigen::Vector3d(pt.x, pt.y, pt.z)) + d_plane) < DISTANCE_THRESHOLD)
-                inliers.push_back(static_cast<int>(i));
-        }
-        if (inliers.size() >= MIN_POINTS &&
-            static_cast<double>(inliers.size()) / cloud_filtered->size() >= MIN_INLIER_RATIO)
-            candidate_planes.emplace_back(normal, std::move(inliers));
-    }
-    if (candidate_planes.empty()) {
+    auto candidate_planes = ransac_plane_candidates(
+        cloud_filtered, MIN_PLANE_INLIERS, 0.02, 2000, 42u);
+    auto best_plane_opt = select_calibration_board_plane(
+        std::move(candidate_planes), cloud_filtered,
+        cfg_.board_cols, cfg_.board_rows, cfg_.square_size_m);
+    if (!best_plane_opt) {
         UNICALIB_WARN("[DetectCircles] RANSAC 未找到有效平面");
         return false;
     }
-    std::sort(candidate_planes.begin(), candidate_planes.end(),
-              [](const auto& a, const auto& b) { return a.second.size() > b.second.size(); });
-    const auto& best = candidate_planes[0];
+    const LidarPlaneModel& best_plane = *best_plane_opt;
+
     Eigen::Vector3d centroid = Eigen::Vector3d::Zero();
-    for (int idx : best.second) {
+    for (int idx : best_plane.inliers) {
         const auto& pt = cloud_filtered->points[idx];
         centroid += Eigen::Vector3d(pt.x, pt.y, pt.z);
     }
-    centroid /= best.second.size();
+    centroid /= static_cast<double>(best_plane.inliers.size());
     Eigen::Vector3d u_axis = Eigen::Vector3d::UnitX();
-    if (std::abs(best.first.dot(u_axis)) > 0.9) u_axis = Eigen::Vector3d::UnitY();
-    Eigen::Vector3d v_axis = best.first.cross(u_axis).normalized();
-    u_axis = v_axis.cross(best.first).normalized();
+    if (std::abs(best_plane.normal.dot(u_axis)) > 0.9) u_axis = Eigen::Vector3d::UnitY();
+    Eigen::Vector3d v_axis = best_plane.normal.cross(u_axis).normalized();
+    u_axis = v_axis.cross(best_plane.normal).normalized();
 
     std::vector<Eigen::Vector2d> points_2d;
     std::vector<Eigen::Vector3d> points_3d;
     double u_min = 1e9, u_max = -1e9, v_min = 1e9, v_max = -1e9;
-    for (int idx : best.second) {
+    for (int idx : best_plane.inliers) {
         const auto& pt = cloud_filtered->points[idx];
         Eigen::Vector3d p(pt.x, pt.y, pt.z);
         Eigen::Vector3d local = p - centroid;

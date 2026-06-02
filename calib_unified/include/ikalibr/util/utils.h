@@ -56,6 +56,7 @@ std::vector<Vector2d.
 #include "ctraj/utils/sophus_utils.hpp"
 #include "spdlog/fmt/fmt.h"
 #include "opencv2/core.hpp"
+#include <set>
 
 namespace ns_ikalibr {
 

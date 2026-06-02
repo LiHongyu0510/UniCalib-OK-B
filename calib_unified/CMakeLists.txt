@@ -103,6 +103,7 @@ if(EXISTS ${SOPHUS_SOURCE_DIR}/CMakeLists.txt)
   set(BUILD_SOPHUS_TESTS OFF CACHE BOOL "" FORCE)
   set(BUILD_SOPHUS_EXAMPLES OFF CACHE BOOL "" FORCE)
   add_subdirectory(${SOPHUS_SOURCE_DIR} thirdparty_build/Sophus EXCLUDE_FROM_ALL)
+  set(Sophus_FOUND TRUE)
   message(STATUS "Sophus: using bundled source")
 else()
   find_package(Sophus REQUIRED)
@@ -570,6 +571,7 @@ set(UNICALIB_NEW_SOURCES
     src/io/new_format_data_source.cpp
     src/io/lidar_packet_reader.cpp
     src/io/oem7_imu_reader.cpp
+    src/io/oem7_imu_scale.cpp
     # 工程化基础设施（header-only, 部分cpp实现）
     src/common/calib_param.cpp  # 确保包含
 )
@@ -944,8 +946,22 @@ if(UNICALIB_BUILD_APPS)
     add_executable(${target_name} ${source_file})
     target_link_libraries(${target_name} PRIVATE unicalib)
     set_target_properties(${target_name} PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+        INSTALL_RPATH "${CMAKE_BINARY_DIR}/lib"
+        BUILD_RPATH "${CMAKE_BINARY_DIR}/lib")
   endfunction()
+
+  # RS-LiDAR 原始包解码器 (独立于 ROS2)
+  add_calib_app(unicalib_rslidar_decode
+      apps/rslidar_decode/main.cpp)
+
+  # LiDAR 原始包 → PCD（MSOP / Livox / 补盲等）
+  add_calib_app(unicalib_lidar_parse
+      apps/lidar_parse/main.cpp)
+
+  # IMU OEM7 / Bynav 文本 → CSV
+  add_calib_app(unicalib_imu_parse
+      apps/imu_parse/main.cpp)
 
   # IMU 内参标定
   add_calib_app(unicalib_imu_intrinsic

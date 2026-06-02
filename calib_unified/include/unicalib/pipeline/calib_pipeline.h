@@ -30,6 +30,8 @@
 #include "unicalib/extrinsic/lidar_camera_calib.h"
 #include "unicalib/extrinsic/cam_cam_calib.h"
 #include "unicalib/intrinsic/imu_intrinsic_calib.h"
+#include "unicalib/extrinsic/imu_lidar_calib.h"
+#include <yaml-cpp/yaml.h>
 #include <opencv2/core.hpp>
 #include <chrono>
 #include <functional>
@@ -174,8 +176,10 @@ struct PipelineConfig {
     // 默认启动可视化界面 (LiDAR-Camera 等外参标定时；可用 --no-viz 关闭)
     bool enable_viz                 = true;
 
-    // ─── 数据路径配置 (LiDAR-Camera 标定) ───
+    // ─── 数据路径配置 (LiDAR-Camera / IMU-LiDAR 文件模式) ───
     std::string lidar_data_dir;              // LiDAR 点云目录 (PCD)
+    std::map<std::string, std::string> lidar_data_paths;  // sensor_id -> PCD 目录
+    std::map<std::string, std::string> imu_data_paths;      // sensor_id -> IMU CSV 或目录
     std::string camera_images_dir;           // 相机图像目录（单目时用）
     std::string camera_intrinsic_file;       // 相机内参 YAML (可选，单目时用)
     std::string lidar_id        = "lidar_front";
@@ -229,6 +233,10 @@ struct PipelineConfig {
     std::string new_format_oem7_time_base = "gps";
     int new_format_oem7_gps_utc_leap_sec = 18;
     double new_format_oem7_time_offset_sec = 0.0;
+    double new_format_oem7_gyro_scale_factor = 0.0;
+    double new_format_oem7_accel_scale_factor = 0.0;
+    double new_format_sample_interval = 0.0;  // 秒，LiDAR/相机降采样；0=不抽样
+    size_t new_format_max_frames = 0;         // 0=不限制
 
     // ─── LiDAR-Camera 标定参数 ───
     // 方法: "edge"(无目标边缘对齐) | "target"(标定板) | "motion"(B样条运动)
@@ -302,11 +310,22 @@ struct PipelineConfig {
     // 1) 文件路径：key = "imu_id__lidar_id" 或 "T_imu_id__lidar_id"，value = YAML 文件路径
     // 2) 内联 4x4：key 同上，value = 含 rows/cols/data 的 YAML 对象（在 app 中解析为 16 个 double）
     std::map<std::string, std::string> imu_lidar_initial_extrinsic_files;
-    std::map<std::string, std::vector<double>> imu_lidar_initial_extrinsic_inline;  // key -> 4x4 行优先 16 个数
+    std::map<std::string, std::vector<double>> imu_lidar_initial_extrinsic_inline;  // key -> 4x4 行优先 16 数（可由 3x3+translation 展开）
+    /** 完整 IMU-LiDAR 标定参数（来自 yaml imu_lidar 段；run_fine_imu_lidar 优先使用） */
+    IMULiDARCalibrator::Config imu_lidar_calib;
     // IMU-LiDAR 手眼 180° 歧义策略（与 imu_lidar.handeye_* 一致；空串表示用 pipeline 默认）
     std::string imu_lidar_handeye_180_decision;                             // residual | prefer_identity | prefer_180
     bool        imu_lidar_handeye_prefer_identity_when_ambiguous = true;
     double      imu_lidar_handeye_180_residual_margin_deg = 3.0;
+    bool        imu_lidar_trim_to_overlap = true;       // 仅标定 IMU/LiDAR 时间重叠段
+    double      imu_lidar_trim_overlap_margin_s = 0.0;  // 重叠区间两端扩展 [s]
+    bool        imu_lidar_bspline_freeze_trans_z = true; // B样条固定 Tz 为初值（平面标定）
+    bool        imu_lidar_bspline_freeze_trans_xy = false;
+    bool        imu_lidar_trust_initial_translation = false;
+    bool        imu_lidar_bspline_auto_freeze_trans_when_underconstrained = true;
+    double      imu_lidar_bspline_max_trans_delta_m = 0.0;
+    bool        imu_lidar_use_planar_prior = true;
+    bool        imu_lidar_trust_initial_rotation = false; // CAD 纵轴等大安装角：旋转用初值
     std::vector<std::pair<std::string, std::string>> lidar_lidar_pairs;    // LiDAR-LiDAR 标定对
     std::vector<std::pair<std::string, std::string>> lidar_camera_pairs;   // LiDAR-Camera 标定对
     // cam_cam_pairs 见上方已有定义
@@ -337,6 +356,9 @@ struct PipelineConfig {
     /** 为 true 时：跳过 AI 粗标定与精标定，直接使用配置中的 initial_extrinsic 作为手动微调的起始值（需同时配置 initial_extrinsic 且通常配合 --manual） */
     bool lidar_cam_use_config_extrinsic_only = false;
 };
+
+/** 从 config.yaml 的 imu_lidar 节点填充 IMULiDARCalibrator::Config */
+void load_imu_lidar_calib_from_yaml(const YAML::Node& il, IMULiDARCalibrator::Config& out);
 
 // ===========================================================================
 // 两阶段标定流水线主类

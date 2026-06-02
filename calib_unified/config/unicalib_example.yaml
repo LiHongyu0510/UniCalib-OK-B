@@ -38,7 +38,7 @@
 auto_tasks:                 false
 do_imu_intrinsic:           true
 do_camera_intrinsic:        true
-do_imu_lidar_extrinsic:     true   # 当前 pipeline 仍要求 ROS2 bag；若后续接入 NEW_FORMAT 再打开
+do_imu_lidar_extrinsic:     true   # 文件模式：配置 data.imu / data.lidar；或 new_format / ros2 bag
 do_lidar_lidar_extrinsic:   false   # 多 LiDAR 时置 true，并按 lidar_lidar.pairs 标定
 do_lidar_camera_extrinsic:  true
 do_cam_cam_extrinsic:       false
@@ -83,7 +83,7 @@ sensors:
     type: imu
     topic: /imu/imu_0
     imu:
-      rate_hz: 200.0
+      rate_hz: 100.0
       model: scale_misalignment
 
   - id: lidar_main
@@ -94,17 +94,17 @@ sensors:
       scan_lines: 32
       rate_hz: 10.0
 
-  - id: lidar_blind_1
+  - id: left_front
     type: lidar
-    topic: /lidar/blind_1/points
+    topic: /lidar/left_front/points
     lidar:
       type: spinning
       scan_lines: 32
       rate_hz: 10.0
 
-  - id: lidar_blind_2
+  - id: right_back
     type: lidar
-    topic: /lidar/blind_2/points
+    topic: /lidar/right_back/points
     lidar:
       type: spinning
       scan_lines: 32
@@ -185,40 +185,43 @@ data:
 
   # IMU：sensor_id -> CSV 路径（文件模式）；bag 模式可留空，按 topic 从 bag 读
   imu:
-    # NEW_FORMAT 模式下本段默认不使用
-    imu_0: ""
+    imu_0: imu/imu/imu_0/imu.csv
 
   # LiDAR：sensor_id -> PCD 目录，或传感器 YAML（含 pointcloud_topic）
   lidar:
     # nya 双雷达：front=水平雷达 YAML，rear=垂直雷达 YAML（与 lidar_lidar.pairs 的 lidar_front/lidar_rear 一致）
     # 纯 bag 时可仅依赖 sensors[].topic；本处 YAML 同时提供 pointcloud_topic 与 IMU-LiDAR 等任务常用外参描述
-    # NEW_FORMAT 模式下本段默认不使用
-    lidar_main: ""
-    lidar_blind_1: ""
-    lidar_blind_2: ""
+    # # PCD 目录（文件名如 frame_<timestamp>.pcd，时间戳从文件名解析）；路径相对 CALIB_DATA_DIR（默认 <工程>/data）
+    # IMU-LiDAR 须与 data.imu 同一次采集：当前 imu.csv 为 0518 → 用 top_front_0518（约 314s 重叠）
+    # 0519 主雷达 top_front_0519 与 0519 RAWIMU 时段不重叠，待同步数据后再改路径
+    # lidar_main: lidar_main/top_front_0601/right_1/top_front
+    # left_front: lidar_airy/20260601/left_1/left_front
+    right_back: lidar_airy/20260601/right_1/right_back
 
   # 相机：sensor_id -> { images_dir（必填文件模式）, intrinsic_yaml（可选）, reference_intrinsic_yaml（可选）}
-  # intrinsic_yaml：跑完 unicalib_camera_intrinsic 后填写；相对 --data-dir 或与主配置一致的工程目录。
-  # 默认落盘路径：<output_dir>/<results.camera_intrinsic>/camera_intrinsic_<sensor_id>.yaml（见本文件 results 段；与 sensors[].id 一致）
-  # 例：output_dir=./results、results.camera_intrinsic=camera_intrinsic → results/camera_intrinsic/camera_intrinsic_center_front.yaml
-  # 仓库不提交内参文件，示例留空；需要时再填。
+  # intrinsic_yaml：厂家内参或标定结果；相对 --data-dir。五路可共用 camera_intrinsic/camera_intrinsic.yaml（cameras 映射）
+  # 单相机文件格式：<output_dir>/<results.camera_intrinsic>/camera_intrinsic_<sensor_id>.yaml
   camera:
     camera_num: 5
-    center_front:
-      images_dir: ""
-      intrinsic_yaml: ""
-    surrounding_front:
-      images_dir: ""
-      intrinsic_yaml: ""
+    # center_front:
+    #   images_dir: Camera/center_front/center_front_1
+    #   intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
+
+    # surrounding_front:
+    #   images_dir: Camera/surrounding_front/surrounding_front_1
+    #   intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
+
     surrounding_back:
-      images_dir: ""
-      intrinsic_yaml: ""
-    surrounding_left:
-      images_dir: ""
-      intrinsic_yaml: ""
-    surrounding_right:
-      images_dir: ""
-      intrinsic_yaml: ""
+      images_dir: Camera/surrounding_back/surrounding_back_1
+      intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
+
+    # surrounding_left:
+    #   images_dir: Camera/surrounding_left/surrounding_left_1
+    #   intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
+
+    # surrounding_right:
+    #   images_dir: Camera/surrounding_right/surrounding_right_1
+    #   intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
 
 # =============================================================================
 # 5. ROS2 数据源（与 data 段二选一或混用：未提供文件路径时从 bag 读）
@@ -250,8 +253,8 @@ ros2:
   strict_topic_match: true
   max_wait_time: 30.0
   sample_interval: 0.0
-  # IMU-LiDAR 标定建议 >=500：使 LiDAR 帧间隔 <1s，NDT 旋转可观、平移可估计（原 100→约 4.2s 间隔导致标定不准）
-  max_frames: 800
+  # IMU-LiDAR 建议 0=不限制；800 只会加载前 800 帧 IMU（约 8s），与长 LiDAR 段不对齐
+  max_frames: 0
 
 # =============================================================================
 # 5.1 新采集格式数据源（索引 CSV）
@@ -264,29 +267,31 @@ ros2:
 #     imu/imu_0.csv              (timestamp,gx,gy,gz,ax,ay,az)
 # - path 推荐写相对 root_dir 的路径（如 pcd/xxx.pcd, images/xxx.png）
 new_format:
-  enable: true
+  enable: false
+  max_frames: 0
+  sample_interval: 0   # 仅 LiDAR/相机降采样(s)；IMU 始终全率。0.5≈604 帧 LiDAR；0=3018 帧 NDT 很慢
   # 与一键脚本配合建议写 "."：最终解析为 CALIB_DATA_DIR（容器内通常是 /root/calib_ws/data）
   # 若不走脚本直接本机运行，可改成绝对路径（如 /data 或 /path/to/dataset）
   root_dir: .
   timestamp_unit: us   # s | ms | us | ns（大小写不敏感）
   # Bynav / NovAtel OEM7 短二进制 CORRIMUDATAS（索引 CSV 两列：占位,oem7.bin）时的 IMU 输出频率 Hz，与 INSHandler 的 imu_rate 一致
-  oem7_imu_rate_hz: 200
-  # OEM7 解码后 IMU 时间戳：gps=自 GPS 历元连续秒（与报文一致）；unix=近似 UTC 的 Unix 秒（与索引里 Unix 时间对齐，需正确 leap）
-  oem7_time_base: gps   # gps | unix
+  oem7_imu_rate_hz: 100
+  # RAWIMUSX 比例因子（与 bynav_ros_driver/config/config.yaml 一致；HG4930 常用值）
+  oem7_imu_gyro_scale_factor: 1.9073486328125e-07
+  oem7_imu_accel_scale_factor: 3.05071567298197e-08
+  # OEM7/北云文本 IMU 时间戳：unix=与 LiDAR/相机索引对齐（推荐）；gps=GPST 连续秒
+  # Bynav CORRIMU 为 GPST、RAWIMU 为 Unix，解码器按数值自动识别，不会重复换算
+  oem7_time_base: unix   # gps | unix
   oem7_gps_utc_leap_sec: 18   # 仅 unix 模式；以 IERS 公布为准，会随年代变化
   oem7_time_offset_sec: 0    # 全体 IMU 时间再加/减的秒数（细调与其它传感器钟差）
   lidar_index_files:
-    lidar_main: lidar/lidar_main.csv
-    lidar_blind_1: lidar/lidar_blind_1.csv
-    lidar_blind_2: lidar/lidar_blind_2.csv
-  camera_index_files:
-    center_front: camera/center_front.csv
-    surrounding_front: camera/surrounding_front.csv
-    surrounding_back: camera/surrounding_back.csv
-    surrounding_left: camera/surrounding_left.csv
-    surrounding_right: camera/surrounding_right.csv
+    lidar_main: lidar_main/lidar_main_pcd/lidar_main_0516_1_index.csv
+    # 补盲索引文件就绪后再取消注释
+    # left_front: lidar/left_front.csv
+    # right_back: lidar/right_back.csv
+  camera_index_files: {}
   imu_index_files:
-    imu_0: imu/imu_0.csv
+    imu_0: imu/imu/imu_1/imu_index.csv
 
 # =============================================================================
 # 6. 第三方 / AI 标定
@@ -350,79 +355,92 @@ camera_intrinsic:
 imu_lidar:
   pairs:
     - [imu_0, lidar_main]
-    - [imu_0, lidar_blind_1]
-    - [imu_0, lidar_blind_2]
+    # - [imu_0, left_front]
+    # - [imu_0, right_back]
   # 初值（可选）：粗标定以初值为先验开始（手眼 180° 消解与平移回退），得到粗结果；若粗结果偏离初值过大则粗结果取初值；精标定在粗标定结果上 B 样条精化。
-  # 键: "imu_id__lidar_id" 或 "T_imu_id__lidar_id"。值支持两种形式（可混用）：
-  #   1) 文件路径（字符串）：YAML 文件内需含 T_Imu_Lidar 或 T_Body_Lidar 的 4x4。
-  #   2) 内联 4x4：含 rows: 4, cols: 4, data: [16 个数行优先]。不写或 null 表示该对手眼粗标定+精标定。
-  # 安装表 mm→m（惯性导航单元盒子中心 r_imu；与 IMU 轴 Y前 X右 Z上 平行假设 R=I）：T_lidar_in_imu，t = (r_lidar - r_imu)/1000 [m]
+  # 键: "imu_id__lidar_id" 或 "T_imu_id__lidar_id"。推荐写法（与安装表一致）：
+  #   rows/cols: 3，data: 9 个数（旋转 R，行优先），translation: [tx, ty, tz]（米）
+  # 亦支持 4x4 内联或初值文件路径（文件内 T_Imu_Lidar 可为 3x3+translation 或 4x4）。
+  # 语义: T_Imu_Lidar，p_imu = T * p_lidar（与 results 输出 4x4 一致）。
+  # 安装表 mm→m（V 系后上左；r 为传感器中心）
   #   r_imu=(792.7, 569.8, 0)
-  #   主雷达 r=(776.16, 876.11, 0)     → t=(-0.01654,  0.30631,  0.0)
-  #   补盲1   r=(-37.49, 530.31, 430.63) → t=(-0.83019, -0.03949,  0.43063)
-  #   补盲2   r=(1539.14, 705.48, -501.01) → t=(0.74644, 0.13568, -0.50101)
+  #   主雷达 r=(776.16, 876.11, 0)     → delta_V=(-0.01654, 0.30631, 0) [m]
+  # T_Imu_Lidar: p_imu = R * p_lidar + t
+  #   R = R_Imu←lidar_nominal * R_y_lidar(前倾4.08°)
+  #       轴对齐: lidar(前左上)→imu(右前上): X_l→Y_i, Y_l→-X_i, Z_l→Z_i
+  #       前倾: 绕 lidar Y(左) +4.08°（Z 向前倾）
+  #   t = R_Imu←V * delta_V，R_Imu←V: V(后,上,左)→IMU(右,前,上)
+  #   → t = [0, 0.01654, 0.30631] m；det(R)=1，SVD 正交化不改变 R
+  #   left_front   r=(-37.49, 530.31, 430.63) → t=(-0.83019, -0.03949,  0.43063)
+  #   right_back   r=(1539.14, 705.48, -501.01) → t=(0.74644, 0.13568, -0.50101)
   initial_extrinsics:
     T_imu_0__lidar_main:
-      rows: 4
-      cols: 4
+      rows: 3
+      cols: 3
       dt: d
-      data: [1.0, 0.0, 0.0, -0.01654,
-             0.0, 1.0, 0.0,  0.30631,
-             0.0, 0.0, 1.0,  0.0,
-             0.0, 0.0, 0.0,  1.0]
-    T_imu_0__lidar_blind_1:
-      rows: 4
-      cols: 4
-      dt: d
-      data: [1.0, 0.0, 0.0, -0.83019,
-             0.0, 1.0, 0.0, -0.03949,
-             0.0, 0.0, 1.0,  0.43063,
-             0.0, 0.0, 0.0,  1.0]
-    T_imu_0__lidar_blind_2:
-      rows: 4
-      cols: 4
-      dt: d
-      data: [1.0, 0.0, 0.0,  0.74644,
-             0.0, 1.0, 0.0,  0.13568,
-             0.0, 0.0, 1.0, -0.50101,
-             0.0, 0.0, 0.0,  1.0]
+      data: [-0.00349065, 0.99505011, -0.09931308,
+             -0.99999238, -0.00330005, 0.00208338,
+              0.00174533, 0.09931960, 0.99505405]
+      translation: [0.01600892, -0.03036198, -0.30482987]
 
-  ndt_resolution: 1.0
+    T_imu_0__left_front:
+      rows: 3
+      cols: 3
+      dt: d
+      data: [-0.30144669916816969, 0.95252335380456077, -0.042768540044354722,
+           0.95316537433858883, 0.30220070994685833, 0.012267846982742952,
+           0.02461009391675811, -0.037067389502444259, -0.99900968559513004]
+      translation: [-0.94109095437021884, 0.24318668104107136, 0.007548942365885547]
+      
+    T_imu_0__right_back:
+      rows: 3
+      cols: 3
+      dt: d
+      data: [0.3023395387399086, -0.95277675881135981, 0.028412166116981833,
+         -0.9530957800746076, -0.30173067514302176, 0.023812469038534081,
+         -0.014115145005077745, -0.034278966534242887, -0.9993126213226915]
+      translation: [-0.85211532802620082, 0.23791194780423403, 0.17371279604563639]
+
+  ndt_resolution: 0.8
   ndt_max_iter: 30
   spline_dt_s: 0.1
   spline_order: 4
   optimize_time_offset: true
   time_offset_init: 0.0
   time_offset_max: 0.2
-  min_motion_rot_deg: 3.0
-  # 手眼 180° 歧义：外参可能真是 180° 时请用 residual 精准按残差选
+  trim_to_overlap: true
+  trim_overlap_margin_s: 0.05
+  imu_integrate_margin_s: 0.05   # LiDAR 10Hz 帧时刻外扩取 IMU，缓解窗内无样本
+  min_motion_rot_deg: 0.15      # 0518 路测：略降低以保留更多旋转对
+  min_motion_rot_deg_short: 0.1
+  rot_pair_dt_target_s: 0.2     # 短时窗长度；10Hz LiDAR 时由代码自动补短时窗（相邻 NDT 转角常过小）
+  rot_pair_short_step_s: 0.1
   handeye_fix_180_ambiguity: true
-  # lidar_blind_1 / lidar_blind_2 若为反向安装(约180°)时，用 prefer_180 避免选到单位阵侧；若仅 main 同向可考虑 per-pair 或 residual
-  handeye_180_decision: prefer_180   # residual=纯按残差 | prefer_identity=同向安装 | prefer_180=反向安装(blind lidar)
-  handeye_prefer_identity_when_ambiguous: false  # prefer_180 时单位阵侧需明显更优才选
-  handeye_180_residual_margin_deg: 3.0          # 另一侧需优出此值(°)才切换
-  # 旋转对按 LiDAR角/IMU角 比值过滤，0=不滤；收紧为 [0.7, 1.3] 仅用高一致性对以缓解病态与 180° 歧义
-  handeye_ratio_min: 0.7
-  handeye_ratio_max: 1.3
-  # 手眼离群点剔除：按残差分位数剔除高残差对并重解，可提升精度（0=不剔除）
-  handeye_outlier_reject_quantile: 0.9   # 剔除残差>P90 的对并重解，建议 0.85~0.95
+  handeye_180_decision: residual   #residual   # 有 3x3+translation 初值时，会结合初值距离消解 180° 歧义
+  handeye_prefer_identity_when_ambiguous: false
+  handeye_180_residual_margin_deg: 3.0
+  handeye_ratio_min: 0           # LiDAR/IMU 角比值常 <0.1，勿用 0.15~0.6 滤掉几乎全部对
+  handeye_ratio_max: 0
+  handeye_outlier_reject_quantile: 0.9
   handeye_outlier_max_iter: 2
-  handeye_outlier_min_pairs: 20
-  # RANSAC 手眼：最小集 2 对求解 + 内点计数，抑制离群对与 180° 歧义（可选，工程量较大）
-  handeye_ransac_enable: true          # true 启用
-  handeye_ransac_inlier_thresh_deg: 3.0 # 内点残差阈值 [deg]
-  handeye_ransac_max_iter: 200          # 最大迭代次数
-  # 车辆等运动自由度受限：仅对激励充足的参数精确标定，不足的用先验
-  use_planar_prior: true         # 平面/弱激励时 roll/pitch 置 0、平移 z 固定 0
-  min_roll_motion_deg: 5.0      # 低于此值认为 roll 激励不足，用先验 0°
-  min_pitch_motion_deg: 5.0     # 低于此值认为 pitch 激励不足，用先验 0°
-  min_yaw_motion_deg: 5.0       # 低于此值仅打警告，yaw 通常保留标定值
-  max_z_trans_ratio: 0.2       # 平移 z 占比低于此视为平面运动，固定 trans_z=0
-  enable_planar_warning: true  # 是否打印激励不足警告与建议
-  # 短时窗旋转对：降低陀螺长时积分漂移（误差∝sqrt(dt)，研究结论）
-  rot_pair_dt_target_s: 0.15     # 短时窗时长 [s]，降低以在帧间隔~0.5s 时也能生效
-  min_motion_rot_deg_short: 0.3  # 短时窗最小运动量 [deg]
-  rot_pair_short_step_s: 0.08    # 短时窗时间步长 [s]
+  handeye_outlier_min_pairs: 15   # 旋转对少时 RANSAC 易失败，降低门槛
+  handeye_ransac_enable: true
+  handeye_ransac_inlier_thresh_deg: 3.0
+  handeye_ransac_max_iter: 300
+  trust_initial_rotation: false    # 0518 主雷达约 yaw90°：锁定 CAD/轴对齐旋转；B样条亦固定旋转
+  # trust_initial_rotation: false  # 手眼比值差(≈0.05)时勿关，易 180° 歧义→≈单位阵
+  trust_initial_translation: false # true=B样条完全锁定平移；更常用下面 freeze_trans_xy
+  bspline_freeze_trans_xy: false  # 横向平移不可观时保持 CAD ty（避免 ty 被优化变号）
+  bspline_auto_freeze_trans_when_underconstrained: true  # 平移有效约束<8 时自动固定 tx/ty
+  bspline_max_trans_delta_m: 0.0 # >0 时限平移相对初值最大偏差，如 0.02
+  use_planar_prior: false        # 大安装角时勿把 roll/pitch 压成 0°
+  bspline_freeze_trans_z: false   # 固定前向 tz≈0.306 m（平面运动 z 不可观）
+  min_roll_motion_deg: 3.0
+  min_pitch_motion_deg: 3.0
+  min_yaw_motion_deg: 3.0
+  max_z_trans_ratio: 0.2
+  enable_planar_warning: true
+  ceres_max_iter: 50
 
 # =============================================================================
 # 10. LiDAR-LiDAR 外参 — 显式标定对
@@ -434,29 +452,57 @@ lidar_lidar:
   method: targetless       # targetless | motion
   # pairs: [ref, target] -> 标定 T_target_in_ref（目标雷达点在参考雷达坐标系下的位姿）
   pairs:
-    - [lidar_main, lidar_blind_1]
-    - [lidar_main, lidar_blind_2]
-  lidar_list: [lidar_main, lidar_blind_1, lidar_blind_2]
+    - [lidar_main, left_front]
+    - [lidar_main, right_back]
+    - [left_front, right_back]
+  lidar_list: [lidar_main, left_front, right_back]
   # 安装表 mm→m（与 IMU/雷达同一车体坐标、轴平行 R=I）：pairs [ref,target] → T_target_in_ref，t = (r_target - r_ref)/1000 [m]
-  #   r_main=(776.16,876.11,0), r_blind1=(-37.49,530.31,430.63), r_blind2=(1539.14,705.48,-501.01)
-  #   main→blind1: (-0.81365,-0.3458,0.43063)  main→blind2: (0.76298,-0.17063,-0.50101)
+  #   r_main=(776.16,876.11,0), r_left_front=(-37.49,530.31,430.63), r_right_back=(1539.14,705.48,-501.01)
+  #   main→left_front: (-0.81365,-0.3458,0.43063)  main→right_back: (0.76298,-0.17063,-0.50101)
+  # 手调外参写入 initial_extrinsics 后重跑：设 true 可跳过 GICP/B样条，手动窗口直接从 config 初值叠图（与 LiDAR-相机 同名选项）
+  chain_imu_extrinsic: true
+  chain_imu_ref: lidar_main
+  chain_imu_id: imu_0
+  use_config_extrinsic_only: true
   initial_extrinsics:
-    lidar_main__lidar_blind_1:
+    T_lidar_main__left_front:
       rows: 4
       cols: 4
       dt: d
-      data: [1.0, 0.0, 0.0, -0.81365,
-             0.0, 1.0, 0.0, -0.34580,
-             0.0, 0.0, 1.0,  0.43063,
-             0.0, 0.0, 0.0,  1.0]
-    lidar_main__lidar_blind_2:
+      data: [0.95310819, 0.29615933, 0.06224492, 0.84047853,
+             0.29821192, -0.95412983, -0.02656890, 0.48251480,
+             0.05152110, 0.04388521, -0.99770720, -0.25948449,
+             0.00000000, 0.00000000, 0.00000000, 1.00000000]
+      # data: [0.95373551, 0.29716026, 0.04565477, 0.86126466,
+      #        0.29796477, -0.95450387, -0.01180530, 0.47915653,
+      #        0.04006959, 0.02486265, -0.99888752, -0.14815828,
+      #        0.00000000, 0.00000000, 0.00000000, 1.00000000]
+
+    T_lidar_main__right_back:
       rows: 4
       cols: 4
       dt: d
-      data: [1.0, 0.0, 0.0,  0.76298,
-             0.0, 1.0, 0.0, -0.17063,
-             0.0, 0.0, 1.0, -0.50101,
-             0.0, 0.0, 0.0,  1.0]
+      data: [-0.95193768, -0.29927511, 0.06518480, -0.73527408,
+             -0.29913383, 0.95413386, 0.01214621, -0.51436830,
+             -0.06583008, -0.00793654, -0.99779928, -0.18570599,
+             0.00000000, 0.00000000, 0.00000000, 1.00000000]
+      # data: [-0.95458205, -0.29181512, 0.06014188, -0.71511499,
+      #        -0.29342725, 0.95577649, -0.01979247, -0.48691960,
+      #        -0.05170646, -0.03654080, -0.99799359, -0.18539460,
+      #        0.00000000, 0.00000000, 0.00000000, 1.00000000]
+
+    T_left_front__right_back:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [-0.99998520, 0.00271857, 0.00471333, -1.78188109,
+             -0.00287821, -0.99941086, -0.03420016, 0.48139126,
+             0.00461758, -0.03421322, 0.99940389, -0.17379859,
+             0.00000000, 0.00000000, 0.00000000, 1.00000000]
+      # data: [-0.99992518, -0.00483570, 0.01123579, -1.78926401,
+      #        0.00497865, -0.99990658, 0.01272935, 0.46208188,
+      #        0.01117320, 0.01278433, 0.99985586, 0.04842158,
+      #        0.00000000, 0.00000000, 0.00000000, 1.00000000]
   # 兼容旧配置：单块 initial_extrinsic 对所有 pairs 共用（多对时建议用上方 initial_extrinsics）
   # initial_extrinsic: !!opencv-matrix
   #   rows: 4
@@ -476,7 +522,7 @@ lidar_lidar:
   fine:
     gicp_resolution: 1.0
     gicp_max_iter: 30
-    use_multi_frame_fine: true
+    use_multi_frame_fine: false
     fine_fusion_max_frames: 20
     fine_fusion_method: median   # single | median | weighted
     spline_dt_s: 0.1
@@ -484,9 +530,9 @@ lidar_lidar:
     optimize_time_offset: true
 
   # 通用参数
-  voxel_size: 0.1
+  voxel_size: 0.1             # 体素边长 [m]，默认 0.1；代码最小 0.001，越小点越多
   min_overlap_ratio: 0.3
-  max_frames: 100
+  max_frames: 100             # 加载 PCD/bag 时最多用多少帧；设 ≥ 目录里 pcd 总数 ≈ 不跳帧
 
 # =============================================================================
 # 11. LiDAR-相机 外参 — 显式标定对
@@ -566,71 +612,141 @@ lidar_camera:
     rms_good_px: 2.0
     rms_acceptable_px: 5.0
     inlier_ratio_good: 0.6
+  # 单标 right_back ↔ surrounding_back 时建议仅保留下面一行 pairs，并注释 camera_list。
+  # 日志应出现: 标定对 lidar_id=right_back camera_id=surrounding_back
+  #              使用按相机初值 key=right_back__surrounding_back
+  #              读取相机内参 sensor_id=surrounding_back fx≈516
   pairs:
-    - [lidar_main, surrounding_front]
-    - [lidar_main, surrounding_back]
-    - [lidar_main, surrounding_left]
-    - [lidar_main, surrounding_right]
+    # - [lidar_main, center_front]
+    # - [lidar_main, surrounding_front]
+    # - [lidar_main, surrounding_back]
+    # - [lidar_main, surrounding_left]
+    # - [lidar_main, surrounding_right]
+    # 补盲 LiDAR-相机（有共识区，在上方主雷达对之外追加）
+    # - [left_front, center_front]
+    # - [left_front, surrounding_front]
+    # - [left_front, surrounding_left]
+    # - [right_back, surrounding_right]
+    - [right_back, surrounding_back]
   # 粗标定初值（可选）：若配置此项，作为粗标定阶段的输入；粗标定必执行，其结果为精标定初值。
   # 有此项时：无 MIAS-LCEC 或 MIAS-LCEC 无输入时直接用此项作为粗标定结果；MIAS-LCEC 失败时也可回退此项。
   # 为 true 时跳过 AI 粗标定与精标定，直接使用下方 initial_extrinsic 作为手动微调起始值（需配合 --manual）
   use_config_extrinsic_only: true
   # 支持键名 initial_extrinsic 或 T_cam_lidar（lidar→camera 4×4）。
-  initial_extrinsic: !!opencv-matrix
-    rows: 4
-    cols: 4
-    dt: d
-    data: [ 0.02183084,  0.99975965, -0.00201407,  0.12299263,
-            -0.01312053,  0.00230088,  0.99991127,  0.03986430,
-            0.99967558, -0.02180248,  0.01316761, -0.05771014,
-            0.0, 0.0, 0.0, 1.0 ]
+ 
   # 多相机初值（可选）：键为 "lidar_id__camera_id" 或 "T_lidar_id__camera_id"
-  # 用于不同相机位姿差异较大时提供独立起始值；未提供则回退到上方 initial_extrinsic 或粗标定结果
-  # 下表：主雷达 (776.16,876.11,0) mm 与五相机说明书中心 mm → 换算 m；T_cam_in_lidar 取平移 t = r_lidar - r_cam，R=I（假设各传感器轴与车体表坐标轴平行，有安装角时需用 CAD 补全旋转）
+  # UniCalib 语义: p_cam = T * p_lidar（T_cam_in_lidar，ref=lidar，target=camera）
+  # 车体 V 系（与安装表同一套）：基点车头参考点，X后 Y上 Z左 — sensor-frame-conventions.mdc
+  #   R = R_cam_to_V^T @ R_lidar_to_V ，  t = R_cam_to_V^T @ (r_lidar - r_cam) / 1000 [m]  （t = LiDAR 原点在相机系）
+  # 安装表 r (mm，分量顺序=后/上/左): lidar_main(776.16,876.11,0) center_front(-57.28,388.64,19.09)
+  #   surrounding_front(-62.34,391.77,-20.78) surrounding_back(1546.67,445.26,0)
+  #   surrounding_left(714.59,445.26,519.67) surrounding_right(714.59,445.26,-519.67)
+  #   left_front(-37.49,530.31,430.63) right_back(1539.14,705.48,-501.01)
+  # （旧注释，公式/轴向有误，仅保留对照）
+  # 安装表中心 r (mm) 在车体 V 系 X前 Y左 Z上；各传感器本地轴见 .cursor/rules/sensor-frame-conventions.mdc
+  #   R = R_cam_to_V @ R_lidar_to_V ，  t = R_cam_to_V @ (r_lidar - r_cam) / 1000 [m]
+
   initial_extrinsics:
     lidar_main__center_front:
       rows: 4
       cols: 4
       dt: d
-      data: [1.0, 0.0, 0.0, 0.83344,
-             0.0, 1.0, 0.0, 0.48747,
-             0.0, 0.0, 1.0, -0.01909,
+      data: [0.0, -1.0, 0.0, 0.01909,
+             0.0, 0.0, -1.0, -0.48747,
+             1.0, 0.0, 0.0, -0.83344,
              0.0, 0.0, 0.0, 1.0]
+      # data: [-0.015707, -0.999877, -0.000038, 0.01909,
+      #         0.061041, -0.000921, -0.998135, -0.48747,
+      #         0.998012, -0.015680, 0.061048, -0.83344,
+      #         0.0, 0.0, 0.0, 1.0]
+
     lidar_main__surrounding_front:
       rows: 4
       cols: 4
       dt: d
-      data: [1.0, 0.0, 0.0, 0.83850,
-             0.0, 1.0, 0.0, 0.48434,
-             0.0, 0.0, 1.0, 0.02078,
+      data: [0.0, -1.0, 0.0, -0.02078,
+             0.0, 0.0, -1.0, -0.48434,
+             1.0, 0.0, 0.0, -0.83850,
              0.0, 0.0, 0.0, 1.0]
+    # data: [-0.02622134, -0.99932261, -0.02582182, -0.03578,
+      #        -0.27223434,  0.03199284, -0.96169898, -0.48434,
+      #         0.96187364, -0.01818745, -0.27288882, -0.8385,
+      #         0.0, 0.0, 0.0, 1.0]
+
     lidar_main__surrounding_back:
       rows: 4
       cols: 4
       dt: d
-      data: [1.0, 0.0, 0.0, -0.77051,
-             0.0, 1.0, 0.0, 0.43085,
-             0.0, 0.0, 1.0, 0.0,
+      data: [0.0, 1.0, 0.0, 0.0,
+             0.0, 0.0, -1.0, -0.43085,
+             -1.0, 0.0, 0.0, -0.77051,
              0.0, 0.0, 0.0, 1.0]
+
     lidar_main__surrounding_left:
       rows: 4
       cols: 4
       dt: d
-      data: [1.0, 0.0, 0.0, 0.06157,
-             0.0, 1.0, 0.0, 0.43085,
-             0.0, 0.0, 1.0, -0.51967,
+      data: [1.0, 0.0, 0.0, -0.06157,
+             0.0, 0.0, -1.0, -0.43085,
+             0.0, 1.0, 0.0, -0.51967,
              0.0, 0.0, 0.0, 1.0]
+
     lidar_main__surrounding_right:
       rows: 4
       cols: 4
       dt: d
-      data: [1.0, 0.0, 0.0, 0.06157,
-             0.0, 1.0, 0.0, 0.43085,
-             0.0, 0.0, 1.0, 0.51967,
+      data: [-1.0, 0.0, 0.0, 0.06157,
+             0.0, 0.0, -1.0, -0.43085,
+             0.0, -1.0, 0.0, -0.51967,
+             0.0, 0.0, 0.0, 1.0]
+
+    left_front__center_front:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [0.0, 1.0, 0.0, -0.41154,
+             0.0, 0.0, 1.0, -0.14167,
+             1.0, 0.0, 0.0, -0.01979,
+             0.0, 0.0, 0.0, 1.0]
+
+    left_front__surrounding_front:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [0.0, 1.0, 0.0, -0.45141,
+             0.0, 0.0, 1.0, -0.13854,
+             1.0, 0.0, 0.0, -0.02485,
+             0.0, 0.0, 0.0, 1.0]
+
+    left_front__surrounding_left:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0, 0.75208,
+             0.0, 0.0, 1.0, -0.08505,
+             0.0, -1.0, 0.0, -0.08904,
+             0.0, 0.0, 0.0, 1.0]
+
+    right_back__surrounding_right:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [1.0, 0.0, 0.0, 0.82455,
+             0.0, 0.0, 1.0, -0.26022,
+             0.0, -1.0, 0.0, -0.01866,
+             0.0, 0.0, 0.0, 1.0]
+
+    right_back__surrounding_back:
+      rows: 4
+      cols: 4
+      dt: d
+      data: [0.0, 1.0, 0.0, -0.50101,
+             0.0, 0.0, 1.0, -0.26022,
+             1.0, 0.0, 0.0, -0.00753,
              0.0, 0.0, 0.0, 1.0]
 
   # 兼容：单 LiDAR 多相机时可只写 camera_list，程序会展开为 (lidar_id, cam) 对
-  camera_list: [surrounding_front, surrounding_back, surrounding_left, surrounding_right]
+  # camera_list: [surrounding_front, surrounding_back, surrounding_left, surrounding_right]
   board_cols: 9
   board_rows: 6
   square_size: 0.025

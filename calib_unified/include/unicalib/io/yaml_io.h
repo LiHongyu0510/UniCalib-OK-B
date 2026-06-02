@@ -27,7 +27,10 @@ public:
     static IMURawData load_imu_csv(const std::string& csv_path);
 
     // 相机内参 YAML 读写
-    static CameraIntrinsics load_camera_intrinsics(const std::string& yaml_path);
+    // sensor_id 非空且 YAML 含 cameras 映射时，从 cameras[sensor_id] 读取（多相机合一文件）
+    static CameraIntrinsics load_camera_intrinsics(
+        const std::string& yaml_path,
+        const std::string& sensor_id = "");
     static void save_camera_intrinsics(
         const CameraIntrinsics& intrin,
         const std::string& yaml_path);
@@ -41,5 +44,8 @@ public:
 
 /// 解析 YAML 4×4 行优先矩阵节点（rows/cols/data），返回 16 个 double 的 vector，格式无效时返回空
 std::vector<double> parse_4x4_matrix_from_yaml(const YAML::Node& node);
+
+/// 解析 3×3 旋转或 4×4 SE3（行优先）；3×3 时平移补 0，供 IMU-LiDAR initial_extrinsics 使用
+std::vector<double> parse_se3_matrix_from_yaml(const YAML::Node& node);
 
 }  // namespace ns_unicalib

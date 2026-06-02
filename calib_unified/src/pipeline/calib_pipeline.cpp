@@ -46,6 +46,70 @@ namespace fs = std::filesystem;
 
 namespace ns_unicalib {
 
+namespace {
+
+void apply_new_format_load_limits(const PipelineConfig& cfg,
+                                  UnifiedDataLoader::Config& load_cfg) {
+    load_cfg.sample_interval = cfg.new_format_sample_interval;
+    load_cfg.max_frames = cfg.new_format_max_frames;
+}
+
+}  // namespace
+
+template<typename T>
+T yaml_get_imu_lidar(const YAML::Node& n, const char* key, T default_val) {
+    return n[key] ? n[key].as<T>() : default_val;
+}
+
+void load_imu_lidar_calib_from_yaml(const YAML::Node& il, IMULiDARCalibrator::Config& c) {
+    if (!il || !il.IsMap()) return;
+    c.ndt_resolution = yaml_get_imu_lidar(il, "ndt_resolution", c.ndt_resolution);
+    c.ndt_max_iter = yaml_get_imu_lidar(il, "ndt_max_iter", c.ndt_max_iter);
+    c.spline_dt_s = yaml_get_imu_lidar(il, "spline_dt_s", c.spline_dt_s);
+    c.spline_order = yaml_get_imu_lidar(il, "spline_order", c.spline_order);
+    c.optimize_time_offset = yaml_get_imu_lidar(il, "optimize_time_offset", c.optimize_time_offset);
+    c.time_offset_init_s = yaml_get_imu_lidar(il, "time_offset_init", c.time_offset_init_s);
+    c.time_offset_max_s = yaml_get_imu_lidar(il, "time_offset_max", c.time_offset_max_s);
+    c.min_motion_rot_deg = yaml_get_imu_lidar(il, "min_motion_rot_deg", c.min_motion_rot_deg);
+    c.rot_pair_dt_target_s = yaml_get_imu_lidar(il, "rot_pair_dt_target_s", c.rot_pair_dt_target_s);
+    c.min_motion_rot_deg_short = yaml_get_imu_lidar(il, "min_motion_rot_deg_short", c.min_motion_rot_deg_short);
+    c.rot_pair_short_step_s = yaml_get_imu_lidar(il, "rot_pair_short_step_s", c.rot_pair_short_step_s);
+    c.handeye_fix_180_ambiguity = yaml_get_imu_lidar(il, "handeye_fix_180_ambiguity", c.handeye_fix_180_ambiguity);
+    c.handeye_180_decision = yaml_get_imu_lidar(il, "handeye_180_decision", c.handeye_180_decision);
+    c.handeye_prefer_identity_when_ambiguous =
+        yaml_get_imu_lidar(il, "handeye_prefer_identity_when_ambiguous", c.handeye_prefer_identity_when_ambiguous);
+    c.handeye_180_residual_margin_deg =
+        yaml_get_imu_lidar(il, "handeye_180_residual_margin_deg", c.handeye_180_residual_margin_deg);
+    c.handeye_ratio_min = yaml_get_imu_lidar(il, "handeye_ratio_min", c.handeye_ratio_min);
+    c.handeye_ratio_max = yaml_get_imu_lidar(il, "handeye_ratio_max", c.handeye_ratio_max);
+    c.handeye_outlier_reject_quantile =
+        yaml_get_imu_lidar(il, "handeye_outlier_reject_quantile", c.handeye_outlier_reject_quantile);
+    c.handeye_outlier_max_iter = yaml_get_imu_lidar(il, "handeye_outlier_max_iter", c.handeye_outlier_max_iter);
+    c.handeye_outlier_min_pairs = yaml_get_imu_lidar(il, "handeye_outlier_min_pairs", c.handeye_outlier_min_pairs);
+    c.handeye_ransac_enable = yaml_get_imu_lidar(il, "handeye_ransac_enable", c.handeye_ransac_enable);
+    c.handeye_ransac_inlier_thresh_deg =
+        yaml_get_imu_lidar(il, "handeye_ransac_inlier_thresh_deg", c.handeye_ransac_inlier_thresh_deg);
+    c.handeye_ransac_max_iter = yaml_get_imu_lidar(il, "handeye_ransac_max_iter", c.handeye_ransac_max_iter);
+    c.trim_to_overlap = yaml_get_imu_lidar(il, "trim_to_overlap", c.trim_to_overlap);
+    c.trim_overlap_margin_s = yaml_get_imu_lidar(il, "trim_overlap_margin_s", c.trim_overlap_margin_s);
+    c.imu_integrate_margin_s = yaml_get_imu_lidar(il, "imu_integrate_margin_s", c.imu_integrate_margin_s);
+    c.bspline_freeze_trans_z = yaml_get_imu_lidar(il, "bspline_freeze_trans_z", c.bspline_freeze_trans_z);
+    c.bspline_freeze_trans_xy = yaml_get_imu_lidar(il, "bspline_freeze_trans_xy", c.bspline_freeze_trans_xy);
+    c.trust_initial_translation = yaml_get_imu_lidar(il, "trust_initial_translation", c.trust_initial_translation);
+    c.bspline_auto_freeze_trans_when_underconstrained =
+        yaml_get_imu_lidar(il, "bspline_auto_freeze_trans_when_underconstrained",
+                           c.bspline_auto_freeze_trans_when_underconstrained);
+    c.bspline_max_trans_delta_m = yaml_get_imu_lidar(il, "bspline_max_trans_delta_m", c.bspline_max_trans_delta_m);
+    c.use_planar_prior = yaml_get_imu_lidar(il, "use_planar_prior", c.use_planar_prior);
+    c.trust_initial_rotation = yaml_get_imu_lidar(il, "trust_initial_rotation", c.trust_initial_rotation);
+    c.min_roll_motion_deg = yaml_get_imu_lidar(il, "min_roll_motion_deg", c.min_roll_motion_deg);
+    c.min_pitch_motion_deg = yaml_get_imu_lidar(il, "min_pitch_motion_deg", c.min_pitch_motion_deg);
+    c.min_yaw_motion_deg = yaml_get_imu_lidar(il, "min_yaw_motion_deg", c.min_yaw_motion_deg);
+    c.max_z_trans_ratio = yaml_get_imu_lidar(il, "max_z_trans_ratio", c.max_z_trans_ratio);
+    c.enable_planar_warning = yaml_get_imu_lidar(il, "enable_planar_warning", c.enable_planar_warning);
+    c.ceres_max_iter = yaml_get_imu_lidar(il, "ceres_max_iter", c.ceres_max_iter);
+}
+
 // ---------------------------------------------------------------------------
 // 工具: 将 3x3 矩阵投影到最近的正交旋转 (SO3)，避免非正交初值导致 Sophus 断言/崩溃
 // ---------------------------------------------------------------------------
@@ -63,16 +127,17 @@ static std::optional<Sophus::SE3d> load_se3_from_imu_lidar_yaml(const std::strin
     try {
         YAML::Node n = YAML::LoadFile(path);
         YAML::Node t_node;
-        if (n["T_Imu_Lidar"] && n["T_Imu_Lidar"]["data"]) t_node = n["T_Imu_Lidar"];
-        else if (n["T_Body_Lidar"] && n["T_Body_Lidar"]["data"]) t_node = n["T_Body_Lidar"];
-        if (!t_node || !t_node["data"].IsSequence() || t_node["data"].size() < 16) return std::nullopt;
-        const auto& data = t_node["data"];
+        if (n["T_Imu_Lidar"]) t_node = n["T_Imu_Lidar"];
+        else if (n["T_Body_Lidar"]) t_node = n["T_Body_Lidar"];
+        if (!t_node) return std::nullopt;
+        const std::vector<double> flat = parse_se3_matrix_from_yaml(t_node);
+        if (flat.size() < 16u) return std::nullopt;
         Eigen::Matrix4d T = Eigen::Matrix4d::Identity();
         for (int i = 0; i < 4; ++i)
             for (int j = 0; j < 4; ++j)
-                T(i, j) = data[i * 4 + j].as<double>();
-        Eigen::Matrix3d R = project_to_rotation(T.block<3,3>(0,0));
-        return Sophus::SE3d(R, T.block<3,1>(0,3));
+                T(i, j) = flat[i * 4 + j];
+        Eigen::Matrix3d R = project_to_rotation(T.block<3, 3>(0, 0));
+        return Sophus::SE3d(R, T.block<3, 1>(0, 3));
     } catch (const std::exception&) {
         return std::nullopt;
     }
@@ -654,13 +719,13 @@ StageResult CalibPipeline::run_coarse_stage(CalibTaskType task) {
                         auto it_cam_file = cfg_.camera_intrinsic_files.find(first_cam);
                         if (it_cam_file != cfg_.camera_intrinsic_files.end() && fs::exists(it_cam_file->second)) {
                             try {
-                                cam_intrin = YamlIO::load_camera_intrinsics(it_cam_file->second);
+                                cam_intrin = YamlIO::load_camera_intrinsics(it_cam_file->second, first_cam);
                                 intrin_loaded = (cam_intrin.width > 0 && cam_intrin.height > 0 && cam_intrin.fx > 0);
                             } catch (const std::exception&) {}
                         }
                         if (!intrin_loaded && !cfg_.camera_intrinsic_file.empty() && fs::exists(cfg_.camera_intrinsic_file)) {
                             try {
-                                cam_intrin = YamlIO::load_camera_intrinsics(cfg_.camera_intrinsic_file);
+                                cam_intrin = YamlIO::load_camera_intrinsics(cfg_.camera_intrinsic_file, first_cam);
                                 intrin_loaded = (cam_intrin.width > 0 && cam_intrin.height > 0 && cam_intrin.fx > 0);
                             } catch (const std::exception&) {}
                         }
@@ -707,13 +772,13 @@ StageResult CalibPipeline::run_coarse_stage(CalibTaskType task) {
                         auto it_cam_file = cfg_.camera_intrinsic_files.find(first_cam);
                         if (it_cam_file != cfg_.camera_intrinsic_files.end() && fs::exists(it_cam_file->second)) {
                             try {
-                                cam_intrin = YamlIO::load_camera_intrinsics(it_cam_file->second);
+                                cam_intrin = YamlIO::load_camera_intrinsics(it_cam_file->second, first_cam);
                                 intrin_loaded = (cam_intrin.width > 0 && cam_intrin.height > 0 && cam_intrin.fx > 0);
                             } catch (const std::exception&) {}
                         }
                         if (!intrin_loaded && !cfg_.camera_intrinsic_file.empty() && fs::exists(cfg_.camera_intrinsic_file)) {
                             try {
-                                cam_intrin = YamlIO::load_camera_intrinsics(cfg_.camera_intrinsic_file);
+                                cam_intrin = YamlIO::load_camera_intrinsics(cfg_.camera_intrinsic_file, first_cam);
                                 intrin_loaded = (cam_intrin.width > 0 && cam_intrin.height > 0 && cam_intrin.fx > 0);
                             } catch (const std::exception&) {}
                         }
@@ -1156,8 +1221,9 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
         unified_cfg.new_format_oem7_time_base = cfg_.new_format_oem7_time_base;
         unified_cfg.new_format_oem7_gps_utc_leap_sec = cfg_.new_format_oem7_gps_utc_leap_sec;
         unified_cfg.new_format_oem7_time_offset_sec = cfg_.new_format_oem7_time_offset_sec;
-        unified_cfg.max_frames = cfg_.ros2_max_frames;
-        unified_cfg.sample_interval = cfg_.ros2_sample_interval;
+        unified_cfg.new_format_oem7_gyro_scale_factor = cfg_.new_format_oem7_gyro_scale_factor;
+        unified_cfg.new_format_oem7_accel_scale_factor = cfg_.new_format_oem7_accel_scale_factor;
+        apply_new_format_load_limits(cfg_, unified_cfg);
         loader_opt.emplace(unified_cfg);
         if (!loader_opt->load()) {
             r.success = false;
@@ -1246,7 +1312,7 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
         auto it_file = cfg_.camera_intrinsic_files.find(cur_cam);
         if (it_file != cfg_.camera_intrinsic_files.end() && fs::exists(it_file->second)) {
             try {
-                cam_intrin = YamlIO::load_camera_intrinsics(it_file->second);
+                cam_intrin = YamlIO::load_camera_intrinsics(it_file->second, cur_cam);
             } catch (...) {
                 cam_intrin = infer_intrinsics_from_images(camera_frames);
             }
@@ -1254,7 +1320,7 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
             cam_intrin = *params_->camera_intrinsics.at(cur_cam);
         } else if (!cfg_.camera_intrinsic_file.empty() && fs::exists(cfg_.camera_intrinsic_file)) {
             try {
-                cam_intrin = YamlIO::load_camera_intrinsics(cfg_.camera_intrinsic_file);
+                cam_intrin = YamlIO::load_camera_intrinsics(cfg_.camera_intrinsic_file, cur_cam);
             } catch (...) {
                 cam_intrin = infer_intrinsics_from_images(camera_frames);
             }
@@ -1516,8 +1582,9 @@ StageResult CalibPipeline::run_fine_cam_cam() {
         load_cfg.new_format_oem7_time_base = cfg_.new_format_oem7_time_base;
         load_cfg.new_format_oem7_gps_utc_leap_sec = cfg_.new_format_oem7_gps_utc_leap_sec;
         load_cfg.new_format_oem7_time_offset_sec = cfg_.new_format_oem7_time_offset_sec;
-        load_cfg.max_frames = cfg_.ros2_max_frames;
-        load_cfg.sample_interval = cfg_.ros2_sample_interval;
+        load_cfg.new_format_oem7_gyro_scale_factor = cfg_.new_format_oem7_gyro_scale_factor;
+        load_cfg.new_format_oem7_accel_scale_factor = cfg_.new_format_oem7_accel_scale_factor;
+        apply_new_format_load_limits(cfg_, load_cfg);
         UnifiedDataLoader loader(load_cfg);
         if (!loader.load()) {
             r.success = false;
@@ -1608,7 +1675,7 @@ StageResult CalibPipeline::run_fine_cam_cam() {
         auto it = cfg_.camera_intrinsic_files.find(id);
         if (it != cfg_.camera_intrinsic_files.end() && fs::exists(it->second)) {
             try {
-                return YamlIO::load_camera_intrinsics(it->second);
+                return YamlIO::load_camera_intrinsics(it->second, id);
             } catch (...) {}
         }
         return std::nullopt;
@@ -1694,8 +1761,8 @@ StageResult CalibPipeline::run_fine_cam_cam() {
             cv::Ptr<cv::Feature2D> detector = cv::ORB::create(500);
             std::vector<cv::KeyPoint> kp0, kp1;
             cv::Mat desc0, desc1;
-            detector->detectAndCompute(frames_per_cam.at(id0)[0].image, cv::noArray(), kp0, desc0);
-            detector->detectAndCompute(frames_per_cam.at(id1)[0].image, cv::noArray(), kp1, desc1);
+            detector->detectAndCompute(frames_per_cam.at(id0)[0].second, cv::noArray(), kp0, desc0);
+            detector->detectAndCompute(frames_per_cam.at(id1)[0].second, cv::noArray(), kp1, desc1);
             size_t matches = 0;
             if (!desc0.empty() && !desc1.empty()) {
                 cv::Ptr<cv::DescriptorMatcher> matcher = cv::DescriptorMatcher::create("BruteForce-Hamming");
@@ -2002,6 +2069,8 @@ StageResult CalibPipeline::run_fine_imu_intrinsic() {
         unified_cfg.new_format_oem7_time_base = cfg_.new_format_oem7_time_base;
         unified_cfg.new_format_oem7_gps_utc_leap_sec = cfg_.new_format_oem7_gps_utc_leap_sec;
         unified_cfg.new_format_oem7_time_offset_sec = cfg_.new_format_oem7_time_offset_sec;
+        unified_cfg.new_format_oem7_gyro_scale_factor = cfg_.new_format_oem7_gyro_scale_factor;
+        unified_cfg.new_format_oem7_accel_scale_factor = cfg_.new_format_oem7_accel_scale_factor;
         unified_cfg.max_frames = 0;  // IMU 内参希望尽量使用全量静止数据
 
         UnifiedDataLoader loader(unified_cfg);
@@ -2056,12 +2125,20 @@ StageResult CalibPipeline::run_fine_imu_intrinsic() {
     } else if (!cfg_.imu_data_file.empty()) {
         UNICALIB_INFO("  数据源类型: CSV文件");
         UNICALIB_INFO("  IMU数据文件: {}", cfg_.imu_data_file);
-        
-        // TODO: 实现CSV加载功能
-        UNICALIB_ERROR("CSV数据加载功能暂未实现");
-        r.success = false;
-        r.message = "CSV数据加载未实现";
-        return r;
+
+        if (!fs::exists(cfg_.imu_data_file)) {
+            r.success = false;
+            r.message = "IMU数据CSV路径不存在: " + cfg_.imu_data_file;
+            return r;
+        }
+        try {
+            imu_data = YamlIO::load_imu_csv(cfg_.imu_data_file);
+        } catch (const std::exception& e) {
+            r.success = false;
+            r.message = std::string("CSV加载失败: ") + e.what();
+            return r;
+        }
+        UNICALIB_INFO("  加载IMU数据: {} 帧 (CSV)", imu_data.size());
     } else {
         UNICALIB_ERROR("未指定数据源 (ros2_bag_file 或 imu_data_file)");
         r.success = false;
@@ -2170,8 +2247,9 @@ StageResult CalibPipeline::run_fine_imu_lidar() {
         load_cfg.new_format_oem7_time_base = cfg_.new_format_oem7_time_base;
         load_cfg.new_format_oem7_gps_utc_leap_sec = cfg_.new_format_oem7_gps_utc_leap_sec;
         load_cfg.new_format_oem7_time_offset_sec = cfg_.new_format_oem7_time_offset_sec;
-        load_cfg.max_frames = cfg_.ros2_max_frames;
-        load_cfg.sample_interval = cfg_.ros2_sample_interval;
+        load_cfg.new_format_oem7_gyro_scale_factor = cfg_.new_format_oem7_gyro_scale_factor;
+        load_cfg.new_format_oem7_accel_scale_factor = cfg_.new_format_oem7_accel_scale_factor;
+        apply_new_format_load_limits(cfg_, load_cfg);
         if (load_cfg.new_format_root_dir.empty() || !fs::exists(load_cfg.new_format_root_dir)) {
             r.success = false;
             r.message = "IMU-LiDAR NEW_FORMAT 根目录无效或不存在: " + load_cfg.new_format_root_dir;
@@ -2179,66 +2257,84 @@ StageResult CalibPipeline::run_fine_imu_lidar() {
             return r;
         }
     } else {
-        if (!cfg_.use_ros2_bag || cfg_.ros2_bag_file.empty()) {
+        const bool use_file_data = !cfg_.imu_data_paths.empty() || !cfg_.lidar_data_paths.empty()
+                                   || !cfg_.imu_data_file.empty() || !cfg_.lidar_data_dir.empty();
+        if (use_file_data) {
+            load_cfg.source_type = UnifiedDataLoader::SourceType::FILES;
+            load_cfg.file_lidar_dirs = cfg_.lidar_data_paths;
+            load_cfg.file_imu_paths = cfg_.imu_data_paths;
+            if (load_cfg.file_lidar_dirs.empty() && !cfg_.lidar_data_dir.empty()) {
+                const std::string lid = cfg_.lidar_id.empty() ? "lidar_front" : cfg_.lidar_id;
+                load_cfg.file_lidar_dirs[lid] = cfg_.lidar_data_dir;
+            }
+            if (load_cfg.file_imu_paths.empty() && !cfg_.imu_data_file.empty()) {
+                const std::string iid = cfg_.imu_sensor_id.empty() ? "imu_0" : cfg_.imu_sensor_id;
+                load_cfg.file_imu_paths[iid] = cfg_.imu_data_file;
+            }
+            load_cfg.max_frames = cfg_.ros2_max_frames;
+            load_cfg.sample_interval = cfg_.ros2_sample_interval;
+            UNICALIB_INFO("[Fine-Auto/IMU-LiDAR] 文件模式: {} 路 LiDAR, {} 路 IMU",
+                          load_cfg.file_lidar_dirs.size(), load_cfg.file_imu_paths.size());
+        } else if (cfg_.use_ros2_bag && !cfg_.ros2_bag_file.empty()) {
+            if (!fs::exists(cfg_.ros2_bag_file)) {
+                r.success = false;
+                r.message = "ROS2 Bag 路径不存在: " + cfg_.ros2_bag_file;
+                r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
+                return r;
+            }
+            RosDataSourceConfig ros_cfg;
+            ros_cfg.bag_file = cfg_.ros2_bag_file;
+            ros_cfg.realtime_mode = false;
+            ros_cfg.max_frames = cfg_.ros2_max_frames;
+            ros_cfg.strict_topic_match = cfg_.ros2_strict_topic_match;
+            ros_cfg.imu_topics = cfg_.imu_topics;
+            ros_cfg.lidar_topics = cfg_.lidar_topics;
+            if (ros_cfg.imu_topics.empty() && !cfg_.imu_ros2_topic.empty())
+                ros_cfg.imu_topics["imu_0"] = cfg_.imu_ros2_topic;
+            if (ros_cfg.lidar_topics.empty() && !cfg_.lidar_ros2_topic.empty())
+                ros_cfg.lidar_topics[cfg_.lidar_id] = cfg_.lidar_ros2_topic;
+            load_cfg.source_type = UnifiedDataLoader::SourceType::ROS2_BAG;
+            load_cfg.ros_config = ros_cfg;
+            load_cfg.max_frames = ros_cfg.max_frames;
+        } else {
             r.success = false;
-            r.message = "IMU-LiDAR 精标定当前需 NEW_FORMAT 或 ROS2 bag 数据源";
+            r.message = "IMU-LiDAR 精标定需 data.imu/data.lidar 文件路径、NEW_FORMAT 或 ROS2 bag";
             r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
             UNICALIB_ERROR("[Fine-Auto/IMU-LiDAR] {}", r.message);
             return r;
         }
-        if (!fs::exists(cfg_.ros2_bag_file)) {
-            r.success = false;
-            r.message = "ROS2 Bag 路径不存在: " + cfg_.ros2_bag_file;
-            r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
-            return r;
-        }
-        RosDataSourceConfig ros_cfg;
-        ros_cfg.bag_file = cfg_.ros2_bag_file;
-        ros_cfg.realtime_mode = false;
-        ros_cfg.max_frames = cfg_.ros2_max_frames;
-        ros_cfg.strict_topic_match = cfg_.ros2_strict_topic_match;
-        ros_cfg.imu_topics = cfg_.imu_topics;
-        ros_cfg.lidar_topics = cfg_.lidar_topics;
-        if (ros_cfg.imu_topics.empty() && !cfg_.imu_ros2_topic.empty())
-            ros_cfg.imu_topics["imu_0"] = cfg_.imu_ros2_topic;
-        if (ros_cfg.lidar_topics.empty() && !cfg_.lidar_ros2_topic.empty())
-            ros_cfg.lidar_topics[cfg_.lidar_id] = cfg_.lidar_ros2_topic;
-        load_cfg.source_type = UnifiedDataLoader::SourceType::ROS2_BAG;
-        load_cfg.ros_config = ros_cfg;
-        load_cfg.max_frames = ros_cfg.max_frames;
     }
 
     UnifiedDataLoader loader(load_cfg);
     if (!loader.load()) {
+        const char* src = cfg_.use_new_format ? "NEW_FORMAT" :
+                          (load_cfg.source_type == UnifiedDataLoader::SourceType::FILES ? "文件" : "ROS2");
         r.success = false;
-        r.message = (cfg_.use_new_format ? "NEW_FORMAT 数据加载失败: " : "ROS2 数据加载失败: ") + loader.get_status_message();
+        r.message = std::string(src) + " 数据加载失败: " + loader.get_status_message();
         r.elapsed_ms = std::chrono::duration<double, std::milli>(std::chrono::high_resolution_clock::now() - t_start).count();
         return r;
     }
 
-    IMULiDARCalibrator::Config calib_cfg;
-    calib_cfg.ndt_resolution = 1.0;
-    calib_cfg.ndt_max_iter = 30;
-    calib_cfg.spline_dt_s = 0.1;
-    calib_cfg.spline_order = 4;
-    calib_cfg.optimize_time_offset = true;
-    calib_cfg.time_offset_init_s = 0.0;
-    calib_cfg.time_offset_max_s = 0.2;
-    calib_cfg.min_motion_rot_deg = 3.0;
-    calib_cfg.rot_pair_dt_target_s = 0.2;      // 短时窗降低陀螺积分漂移
-    calib_cfg.min_motion_rot_deg_short = 0.5;
-    calib_cfg.rot_pair_short_step_s = 0.1;
-    calib_cfg.handeye_fix_180_ambiguity = true;
-    calib_cfg.handeye_180_decision = cfg_.imu_lidar_handeye_180_decision.empty() ? "prefer_identity" : cfg_.imu_lidar_handeye_180_decision;
+    IMULiDARCalibrator::Config calib_cfg = cfg_.imu_lidar_calib;
+    if (!cfg_.imu_lidar_handeye_180_decision.empty())
+        calib_cfg.handeye_180_decision = cfg_.imu_lidar_handeye_180_decision;
     calib_cfg.handeye_prefer_identity_when_ambiguous = cfg_.imu_lidar_handeye_prefer_identity_when_ambiguous;
     calib_cfg.handeye_180_residual_margin_deg = cfg_.imu_lidar_handeye_180_residual_margin_deg;
-    calib_cfg.use_planar_prior = true;           // 车辆等激励不足时 roll/pitch 与 trans_z 用先验
-    calib_cfg.min_roll_motion_deg = 5.0;
-    calib_cfg.min_pitch_motion_deg = 5.0;
-    calib_cfg.min_yaw_motion_deg = 5.0;
-    calib_cfg.max_z_trans_ratio = 0.2;
-    calib_cfg.enable_planar_warning = true;
+    calib_cfg.trim_to_overlap = cfg_.imu_lidar_trim_to_overlap;
+    calib_cfg.trim_overlap_margin_s = cfg_.imu_lidar_trim_overlap_margin_s;
+    calib_cfg.bspline_freeze_trans_z = cfg_.imu_lidar_bspline_freeze_trans_z;
+    calib_cfg.bspline_freeze_trans_xy = cfg_.imu_lidar_bspline_freeze_trans_xy;
+    calib_cfg.trust_initial_translation = cfg_.imu_lidar_trust_initial_translation;
+    calib_cfg.bspline_auto_freeze_trans_when_underconstrained =
+        cfg_.imu_lidar_bspline_auto_freeze_trans_when_underconstrained;
+    calib_cfg.bspline_max_trans_delta_m = cfg_.imu_lidar_bspline_max_trans_delta_m;
+    calib_cfg.use_planar_prior = cfg_.imu_lidar_use_planar_prior;
+    calib_cfg.trust_initial_rotation = cfg_.imu_lidar_trust_initial_rotation;
     calib_cfg.verbose = (cfg_.log_level == "debug" || cfg_.log_level == "trace");
+    UNICALIB_INFO("[Fine-Auto/IMU-LiDAR] 标定参数: min_motion_rot_deg={:.2f} handeye_ratio=[{:.2f},{:.2f}] "
+                  "trust_initial_rotation={} imu_integrate_margin_s={:.3f}",
+                  calib_cfg.min_motion_rot_deg, calib_cfg.handeye_ratio_min, calib_cfg.handeye_ratio_max,
+                  calib_cfg.trust_initial_rotation, calib_cfg.imu_integrate_margin_s);
 
     std::string result_subdir = cfg_.output_dir + "/imu_lidar_extrinsic";
     fs::create_directories(result_subdir);
@@ -2357,7 +2453,7 @@ StageResult CalibPipeline::run_fine_imu_lidar() {
             of << "  data: [ ";
             for (int i = 0; i < 4; ++i) {
                 for (int j = 0; j < 4; ++j) {
-                    if (i * 4 + j > 0) of << ", ";
+                    if (i * 4 + j > 0 && j != 0) of << ", ";
                     of << T(i, j);
                 }
                 if (i < 3) of << ",\n           ";
@@ -2393,36 +2489,60 @@ StageResult CalibPipeline::run_fine_imu_lidar() {
 // ---------------------------------------------------------------------------
 void CalibPipeline::save_imu_intrinsic_yaml(const ns_unicalib::IMUIntrinsics& intrinsics,
                                            const std::string& path) const {
+    auto snap_zero = [](double v) {
+        return std::abs(v) < 1e-9 ? 0.0 : v;
+    };
+
     ::YAML::Emitter out;
     out << ::YAML::BeginMap;
-    out << ::YAML::Key << "imu_id" << ::YAML::Value << cfg_.imu_sensor_id;
-
-    // 陀螺仪参数 (noise_density: rad/s/√Hz, bias_instability: rad/s)
-    out << ::YAML::Key << "gyroscope" << ::YAML::BeginMap;
-    out << ::YAML::Key << "noise_density" << ::YAML::Value << intrinsics.noise_gyro;
-    out << ::YAML::Key << "bias_instability" << ::YAML::Value << intrinsics.bias_instab_gyro;
-    out << ::YAML::Key << "random_walk" << ::YAML::Value << 0.0;
-    out << ::YAML::EndMap;
-
-    // 加速度计参数 (noise_density: m/s²/√Hz, bias_instability: m/s²)
-    out << ::YAML::Key << "accelerometer" << ::YAML::BeginMap;
-    out << ::YAML::Key << "noise_density" << ::YAML::Value << intrinsics.noise_acce;
-    out << ::YAML::Key << "bias_instability" << ::YAML::Value << intrinsics.bias_instab_acce;
-    out << ::YAML::Key << "random_walk" << ::YAML::Value << 0.0;
-    out << ::YAML::EndMap;
-
-    // 元数据
-    out << ::YAML::Key << "metadata" << ::YAML::BeginMap;
-    out << ::YAML::Key << "method" << ::YAML::Value << "allan_variance";
-    out << ::YAML::Key << "num_samples" << ::YAML::Value << intrinsics.num_samples_used;
+  // 与 unicalib_imu_intrinsic 输出格式一致，便于下游 YamlIO::load_imu_intrinsics 读取
+    out << ::YAML::Key << "sensor_id" << ::YAML::Value << cfg_.imu_sensor_id;
+    out << ::YAML::Key << "timestamp" << ::YAML::Value
+        << std::to_string(std::chrono::system_clock::now().time_since_epoch().count());
+    out << ::YAML::Key << "noise_gyro" << ::YAML::Value << intrinsics.noise_gyro;
+    out << ::YAML::Key << "bias_instab_gyro" << ::YAML::Value << intrinsics.bias_instab_gyro;
+    out << ::YAML::Key << "noise_accel" << ::YAML::Value << intrinsics.noise_acce;
+    out << ::YAML::Key << "bias_instab_accel" << ::YAML::Value << intrinsics.bias_instab_acce;
+    out << ::YAML::Key << "bias_gyro" << ::YAML::Value << ::YAML::Flow
+        << std::vector<double>{intrinsics.bias_gyro[0], intrinsics.bias_gyro[1], intrinsics.bias_gyro[2]};
+    out << ::YAML::Key << "bias_accel" << ::YAML::Value << ::YAML::Flow
+        << std::vector<double>{intrinsics.bias_acce[0], intrinsics.bias_acce[1], intrinsics.bias_acce[2]};
+    out << ::YAML::Key << "num_samples_used" << ::YAML::Value << intrinsics.num_samples_used;
     out << ::YAML::Key << "allan_fit_rms" << ::YAML::Value << intrinsics.allan_fit_rms;
+
+    const Eigen::Matrix4d& T = intrinsics.T_Body_Imu;
+    out << ::YAML::Key << "T_Body_Imu" << ::YAML::Value << ::YAML::BeginMap;
+    out << ::YAML::Key << "rows" << ::YAML::Value << 4;
+    out << ::YAML::Key << "cols" << ::YAML::Value << 4;
+    out << ::YAML::Key << "dt" << ::YAML::Value << "d";
+    out << ::YAML::Key << "data" << ::YAML::Value << ::YAML::Flow << ::YAML::BeginSeq;
+    for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+            out << snap_zero(T(i, j));
+        }
+    }
+    out << ::YAML::EndSeq;
     out << ::YAML::EndMap;
 
     out << ::YAML::EndMap;
+
+    std::string yaml_text = out.c_str();
+    {
+        const std::string anchor = "\nT_Body_Imu:";
+        const auto pos = yaml_text.find(anchor);
+        if (pos != std::string::npos) {
+            yaml_text.insert(pos + 1,
+                "# T_Body_Imu: 车体系到IMU系的4x4刚体变换矩阵 (Body -> IMU)\n"
+                "# 含义: 描述IMU在车体坐标系下的位姿；将车体坐标系下的点 p_body 变换到IMU系: p_imu = T_Body_Imu * p_body\n"
+                "# 默认单位矩阵表示IMU与车体坐标系重合（原点与轴向一致）\n"
+                "# 使用: 下游SLAM/INS中需将IMU角速度、加速度转到车体时，用旋转部分 R(3x3)：omega_body = R^T * omega_imu，a_body = R^T * a_imu\n"
+                "# 若从配置/标定得到的是 T_Imu_Body（IMU->Body），则 T_Body_Imu = inv(T_Imu_Body)\n");
+        }
+    }
 
     std::ofstream f(path);
     if (f.is_open()) {
-        f << out.c_str();
+        f << yaml_text;
         UNICALIB_INFO("[Fine-Auto] IMU内参已保存: {}", path);
     } else {
         UNICALIB_ERROR("[Fine-Auto] 无法保存IMU内参到: {}", path);

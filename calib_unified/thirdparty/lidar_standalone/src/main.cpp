@@ -1,6 +1,5 @@
 #include <filesystem>
 #include <regex>
-#include <pcl_conversions/pcl_conversions.h>
 #include <arpa/inet.h>
 #include <vector>
 #include <thread>
@@ -10,8 +9,27 @@
 std::unordered_map<std::string, int> framecounts; 
 std::vector<std::thread> threads;
 namespace fs = std::filesystem;
-using sensor_msgs::msg::PointCloud2;
-using sensor_msgs::msg::PointField;
+
+namespace {
+
+/** Unix 毫秒时间戳，如 1779100123456（2026 年约为 177... 开头）。 */
+std::string unixMsFilename(uint64_t unix_ms)
+{
+    return std::to_string(unix_ms);
+}
+
+std::string uniqueOutputPath(const std::string& dir, const std::string& stamp, const std::string& ext)
+{
+    std::string path = dir + stamp + ext;
+    int suffix = 0;
+    while (fs::exists(path)) {
+        path = dir + stamp + "_" + std::to_string(++suffix) + ext;
+    }
+    return path;
+}
+
+}  // namespace
+
 #pragma pack(push, 1)
 #define DEGREE_TO_RADIAN(deg)  ((deg) * M_PI / 180)
 
@@ -44,14 +62,19 @@ struct RSTemperature {
     uint8_t tt[2];
 };
 
+/** Helios32 手册表11：Header 42B，时间戳在 offset 20（非紧跟 packet_count 之后）。 */
 struct RSHELIOSMsopHeader {
-    uint8_t id[4];
-    uint16_t protocol_version;
-    uint8_t reserved1[14];
-    RSTimestampUTC timestamp;
-    uint8_t lidar_type;
-    uint8_t reserved2[11];
+    uint8_t header[4];           // 0: 55_aa_05_5a
+    uint8_t reserved_4_11[8];    // 4
+    uint32_t packet_count;       // 12
+    uint8_t reserved_16_19[4];   // 16
+    RSTimestampUTC timestamp;      // 20: 6B sec + 4B us
+    uint8_t reserved_30;         // 30
+    uint8_t lidar_type;          // 31
+    uint8_t lidar_model;         // 32
+    uint8_t others[9];           // 33-41
 };
+static_assert(sizeof(RSHELIOSMsopHeader) == 42, "RSHELIOSMsopHeader must be 42 bytes");
 
 struct RSHELIOSMsopBlock {
     uint8_t id[2];
@@ -338,7 +361,7 @@ protected:
 class RslidarDecode {
 public:
     RslidarDecode(const std::string& msop_file, const std::string& difop_file,fs::path directory_path,fs::path save_path,std::string pcd, const std::string& mode)
-        :pkt_count(0), mode(mode), first_pts_time_ms(-1)
+        :pkt_count(0), mode(mode), first_pts_unix_ms(0)
         {
         save_pcd = !pcd.empty();
         // 创建文件夹
@@ -397,7 +420,7 @@ public:
     }
 
 private:
-    double first_pts_time_ms;
+    uint64_t first_pts_unix_ms;
     std::string mode;
     std::ifstream infile_msop;
     std::ifstream infile_difop;
@@ -418,6 +441,12 @@ private:
     bool first_packet = false;
     //builtin_interfaces::msg::Time last_timestamp;
     std::shared_ptr<SplitStrategy> split_strategy_;
+    /** 低于该径向距离(米)的笛卡尔坐标点丢弃（车体近距）；与原始测距 distanceSection 下限无关。 */
+    static constexpr float kFilterMinRadialDistanceM = 0.05f;
+    /** 原始通道距离(米)下限；原 0.2m 在标定/比例异常时易全场无点。 */
+    static constexpr float kDistanceSectionMinM = 0.05f;
+    /** 车尾楔形盲区过滤（基于点反算方位角）；车顶前向/解析调试建议关。 */
+    static constexpr bool kApplyEgoWedgeFilter = false;
     Trigon trigon_;
     //std::thread parsePointCloud2_thread;
     #define SIN(angle) this->trigon_.sin(angle)
@@ -461,7 +490,7 @@ private:
     }
     // 距离范围
     bool distanceSection(float distance){
-        return((0.2 <= distance) && (distance <= 200));
+        return (kDistanceSectionMinM <= distance) && (distance <= 200.0f);
     }
     // 角度范围
     bool azimuthSection(int angle)
@@ -522,7 +551,7 @@ private:
                 const RSHELIOSMsopBlock& block = pkt.blocks[blocks_i];
                 // 判断block——id是否正确
                 if (memcmp(expected_id.data(), block.id, 2) != 0) {
-                    RCLCPP_INFO(rclcpp::get_logger("rslidar"), "block error");
+                    std::cout << "block error" << std::endl;
                     break;
                 }
                 // 角度值
@@ -561,7 +590,7 @@ private:
                         first_timestamp.sec = (uint32_t)floor(block_ts);
                         first_timestamp.nanosec = (uint32_t)round((block_ts - first_timestamp.sec) * 1e9);
                         pointNum_value = 0;
-                        first_pts_time_ms = -1;
+                        first_pts_unix_ms = 0;
                     }
                     // 遍历32个通道
                     for (size_t chan = 0; chan < std::size(block.channels); ++chan) {
@@ -575,7 +604,8 @@ private:
                         double angle_horiz_final = (angle_horiz + horiz_angles[chan]);
                         pointNum ++;
                         // 处理无效点
-                        if (distanceSection(distance) && azimuthSection(angle_horiz_final)) {
+                        if (distanceSection(distance) &&
+                            azimuthSection(static_cast<int>(std::lround(angle_horiz_final)))) {
                             
                             float x = distance * COS(angle_vert) * COS(angle_horiz_final) + 0.03498f * COS(angle_horiz);
                             float y = -distance * COS(angle_vert) * SIN(angle_horiz_final) - 0.03498f * SIN(angle_horiz);
@@ -588,25 +618,35 @@ private:
                             double pitch = atan2(z, sqrt(x * x + y * y)) * 57.2958;
                             double distance_filter = sqrt(x * x + y * y + z * z);
 
-                            bool in_angle_range_first = (azimuth_filter >= 145.0 && azimuth_filter <= 180.0) &&
-                                        (pitch >= -90.0 && pitch <= -0.1) &&
-                                        (distance_filter >= 0.0 && distance_filter <= 3.5);
-
-                            bool in_angle_range_second = (azimuth_filter >= -180 && azimuth_filter <= -145.0) &&
-                                        (pitch >= -90.0 && pitch <= -0.1) &&
-                                        (distance_filter >= 0.0 && distance_filter <= 3.5);
-
-                            if (in_angle_range_first || in_angle_range_second || distance_filter < 0.7) {
+                            bool wedge_drop = false;
+                            if (kApplyEgoWedgeFilter) {
+                                bool in_angle_range_first =
+                                    (azimuth_filter >= 145.0 && azimuth_filter <= 180.0) &&
+                                    (pitch >= -90.0 && pitch <= -0.1) &&
+                                    (distance_filter >= 0.0 && distance_filter <= 3.5);
+                                bool in_angle_range_second =
+                                    (azimuth_filter >= -180 && azimuth_filter <= -145.0) &&
+                                    (pitch >= -90.0 && pitch <= -0.1) &&
+                                    (distance_filter >= 0.0 && distance_filter <= 3.5);
+                                wedge_drop = in_angle_range_first || in_angle_range_second;
+                            }
+                            if (wedge_drop || distance_filter < kFilterMinRadialDistanceM) {
                                 continue;
                             }
-                            if (first_pts_time_ms == -1) first_pts_time_ms = point_timestamp * 1000; //ms
+                            const uint64_t pkt_us = getTimestamp(pkt.header.timestamp);
+                            const uint64_t offset_us = static_cast<uint64_t>(
+                                (block_ts_off + CHAN_TSS[chan]) * 1e6 + 0.5);
+                            const uint64_t point_unix_ms = (pkt_us + offset_us) / 1000;
+                            if (first_pts_unix_ms == 0) {
+                                first_pts_unix_ms = point_unix_ms;
+                            }
                             if (mode == "bev_mode") {
                                 RSPointXYZIT pt;
                                 pt.x = x;
                                 pt.y = y;
                                 pt.z = z;
                                 pt.intensity = intensity;
-                                pt.timestamp = point_timestamp * 1000; //ms
+                                pt.timestamp = static_cast<double>(point_unix_ms);
                                 cloud_bev->points.push_back(pt);
                             } else {
                                 
@@ -665,37 +705,44 @@ private:
     void sendPointCloud2()
     {
         auto cloud = std::make_shared<PointCloud2>();
-        pcl::toROSMsg(*pcl_cloud, *cloud);
-        uint64_t stamp_ms = static_cast<uint64_t>(first_pts_time_ms);
+        const bool bev = (mode == "bev_mode");
+        if (bev) {
+            pcl::toROSMsg(*cloud_bev, *cloud);
+        } else {
+            pcl::toROSMsg(*pcl_cloud, *cloud);
+        }
+        const std::string stamp_str = unixMsFilename(first_pts_unix_ms);
 
         //publisher->publish(*cloud);
         if (pointNum == 57600) {
-            if (save_pcd)
-            {
-                std::string pcd_filename = pcd_directory + std::to_string(framecounts[name]) + "_" + std::to_string(stamp_ms) + ".pcd";
-                if (mode == "bev_mode") {
+            const size_t n = bev ? cloud_bev->points.size() : pcl_cloud->points.size();
+            if (n == 0) {
+                RCLCPP_WARN(
+                    std::cerr, 
+                    "Skip save: pointNum=%zu but point cloud empty (bev=%d). Check filters / MSOP.",
+                    static_cast<size_t>(pointNum), bev ? 1 : 0);
+            } else if (save_pcd) {
+                const std::string pcd_filename =
+                    uniqueOutputPath(pcd_directory, stamp_str, ".pcd");
+                if (bev) {
                     pcl::io::savePCDFileBinary(pcd_filename, *cloud_bev);
                 } else {
                     pcl::io::savePCDFileASCII(pcd_filename, *pcl_cloud);
                 }
-                //RCLCPP_INFO(rclcpp::get_logger("rslidar"), "Pcd saved in %s", pcd_filename.c_str());
-            }
-            else{
-                std::string bin_filename = bin_directory + std::to_string(framecounts[name]) + "_" + std::to_string(stamp_ms) + ".bin";
-                if (mode == "bev_mode") {
-                    if (saveBINfile(*cloud_bev, bin_filename) == 0) {
-                    //   RCLCPP_INFO(rclcpp::get_logger("rslidar"), "Bin saved in %s", bin_filename.c_str());
-                    } else {
-                        RCLCPP_ERROR(rclcpp::get_logger("rslidar"), "Failed to save Bin file in %s", bin_filename.c_str());
+            } else {
+                const std::string bin_filename =
+                    uniqueOutputPath(bin_directory, stamp_str, ".bin");
+                if (bev) {
+                    if (saveBINfile(*cloud_bev, bin_filename) != 0) {
+                        RCLCPP_ERROR(
+                            std::cerr,  "Failed to save Bin file in %s", bin_filename.c_str());
                     }
-                }else {
-                    if (saveBINfile(*pcl_cloud, bin_filename) == 0) {
-                    //   RCLCPP_INFO(rclcpp::get_logger("rslidar"), "Bin saved in %s", bin_filename.c_str());
-                    } else {
-                        RCLCPP_ERROR(rclcpp::get_logger("rslidar"), "Failed to save Bin file in %s", bin_filename.c_str());
+                } else {
+                    if (saveBINfile(*pcl_cloud, bin_filename) != 0) {
+                        RCLCPP_ERROR(
+                            std::cerr,  "Failed to save Bin file in %s", bin_filename.c_str());
                     }
                 }
-                
             }
         }
         framecounts[name]++;
@@ -739,6 +786,25 @@ POINT_CLOUD_REGISTER_POINT_STRUCT(LivoxPointXyzrtlt,
     (uint8_t, line, line)
     (double, timestamp, timestamp)
 )
+
+namespace {
+
+uint64_t packetTimestampToUnixMs(uint64_t packet_timestamp_ns)
+{
+    return packet_timestamp_ns / 1000000ULL;
+}
+
+uint64_t resolveFrameUnixMs(uint64_t packet_timestamp_ns)
+{
+    // 包头为 0 表示无效；勿用点内 timestamp 代替（首包仅为微秒 offset，会得到 41.pcd 这类假名）
+    constexpr uint64_t kMinValidTimestampNs = 1000000000000000000ULL;  // ~2001 年起
+    if (packet_timestamp_ns < kMinValidTimestampNs) {
+        return 0;
+    }
+    return packetTimestampToUnixMs(packet_timestamp_ns);
+}
+
+}  // namespace
 
 #pragma pack(1)
 
@@ -833,64 +899,20 @@ private:
     bool save_pcd;
     std::string pcd_directory;
     std::string bin_directory;
-    rclcpp::Publisher<PointCloud2>::SharedPtr publisher;
-    rclcpp::TimerBase::SharedPtr timer;
     pcl::PCLPointCloud2 pcl_cloud;
     bool start_falg = true;
     std::string name;
-    std::shared_ptr<PointCloud2> cloud = std::make_shared<PointCloud2>();
+
+    // 直接使用 PCL 点云（已移除 ROS2 PointCloud2 依赖）
+    pcl::PointCloud<LivoxPointXyzrtlt> cloud;
+
     std::string getParentDirectory(const std::string& filePath) {
         fs::path p(filePath);
         return p.parent_path().filename().string();
     }
-    void InitPointcloud2MsgHeader(std::shared_ptr<PointCloud2>& cloud) {
-        cloud->header.frame_id = "";
-        cloud->height = 1;
-        cloud->width = 0;
-        cloud->fields.resize(7);
-
-        cloud->fields[0].name = "x";
-        cloud->fields[0].offset = 0;
-        cloud->fields[0].datatype = PointField::FLOAT32;
-        cloud->fields[0].count = 1;
-
-        cloud->fields[1].name = "y";
-        cloud->fields[1].offset = 4;
-        cloud->fields[1].datatype = PointField::FLOAT32;
-        cloud->fields[1].count = 1;
-
-        cloud->fields[2].name = "z";
-        cloud->fields[2].offset = 8;
-        cloud->fields[2].datatype = PointField::FLOAT32;
-        cloud->fields[2].count = 1;
-
-        cloud->fields[3].name = "intensity";
-        cloud->fields[3].offset = 12;
-        cloud->fields[3].datatype = PointField::FLOAT32;
-        cloud->fields[3].count = 1;
-
-        cloud->fields[4].name = "tag";
-        cloud->fields[4].offset = 16;
-        cloud->fields[4].datatype = PointField::UINT8;
-        cloud->fields[4].count = 1;
-
-        cloud->fields[5].name = "line";
-        cloud->fields[5].offset = 17;
-        cloud->fields[5].datatype = PointField::UINT8;
-        cloud->fields[5].count = 1;
-
-        cloud->fields[6].name = "timestamp";
-        cloud->fields[6].offset = 18;
-        cloud->fields[6].datatype = PointField::FLOAT64;
-        cloud->fields[6].count = 1;
-
-        cloud->point_step = sizeof(LivoxPointXyzrtlt);
-        cloud->is_bigendian = false;
-        cloud->is_dense = true;
-    }
 
 
-    bool livox_parsePointCloud2(std::ifstream& file, std::shared_ptr<PointCloud2>& cloud, uint64_t& timestamp) {
+    bool livox_parsePointCloud2(std::ifstream& file, uint64_t& timestamp) {
         if (!file.is_open()) {
             std::cerr << "File not open!" << std::endl;
             return false;
@@ -901,7 +923,7 @@ private:
 
         uint64_t curr_point_timstamp_us = 0;
         while (file.read(reinterpret_cast<char*>(&data_id), sizeof(data_id))) {
-            InitPointcloud2MsgHeader(cloud);
+            cloud.clear();
             //std::cout << "data_id: 0x" << std::hex << data_id << std::endl;
             file.read(reinterpret_cast<char*>(&pkt_prt->timestamp), sizeof(LivoxPacketXYZIT::timestamp));
             file.read(reinterpret_cast<char*>(&pkt_prt->points_num), sizeof(LivoxPacketXYZIT::points_num));
@@ -955,29 +977,29 @@ private:
             if (!pkt_prt->points.empty()) {
                 timestamp = pkt_prt->timestamp;
             }
-            cloud->width = pkt_prt->points_num;
-            cloud->row_step = cloud->width * cloud->point_step;
-            cloud->header.stamp = rclcpp::Time(timestamp);
-            cloud->data.resize(pkt_prt->points_num * sizeof(LivoxPointXyzrtlt));
-            memcpy(cloud->data.data(), livox_points.data(), pkt_prt->points_num * sizeof(LivoxPointXyzrtlt));
-            //std::cout << "timestamp:" << pkt_prt->timestamp << std::endl;
+
+            // 直接填充 PCL 点云（已移除 ROS2 依赖）
+            cloud.width = pkt_prt->points_num;
+            cloud.height = 1;
+            cloud.is_dense = true;
+            cloud.points = std::move(livox_points);
+
             return true;
         }
 
         return false;
     }
 
-    bool hesai_parsePointCloud2(std::ifstream& file, std::shared_ptr<PointCloud2>& cloud, uint64_t& timestamp) {
+    bool hesai_parsePointCloud2(std::ifstream& file, uint64_t& timestamp) {
         if (!file.is_open()) {
             std::cerr << "File not open!" << std::endl;
             return false;
         }
 
         auto pkt_prt = std::make_shared<HesaiPacketXYZIT>();
-        //std::cout << "sizeof(HesaiPacketXYZIT):" << sizeof(HesaiPacketXYZIT) << "sizeof(PointXYZITO):" << sizeof(PointXYZITO) << std::endl;
         uint16_t data_id = 0;
         while (file.read(reinterpret_cast<char*>(&data_id), sizeof(data_id))) {
-            InitPointcloud2MsgHeader(cloud);
+            cloud.clear();
             file.read(reinterpret_cast<char*>(&pkt_prt->timestamp), sizeof(HesaiPacketXYZIT::timestamp));
             file.read(reinterpret_cast<char*>(&pkt_prt->points_num), sizeof(HesaiPacketXYZIT::points_num));
             pkt_prt->points.resize(pkt_prt->points_num);
@@ -1036,7 +1058,7 @@ private:
             }
             cloud->width = pkt_prt->points_num;
             cloud->row_step = cloud->width * cloud->point_step;
-            cloud->header.stamp = rclcpp::Time(timestamp);
+            // ROS2 header.stamp removed - standalone version
             cloud->data.resize(pkt_prt->points_num * sizeof(LivoxPointXyzrtlt));
             memcpy(cloud->data.data(), livox_points.data(), pkt_prt->points_num * sizeof(LivoxPointXyzrtlt));
             return true;
@@ -1103,49 +1125,43 @@ private:
     void timer_callback() {
         uint64_t frame_timestamp = 0;
         bool parseRet;
-        if((name.find("hesai") != std::string::npos) || name.find("airy") != std::string::npos)
-        {
-            parseRet = hesai_parsePointCloud2(infile, cloud, frame_timestamp);
-            
+
+        cloud.clear();
+
+        if ((name.find("hesai") != std::string::npos) || name.find("airy") != std::string::npos) {
+            parseRet = hesai_parsePointCloud2(infile, frame_timestamp);
+        } else {
+            parseRet = livox_parsePointCloud2(infile, frame_timestamp);
         }
-        
-        else{
-            parseRet = livox_parsePointCloud2(infile, cloud, frame_timestamp);
-        } 
+
         if (parseRet) {
-            pcl_conversions::toPCL(*cloud, pcl_cloud);
+            // 直接使用类成员 cloud（PCL 点云）
             pcl::PointCloud<pcl::PointXYZI> point_cloud;
-            pcl::PointCloud<LivoxPointXyzrtlt> cloud_specific;
-            pcl::fromPCLPointCloud2(pcl_cloud, cloud_specific);
-            pcl::fromPCLPointCloud2(pcl_cloud, point_cloud);
-            cloud->header.frame_id = "blind_filling_lidar";
-            //publisher->publish(*cloud);
-            //verifyPclCloudTimestamps(pcl_cloud);
-            if (save_pcd) {
-                std::string pcd_filename = pcd_directory + std::to_string({framecounts[name]}) + "_" + std::to_string(frame_timestamp / 1000000) + ".pcd";
+            pcl::copyPointCloud(cloud, point_cloud);
+
+            const uint64_t unix_ms = resolveFrameUnixMs(frame_timestamp);
+            if (unix_ms == 0) {
+                std::cerr << "Skip save: packet timestamp is 0 (check " << name << ")." << std::endl;
+            } else if (save_pcd) {
+                const std::string pcd_filename =
+                    uniqueOutputPath(pcd_directory, unixMsFilename(unix_ms), ".pcd");
                 if (mode == "bev_mode") {
-                    pcl::io::savePCDFile(pcd_filename, pcl_cloud, Eigen::Vector4f::Zero(),
+                    pcl::io::savePCDFile(pcd_filename, cloud, Eigen::Vector4f::Zero(),
                              Eigen::Quaternionf::Identity(), true);
                 } else {
-                    SavePCDfile(pcd_filename,cloud_specific);
+                    SavePCDfile(pcd_filename, cloud);
                 }
-                //pcl::io::savePCDFile(pcd_filename, pcl_cloud);
-                //RCLCPP_INFO(rclcpp::get_logger("LivoxlidarDecode"), "Pcd saved in %s", pcd_filename.c_str());
-            }else
-            {
-                std::string bin_filename = bin_directory + std::to_string(framecounts[name]) + "_" + std::to_string(frame_timestamp / 1000000) + ".bin";
-                if (saveBINfile(point_cloud, bin_filename) == 0) {
-                //    RCLCPP_INFO(rclcpp::get_logger("LivoxlidarDecode"), "Bin saved in %s", bin_filename.c_str());
-                } else {
-                    RCLCPP_ERROR(rclcpp::get_logger("LivoxlidarDecode"), "Failed to save Bin file in %s", bin_filename.c_str());
+            } else {
+                const std::string bin_filename =
+                    uniqueOutputPath(bin_directory, unixMsFilename(unix_ms), ".bin");
+                if (saveBINfile(point_cloud, bin_filename) != 0) {
+                    std::cerr << "Failed to save Bin file in " << bin_filename << std::endl;
                 }
             }
-            
-            framecounts[name]++; 
-            // RCLCPP_INFO(rclcpp::get_logger("LivoxlidarDecode"), "timestamp_ms: %s", std::to_string(frame_timestamp).c_str());
+
+            framecounts[name]++;
         } else {
             start_falg = false;
-            rclcpp::shutdown();
         }
     }
 };
@@ -1188,7 +1204,7 @@ void classifyFiles(const fs::path& directory_path,
 }
 
 void signalHandler(int signum) {
-    rclcpp::shutdown();
+    // rclcpp::shutdown() removed - standalone version
     exit(signum);
 }
 
@@ -1298,6 +1314,5 @@ int main(int argc, char** argv) {
     auto end_time = std::chrono::system_clock::to_time_t(cTime);
     auto final_time = end_time - start_time;
     std::cout << "done!\n解析时长:" << final_time << "s" << std::endl;
-    rclcpp::shutdown();
     return 0;
 }

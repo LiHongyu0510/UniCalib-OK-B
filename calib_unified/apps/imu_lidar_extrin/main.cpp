@@ -17,6 +17,7 @@
 #include "unicalib/pipeline/ai_coarse_calib.h"
 #include "unicalib/pipeline/manual_calib.h"
 #include "unicalib/extrinsic/imu_lidar_calib.h"
+#include "unicalib/io/yaml_io.h"
 #include <yaml-cpp/yaml.h>
 #include <filesystem>
 #include <iostream>
@@ -25,6 +26,20 @@
 
 namespace fs = std::filesystem;
 using namespace ns_unicalib;
+
+static std::string resolve_data_path(const std::string& base, const std::string& path) {
+    if (path.empty()) return "";
+    std::string work = path;
+    const char prefix[] = "/path/to/";
+    if (!base.empty() && work.size() > sizeof(prefix) - 1 &&
+        work.compare(0, sizeof(prefix) - 1, prefix) == 0) {
+        work = work.substr(sizeof(prefix) - 1);
+    }
+    if (base.empty()) return path;
+    fs::path p(work);
+    if (p.is_absolute()) return path;
+    return (fs::path(base) / p).lexically_normal().string();
+}
 
 static void print_banner() {
     std::cout << R"(
@@ -187,11 +202,21 @@ int main(int argc, char** argv) {
         if (il["handeye_ransac_inlier_thresh_deg"]) calib_cfg.handeye_ransac_inlier_thresh_deg = il["handeye_ransac_inlier_thresh_deg"].as<double>();
         if (il["handeye_ransac_max_iter"]) calib_cfg.handeye_ransac_max_iter = il["handeye_ransac_max_iter"].as<int>();
         if (il["use_planar_prior"]) calib_cfg.use_planar_prior = il["use_planar_prior"].as<bool>();
+        if (il["bspline_freeze_trans_z"]) calib_cfg.bspline_freeze_trans_z = il["bspline_freeze_trans_z"].as<bool>();
+        if (il["bspline_freeze_trans_xy"]) calib_cfg.bspline_freeze_trans_xy = il["bspline_freeze_trans_xy"].as<bool>();
+        if (il["trust_initial_translation"]) calib_cfg.trust_initial_translation = il["trust_initial_translation"].as<bool>();
+        if (il["bspline_auto_freeze_trans_when_underconstrained"])
+            calib_cfg.bspline_auto_freeze_trans_when_underconstrained =
+                il["bspline_auto_freeze_trans_when_underconstrained"].as<bool>();
+        if (il["bspline_max_trans_delta_m"]) calib_cfg.bspline_max_trans_delta_m = il["bspline_max_trans_delta_m"].as<double>();
+        if (il["trust_initial_rotation"]) calib_cfg.trust_initial_rotation = il["trust_initial_rotation"].as<bool>();
         if (il["min_roll_motion_deg"]) calib_cfg.min_roll_motion_deg = il["min_roll_motion_deg"].as<double>();
         if (il["min_pitch_motion_deg"]) calib_cfg.min_pitch_motion_deg = il["min_pitch_motion_deg"].as<double>();
         if (il["min_yaw_motion_deg"]) calib_cfg.min_yaw_motion_deg = il["min_yaw_motion_deg"].as<double>();
         if (il["max_z_trans_ratio"]) calib_cfg.max_z_trans_ratio = il["max_z_trans_ratio"].as<double>();
         if (il["enable_planar_warning"]) calib_cfg.enable_planar_warning = il["enable_planar_warning"].as<bool>();
+        if (il["trim_to_overlap"]) calib_cfg.trim_to_overlap = il["trim_to_overlap"].as<bool>();
+        if (il["trim_overlap_margin_s"]) calib_cfg.trim_overlap_margin_s = il["trim_overlap_margin_s"].as<double>();
     }
     calib_cfg.verbose = (log_level == "debug" || log_level == "trace");
 
@@ -249,9 +274,55 @@ int main(int argc, char** argv) {
             pipe_cfg.ros2_strict_topic_match = ros2_node["strict_topic_match"].as<bool>();
     }
 
-    // 1.1) 读取 NEW_FORMAT 段（启用后优先于 ROS2）
+    // 解析基础数据目录：CALIB_DATA_DIR 环境变量（由一键脚本设置）
+    std::string base_data_dir;
+    if (const char* env_p = std::getenv("CALIB_DATA_DIR")) {
+        base_data_dir = env_p;
+    }
+
+    // data.imu / data.lidar：PCD 目录 + IMU CSV（旧式文件加载，优先于 NEW_FORMAT）
+    bool has_file_data_paths = false;
+    if (cfg["data"]) {
+        const auto& data = cfg["data"];
+        if (data["imu"] && data["imu"].IsMap()) {
+            for (const auto& kv : data["imu"]) {
+                std::string p = resolve_data_path(base_data_dir, kv.second.as<std::string>());
+                if (!p.empty()) {
+                    pipe_cfg.imu_data_paths[kv.first.as<std::string>()] = p;
+                    has_file_data_paths = true;
+                }
+            }
+        }
+        if (data["lidar"] && data["lidar"].IsMap()) {
+            for (const auto& kv : data["lidar"]) {
+                std::string p = resolve_data_path(base_data_dir, kv.second.as<std::string>());
+                if (!p.empty()) {
+                    pipe_cfg.lidar_data_paths[kv.first.as<std::string>()] = p;
+                    has_file_data_paths = true;
+                }
+            }
+        }
+    }
+    if (cfg["imu_data_file"]) {
+        std::string p = resolve_data_path(base_data_dir, cfg["imu_data_file"].as<std::string>());
+        if (!p.empty()) {
+            pipe_cfg.imu_data_file = p;
+            has_file_data_paths = true;
+        }
+    }
+    if (cfg["lidar_data_dir"]) {
+        std::string p = resolve_data_path(base_data_dir, cfg["lidar_data_dir"].as<std::string>());
+        if (!p.empty()) {
+            pipe_cfg.lidar_data_dir = p;
+            has_file_data_paths = true;
+        }
+    }
+
+    // 1.1) 读取 NEW_FORMAT 段（无 data 文件路径时启用）
     const YAML::Node new_format_node = cfg["new_format"];
-    if (new_format_node && new_format_node["enable"] && new_format_node["enable"].as<bool>()) {
+    const bool new_format_requested = new_format_node && new_format_node["enable"] &&
+                                      new_format_node["enable"].as<bool>();
+    if (new_format_requested && !has_file_data_paths) {
         pipe_cfg.use_new_format = true;
         if (new_format_node["root_dir"])
             pipe_cfg.new_format_root_dir = new_format_node["root_dir"].as<std::string>();
@@ -265,6 +336,14 @@ int main(int argc, char** argv) {
             pipe_cfg.new_format_oem7_gps_utc_leap_sec = new_format_node["oem7_gps_utc_leap_sec"].as<int>();
         if (new_format_node["oem7_time_offset_sec"])
             pipe_cfg.new_format_oem7_time_offset_sec = new_format_node["oem7_time_offset_sec"].as<double>();
+        if (new_format_node["oem7_imu_gyro_scale_factor"])
+            pipe_cfg.new_format_oem7_gyro_scale_factor = new_format_node["oem7_imu_gyro_scale_factor"].as<double>();
+        if (new_format_node["oem7_imu_accel_scale_factor"])
+            pipe_cfg.new_format_oem7_accel_scale_factor = new_format_node["oem7_imu_accel_scale_factor"].as<double>();
+        if (new_format_node["sample_interval"])
+            pipe_cfg.new_format_sample_interval = new_format_node["sample_interval"].as<double>();
+        if (new_format_node["max_frames"])
+            pipe_cfg.new_format_max_frames = new_format_node["max_frames"].as<size_t>();
         if (new_format_node["lidar_index_files"] && new_format_node["lidar_index_files"].IsMap()) {
             for (const auto& kv : new_format_node["lidar_index_files"]) {
                 pipe_cfg.new_format_lidar_index_files[kv.first.as<std::string>()] = kv.second.as<std::string>();
@@ -283,20 +362,21 @@ int main(int argc, char** argv) {
         UNICALIB_INFO("[IMU-LiDAR] NEW_FORMAT 已启用: root_dir={} unit={}",
                       pipe_cfg.new_format_root_dir.empty() ? "(未设置)" : pipe_cfg.new_format_root_dir,
                       pipe_cfg.new_format_timestamp_unit);
-        // 避免和 ROS2 路径混用造成误导
         pipe_cfg.use_ros2_bag = false;
         pipe_cfg.use_ros2_topics = false;
+    } else if (has_file_data_paths) {
+        UNICALIB_INFO("[IMU-LiDAR] 文件模式: data.imu {} 路, data.lidar {} 路",
+                      pipe_cfg.imu_data_paths.size(), pipe_cfg.lidar_data_paths.size());
+        pipe_cfg.use_new_format = false;
+        pipe_cfg.use_ros2_bag = false;
+        pipe_cfg.use_ros2_topics = false;
+    } else if (new_format_requested) {
+        UNICALIB_WARN("[IMU-LiDAR] new_format.enable=true 但未配置 data.imu/data.lidar，且未启用索引 CSV");
     }
 
     // data.bag_file 作为 ros2_bag_file 的后备（与统一配置保持一致）
     if (pipe_cfg.ros2_bag_file.empty() && cfg["data"] && cfg["data"]["bag_file"]) {
         pipe_cfg.ros2_bag_file = cfg["data"]["bag_file"].as<std::string>();
-    }
-
-    // 解析基础数据目录：CALIB_DATA_DIR 环境变量（由一键脚本设置）
-    std::string base_data_dir;
-    if (const char* env_p = std::getenv("CALIB_DATA_DIR")) {
-        base_data_dir = env_p;
     }
 
     // 如果使用 ROS2 bag，且路径为相对路径，则相对于 base_data_dir 解析为绝对路径
@@ -350,9 +430,21 @@ int main(int argc, char** argv) {
     // 手眼 180° 歧义策略（pipeline 用；lidar_rear 反向安装时建议 prefer_180）
     if (cfg["imu_lidar"]) {
         const auto& il = cfg["imu_lidar"];
+        load_imu_lidar_calib_from_yaml(il, pipe_cfg.imu_lidar_calib);
         if (il["handeye_180_decision"]) pipe_cfg.imu_lidar_handeye_180_decision = il["handeye_180_decision"].as<std::string>();
         if (il["handeye_prefer_identity_when_ambiguous"]) pipe_cfg.imu_lidar_handeye_prefer_identity_when_ambiguous = il["handeye_prefer_identity_when_ambiguous"].as<bool>();
         if (il["handeye_180_residual_margin_deg"]) pipe_cfg.imu_lidar_handeye_180_residual_margin_deg = il["handeye_180_residual_margin_deg"].as<double>();
+        if (il["trim_to_overlap"]) pipe_cfg.imu_lidar_trim_to_overlap = il["trim_to_overlap"].as<bool>();
+        if (il["trim_overlap_margin_s"]) pipe_cfg.imu_lidar_trim_overlap_margin_s = il["trim_overlap_margin_s"].as<double>();
+        if (il["bspline_freeze_trans_z"]) pipe_cfg.imu_lidar_bspline_freeze_trans_z = il["bspline_freeze_trans_z"].as<bool>();
+        if (il["bspline_freeze_trans_xy"]) pipe_cfg.imu_lidar_bspline_freeze_trans_xy = il["bspline_freeze_trans_xy"].as<bool>();
+        if (il["trust_initial_translation"]) pipe_cfg.imu_lidar_trust_initial_translation = il["trust_initial_translation"].as<bool>();
+        if (il["bspline_auto_freeze_trans_when_underconstrained"])
+            pipe_cfg.imu_lidar_bspline_auto_freeze_trans_when_underconstrained =
+                il["bspline_auto_freeze_trans_when_underconstrained"].as<bool>();
+        if (il["bspline_max_trans_delta_m"]) pipe_cfg.imu_lidar_bspline_max_trans_delta_m = il["bspline_max_trans_delta_m"].as<double>();
+        if (il["use_planar_prior"]) pipe_cfg.imu_lidar_use_planar_prior = il["use_planar_prior"].as<bool>();
+        if (il["trust_initial_rotation"]) pipe_cfg.imu_lidar_trust_initial_rotation = il["trust_initial_rotation"].as<bool>();
         // 初值：标定在初值基础上精化。支持 1) 文件路径（字符串） 2) 内联 4x4（含 rows/cols/data 的对象）
         if (il["initial_extrinsics"] && il["initial_extrinsics"].IsMap()) {
             for (const auto& kv : il["initial_extrinsics"]) {
@@ -361,11 +453,13 @@ int main(int argc, char** argv) {
                 std::string storage_key = (key.size() > 2 && key.substr(0, 2) == "T_") ? key.substr(2) : key;
                 if (kv.second.IsScalar()) {
                     pipe_cfg.imu_lidar_initial_extrinsic_files[storage_key] = kv.second.as<std::string>();
-                } else if (kv.second.IsMap() && kv.second["data"].IsSequence()) {
-                    const auto& data = kv.second["data"];
-                    std::vector<double> v;
-                    for (size_t i = 0; i < data.size() && i < 16u; ++i) v.push_back(data[i].as<double>());
-                    if (v.size() >= 16u) pipe_cfg.imu_lidar_initial_extrinsic_inline[storage_key] = std::move(v);
+                } else if (kv.second.IsMap()) {
+                    std::vector<double> v = parse_se3_matrix_from_yaml(kv.second);
+                    if (v.size() >= 16u) {
+                        pipe_cfg.imu_lidar_initial_extrinsic_inline[storage_key] = std::move(v);
+                    } else {
+                        UNICALIB_WARN("[IMU-LiDAR] initial_extrinsics['{}'] 需 4x4 或 3x3(+可选 translation)，已忽略", key);
+                    }
                 }
             }
         }

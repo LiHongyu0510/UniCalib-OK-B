@@ -95,6 +95,9 @@ struct LiDARLiDARConfig {
     double time_offset_init_s = 0.0;    // 初始时间偏移估计
     double time_offset_max_s = 0.1;     // 最大时间偏移范围 [s]
 
+    // 为 true 且本对提供了 initial_extrinsics 初值时：跳过精标定/B样条，直接以该初值进入手动微调
+    bool   use_config_extrinsic_only = false;
+
     // ─── 通用参数 ───────────────────────────────────────────────────
     double voxel_size = 0.1;            // 预处理体素下采样大小 [m]
     double min_overlap_ratio = 0.3;     // 最小 FOV 重叠率

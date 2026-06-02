@@ -112,23 +112,81 @@ void JointCalibSolver::iKalibrResultWriter::write_extrinsics(
     if (!ikalibr_param_mgr || !unicalib_params) return;
     
     UNICALIB_INFO("[iKalibrRW] 写回外参");
-    UNICALIB_WARN("[iKalibrRW] write_extrinsics 为桩实现：未从 iKalibr 读取优化结果，需根据 iKalibr API 补全");
-    // 遍历 unicalib_params 中的所有外参，从 ikalibr_param_mgr 读取优化结果
-    // 示例伪代码（需根据实际 iKalibr API 调整）:
-    // for (auto& [key, ext_ptr] : unicalib_params->extrinsics) {
-    //     if (ext_ptr) {
-    //         try {
-    //             // 从 ikalibr param manager 读取对应外参
-    //             // Sophus::SE3d T_refined = ikalibr_param_mgr->Get...(ref_id, target_id);
-    //             // double t_offset = ikalibr_param_mgr->GetTimeOffset(...);
-    //             // ext_ptr->set_SE3(T_refined);
-    //             // ext_ptr->time_offset_s = t_offset;
-    //             UNICALIB_TRACE("[iKalibrRW] 外参 {} 已更新", key);
-    //         } catch (...) {
-    //             UNICALIB_WARN("[iKalibrRW] 外参 {} 写回失败，保留粗值", key);
-    //         }
-    //     }
-    // }
+    
+    for (auto& [key, ext_ptr] : unicalib_params->extrinsics) {
+        if (!ext_ptr) continue;
+        
+        // 解析 key: "ref_id->target_id"
+        auto delim = key.find("->");
+        if (delim == std::string::npos) continue;
+        std::string ref_id = key.substr(0, delim);
+        std::string target_id = key.substr(delim + 2);
+        
+        auto ref_topic_it = sensor_topic_map.find(ref_id);
+        auto tgt_topic_it = sensor_topic_map.find(target_id);
+        if (ref_topic_it == sensor_topic_map.end() || tgt_topic_it == sensor_topic_map.end()) {
+            UNICALIB_WARN("[iKalibrRW] 传感器 {} 或 {} 未在 topic 映射表中，跳过",
+                           ref_id, target_id);
+            continue;
+        }
+        const std::string& ref_topic = ref_topic_it->second;
+        const std::string& tgt_topic = tgt_topic_it->second;
+        
+        // 在 iKalibr 的所有传感器类型中查找 ref/target 的外参 (均相对于参考 IMU Br)
+        Sophus::SE3d T_ref_in_Br;
+        Sophus::SE3d T_tgt_in_Br;
+        bool found_ref = false, found_tgt = false;
+        
+        auto try_find = [&](const std::string& topic, Sophus::SE3d& T, bool& found) {
+            if (ikalibr_param_mgr->EXTRI.SO3_BiToBr.count(topic)) {
+                T = ikalibr_param_mgr->EXTRI.SE3_BiToBr(topic); found = true;
+            } else if (ikalibr_param_mgr->EXTRI.SO3_LkToBr.count(topic)) {
+                T = ikalibr_param_mgr->EXTRI.SE3_LkToBr(topic); found = true;
+            } else if (ikalibr_param_mgr->EXTRI.SO3_CmToBr.count(topic)) {
+                T = ikalibr_param_mgr->EXTRI.SE3_CmToBr(topic); found = true;
+            } else if (ikalibr_param_mgr->EXTRI.SO3_DnToBr.count(topic)) {
+                T = ikalibr_param_mgr->EXTRI.SE3_DnToBr(topic); found = true;
+            } else if (ikalibr_param_mgr->EXTRI.SO3_RjToBr.count(topic)) {
+                T = ikalibr_param_mgr->EXTRI.SE3_RjToBr(topic); found = true;
+            } else if (ikalibr_param_mgr->EXTRI.SO3_EsToBr.count(topic)) {
+                T = ikalibr_param_mgr->EXTRI.SE3_EsToBr(topic); found = true;
+            }
+        };
+        try_find(ref_topic, T_ref_in_Br, found_ref);
+        try_find(tgt_topic, T_tgt_in_Br, found_tgt);
+        
+        if (!found_ref || !found_tgt) {
+            UNICALIB_WARN("[iKalibrRW] iKalibr 参数中未找到 {} 或 {} 的外参，跳过",
+                           ref_topic, tgt_topic);
+            continue;
+        }
+        
+        // T_target_in_ref = T_ref_in_Br^(-1) * T_target_in_Br
+        Sophus::SE3d T_target_in_ref = T_ref_in_Br.inverse() * T_tgt_in_Br;
+        ext_ptr->set_SE3(T_target_in_ref);
+        
+        // 尝试读取时间偏移
+        auto try_find_offset = [&](const std::string& topic, double& offset, bool& found) {
+            if (ikalibr_param_mgr->TEMPORAL.TO_BiToBr.count(topic)) {
+                offset = ikalibr_param_mgr->TEMPORAL.TO_BiToBr.at(topic); found = true;
+            } else if (ikalibr_param_mgr->TEMPORAL.TO_LkToBr.count(topic)) {
+                offset = ikalibr_param_mgr->TEMPORAL.TO_LkToBr.at(topic); found = true;
+            } else if (ikalibr_param_mgr->TEMPORAL.TO_CmToBr.count(topic)) {
+                offset = ikalibr_param_mgr->TEMPORAL.TO_CmToBr.at(topic); found = true;
+            } else if (ikalibr_param_mgr->TEMPORAL.TO_DnToBr.count(topic)) {
+                offset = ikalibr_param_mgr->TEMPORAL.TO_DnToBr.at(topic); found = true;
+            } else if (ikalibr_param_mgr->TEMPORAL.TO_RjToBr.count(topic)) {
+                offset = ikalibr_param_mgr->TEMPORAL.TO_RjToBr.at(topic); found = true;
+            } else if (ikalibr_param_mgr->TEMPORAL.TO_EsToBr.count(topic)) {
+                offset = ikalibr_param_mgr->TEMPORAL.TO_EsToBr.at(topic); found = true;
+            }
+        };
+        bool found_offset = false;
+        try_find_offset(tgt_topic, ext_ptr->time_offset_s, found_offset);
+        
+        ext_ptr->is_converged = true;
+        UNICALIB_INFO("[iKalibrRW] 外参 {} 已更新 (time_offset={:.6f}s)", key, ext_ptr->time_offset_s);
+    }
 }
 
 void JointCalibSolver::iKalibrResultWriter::write_imu_intrinsics(
@@ -138,8 +196,35 @@ void JointCalibSolver::iKalibrResultWriter::write_imu_intrinsics(
     if (!ikalibr_param_mgr || !unicalib_params) return;
     
     UNICALIB_INFO("[iKalibrRW] 写回 IMU 内参");
-    UNICALIB_WARN("[iKalibrRW] write_imu_intrinsics 为桩实现：未从 iKalibr 读取，需根据 API 补全");
-    // 类似逻辑: 遍历 unicalib_params->imu_intrinsics，从 ikalibr_param_mgr 读取更新值
+    
+    for (auto& [sensor_id, intri_ptr] : unicalib_params->imu_intrinsics) {
+        if (!intri_ptr) continue;
+        
+        auto topic_it = sensor_topic_map.find(sensor_id);
+        if (topic_it == sensor_topic_map.end()) {
+            UNICALIB_WARN("[iKalibrRW] IMU {} 未在 topic 映射表中，跳过", sensor_id);
+            continue;
+        }
+        
+        auto ik_it = ikalibr_param_mgr->INTRI.IMU.find(topic_it->second);
+        if (ik_it == ikalibr_param_mgr->INTRI.IMU.end()) {
+            UNICALIB_WARN("[iKalibrRW] iKalibr 中未找到 IMU 内参 (topic={})", topic_it->second);
+            continue;
+        }
+        
+        const auto& ik = ik_it->second;
+        if (!ik) continue;
+        
+        intri_ptr->bias_gyro = ik->GYRO.BIAS;
+        intri_ptr->bias_acce = ik->ACCE.BIAS;
+        intri_ptr->SO3_AtoG = ik->SO3_AtoG;
+        intri_ptr->Ma_gyro = ik->GYRO.MapMatrix();
+        intri_ptr->Ma_acce = ik->ACCE.MapMatrix();
+        
+        UNICALIB_INFO("[iKalibrRW] IMU 内参 {} 已更新 (gyro_bias={:.6f},{:.6f},{:.6f})",
+                       sensor_id,
+                       intri_ptr->bias_gyro[0], intri_ptr->bias_gyro[1], intri_ptr->bias_gyro[2]);
+    }
 }
 
 void JointCalibSolver::iKalibrResultWriter::write_camera_intrinsics(
@@ -149,8 +234,39 @@ void JointCalibSolver::iKalibrResultWriter::write_camera_intrinsics(
     if (!ikalibr_param_mgr || !unicalib_params) return;
     
     UNICALIB_INFO("[iKalibrRW] 写回相机内参");
-    UNICALIB_WARN("[iKalibrRW] write_camera_intrinsics 为桩实现：未从 iKalibr 读取，需根据 API 补全");
-    // 类似逻辑: 遍历 unicalib_params->camera_intrinsics，从 ikalibr_param_mgr 读取更新值
+    
+    for (auto& [sensor_id, intri_ptr] : unicalib_params->camera_intrinsics) {
+        if (!intri_ptr) continue;
+        
+        auto topic_it = sensor_topic_map.find(sensor_id);
+        if (topic_it == sensor_topic_map.end()) {
+            UNICALIB_WARN("[iKalibrRW] 相机 {} 未在 topic 映射表中，跳过", sensor_id);
+            continue;
+        }
+        
+        auto ik_it = ikalibr_param_mgr->INTRI.Camera.find(topic_it->second);
+        if (ik_it == ikalibr_param_mgr->INTRI.Camera.end()) {
+            UNICALIB_WARN("[iKalibrRW] iKalibr 中未找到相机内参 (topic={})", topic_it->second);
+            continue;
+        }
+        
+        const auto& ik = ik_it->second;
+        if (!ik) continue;
+        
+        intri_ptr->fx = ik->FocalX();
+        intri_ptr->fy = ik->FocalY();
+        intri_ptr->cx = ik->PrincipalPoint()(0);
+        intri_ptr->cy = ik->PrincipalPoint()(1);
+        intri_ptr->width = ik->imgWidth;
+        intri_ptr->height = ik->imgHeight;
+        
+        intri_ptr->dist_coeffs.resize(ik->dist.size());
+        for (int i = 0; i < ik->dist.size(); ++i)
+            intri_ptr->dist_coeffs[i] = ik->dist(i);
+        
+        UNICALIB_INFO("[iKalibrRW] 相机内参 {} 已更新 (fx={:.2f} fy={:.2f} cx={:.2f} cy={:.2f})",
+                       sensor_id, intri_ptr->fx, intri_ptr->fy, intri_ptr->cx, intri_ptr->cy);
+    }
 }
 
 #endif  // UNICALIB_WITH_IKALIBR

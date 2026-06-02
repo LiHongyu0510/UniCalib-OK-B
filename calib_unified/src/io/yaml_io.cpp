@@ -254,43 +254,23 @@ IMURawData YamlIO::load_imu_csv(const std::string& csv_path) {
     return data;
 }
 
-// ===================================================================
-// 读取相机内参 YAML
-// 支持两种格式:
-//   1) 扁平: width/height/fx/fy/cx/cy、dist_coeffs 在根节点
-//   2) results 格式: projection_parameters{fx,fy,cx,cy}、distortion_parameters{k1,k2,p1,p2}、width/height 在根节点
-// ===================================================================
-CameraIntrinsics YamlIO::load_camera_intrinsics(const std::string& yaml_path) {
-    UNICALIB_INFO("读取相机内参: {}", yaml_path);
-    
-    if (!fs::exists(yaml_path)) {
-        UNICALIB_THROW_DATA(ErrorCode::FILE_NOT_FOUND,
-                           "相机内参文件不存在: " + yaml_path);
-    }
-    
-    YAML::Node root;
-    try {
-        root = YAML::LoadFile(yaml_path);
-    } catch (const YAML::Exception& e) {
-        UNICALIB_THROW_DATA(ErrorCode::DATA_PARSE_ERROR,
-                           "YAML 解析失败: " + yaml_path + "\n" + e.what());
-    }
-    
+namespace {
+
+CameraIntrinsics parse_camera_intrinsics_node(const YAML::Node& root) {
     CameraIntrinsics I;
     I.width  = YAML_GET_OR(root, "width",  0);
     I.height = YAML_GET_OR(root, "height", 0);
-    // 优先从 projection_parameters 读 fx/fy/cx/cy（与 results/camera_intrinsic/*.yaml 一致）
     YAML::Node proj = root["projection_parameters"];
     const YAML::Node& ref = (proj && proj.IsDefined()) ? proj : root;
     I.fx = YAML_GET_OR(ref, "fx", 0.0);
     I.fy = YAML_GET_OR(ref, "fy", 0.0);
     I.cx = YAML_GET_OR(ref, "cx", 0.0);
     I.cy = YAML_GET_OR(ref, "cy", 0.0);
-    
+
     std::string model_str = YAML_GET_OR(root, "model", std::string("pinhole"));
     if (model_str == "fisheye") I.model = CameraIntrinsics::Model::FISHEYE;
     else                         I.model = CameraIntrinsics::Model::PINHOLE;
-    
+
     if (root["dist_coeffs"]) {
         for (const auto& v : root["dist_coeffs"]) {
             I.dist_coeffs.push_back(v.as<double>());
@@ -302,10 +282,57 @@ CameraIntrinsics YamlIO::load_camera_intrinsics(const std::string& yaml_path) {
         if (dp["p1"]) I.dist_coeffs.push_back(dp["p1"].as<double>());
         if (dp["p2"]) I.dist_coeffs.push_back(dp["p2"].as<double>());
         if (dp["k3"]) I.dist_coeffs.push_back(dp["k3"].as<double>());
+        if (dp["k4"]) I.dist_coeffs.push_back(dp["k4"].as<double>());
+        if (dp["k5"]) I.dist_coeffs.push_back(dp["k5"].as<double>());
+        if (dp["k6"]) I.dist_coeffs.push_back(dp["k6"].as<double>());
     }
-    
-    UNICALIB_INFO("  fx={:.2f} fy={:.2f} cx={:.2f} cy={:.2f} dist={}",
-                  I.fx, I.fy, I.cx, I.cy, I.dist_coeffs.size());
+    return I;
+}
+
+}  // namespace
+
+// ===================================================================
+// 读取相机内参 YAML
+// 支持:
+//   1) 单相机扁平 / results 格式（根节点即内参）
+//   2) 多相机合一: cameras.<sensor_id> 下为各相机内参（需传入 sensor_id）
+// ===================================================================
+CameraIntrinsics YamlIO::load_camera_intrinsics(
+    const std::string& yaml_path,
+    const std::string& sensor_id) {
+    UNICALIB_INFO("读取相机内参: {} sensor_id={}", yaml_path,
+                  sensor_id.empty() ? "(单文件)" : sensor_id);
+
+    if (!fs::exists(yaml_path)) {
+        UNICALIB_THROW_DATA(ErrorCode::FILE_NOT_FOUND,
+                           "相机内参文件不存在: " + yaml_path);
+    }
+
+    YAML::Node root;
+    try {
+        root = YAML::LoadFile(yaml_path);
+    } catch (const YAML::Exception& e) {
+        UNICALIB_THROW_DATA(ErrorCode::DATA_PARSE_ERROR,
+                           "YAML 解析失败: " + yaml_path + "\n" + e.what());
+    }
+
+    YAML::Node node = root;
+    if (root["cameras"] && root["cameras"].IsMap()) {
+        if (sensor_id.empty()) {
+            UNICALIB_THROW_DATA(ErrorCode::DATA_PARSE_ERROR,
+                "相机内参 YAML 含 cameras 映射，须指定 sensor_id: " + yaml_path);
+        }
+        if (!root["cameras"][sensor_id]) {
+            UNICALIB_THROW_DATA(ErrorCode::DATA_PARSE_ERROR,
+                "相机内参 YAML 中无 cameras." + sensor_id + ": " + yaml_path);
+        }
+        node = root["cameras"][sensor_id];
+    }
+
+    CameraIntrinsics I = parse_camera_intrinsics_node(node);
+    UNICALIB_INFO("  fx={:.2f} fy={:.2f} cx={:.2f} cy={:.2f} dist={} model={}",
+                  I.fx, I.fy, I.cx, I.cy, I.dist_coeffs.size(),
+                  I.model == CameraIntrinsics::Model::FISHEYE ? "fisheye" : "pinhole");
     return I;
 }
 
@@ -529,6 +556,43 @@ std::vector<double> parse_4x4_matrix_from_yaml(const YAML::Node& node) {
     v.reserve(16);
     for (size_t i = 0; i < 16; ++i)
         v.push_back(data[i].as<double>());
+    return v;
+}
+
+std::vector<double> parse_se3_matrix_from_yaml(const YAML::Node& node) {
+    if (!node || !node.IsMap()) {
+        return {};
+    }
+    auto flat4 = parse_4x4_matrix_from_yaml(node);
+    if (flat4.size() >= 16u) {
+        return flat4;
+    }
+    if (!node["rows"] || !node["cols"] || !node["data"] || !node["data"].IsSequence()) {
+        return {};
+    }
+    const int rows = node["rows"].as<int>();
+    const int cols = node["cols"].as<int>();
+    const auto& data = node["data"];
+    if (rows != 3 || cols != 3 || data.size() < 9) {
+        return {};
+    }
+    std::vector<double> v(16, 0.0);
+    v[3] = v[7] = v[11] = 0.0;
+    v[12] = v[13] = v[14] = 0.0;
+    v[15] = 1.0;
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            v[i * 4 + j] = data[i * 3 + j].as<double>();
+        }
+    }
+    if (node["translation"] && node["translation"].IsSequence() && node["translation"].size() >= 3) {
+        v[3] = node["translation"][0].as<double>();
+        v[7] = node["translation"][1].as<double>();
+        v[11] = node["translation"][2].as<double>();
+    } else {
+        UNICALIB_WARN(
+            "[YamlIO] 3x3 初值未配置 translation，平移按 0 处理；IMU-LiDAR 请填写安装表 t [m]");
+    }
     return v;
 }
 
