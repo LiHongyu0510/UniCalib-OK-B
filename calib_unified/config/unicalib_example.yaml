@@ -122,7 +122,7 @@ sensors:
     camera:
       model: pinhole
       width: 1920
-      height: 1080
+      height: 1536
       fps: 30.0
       rolling_shutter: false
   
@@ -194,35 +194,59 @@ data:
     # # PCD 目录（文件名如 frame_<timestamp>.pcd，时间戳从文件名解析）；路径相对 CALIB_DATA_DIR（默认 <工程>/data）
     # IMU-LiDAR 须与 data.imu 同一次采集：当前 imu.csv 为 0518 → 用 top_front_0518（约 314s 重叠）
     # 0519 主雷达 top_front_0519 与 0519 RAWIMU 时段不重叠，待同步数据后再改路径
-    # lidar_main: lidar_main/top_front_0601/right_1/top_front
-    # left_front: lidar_airy/20260601/left_1/left_front
-    right_back: lidar_airy/20260601/right_1/right_back
+    lidar_main: lidar_main/top_front_0603_1/front
+    left_front: lidar_airy/20260603_1/front/left_front
+    right_back: lidar_airy/20260603_1/front/right_back
+
+    # lidar_main: lidar_main/top_front_0603
+    # left_front: lidar_airy/20260603/left_front
+    # right_back: lidar_airy/20260603/right_back
 
   # 相机：sensor_id -> { images_dir（必填文件模式）, intrinsic_yaml（可选）, reference_intrinsic_yaml（可选）}
   # intrinsic_yaml：厂家内参或标定结果；相对 --data-dir。五路可共用 camera_intrinsic/camera_intrinsic.yaml（cameras 映射）
   # 单相机文件格式：<output_dir>/<results.camera_intrinsic>/camera_intrinsic_<sensor_id>.yaml
   camera:
     camera_num: 5
+    center_front:
+      images_dir: Camera/center_front/3302_2
+      intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
+
+    surrounding_front:
+      images_dir: Camera/surrounding_front/3302_2
+      intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
+
+    surrounding_back:
+      images_dir: Camera/surrounding_back/3302_2
+      intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
+
+    surrounding_left:
+      images_dir: Camera/surrounding_left/3302_2
+      intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
+
+    surrounding_right:
+      images_dir: Camera/surrounding_right/3302_2
+      intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
+
+    # camera_num: 5
     # center_front:
-    #   images_dir: Camera/center_front/center_front_1
+    #   images_dir: test/center
     #   intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
 
     # surrounding_front:
-    #   images_dir: Camera/surrounding_front/surrounding_front_1
+    #   images_dir: test/front
     #   intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
 
-    surrounding_back:
-      images_dir: Camera/surrounding_back/surrounding_back_1
-      intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
+    # surrounding_back:
+    #   images_dir: test/back
+    #   intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
 
     # surrounding_left:
-    #   images_dir: Camera/surrounding_left/surrounding_left_1
+    #   images_dir: test/left
     #   intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
 
     # surrounding_right:
-    #   images_dir: Camera/surrounding_right/surrounding_right_1
+    #   images_dir: test/right
     #   intrinsic_yaml: camera_intrinsic/camera_intrinsic.yaml
-
 # =============================================================================
 # 5. ROS2 数据源（与 data 段二选一或混用：未提供文件路径时从 bag 读）
 # =============================================================================
@@ -378,10 +402,14 @@ imu_lidar:
       rows: 3
       cols: 3
       dt: d
-      data: [-0.00349065, 0.99505011, -0.09931308,
-             -0.99999238, -0.00330005, 0.00208338,
-              0.00174533, 0.09931960, 0.99505405]
+      data: [-0.00821254, 0.99662158, -0.08171890,
+             -0.98803581, 0.00449862, 0.15415904,
+              0.15400585, 0.08200723, 0.98466086]
       translation: [0.01600892, -0.03036198, -0.30482987]
+      # data: [-0.00349065, 0.99505011, -0.09931308,
+      #        -0.99999238, -0.00330005, 0.00208338,
+      #         0.00174533, 0.09931960, 0.99505405]
+      # translation: [0.01600892, -0.03036198, -0.30482987]
 
     T_imu_0__left_front:
       rows: 3
@@ -454,7 +482,7 @@ lidar_lidar:
   pairs:
     - [lidar_main, left_front]
     - [lidar_main, right_back]
-    - [left_front, right_back]
+    # - [left_front, right_back]
   lidar_list: [lidar_main, left_front, right_back]
   # 安装表 mm→m（与 IMU/雷达同一车体坐标、轴平行 R=I）：pairs [ref,target] → T_target_in_ref，t = (r_target - r_ref)/1000 [m]
   #   r_main=(776.16,876.11,0), r_left_front=(-37.49,530.31,430.63), r_right_back=(1539.14,705.48,-501.01)
@@ -469,26 +497,26 @@ lidar_lidar:
       rows: 4
       cols: 4
       dt: d
-      data: [0.95310819, 0.29615933, 0.06224492, 0.84047853,
-             0.29821192, -0.95412983, -0.02656890, 0.48251480,
-             0.05152110, 0.04388521, -0.99770720, -0.25948449,
-             0.00000000, 0.00000000, 0.00000000, 1.00000000]
-      # data: [0.95373551, 0.29716026, 0.04565477, 0.86126466,
-      #        0.29796477, -0.95450387, -0.01180530, 0.47915653,
-      #        0.04006959, 0.02486265, -0.99888752, -0.14815828,
+      data: [0.95400787095130035, 0.29122180661204, 0.071125533506516472, 0.88047852999999998,
+             0.29496942273227256, -0.95423132998467763, -0.04935188475289759, 0.48751480000000003,
+             0.053497867396344934, 0.06806194406048785, -0.99624572769711306, -0.27948449000000003,
+             0.0, 0.0, 0.0, 1.0]
+      # data: [0.95310819, 0.29615933, 0.06224492, 0.84047853,
+      #        0.29821192, -0.95412983, -0.02656890, 0.48251480,
+      #        0.05152110, 0.04388521, -0.99770720, -0.25948449,
       #        0.00000000, 0.00000000, 0.00000000, 1.00000000]
 
     T_lidar_main__right_back:
       rows: 4
       cols: 4
       dt: d
-      data: [-0.95193768, -0.29927511, 0.06518480, -0.73527408,
-             -0.29913383, 0.95413386, 0.01214621, -0.51436830,
-             -0.06583008, -0.00793654, -0.99779928, -0.18570599,
-             0.00000000, 0.00000000, 0.00000000, 1.00000000]
-      # data: [-0.95458205, -0.29181512, 0.06014188, -0.71511499,
-      #        -0.29342725, 0.95577649, -0.01979247, -0.48691960,
-      #        -0.05170646, -0.03654080, -0.99799359, -0.18539460,
+      data: [-0.95193768245355326, -0.29809189627366156, 0.07039794102764467, -0.73527408000000005,
+             -0.29913383135222765, 0.95420052020023993, -0.0045075703132145166, -0.5143683,
+             -0.065830081767351389, -0.025349331856365388, -0.99750880282278254, -0.18570598999999999,
+             0.0, 0.0, 0.0, 1.0]
+      # data: [-0.95193768, -0.29927511, 0.06518480, -0.73527408,
+      #        -0.29913383, 0.95413386, 0.01214621, -0.51436830,
+      #        -0.06583008, -0.00793654, -0.99779928, -0.18570599,
       #        0.00000000, 0.00000000, 0.00000000, 1.00000000]
 
     T_left_front__right_back:
@@ -543,6 +571,8 @@ lidar_lidar:
 #   1) 指定文件: coarse_pcd_file / coarse_image_file（相对 --data-dir 或绝对）
 #   2) 不指定时从当前数据源取首帧: ROS2 bag/话题 或 文件目录（lidar/camera 目录）自动取第一帧
 lidar_camera:
+  # 按文件名时间戳自动匹配 LiDAR PCD 与相机图像（|Δt| <= frame_sync_threshold）
+  auto_time_align: true
   method: target
   # 标定板类型 (method=target 时): chessboard | circles_grid | asym_circles
   # 圆点格说明: 对称/非对称均只需 board_cols、board_rows、square_size；非对称通常为奇数列×偶数行
@@ -624,10 +654,10 @@ lidar_camera:
     # - [lidar_main, surrounding_right]
     # 补盲 LiDAR-相机（有共识区，在上方主雷达对之外追加）
     # - [left_front, center_front]
-    # - [left_front, surrounding_front]
+    - [left_front, surrounding_front]
     # - [left_front, surrounding_left]
     # - [right_back, surrounding_right]
-    - [right_back, surrounding_back]
+    # - [right_back, surrounding_back]
   # 粗标定初值（可选）：若配置此项，作为粗标定阶段的输入；粗标定必执行，其结果为精标定初值。
   # 有此项时：无 MIAS-LCEC 或 MIAS-LCEC 无输入时直接用此项作为粗标定结果；MIAS-LCEC 失败时也可回退此项。
   # 为 true 时跳过 AI 粗标定与精标定，直接使用下方 initial_extrinsic 作为手动微调起始值（需配合 --manual）
@@ -655,23 +685,34 @@ lidar_camera:
              0.0, 0.0, -1.0, -0.48747,
              1.0, 0.0, 0.0, -0.83344,
              0.0, 0.0, 0.0, 1.0]
+      # 3302_1
       # data: [-0.015707, -0.999877, -0.000038, 0.01909,
       #         0.061041, -0.000921, -0.998135, -0.48747,
       #         0.998012, -0.015680, 0.061048, -0.83344,
       #         0.0, 0.0, 0.0, 1.0]
-
+      # 3302_2
+      data: [-0.022687, -0.999743, 0.000038, 0.01909,
+              0.066257, -0.001541, -0.997801, -0.48747,
+              0.997545, -0.022635, 0.066275, -0.83344,
+              0.0, 0.0, 0.0, 1.0]
     lidar_main__surrounding_front:
       rows: 4
       cols: 4
       dt: d
-      data: [0.0, -1.0, 0.0, -0.02078,
-             0.0, 0.0, -1.0, -0.48434,
-             1.0, 0.0, 0.0, -0.83850,
-             0.0, 0.0, 0.0, 1.0]
+      # data: [0.0, -1.0, 0.0, -0.02078,
+      #        0.0, 0.0, -1.0, -0.48434,
+      #        1.0, 0.0, 0.0, -0.83850,
+      #        0.0, 0.0, 0.0, 1.0]
+    # 3302_1
     # data: [-0.02622134, -0.99932261, -0.02582182, -0.03578,
-      #        -0.27223434,  0.03199284, -0.96169898, -0.48434,
-      #         0.96187364, -0.01818745, -0.27288882, -0.8385,
-      #         0.0, 0.0, 0.0, 1.0]
+    #          -0.27223434,  0.03199284, -0.96169898, -0.48434,
+    #           0.96187364, -0.01818745, -0.27288882, -0.8385,
+    #           0.0, 0.0, 0.0, 1.0]
+    # 3302_2
+      data: [-0.015707, -0.999877, 0.000063, -0.02078,
+            -0.202763, 0.003123, -0.979223, -0.48434,
+             0.979102, -0.015394, -0.202787, -0.83850,
+             0.0, 0.0, 0.0, 1.0]
 
     lidar_main__surrounding_back:
       rows: 4
@@ -690,6 +731,11 @@ lidar_camera:
              0.0, 0.0, -1.0, -0.43085,
              0.0, 1.0, 0.0, -0.51967,
              0.0, 0.0, 0.0, 1.0]
+      # 3302_2
+      data: [0.999823, -0.017452, -0.007007, -0.06157,
+            -0.013317, -0.393889, -0.919062, -0.43085,
+           0.013280, 0.918992, -0.394052, -0.51967,
+          0.0, 0.0, 0.0, 1.0]
 
     lidar_main__surrounding_right:
       rows: 4
@@ -699,6 +745,11 @@ lidar_camera:
              0.0, 0.0, -1.0, -0.43085,
              0.0, -1.0, 0.0, -0.51967,
              0.0, 0.0, 0.0, 1.0]
+      # 3302_2
+      data: [-0.999945, 0.010469, 0.000227, 0.06157,
+              0.002967, 0.304020, -0.952661, -0.43085,
+             -0.010043, -0.952608, -0.304034, -0.51967,
+              0.0, 0.0, 0.0, 1.0]
 
     left_front__center_front:
       rows: 4
@@ -713,10 +764,14 @@ lidar_camera:
       rows: 4
       cols: 4
       dt: d
-      data: [0.0, 1.0, 0.0, -0.45141,
-             0.0, 0.0, 1.0, -0.13854,
-             1.0, 0.0, 0.0, -0.02485,
-             0.0, 0.0, 0.0, 1.0]
+      # data: [0.0, 1.0, 0.0, -0.45141,
+      #        0.0, 0.0, 1.0, -0.13854,
+      #        1.0, 0.0, 0.0, -0.02485,
+      #        0.0, 0.0, 0.0, 1.0]
+      data: [-0.3363009, 0.9414150, 0.0252878, -0.5056639,
+             -0.3900280, -0.1636696, 0.9061404, -0.4852539,
+              0.8571930, 0.2948729, 0.4222204, -0.2084387,
+              0.0000000, 0.0000000, 0.0000000, 1.0000000]
 
     left_front__surrounding_left:
       rows: 4
@@ -744,6 +799,16 @@ lidar_camera:
              0.0, 0.0, 1.0, -0.26022,
              1.0, 0.0, 0.0, -0.00753,
              0.0, 0.0, 0.0, 1.0]
+      # 3302_1
+      # data: [-0.2980919, 0.95420052, -0.02534933, 0.26692373,
+      #        -0.07039794, 0.00450757,  0.99750881, -0.29504987,
+      #         0.95193768, 0.29913384, 0.06583008, 0.09551511,
+      #         0.0, 0.0, 0.0, 1.0]
+      # 3302_2
+      data: [-0.316791, 0.948495, -0.001079, -0.50101,
+             -0.335337, -0.110936, 0.935544, -0.50022,
+              0.887239, 0.296734, 0.353209, -0.00753,
+              0.0, 0.0, 0.0, 1.0]
 
   # 兼容：单 LiDAR 多相机时可只写 camera_list，程序会展开为 (lidar_id, cam) 对
   # camera_list: [surrounding_front, surrounding_back, surrounding_left, surrounding_right]

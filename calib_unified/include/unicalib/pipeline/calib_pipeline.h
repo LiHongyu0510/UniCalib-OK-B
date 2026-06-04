@@ -267,6 +267,7 @@ struct PipelineConfig {
     int    edge_canny_high = 150;
     int    ceres_max_iter  = 50;
     double frame_sync_threshold_s = 0.5;   // LiDAR-相机帧同步时间阈值 [s]，放宽到 0.5s
+    bool   lidar_cam_auto_time_align = true;  // 加载后按时间戳匹配 LiDAR/图像帧对
     double ncc_threshold = 0.05;           // NCC 阈值：NCC > 此值才参与优化
     double ncc_low_skip_threshold  = -1e9; // NCC 低于此值可跳过（-1e9 表示不启用）
     bool   lidar_cam_optimize_time_offset = true;  // 来自 lidar_camera.optimize_time_offset

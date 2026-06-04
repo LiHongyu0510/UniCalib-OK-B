@@ -555,6 +555,19 @@ int main(int argc, char** argv) {
         if (n["target_ba_max_iter"]) pipe_cfg.target_ba_max_iter = n["target_ba_max_iter"].as<int>();
         if (n["target_ba_use_robust_loss"]) pipe_cfg.target_ba_use_robust_loss = n["target_ba_use_robust_loss"].as<bool>();
         if (n["target_ba_huber_scale_px"]) pipe_cfg.target_ba_huber_scale_px = n["target_ba_huber_scale_px"].as<double>();
+        if (n["auto_time_align"]) pipe_cfg.lidar_cam_auto_time_align = n["auto_time_align"].as<bool>();
+        if (n["frame_sync_threshold"])
+            pipe_cfg.frame_sync_threshold_s = n["frame_sync_threshold"].as<double>();
+        if (n["time_offset_search_range"])
+            pipe_cfg.time_offset_search_range_s = n["time_offset_search_range"].as<double>();
+        if (n["fine"]) {
+            const auto& fine = n["fine"];
+            if (fine["frame_sync_threshold"])
+                pipe_cfg.frame_sync_threshold_s = fine["frame_sync_threshold"].as<double>();
+            if (fine["time_offset_search_range"])
+                pipe_cfg.time_offset_search_range_s = fine["time_offset_search_range"].as<double>();
+            if (fine["ncc_threshold"]) pipe_cfg.ncc_threshold = fine["ncc_threshold"].as<double>();
+        }
     }
     // 传递 reference_imu
     if (!sys_cfg.reference_imu.empty()) {

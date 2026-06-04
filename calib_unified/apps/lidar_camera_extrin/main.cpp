@@ -548,6 +548,22 @@ int main(int argc, char** argv) {
         do_coarse = false;
         UNICALIB_INFO("[LiDAR-Cam] use_config_extrinsic_only=true：跳过 AI 粗标定，将使用配置 initial_extrinsic 直接进入精标定/手动微调");
     }
+    if (cfg["lidar_camera"]) {
+        const auto& lc = cfg["lidar_camera"];
+        if (lc["auto_time_align"]) pipe_cfg.lidar_cam_auto_time_align = lc["auto_time_align"].as<bool>();
+        if (lc["frame_sync_threshold"])
+            pipe_cfg.frame_sync_threshold_s = lc["frame_sync_threshold"].as<double>();
+        if (lc["time_offset_search_range"])
+            pipe_cfg.time_offset_search_range_s = lc["time_offset_search_range"].as<double>();
+        if (lc["fine"]) {
+            const auto& fine = lc["fine"];
+            if (fine["frame_sync_threshold"])
+                pipe_cfg.frame_sync_threshold_s = fine["frame_sync_threshold"].as<double>();
+            if (fine["time_offset_search_range"])
+                pipe_cfg.time_offset_search_range_s = fine["time_offset_search_range"].as<double>();
+            if (fine["ncc_threshold"]) pipe_cfg.ncc_threshold = fine["ncc_threshold"].as<double>();
+        }
+    }
     if (cfg["frame_sync_threshold_s"]) pipe_cfg.frame_sync_threshold_s = cfg["frame_sync_threshold_s"].as<double>();
     if (cfg["time_offset_search_range_s"]) pipe_cfg.time_offset_search_range_s = cfg["time_offset_search_range_s"].as<double>();
     if (cfg["ncc_threshold"]) pipe_cfg.ncc_threshold = cfg["ncc_threshold"].as<double>();

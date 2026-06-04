@@ -7,6 +7,7 @@
  */
 
 #include "unicalib/extrinsic/lidar_camera_calib.h"
+#include "unicalib/common/camera_undistort.h"
 #include "unicalib/common/logger.h"
 #include "unicalib/common/exception.h"
 #include <pcl/point_cloud.h>
@@ -758,6 +759,10 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_target(
     const std::string& cam_id,
     const std::optional<Sophus::SE3d>& init_extrin) {
 
+    const auto prep = prepare_lidar_cam_calibration_images(camera_frames, cam_intrin);
+    const auto& frames_calib = prep.frames;
+    const CameraIntrinsics& intrin_calib = prep.intrin;
+
     const char* target_name = (cfg_.target_type == LiDARCameraCalibrator::TargetType::CHESSBOARD) ? "棋盘格" :
                              (cfg_.target_type == LiDARCameraCalibrator::TargetType::CIRCLES_GRID) ? "圆点格(对称)" : "圆点格(非对称)";
     UNICALIB_INFO("=== LiDAR-Camera 目标法 (标定板: {}) ===", target_name);
@@ -770,12 +775,12 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_target(
     const int min_frames = std::max(1, cfg_.target_min_frames);
 
     UNICALIB_INFO("[LiDAR-Cam/Target] 步骤: 帧同步与角点检测 (LiDAR {} 帧, 图像 {} 帧, 每帧最少角点={})",
-                  lidar_scans.size(), camera_frames.size(), min_corners);
+                  lidar_scans.size(), frames_calib.size(), min_corners);
     std::vector<std::vector<cv::Point3f>> frames_pts3d;
     std::vector<std::vector<cv::Point2f>> frames_pts2d;
     cv::Size pattern_size(cfg_.board_cols, cfg_.board_rows);
 
-    for (const auto& [ts_cam, img_cam] : camera_frames) {
+    for (const auto& [ts_cam, img_cam] : frames_calib) {
         if (img_cam.empty()) continue;
         const LiDARScan* best_scan = nullptr;
         double best_dt = 1e9;
@@ -840,29 +845,30 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_target(
     UNICALIB_INFO("[LiDAR-Cam/Target] 有效帧数={} 总点对数={}", frames_pts3d.size(), total_pts);
 
     cv::Mat K = (cv::Mat_<double>(3,3) <<
-        cam_intrin.fx, 0, cam_intrin.cx,
-        0, cam_intrin.fy, cam_intrin.cy, 0, 0, 1);
-    cv::Mat dist = cv::Mat(cam_intrin.dist_coeffs).reshape(1, 1);
-    double fx = cam_intrin.fx, fy = cam_intrin.fy, cx = cam_intrin.cx, cy = cam_intrin.cy;
+        intrin_calib.fx, 0, intrin_calib.cx,
+        0, intrin_calib.fy, intrin_calib.cy, 0, 0, 1);
+    cv::Mat dist = cv::Mat(intrin_calib.dist_coeffs).reshape(1, 1);
+    double fx = intrin_calib.fx, fy = intrin_calib.fy, cx = intrin_calib.cx, cy = intrin_calib.cy;
 
-    // 若有畸变，则对 2D 点去畸变，使粗搜索/精化/BA 与针孔投影一致（PnP 仍用畸变模型求初值）
-    bool use_undistorted_2d = (dist.rows >= 1 && dist.cols >= 4);
+    // 图像已去畸变时 2D 角点即为针孔像素；否则对观测点做 undistortPoints
+    const bool undistort_points_only = !prep.undistorted && dist.rows >= 1 && dist.cols >= 4;
     std::vector<std::vector<cv::Point2f>> frames_pts2d_undistorted;
-    if (use_undistorted_2d) {
+    if (!prep.undistorted && dist.rows >= 1 && dist.cols >= 4) {
         frames_pts2d_undistorted.resize(frames_pts2d.size());
         for (size_t f = 0; f < frames_pts2d.size(); ++f) {
             cv::undistortPoints(frames_pts2d[f], frames_pts2d_undistorted[f], K, dist, cv::noArray(), K);
         }
         UNICALIB_INFO("[LiDAR-Cam/Target] 已对 2D 观测去畸变，BA 使用针孔+去畸变点");
     }
-    const std::vector<std::vector<cv::Point2f>>& frames_pts2d_use = use_undistorted_2d ? frames_pts2d_undistorted : frames_pts2d;
+    const std::vector<std::vector<cv::Point2f>>& frames_pts2d_use =
+        (!prep.undistorted && dist.rows >= 1 && dist.cols >= 4) ? frames_pts2d_undistorted : frames_pts2d;
 
     std::vector<cv::Point3f> pts3d_all;
     std::vector<cv::Point2f> pts2d_all;
     for (size_t f = 0; f < frames_pts3d.size(); ++f) {
         for (size_t i = 0; i < frames_pts3d[f].size(); ++i) {
             pts3d_all.push_back(frames_pts3d[f][i]);
-            pts2d_all.push_back(frames_pts2d[f][i]);  // PnP 仍用原始（带畸变）像素坐标
+            pts2d_all.push_back(frames_pts2d_use[f][i]);
         }
     }
 
@@ -930,7 +936,7 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_target(
                           kept_pts3d.size(), min_frames);
         } else {
             frames_pts3d = std::move(kept_pts3d);
-            if (use_undistorted_2d)
+            if (undistort_points_only)
                 frames_pts2d_undistorted = std::move(kept_pts2d);
             else
                 frames_pts2d = std::move(kept_pts2d);
@@ -1268,6 +1274,10 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
     const std::string& lidar_id,
     const std::string& cam_id) {
 
+    const auto prep = prepare_lidar_cam_calibration_images(camera_frames, cam_intrin);
+    const auto& frames_calib = prep.frames;
+    const CameraIntrinsics& intrin_calib = prep.intrin;
+
     bool init_is_identity = init_guess.log().norm() < 1e-9;
     UNICALIB_INFO("┌────────────────────────────────────────────────────────────────┐");
     UNICALIB_INFO("│ [精标定] 边缘对齐法 (Edge Alignment)                        │");
@@ -1280,17 +1290,17 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
         UNICALIB_INFO("│   平移: [{:.4f}, {:.4f}, {:.4f}] m", t.x(), t.y(), t.z());
         UNICALIB_INFO("│   旋转: [{:.2f}, {:.2f}, {:.2f}] deg", euler.x()*180/M_PI, euler.y()*180/M_PI, euler.z()*180/M_PI);
     }
-    size_t N = std::min(lidar_scans.size(), camera_frames.size());
+    size_t N = std::min(lidar_scans.size(), frames_calib.size());
     if (N == 0) {
-        UNICALIB_ERROR("│ [错误] 数据为空 LiDAR帧:{} 图像帧:{}", lidar_scans.size(), camera_frames.size());
+        UNICALIB_ERROR("│ [错误] 数据为空 LiDAR帧:{} 图像帧:{}", lidar_scans.size(), frames_calib.size());
         return std::nullopt;
     }
     const size_t max_frames = 30;
     const size_t num_to_try = std::min(N, max_frames);
     UNICALIB_INFO("│ 数据: 点云帧={} 图像帧={} 采样={} 尺寸={}x{}",
-                 lidar_scans.size(), camera_frames.size(), num_to_try, cam_intrin.width, cam_intrin.height);
+                 lidar_scans.size(), frames_calib.size(), num_to_try, intrin_calib.width, intrin_calib.height);
     UNICALIB_INFO("│ 时间: 图像[{:.3f}-{:.3f}]s LiDAR[{:.3f}-{:.3f}]s",
-                 camera_frames.front().first, camera_frames.back().first,
+                 frames_calib.front().first, frames_calib.back().first,
                  lidar_scans.front().timestamp, lidar_scans.back().timestamp);
     UNICALIB_INFO("│ 配置: 同步阈值={:.3f}s 边缘Canny({}, {}) NCC阈值={:.3f}",
                  cfg_.frame_sync_threshold_s, cfg_.edge_canny_low, cfg_.edge_canny_high, cfg_.ncc_threshold);
@@ -1301,7 +1311,7 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
     Sophus::SE3d T_cam_lidar = init_guess;
     // 时间偏移：在进入非凸的 Ceres 优化前，先做一次离散搜索找到更合理的配对（避免在错误帧对上优化）
     double time_offset_s = cfg_.time_offset_init_s;
-    if (cfg_.optimize_time_offset && !lidar_scans.empty() && !camera_frames.empty()) {
+    if (cfg_.optimize_time_offset && !lidar_scans.empty() && !frames_calib.empty()) {
         const double sync_thresh = cfg_.frame_sync_threshold_s;
         // 使用配置的时间偏移搜索范围，不再硬编码限制为 0.5s
         const double search_range_s = cfg_.time_offset_search_range_s;
@@ -1313,7 +1323,7 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
             for (size_t k = 0; k < num_to_try; ++k) {
                 size_t fi = (k * N) / num_to_try;
                 if (fi >= N) break;
-                const auto& [ts_cam, img_cam] = camera_frames[fi];
+                const auto& [ts_cam, img_cam] = frames_calib[fi];
                 if (img_cam.empty()) continue;
                 const double target_ts = ts_cam + off;
                 const LiDARScan* best_scan = nullptr;
@@ -1323,7 +1333,7 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
                     if (dt < best_dt) { best_dt = dt; best_scan = &scan; }
                 }
                 if (!best_scan || best_dt > sync_thresh) continue;
-                double ncc = compute_frame_ncc(*best_scan, img_cam, T_cam_lidar, cam_intrin, cfg_.edge_canny_low, cfg_.edge_canny_high);
+                double ncc = compute_frame_ncc(*best_scan, img_cam, T_cam_lidar, intrin_calib, cfg_.edge_canny_low, cfg_.edge_canny_high);
                 local_best = std::max(local_best, ncc);
             }
             if (local_best > best_score) { best_score = local_best; best_off = off; }
@@ -1349,7 +1359,7 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
         for (size_t k = 0; k < num_to_try; ++k) {
             size_t fi = (k * N) / num_to_try;
             if (fi >= N) break;
-            const auto& [ts_cam, img_cam] = camera_frames[fi];
+            const auto& [ts_cam, img_cam] = frames_calib[fi];
             if (img_cam.empty()) continue;
             const LiDARScan* best_scan = nullptr;
             double best_dt = 1e9;
@@ -1358,7 +1368,7 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
                 if (dt < best_dt) { best_dt = dt; best_scan = &scan; }
             }
             if (!best_scan || best_dt > sync_thresh) continue;
-            double ncc = compute_frame_ncc(*best_scan, img_cam, T_cam_lidar, cam_intrin, cfg_.edge_canny_low, cfg_.edge_canny_high);
+            double ncc = compute_frame_ncc(*best_scan, img_cam, T_cam_lidar, intrin_calib, cfg_.edge_canny_low, cfg_.edge_canny_high);
             if (cfg_.ncc_low_skip_threshold > -1e8 && ncc < cfg_.ncc_low_skip_threshold) {
                 UNICALIB_DEBUG("  [精标定] 低NCC帧跳过 fi={} ncc={:.4f} (阈值={:.4f})", fi, ncc, cfg_.ncc_low_skip_threshold);
                 continue;
@@ -1373,7 +1383,7 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
     for (size_t k = 0; k < num_to_try; ++k) {
         size_t fi = (k * N) / num_to_try;
         if (fi >= N) break;
-        const auto& [ts_cam, img_cam] = camera_frames[fi];
+        const auto& [ts_cam, img_cam] = frames_calib[fi];
         if (img_cam.empty()) continue;
         const LiDARScan* best_scan = nullptr;
         double best_dt = 1e9;
@@ -1382,7 +1392,7 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
             if (dt < best_dt) { best_dt = dt; best_scan = &scan; }
         }
         if (!best_scan || best_dt > sync_thresh) continue;
-        double ncc = compute_frame_ncc(*best_scan, img_cam, T_cam_lidar, cam_intrin, cfg_.edge_canny_low, cfg_.edge_canny_high);
+        double ncc = compute_frame_ncc(*best_scan, img_cam, T_cam_lidar, intrin_calib, cfg_.edge_canny_low, cfg_.edge_canny_high);
         candidates_tried++;
         ncc_samples.push_back(ncc);
         if (cfg_.ncc_low_skip_threshold > -1e8 && ncc < cfg_.ncc_low_skip_threshold) {
@@ -1466,7 +1476,7 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
     for (size_t i = 0; i < frame_pairs.size(); ++i) {
         edge_functors[i].scan = frame_pairs[i].first;
         edge_functors[i].image = frame_pairs[i].second.clone();  // 值拷贝
-        edge_functors[i].intrin = cam_intrin;
+        edge_functors[i].intrin = intrin_calib;
         edge_functors[i].canny_low = cfg_.edge_canny_low;
         edge_functors[i].canny_high = cfg_.edge_canny_high;
         ceres::CostFunction* cost = new ceres::NumericDiffCostFunction<EdgeNCCCost, ceres::CENTRAL, 1, 6>(
@@ -1513,7 +1523,7 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
                 fc.scan = frame_pairs[i].first;
                 fc.keypoint_u = kp.x;
                 fc.keypoint_v = kp.y;
-                fc.intrin = cam_intrin;
+                fc.intrin = intrin_calib;
                 corner_functors.push_back(fc);
             }
         }
@@ -1533,7 +1543,7 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
         for (size_t i = 0; i < frame_pairs.size(); ++i) {
             intensity_functors[i].scan = frame_pairs[i].first;
             intensity_functors[i].image = frame_pairs[i].second.clone();  // 值拷贝
-            intensity_functors[i].intrin = cam_intrin;
+            intensity_functors[i].intrin = intrin_calib;
             ceres::CostFunction* cost = new ceres::NumericDiffCostFunction<IntensityConsistencyCost, ceres::CENTRAL, 1, 6>(
                 &intensity_functors[i], ceres::DO_NOT_TAKE_OWNERSHIP, 1, ceres::NumericDiffOptions());
             ceres::LossFunction* loss = nullptr;
@@ -1634,10 +1644,10 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
 
     // 6. 检查相机内参
     UNICALIB_INFO("  [预检查] 相机内参: fx={:.2f} fy={:.2f} cx={:.2f} cy={:.2f} size={}x{}",
-                  cam_intrin.fx, cam_intrin.fy, cam_intrin.cx, cam_intrin.cy,
-                  cam_intrin.width, cam_intrin.height);
-    if (cam_intrin.fx <= 0 || cam_intrin.fy <= 0) {
-        UNICALIB_ERROR("  [预检查] 相机焦距无效 fx={} fy={}!", cam_intrin.fx, cam_intrin.fy);
+                  intrin_calib.fx, intrin_calib.fy, intrin_calib.cx, intrin_calib.cy,
+                  intrin_calib.width, intrin_calib.height);
+    if (intrin_calib.fx <= 0 || intrin_calib.fy <= 0) {
+        UNICALIB_ERROR("  [预检查] 相机焦距无效 fx={} fy={}!", intrin_calib.fx, intrin_calib.fy);
         params_valid = false;
     }
 
@@ -1740,7 +1750,7 @@ std::optional<ExtrinsicSE3> LiDARCameraCalibrator::calibrate_edge_align(
     }
     double final_ncc = -1e9;
     for (const auto& pr : frame_pairs)
-        final_ncc = std::max(final_ncc, compute_frame_ncc(*pr.first, pr.second, T_cam_lidar, cam_intrin, cfg_.edge_canny_low, cfg_.edge_canny_high));
+        final_ncc = std::max(final_ncc, compute_frame_ncc(*pr.first, pr.second, T_cam_lidar, intrin_calib, cfg_.edge_canny_low, cfg_.edge_canny_high));
     double rms = 1.0 - std::max(0.0, final_ncc);
     bool converged = (final_ncc > 0.3);
 
@@ -1810,7 +1820,10 @@ void LiDARCameraCalibrator::visualize_projection(
 
     if (!scan.cloud || image.empty()) return;
 
-    cv::Mat vis = image.clone();
+    const cv::Mat img_calib = undistort_camera_image(image, cam_intrin);
+    const CameraIntrinsics intrin_calib = pinhole_intrinsics_without_distortion(cam_intrin);
+
+    cv::Mat vis = img_calib.clone();
     if (vis.channels() == 1)
         cv::cvtColor(vis, vis, cv::COLOR_GRAY2BGR);
 
@@ -1835,12 +1848,14 @@ void LiDARCameraCalibrator::visualize_projection(
         Eigen::Vector3d p_c = T * p_l;
         if (p_c.z() < 0.1) continue;
 
-        double u = cam_intrin.fx * p_c.x() / p_c.z() + cam_intrin.cx;
-        double v = cam_intrin.fy * p_c.y() / p_c.z() + cam_intrin.cy;
+        double u = intrin_calib.fx * p_c.x() / p_c.z() + intrin_calib.cx;
+        double v = intrin_calib.fy * p_c.y() / p_c.z() + intrin_calib.cy;
         int iu = static_cast<int>(std::round(u));
         int iv = static_cast<int>(std::round(v));
-        if (iu < 2 || iu >= cam_intrin.width-2 ||
-            iv < 2 || iv >= cam_intrin.height-2) continue;
+        const int img_w = intrin_calib.width > 0 ? intrin_calib.width : vis.cols;
+        const int img_h = intrin_calib.height > 0 ? intrin_calib.height : vis.rows;
+        if (iu < 2 || iu >= img_w - 2 ||
+            iv < 2 || iv >= img_h - 2) continue;
 
         // 深度着色 (近=红, 远=蓝)
         double ratio = (p_c.z() - d_min) / (d_max - d_min);
@@ -1865,12 +1880,15 @@ EdgeAlignmentScore LiDARCameraCalibrator::evaluate_edge_alignment(
     EdgeAlignmentScore score;
     if (!scan.cloud || image.empty()) return score;
 
+    const cv::Mat img_calib = undistort_camera_image(image, cam_intrin);
+    const CameraIntrinsics intrin_calib = pinhole_intrinsics_without_distortion(cam_intrin);
+
     Sophus::SE3d T = extrin.SE3_TargetInRef();
-    cv::Mat lidar_img = lidar_to_intensity_image(scan, T, cam_intrin);
+    cv::Mat lidar_img = lidar_to_intensity_image(scan, T, intrin_calib);
 
     cv::Mat gray;
-    if (image.channels() == 3) cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
-    else gray = image.clone();
+    if (img_calib.channels() == 3) cv::cvtColor(img_calib, gray, cv::COLOR_BGR2GRAY);
+    else gray = img_calib.clone();
     cv::Mat img_edges, lidar_edges;
     cv::Canny(gray, img_edges, cfg_.edge_canny_low, cfg_.edge_canny_high);
 
@@ -1922,6 +1940,10 @@ LiDARCameraCalibrator::TwoStageResult LiDARCameraCalibrator::calibrate_two_stage
     UNICALIB_INFO("│   - 图像尺寸: {}x{}", cam_intrin.width, cam_intrin.height);
     UNICALIB_INFO("│   - 相机内参: fx={:.2f} fy={:.2f} cx={:.2f} cy={:.2f}",
                   cam_intrin.fx, cam_intrin.fy, cam_intrin.cx, cam_intrin.cy);
+    if (camera_has_distortion(cam_intrin)) {
+        UNICALIB_INFO("│   - 图像去畸变: 标定前将使用内参 K 与畸变系数 ({} 个)",
+                      cam_intrin.dist_coeffs.size());
+    }
     UNICALIB_INFO("│   - 优先无目标方法: {}", prefer_targetfree ? "是(边缘对齐)" : "否(棋盘格)");
     UNICALIB_INFO("│   - 粗标定初值: {}", coarse_init.has_value() ? "已提供" : "无(使用identity)");
     if (coarse_init.has_value()) {

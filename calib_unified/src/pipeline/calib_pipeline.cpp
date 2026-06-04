@@ -26,10 +26,12 @@
 #include "unicalib/pipeline/ai_coarse_calib.h"
 #include "unicalib/pipeline/manual_calib.h"
 #include "unicalib/viz/calib_visualizer.h"
+#include "unicalib/common/camera_undistort.h"
 #include "unicalib/common/logger.h"
 #include "unicalib/common/exception.h"
 #include "unicalib/common/accuracy_logger.h"
 #include "unicalib/extrinsic/lidar_camera_calib.h"
+#include "unicalib/extrinsic/lidar_scan_pair.h"
 #include "unicalib/extrinsic/cam_cam_calib.h"
 #include "unicalib/extrinsic/imu_lidar_calib.h"
 #include "unicalib/intrinsic/imu_intrinsic_calib.h"
@@ -711,7 +713,7 @@ StageResult CalibPipeline::run_coarse_stage(CalibTaskType task) {
                     fs::create_directories(coarse_dir);
                     pcd_file = coarse_dir + "/coarse_first.pcd";
                     image_file = coarse_dir + "/coarse_first.png";
-                    if (pcl::io::savePCDFile(pcd_file, *scans[0].cloud, false) == 0 && cv::imwrite(image_file, frames[0].second)) {
+                    if (pcl::io::savePCDFile(pcd_file, *scans[0].cloud, false) == 0) {
                         cam_intrin.width  = frames[0].second.cols;
                         cam_intrin.height = frames[0].second.rows;
                         bool intrin_loaded = false;
@@ -733,6 +735,13 @@ StageResult CalibPipeline::run_coarse_stage(CalibTaskType task) {
                             cam_intrin.fx = cam_intrin.fy = std::max(cam_intrin.width, cam_intrin.height) * 0.8;
                             cam_intrin.cx = cam_intrin.width * 0.5;
                             cam_intrin.cy = cam_intrin.height * 0.5;
+                        }
+                        cv::Mat img_coarse = undistort_camera_image(frames[0].second, cam_intrin);
+                        if (!cv::imwrite(image_file, img_coarse.empty() ? frames[0].second : img_coarse)) {
+                            pcd_file.clear();
+                            image_file.clear();
+                        } else if (camera_has_distortion(cam_intrin)) {
+                            cam_intrin = pinhole_intrinsics_without_distortion(cam_intrin);
                         }
                     } else {
                         pcd_file.clear();
@@ -786,6 +795,11 @@ StageResult CalibPipeline::run_coarse_stage(CalibTaskType task) {
                             cam_intrin.fx = cam_intrin.fy = std::max(cam_intrin.width, cam_intrin.height) * 0.8;
                             cam_intrin.cx = cam_intrin.width * 0.5;
                             cam_intrin.cy = cam_intrin.height * 0.5;
+                        }
+                        cv::Mat img_ud = undistort_camera_image(img, cam_intrin);
+                        if (!img_ud.empty() && camera_has_distortion(cam_intrin)) {
+                            if (cv::imwrite(image_file, img_ud))
+                                cam_intrin = pinhole_intrinsics_without_distortion(cam_intrin);
                         }
                     }
                 }
@@ -1135,14 +1149,19 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
             return r;
         }
         const size_t MAX_FRAMES = 100;
-        size_t step = std::max(size_t(1), pcd_files.size() / MAX_FRAMES);
+        const size_t max_load_files = cfg_.lidar_cam_auto_time_align ? 500u : MAX_FRAMES;
+        const size_t step = cfg_.lidar_cam_auto_time_align
+            ? 1u
+            : std::max(size_t(1), pcd_files.size() / MAX_FRAMES);
         bool lidar_ts_fallback_used = false;
-        for (size_t i = 0; i < pcd_files.size() && lidar_scans.size() < MAX_FRAMES; i += step) {
+        for (size_t i = 0; i < pcd_files.size() && lidar_scans.size() < max_load_files; i += step) {
             LiDARScan scan;
             scan.cloud.reset(new pcl::PointCloud<pcl::PointXYZI>);
             if (pcl::io::loadPCDFile<pcl::PointXYZI>(pcd_files[i].string(), *scan.cloud) == 0) {
                 std::string fname = pcd_files[i].stem().string();
-                try { scan.timestamp = std::stod(fname); } catch (...) {
+                if (auto ts = parse_timestamp_from_filename_stem(fname)) {
+                    scan.timestamp = *ts;
+                } else {
                     scan.timestamp = static_cast<double>(i) * 0.1;
                     lidar_ts_fallback_used = true;
                 }
@@ -1284,14 +1303,19 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
                 UNICALIB_WARN("[Fine-Auto/LiDAR-Cam] 相机 {} 无图像: {}", cur_cam, img_dir);
                 continue;
             }
-            size_t img_step = std::max(size_t(1), img_files.size() / MAX_FRAMES);
+            const size_t max_load_img = cfg_.lidar_cam_auto_time_align ? 500u : MAX_FRAMES;
+            const size_t img_step = cfg_.lidar_cam_auto_time_align
+                ? 1u
+                : std::max(size_t(1), img_files.size() / MAX_FRAMES);
             bool cam_ts_fallback_used = false;
-            for (size_t i = 0; i < img_files.size() && camera_frames.size() < MAX_FRAMES; i += img_step) {
+            for (size_t i = 0; i < img_files.size() && camera_frames.size() < max_load_img; i += img_step) {
                 cv::Mat img = cv::imread(img_files[i].string());
                 if (!img.empty()) {
                     std::string fname = img_files[i].stem().string();
                     double ts;
-                    try { ts = std::stod(fname); } catch (...) {
+                    if (auto parsed = parse_timestamp_from_filename_stem(fname)) {
+                        ts = *parsed;
+                    } else {
                         ts = static_cast<double>(i) * 0.1;
                         cam_ts_fallback_used = true;
                     }
@@ -1306,6 +1330,26 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
         if (camera_frames.empty()) {
             UNICALIB_WARN("[Fine-Auto/LiDAR-Cam] 相机 {} 无帧，跳过", cur_cam);
             continue;
+        }
+
+        std::vector<LiDARScan> lidar_for_cam = lidar_scans;
+        std::vector<std::pair<double, cv::Mat>> cam_for_calib = camera_frames;
+        if (cfg_.lidar_cam_auto_time_align && !lidar_scans.empty()) {
+            std::vector<LiDARScan> aligned_lidar;
+            std::vector<std::pair<double, cv::Mat>> aligned_cam;
+            const std::size_t n_sync = build_time_aligned_lidar_camera_sequences(
+                aligned_lidar, aligned_cam,
+                lidar_scans, camera_frames,
+                cfg_.frame_sync_threshold_s, 0.0, MAX_FRAMES);
+            if (n_sync > 0) {
+                lidar_for_cam = std::move(aligned_lidar);
+                cam_for_calib = std::move(aligned_cam);
+            } else {
+                UNICALIB_WARN(
+                    "[Fine-Auto/LiDAR-Cam] 相机 {} 时间戳匹配无有效对 (阈值 {:.3f}s)，"
+                    "保留原序列（精标定内仍会按最近时间戳配对）",
+                    cur_cam, cfg_.frame_sync_threshold_s);
+            }
         }
 
         CameraIntrinsics cam_intrin;
@@ -1326,6 +1370,12 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
             }
         } else {
             cam_intrin = infer_intrinsics_from_images(camera_frames);
+        }
+
+        {
+            auto prep = prepare_lidar_cam_calibration_images(cam_for_calib, cam_intrin);
+            cam_for_calib = std::move(prep.frames);
+            cam_intrin = prep.intrin;
         }
 
         UNICALIB_LOG_STEP("Fine-Auto/LiDAR-Cam", "步骤: LiDAR-Camera 标定 相机={} (方法: {})",
@@ -1411,7 +1461,15 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
         if (it_inline != cfg_.lidar_camera_initial_extrinsic_inline.end() && it_inline->second.size() >= 16u) {
             Eigen::Matrix4d T = Eigen::Matrix4d::Identity();
             for (int i = 0; i < 16; ++i) T(i / 4, i % 4) = it_inline->second[static_cast<size_t>(i)];
-            coarse_init = Sophus::SE3d(T);
+            Eigen::Matrix3d Rm = T.block<3, 3>(0, 0);
+            const double ortho_err = (Rm.transpose() * Rm - Eigen::Matrix3d::Identity()).norm();
+            if (ortho_err > 1e-10) {
+                UNICALIB_WARN(
+                    "[Fine-Auto/LiDAR-Cam] initial_extrinsics 旋转矩阵非正交 (error={:.2e})，已自动正交化",
+                    ortho_err);
+            }
+            Eigen::Matrix3d R = project_to_rotation(Rm);
+            coarse_init = Sophus::SE3d(R, T.block<3, 1>(0, 3));
             UNICALIB_INFO("[Fine-Auto/LiDAR-Cam] 使用按相机初值 key={} (camera={})", it_inline->first, cur_cam);
         } else {
             coarse_init = coarse_lidar_cam_init_;
@@ -1440,20 +1498,28 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
                 auto extrin_ptr = params_->get_or_create_extrinsic(cfg_.lidar_id, cur_cam);
                 if (extrin_ptr) *extrin_ptr = ext;
             }
-            if (!manual_cache_.lidar_scan.has_value() && !lidar_scans.empty() && !camera_frames.empty()) {
-                manual_cache_.lidar_scan = lidar_scans[0];
-                manual_cache_.camera_image = camera_frames[0].second.clone();
+            if (!manual_cache_.lidar_scan.has_value() && !lidar_for_cam.empty() && !cam_for_calib.empty()) {
+                const auto [ci, li] = time_aligned_lidar_cam_indices_for_manual(
+                    lidar_for_cam, cam_for_calib, cfg_.frame_sync_threshold_s, 0.0);
+                manual_cache_.lidar_scan = lidar_for_cam[li];
+                manual_cache_.camera_image = cam_for_calib[ci].second.clone();
                 manual_cache_.lidar_id = cfg_.lidar_id;
                 manual_cache_.camera_id = cur_cam;
                 manual_cache_.camera_intrin = cam_intrin;
+                UNICALIB_INFO(
+                    "[Fine-Auto/LiDAR-Cam] 手动缓存使用时间对齐帧: cam[{}] t={:.6f} lidar[{}] t={:.6f} |Δt|={:.4f}s",
+                    ci, cam_for_calib[ci].first, li, lidar_for_cam[li].timestamp,
+                    std::fabs(cam_for_calib[ci].first - lidar_for_cam[li].timestamp));
             }
             std::string result_yaml = result_subdir + "/lidar_cam_" + cur_cam + "_extrinsic.yaml";
             save_extrinsic_result(result_yaml, result, cur_cam);
-            if (!lidar_scans.empty() && !camera_frames.empty()) {
+            if (!lidar_for_cam.empty() && !cam_for_calib.empty()) {
+                const auto [ci, li] = time_aligned_lidar_cam_indices_for_manual(
+                    lidar_for_cam, cam_for_calib, cfg_.frame_sync_threshold_s, 0.0);
                 std::string vis_path = result_subdir + "/lidar_cam_" + cur_cam + "_projection.png";
                 UNICALIB_INFO("[Viz] 即将生成投影图并保存到 {}", vis_path);
                 calibrator.visualize_projection(
-                    lidar_scans[0], camera_frames[0].second, ext, cam_intrin, vis_path);
+                    lidar_for_cam[li], cam_for_calib[ci].second, ext, cam_intrin, vis_path);
                 UNICALIB_INFO("[Viz] 投影图已保存（仅使用配置初值，未做精标定）");
             }
             max_rms = std::max(max_rms, 0.0);
@@ -1461,9 +1527,9 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
             UNICALIB_INFO("[Fine-Auto/LiDAR-Cam] 相机 {} 已使用配置初值跳过精标定，直接供手动微调", cur_cam);
         } else {
             UNICALIB_INFO("[Fine-Auto/LiDAR-Cam] 执行标定 相机={}: 点云 {} 帧  图像 {} 帧",
-                          cur_cam, lidar_scans.size(), camera_frames.size());
+                          cur_cam, lidar_for_cam.size(), cam_for_calib.size());
             auto result = calibrator.calibrate_two_stage(
-                lidar_scans, camera_frames, cam_intrin,
+                lidar_for_cam, cam_for_calib, cam_intrin,
                 coarse_init, cfg_.prefer_targetfree,
                 cfg_.lidar_id, cur_cam);
 
@@ -1472,20 +1538,28 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
                     auto extrin_ptr = params_->get_or_create_extrinsic(cfg_.lidar_id, cur_cam);
                     if (extrin_ptr) *extrin_ptr = *result.fine;
                 }
-                if (!manual_cache_.lidar_scan.has_value() && !lidar_scans.empty() && !camera_frames.empty()) {
-                    manual_cache_.lidar_scan = lidar_scans[0];
-                    manual_cache_.camera_image = camera_frames[0].second.clone();
+                if (!manual_cache_.lidar_scan.has_value() && !lidar_for_cam.empty() && !cam_for_calib.empty()) {
+                    const auto [ci, li] = time_aligned_lidar_cam_indices_for_manual(
+                        lidar_for_cam, cam_for_calib, cfg_.frame_sync_threshold_s, 0.0);
+                    manual_cache_.lidar_scan = lidar_for_cam[li];
+                    manual_cache_.camera_image = cam_for_calib[ci].second.clone();
                     manual_cache_.lidar_id = cfg_.lidar_id;
                     manual_cache_.camera_id = cur_cam;
                     manual_cache_.camera_intrin = cam_intrin;
+                    UNICALIB_INFO(
+                        "[Fine-Auto/LiDAR-Cam] 手动缓存使用时间对齐帧: cam[{}] t={:.6f} lidar[{}] t={:.6f} |Δt|={:.4f}s",
+                        ci, cam_for_calib[ci].first, li, lidar_for_cam[li].timestamp,
+                        std::fabs(cam_for_calib[ci].first - lidar_for_cam[li].timestamp));
                 }
                 std::string result_yaml = result_subdir + "/lidar_cam_" + cur_cam + "_extrinsic.yaml";
                 save_extrinsic_result(result_yaml, result, cur_cam);
-                if (!lidar_scans.empty() && !camera_frames.empty()) {
+                if (!lidar_for_cam.empty() && !cam_for_calib.empty()) {
+                    const auto [ci, li] = time_aligned_lidar_cam_indices_for_manual(
+                        lidar_for_cam, cam_for_calib, cfg_.frame_sync_threshold_s, 0.0);
                     std::string vis_path = result_subdir + "/lidar_cam_" + cur_cam + "_projection.png";
                     UNICALIB_INFO("[Viz] 即将生成投影图并保存到 {}", vis_path);
                     calibrator.visualize_projection(
-                        lidar_scans[0], camera_frames[0].second,
+                        lidar_for_cam[li], cam_for_calib[ci].second,
                         *result.best(), cam_intrin, vis_path);
                     UNICALIB_INFO("[Viz] 投影图已保存（当前未将结果点云回显到 3D 窗口，仅保存 PNG）");
                 }

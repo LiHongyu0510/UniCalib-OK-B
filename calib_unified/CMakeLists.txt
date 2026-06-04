@@ -540,6 +540,7 @@ set(UNICALIB_NEW_SOURCES
     # 公共数据结构与异常报告
     src/common/sensor_types.cpp
     src/common/calib_param.cpp
+    src/common/camera_undistort.cpp
     src/common/exception_report.cpp
     src/common/accuracy_logger.cpp
     src/common/calib_stage.cpp
