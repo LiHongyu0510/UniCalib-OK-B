@@ -539,6 +539,32 @@ int main(int argc, char** argv) {
                 "直接以配置初值进入手动微调");
         }
     }
+    calib_cfg.post_manual_refine = YG(ll, "post_manual_refine", true);
+    if (ll["post_manual"] && ll["post_manual"].IsMap()) {
+        const auto& pm = ll["post_manual"];
+        calib_cfg.post_manual_refine = YG(pm, "enable", calib_cfg.post_manual_refine);
+        calib_cfg.post_manual_use_multi_frame = YG(pm, "use_multi_frame", true);
+        calib_cfg.post_manual_two_stage_gicp = YG(pm, "two_stage_gicp", true);
+        if (pm["gicp_corr_dist_coarse"])
+            calib_cfg.post_manual_gicp_corr_dist_coarse = pm["gicp_corr_dist_coarse"].as<double>();
+        if (pm["gicp_corr_dist_fine"])
+            calib_cfg.post_manual_gicp_corr_dist_fine = pm["gicp_corr_dist_fine"].as<double>();
+        if (pm["voxel_coarse"]) calib_cfg.post_manual_voxel_coarse = pm["voxel_coarse"].as<double>();
+        if (pm["voxel_fine"]) calib_cfg.post_manual_voxel_fine = pm["voxel_fine"].as<double>();
+        if (pm["gicp_max_iter"]) calib_cfg.post_manual_gicp_max_iter = pm["gicp_max_iter"].as<int>();
+        if (pm["max_delta_deg"]) calib_cfg.post_manual_max_delta_deg = pm["max_delta_deg"].as<double>();
+        if (pm["max_delta_m"]) calib_cfg.post_manual_max_delta_m = pm["max_delta_m"].as<double>();
+        if (pm["min_overlap_ratio"])
+            calib_cfg.post_manual_min_overlap_ratio = pm["min_overlap_ratio"].as<double>();
+    }
+    if (calib_cfg.post_manual_refine) {
+        UNICALIB_INFO(
+            "[LiDAR-LiDAR] post_manual_refine=true：--manual 且用户 Enter 后将自动 GICP 精化 "
+            "(two_stage={} corr_coarse={:.2f}m corr_fine={:.2f}m max_delta={:.1f}deg/{:.2f}m)",
+            calib_cfg.post_manual_two_stage_gicp, calib_cfg.post_manual_gicp_corr_dist_coarse,
+            calib_cfg.post_manual_gicp_corr_dist_fine, calib_cfg.post_manual_max_delta_deg,
+            calib_cfg.post_manual_max_delta_m);
+    }
 
     bool use_new_format = false;
     std::unique_ptr<UnifiedDataLoader> loader_new_format;
@@ -760,9 +786,29 @@ int main(int argc, char** argv) {
                           std::fabs(sref_man.timestamp - stgt_man.timestamp),
                           sref_man.cloud ? sref_man.cloud->size() : 0,
                           stgt_man.cloud ? stgt_man.cloud->size() : 0);
-            final_ext = session.run_lidar_lidar(final_ext, auto_fitness, &sref_man, &stgt_man);
-            UNICALIB_INFO("[LiDAR-LiDAR][Manual] 手动微调结束，rpy_deg={} xyz_m={}",
-                          final_ext.euler_deg().transpose(), final_ext.translation().transpose());
+            bool manual_accepted = false;
+            final_ext = session.run_lidar_lidar(
+                final_ext, auto_fitness, &sref_man, &stgt_man, &manual_accepted);
+            UNICALIB_INFO("[LiDAR-LiDAR][Manual] 手动微调结束，accepted={} rpy_deg={} xyz_m={}",
+                          manual_accepted, final_ext.euler_deg().transpose(),
+                          final_ext.translation().transpose());
+
+            if (manual_accepted && calib_cfg.post_manual_refine) {
+                UNICALIB_INFO("[LiDAR-LiDAR][PostManual] 用户已接受手调，开始 GICP 精化...");
+                const ExtrinsicSE3 manual_ext = final_ext;
+                auto post = calibrator.calibrate_post_manual(
+                    scans_ref, scans_target, manual_ext, ref_id, target_id);
+                if (post.applied) {
+                    final_ext = post.extrinsic;
+                    UNICALIB_INFO(
+                        "[LiDAR-LiDAR][PostManual] 精化已应用: delta_rot={:.4f}deg delta_trans={:.4f}m "
+                        "overlap={:.3f} inlier_rmse={:.4f}m",
+                        post.delta_rot_deg, post.delta_trans_m, post.refined_quality.overlap_ratio,
+                        post.refined_quality.inlier_rmse);
+                } else {
+                    UNICALIB_WARN("[LiDAR-LiDAR][PostManual] 保留手调外参: {}", post.message);
+                }
+            }
         }
 
         // 标定 4x4：T_target_in_ref（p_ref = T_calib * p_target）

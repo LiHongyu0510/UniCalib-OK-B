@@ -298,7 +298,8 @@ public:
         const ExtrinsicSE3& auto_result,
         double auto_fitness_or_rms,
         const LiDARScan* ref_first = nullptr,
-        const LiDARScan* target_first = nullptr);
+        const LiDARScan* target_first = nullptr,
+        bool* user_accepted = nullptr);
 
     // -----------------------------------------------------------------------
     // 会话持久化

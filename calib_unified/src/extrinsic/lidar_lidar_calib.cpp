@@ -10,6 +10,7 @@
 
 #include "unicalib/extrinsic/lidar_lidar_calib.h"
 #include "unicalib/extrinsic/imu_lidar_calib.h"
+#include "unicalib/extrinsic/lidar_scan_pair.h"
 #include "unicalib/common/logger.h"
 #include "unicalib/common/exception.h"
 #include <pcl/point_types.h>
@@ -1011,6 +1012,172 @@ LiDARLiDARObservability LiDARLiDARCalibrator::analyze_observability(
     obs.overlap_ratio = 0.5;
     obs.recommended_method = "targetless";
     return obs;
+}
+
+// =============================================================================
+// 手动接受后 GICP 精化
+// =============================================================================
+
+namespace {
+
+void se3_delta_deg_m(const Sophus::SE3d& from, const Sophus::SE3d& to,
+                     double& rot_deg, double& trans_m) {
+    Sophus::SE3d d = from.inverse() * to;
+    rot_deg = d.so3().log().norm() * 180.0 / M_PI;
+    trans_m = d.translation().norm();
+}
+
+struct ConfigRestore {
+    LiDARLiDARConfig& cfg;
+    LiDARLiDARConfig saved;
+    explicit ConfigRestore(LiDARLiDARConfig& c) : cfg(c), saved(c) {}
+    ~ConfigRestore() { cfg = saved; }
+};
+
+}  // namespace
+
+PostManualRefineResult LiDARLiDARCalibrator::calibrate_post_manual(
+    const std::vector<LiDARScan>& scans_ref,
+    const std::vector<LiDARScan>& scans_target,
+    const ExtrinsicSE3& manual_extrinsic,
+    const std::string& ref_id,
+    const std::string& target_id) {
+    PostManualRefineResult out;
+    out.extrinsic = manual_extrinsic;
+    out.message = "post_manual_refine disabled or skipped";
+
+    if (!cfg_.post_manual_refine) {
+        out.message = "post_manual_refine=false";
+        return out;
+    }
+    if (scans_ref.empty() || scans_target.empty()) {
+        out.message = "empty scans";
+        return out;
+    }
+    const Sophus::SE3d T_manual = manual_extrinsic.SE3_TargetInRef();
+    if (!is_se3_finite(T_manual) || !validate_extrinsic(T_manual)) {
+        out.message = "invalid manual extrinsic";
+        return out;
+    }
+
+    log_stage("PostManual", "手调接受后 GICP 精化");
+    UNICALIB_INFO(
+        "[LiDAR-LiDAR][PostManual] 初值手调 rpy_deg={} t_m={}",
+        manual_extrinsic.euler_deg().transpose(), manual_extrinsic.translation().transpose());
+
+    const auto [ir_eval, it_eval] = time_aligned_lidar_scan_indices_for_manual(scans_ref, scans_target);
+    out.manual_quality = evaluate_registration(scans_ref[ir_eval], scans_target[it_eval], T_manual);
+
+    auto run_fine_with_overrides = [this, &ref_id, &target_id](
+        const std::vector<LiDARScan>& ref,
+        const std::vector<LiDARScan>& tgt,
+        const Sophus::SE3d& init,
+        double voxel,
+        double corr_dist,
+        int max_iter,
+        bool multi_frame) -> std::optional<ExtrinsicSE3> {
+        ConfigRestore guard(cfg_);
+        cfg_.voxel_size = clamp_voxel_size(voxel);
+        cfg_.gicp_max_corr_dist = corr_dist;
+        cfg_.gicp_max_iterations = max_iter;
+        cfg_.use_ndt = false;
+        cfg_.use_multi_frame_fine = multi_frame;
+        cfg_.use_bspline_refinement = false;
+        return calibrate_fine(ref, tgt, init, ref_id, target_id);
+    };
+
+    const double corr_coarse = std::isfinite(cfg_.post_manual_gicp_corr_dist_coarse) &&
+                                       cfg_.post_manual_gicp_corr_dist_coarse > 0
+                                   ? std::min(3.0, std::max(0.2, cfg_.post_manual_gicp_corr_dist_coarse))
+                                   : 1.0;
+    const double corr_fine = std::isfinite(cfg_.post_manual_gicp_corr_dist_fine) &&
+                                     cfg_.post_manual_gicp_corr_dist_fine > 0
+                                 ? std::min(2.0, std::max(0.05, cfg_.post_manual_gicp_corr_dist_fine))
+                                 : 0.35;
+    const double voxel_c = clamp_voxel_size(cfg_.post_manual_voxel_coarse);
+    const double voxel_f = clamp_voxel_size(cfg_.post_manual_voxel_fine);
+    const int max_iter = cfg_.post_manual_gicp_max_iter > 0
+                             ? std::min(200, cfg_.post_manual_gicp_max_iter)
+                             : 40;
+    const bool multi = cfg_.post_manual_use_multi_frame;
+
+    std::optional<ExtrinsicSE3> refined;
+    if (cfg_.post_manual_two_stage_gicp) {
+        UNICALIB_INFO(
+            "[LiDAR-LiDAR][PostManual] 两阶段 GICP: coarse corr={:.3f}m voxel={:.3f} -> fine corr={:.3f}m voxel={:.3f}",
+            corr_coarse, voxel_c, corr_fine, voxel_f);
+        auto stage1 = run_fine_with_overrides(
+            scans_ref, scans_target, T_manual, voxel_c, corr_coarse, max_iter, multi);
+        if (!stage1.has_value()) {
+            out.message = "post-manual coarse GICP failed";
+            UNICALIB_WARN("[LiDAR-LiDAR][PostManual] {}", out.message);
+            return out;
+        }
+        refined = run_fine_with_overrides(
+            scans_ref, scans_target, stage1->SE3_TargetInRef(), voxel_f, corr_fine, max_iter, multi);
+        if (!refined.has_value()) {
+            UNICALIB_WARN("[LiDAR-LiDAR][PostManual] fine stage failed, fallback to coarse stage");
+            refined = stage1;
+        }
+    } else {
+        refined = run_fine_with_overrides(
+            scans_ref, scans_target, T_manual, voxel_c, corr_coarse, max_iter, multi);
+    }
+
+    if (!refined.has_value()) {
+        out.message = "post-manual GICP failed";
+        UNICALIB_WARN("[LiDAR-LiDAR][PostManual] {}", out.message);
+        return out;
+    }
+
+    out.gicp_converged = true;
+    const Sophus::SE3d T_refined = refined->SE3_TargetInRef();
+    se3_delta_deg_m(T_manual, T_refined, out.delta_rot_deg, out.delta_trans_m);
+
+    out.refined_quality =
+        evaluate_registration(scans_ref[ir_eval], scans_target[it_eval], T_refined);
+
+    const double max_d_rot = std::isfinite(cfg_.post_manual_max_delta_deg) && cfg_.post_manual_max_delta_deg > 0
+                                 ? cfg_.post_manual_max_delta_deg
+                                 : 5.0;
+    const double max_d_trans = std::isfinite(cfg_.post_manual_max_delta_m) && cfg_.post_manual_max_delta_m > 0
+                                   ? cfg_.post_manual_max_delta_m
+                                   : 0.10;
+    const double min_overlap = std::isfinite(cfg_.post_manual_min_overlap_ratio) &&
+                                       cfg_.post_manual_min_overlap_ratio > 0
+                                   ? cfg_.post_manual_min_overlap_ratio
+                                   : 0.25;
+
+    UNICALIB_INFO(
+        "[LiDAR-LiDAR][PostManual] GICP delta: rot={:.4f}deg trans={:.4f}m | overlap manual={:.3f} refined={:.3f} "
+        "rmse manual={:.4f}m refined={:.4f}m",
+        out.delta_rot_deg, out.delta_trans_m, out.manual_quality.overlap_ratio,
+        out.refined_quality.overlap_ratio, out.manual_quality.inlier_rmse, out.refined_quality.inlier_rmse);
+
+    if (out.delta_rot_deg > max_d_rot || out.delta_trans_m > max_d_trans) {
+        out.message = "trust region exceeded (delta rot=" + std::to_string(out.delta_rot_deg) +
+                      "deg trans=" + std::to_string(out.delta_trans_m) + "m)";
+        UNICALIB_WARN("[LiDAR-LiDAR][PostManual] 拒绝精化结果，保留手调: {}", out.message);
+        return out;
+    }
+    if (out.refined_quality.overlap_ratio < min_overlap) {
+        out.message = "refined overlap_ratio below threshold";
+        UNICALIB_WARN("[LiDAR-LiDAR][PostManual] 拒绝精化结果，保留手调: {} ({:.3f} < {:.3f})",
+                      out.message, out.refined_quality.overlap_ratio, min_overlap);
+        return out;
+    }
+
+    out.extrinsic = *refined;
+    out.extrinsic.ref_sensor_id = ref_id;
+    out.extrinsic.target_sensor_id = target_id;
+    out.extrinsic.residual_rms = out.refined_quality.inlier_rmse;
+    out.extrinsic.is_converged = out.refined_quality.converged;
+    out.applied = true;
+    out.message = "post-manual GICP applied";
+    UNICALIB_INFO(
+        "[LiDAR-LiDAR][PostManual] 已采用精化外参 rpy_deg={} t_m={}",
+        out.extrinsic.euler_deg().transpose(), out.extrinsic.translation().transpose());
+    return out;
 }
 
 // =============================================================================

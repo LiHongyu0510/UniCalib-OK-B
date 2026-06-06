@@ -1702,7 +1702,8 @@ ExtrinsicSE3 ManualCalibSession::run_lidar_lidar(
     const ExtrinsicSE3& auto_result,
     double auto_fitness_or_rms,
     const LiDARScan* ref_first,
-    const LiDARScan* target_first) {
+    const LiDARScan* target_first,
+    bool* user_accepted) {
 
     UNICALIB_INFO("[ManualSession] 启动 LiDAR-LiDAR 手动校准 cfg.enable_interactive_gui={}",
                   cfg_.enable_interactive_gui);
@@ -1746,10 +1747,14 @@ ExtrinsicSE3 ManualCalibSession::run_lidar_lidar(
         }
         if (adjusted.has_value()) {
             result = *adjusted;
+            if (user_accepted) *user_accepted = true;
             UNICALIB_INFO("[ManualSession] 用户接受 LiDAR-LiDAR 手动调整结果");
         } else {
+            if (user_accepted) *user_accepted = false;
             UNICALIB_INFO("[ManualSession] 用户取消，保留自动标定结果");
         }
+    } else if (user_accepted) {
+        *user_accepted = false;
     }
 
     log_session_event("lidar_lidar_end",

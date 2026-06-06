@@ -98,6 +98,20 @@ struct LiDARLiDARConfig {
     // 为 true 且本对提供了 initial_extrinsics 初值时：跳过精标定/B样条，直接以该初值进入手动微调
     bool   use_config_extrinsic_only = false;
 
+    // ─── 手动接受后 GICP 精化（--manual 且用户 Enter 确认后）────────────────
+    bool   post_manual_refine = true;
+    bool   post_manual_use_multi_frame = true;
+    bool   post_manual_two_stage_gicp = true;
+    double post_manual_gicp_corr_dist_coarse = 1.0;  // 容纳 ~3° 初值偏差 [m]
+    double post_manual_gicp_corr_dist_fine = 0.35;
+    double post_manual_voxel_coarse = 0.08;
+    double post_manual_voxel_fine = 0.05;
+    int    post_manual_gicp_max_iter = 40;
+    // 相对手调位姿的最大允许修正量；超过则视为 ICP 错配，保留手调结果
+    double post_manual_max_delta_deg = 5.0;
+    double post_manual_max_delta_m = 0.10;
+    double post_manual_min_overlap_ratio = 0.25;
+
     // ─── 通用参数 ───────────────────────────────────────────────────
     double voxel_size = 0.1;            // 预处理体素下采样大小 [m]
     double min_overlap_ratio = 0.3;     // 最小 FOV 重叠率
@@ -126,6 +140,18 @@ struct RegistrationQuality {
 // ===================================================================
 // 两阶段标定结果
 // ===================================================================
+// 手动接受后的 GICP 精化结果
+struct PostManualRefineResult {
+    ExtrinsicSE3 extrinsic;
+    bool applied = false;           // true=采用精化外参，false=保留手调
+    bool gicp_converged = false;
+    double delta_rot_deg = 0.0;   // |T_refined - T_manual| 旋转
+    double delta_trans_m = 0.0;
+    RegistrationQuality manual_quality;
+    RegistrationQuality refined_quality;
+    std::string message;
+};
+
 struct LiDARLiDARTwoStageResult {
     // 粗标定结果
     std::optional<ExtrinsicSE3> coarse;
@@ -224,6 +250,17 @@ public:
         const std::vector<LiDARScan>& scans_ref,
         const std::vector<LiDARScan>& scans_target,
         const Sophus::SE3d& init_extrinsic,
+        const std::string& ref_id,
+        const std::string& target_id);
+
+    /**
+     * @brief 手动接受后以手调外参为初值做 GICP 精化（信任域 + 可选两阶段）
+     * @param manual_extrinsic 用户 Enter 确认的手调外参
+     */
+    PostManualRefineResult calibrate_post_manual(
+        const std::vector<LiDARScan>& scans_ref,
+        const std::vector<LiDARScan>& scans_target,
+        const ExtrinsicSE3& manual_extrinsic,
         const std::string& ref_id,
         const std::string& target_id);
 

@@ -557,6 +557,21 @@ lidar_lidar:
     spline_order: 4
     optimize_time_offset: true
 
+  # --manual 且用户 Enter 后自动 GICP 精化（手调约 3°/数 cm 内时推荐开启）
+  post_manual_refine: true
+  post_manual:
+    enable: true
+    use_multi_frame: true       # 多帧融合，比单帧肉眼对齐更稳
+    two_stage_gicp: true        # 先大对应距离粗 GICP，再小体素/小距离精 GICP
+    gicp_corr_dist_coarse: 1.0  # [m] 容纳 ~3° 初值（10m 处横向约 0.5m）
+    gicp_corr_dist_fine: 0.35
+    voxel_coarse: 0.08
+    voxel_fine: 0.05
+    gicp_max_iter: 40
+    max_delta_deg: 5.0          # 相对手调的最大允许修正；超过则拒绝（防 ICP 错配）
+    max_delta_m: 0.10
+    min_overlap_ratio: 0.25
+
   # 通用参数
   voxel_size: 0.1             # 体素边长 [m]，默认 0.1；代码最小 0.001，越小点越多
   min_overlap_ratio: 0.3
