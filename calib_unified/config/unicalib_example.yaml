@@ -196,7 +196,7 @@ data:
     # 0519 主雷达 top_front_0519 与 0519 RAWIMU 时段不重叠，待同步数据后再改路径
     lidar_main: lidar_main/top_front_0603_1/front
     left_front: lidar_airy/20260603_1/front/left_front
-    right_back: lidar_airy/20260603_1/front/right_back
+    right_back: lidar_airy/20260603_1/back/right_back
 
     # lidar_main: lidar_main/top_front_0603
     # left_front: lidar_airy/20260603/left_front
@@ -402,9 +402,9 @@ imu_lidar:
       rows: 3
       cols: 3
       dt: d
-      data: [-0.00821254, 0.99662158, -0.08171890,
-             -0.98803581, 0.00449862, 0.15415904,
-              0.15400585, 0.08200723, 0.98466086]
+      data: [0.00365937, 0.99747180, -0.07096909,
+             -0.98824432, 0.01445425, 0.15219800,
+              0.15283902, 0.06957785, 0.98579874]
       translation: [0.01600892, -0.03036198, -0.30482987]
       # data: [-0.00349065, 0.99505011, -0.09931308,
       #        -0.99999238, -0.00330005, 0.00208338,
@@ -614,7 +614,7 @@ lidar_camera:
       max_time_s: 0.1           # 最大补偿时间范围 [s]
     # 混合标定配置（深度学习粗标定 + 传统精标定）
     hybrid_calibration:
-      enable: true             # 启用混合标定模式
+      enable: true             # 目标法失败/超差时自动回退边缘对齐
       coarse_confidence_threshold: 0.5  # 粗标定置信度阈值，低于此值触发回退
       pyramid_levels: 3         # 多分辨率金字塔层数
       pyramid_iterations: 20    # 每层迭代次数
@@ -635,33 +635,42 @@ lidar_camera:
       depth_threshold_m: 0.1   # 深度边缘阈值 [m]
       normal_threshold_deg: 30.0  # 法向边缘阈值 [度]
       feature_sample_step: 1   # 特征提取下采样步长
-  # 质量评估阈值（用于诊断报告）
+  # 质量评估阈值 + 自动验收（精标定后生成 quality_report.yaml，无需人工看投影图）
   quality:
+    auto_assess: true           # 精标定后自动评估 PASS/FAIL
+    edge_viz_enable: true       # 保存边缘对齐图（红=图像 绿=LiDAR 黄=重叠）
+    bev_viz_enable: true        # 保存 LiDAR BEV 俯视图
+    bev_range_m: 30.0           # BEV 显示范围 ±m
+    bev_resolution: 512
+    fail_on_bad_quality: false  # true 时 verdict=bad 则进程 exit_code=1（CI 门禁）
     ncc_good: 0.3
     ncc_acceptable: 0.2
     rms_good_px: 2.0
     rms_acceptable_px: 5.0
+    chamfer_good_px: 3.0        # 边缘 Chamfer 距离阈值 [px]
+    chamfer_acceptable_px: 6.0
     inlier_ratio_good: 0.6
+    inlier_ratio_acceptable: 0.4
   # 单标 right_back ↔ surrounding_back 时建议仅保留下面一行 pairs，并注释 camera_list。
   # 日志应出现: 标定对 lidar_id=right_back camera_id=surrounding_back
   #              使用按相机初值 key=right_back__surrounding_back
   #              读取相机内参 sensor_id=surrounding_back fx≈516
   pairs:
     # - [lidar_main, center_front]
-    # - [lidar_main, surrounding_front]
+    - [lidar_main, surrounding_front]
     # - [lidar_main, surrounding_back]
     # - [lidar_main, surrounding_left]
     # - [lidar_main, surrounding_right]
     # 补盲 LiDAR-相机（有共识区，在上方主雷达对之外追加）
     # - [left_front, center_front]
-    - [left_front, surrounding_front]
+    # - [left_front, surrounding_front]
     # - [left_front, surrounding_left]
     # - [right_back, surrounding_right]
     # - [right_back, surrounding_back]
   # 粗标定初值（可选）：若配置此项，作为粗标定阶段的输入；粗标定必执行，其结果为精标定初值。
   # 有此项时：无 MIAS-LCEC 或 MIAS-LCEC 无输入时直接用此项作为粗标定结果；MIAS-LCEC 失败时也可回退此项。
   # 为 true 时跳过 AI 粗标定与精标定，直接使用下方 initial_extrinsic 作为手动微调起始值（需配合 --manual）
-  use_config_extrinsic_only: true
+  use_config_extrinsic_only: false
   # 支持键名 initial_extrinsic 或 T_cam_lidar（lidar→camera 4×4）。
  
   # 多相机初值（可选）：键为 "lidar_id__camera_id" 或 "T_lidar_id__camera_id"
@@ -732,10 +741,10 @@ lidar_camera:
              0.0, 1.0, 0.0, -0.51967,
              0.0, 0.0, 0.0, 1.0]
       # 3302_2
-      data: [0.999823, -0.017452, -0.007007, -0.06157,
-            -0.013317, -0.393889, -0.919062, -0.43085,
-           0.013280, 0.918992, -0.394052, -0.51967,
-          0.0, 0.0, 0.0, 1.0]
+      # data: [0.999823, -0.017452, -0.007007, -0.06157,
+      #       -0.013317, -0.393889, -0.919062, -0.43085,
+      #      0.013280, 0.918992, -0.394052, -0.51967,
+      #     0.0, 0.0, 0.0, 1.0]
 
     lidar_main__surrounding_right:
       rows: 4
@@ -746,10 +755,10 @@ lidar_camera:
              0.0, -1.0, 0.0, -0.51967,
              0.0, 0.0, 0.0, 1.0]
       # 3302_2
-      data: [-0.999945, 0.010469, 0.000227, 0.06157,
-              0.002967, 0.304020, -0.952661, -0.43085,
-             -0.010043, -0.952608, -0.304034, -0.51967,
-              0.0, 0.0, 0.0, 1.0]
+      # data: [-0.999945, 0.010469, 0.000227, 0.06157,
+      #         0.002967, 0.304020, -0.952661, -0.43085,
+      #        -0.010043, -0.952608, -0.304034, -0.51967,
+      #         0.0, 0.0, 0.0, 1.0]
 
     left_front__center_front:
       rows: 4

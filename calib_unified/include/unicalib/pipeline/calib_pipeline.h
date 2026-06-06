@@ -26,6 +26,7 @@
 
 #include "unicalib/common/logger.h"
 #include "unicalib/common/calib_param.h"
+#include "unicalib/common/extrinsic_quality.h"
 #include "unicalib/common/sensor_types.h"
 #include "unicalib/extrinsic/lidar_camera_calib.h"
 #include "unicalib/extrinsic/cam_cam_calib.h"
@@ -96,7 +97,11 @@ struct StageResult {
 
     // 质量阈值 (供下游判断是否需要手动校准)
     double quality_threshold = -1.0; // < 0 表示不评估
+    std::string quality_verdict;     // good | acceptable | bad | unknown
+    double quality_confidence = -1.0;
+
     bool needs_manual_refine() const {
+        if (quality_verdict == "bad") return true;
         return quality_threshold > 0.0 && residual_rms > quality_threshold;
     }
 };
@@ -115,6 +120,25 @@ struct PipelineReport {
             if (!r.success) return false;
         }
         return true;
+    }
+    bool all_quality_pass() const {
+        for (const auto& r : stage_results) {
+            if (r.quality_verdict.empty()) continue;
+            if (r.quality_verdict == "bad" || r.quality_verdict == "unknown") return false;
+        }
+        return true;
+    }
+    std::string overall_quality_verdict() const {
+        bool has_good = false, has_acceptable = false, has_bad = false;
+        for (const auto& r : stage_results) {
+            if (r.quality_verdict == "good") has_good = true;
+            else if (r.quality_verdict == "acceptable") has_acceptable = true;
+            else if (r.quality_verdict == "bad") has_bad = true;
+        }
+        if (has_bad) return "bad";
+        if (has_acceptable) return "acceptable";
+        if (has_good) return "good";
+        return "unknown";
     }
     double total_elapsed_ms() const {
         double total = 0;
@@ -299,6 +323,20 @@ struct PipelineConfig {
     double lidar_cam_quality_rms_acceptable_px = 5.0;
     double lidar_cam_quality_inlier_ratio_good = 0.6;
     double lidar_cam_quality_inlier_ratio_acceptable = 0.4;
+    double lidar_cam_quality_chamfer_good_px = 3.0;
+    double lidar_cam_quality_chamfer_acceptable_px = 6.0;
+
+    // 精标定后自动质量评估与可视化
+    bool lidar_cam_auto_quality_assess = true;
+    bool lidar_cam_edge_viz_enable = true;
+    bool lidar_cam_bev_viz_enable = true;
+    double lidar_cam_bev_range_m = 30.0;
+    int    lidar_cam_bev_resolution = 512;
+    bool lidar_cam_fail_on_bad_quality = false;
+
+    // 混合标定：目标法失败/超差时自动回退边缘对齐
+    bool lidar_cam_hybrid_enable = true;
+    bool lidar_cam_adaptive_strategy = true;
 
     // ─── IMU 内参标定配置 ───
     std::string imu_sensor_id   = "imu_0";  // IMU传感器ID
@@ -499,7 +537,22 @@ protected:
     void save_extrinsic_result(
         const std::string& path,
         const LiDARCameraCalibrator::TwoStageResult& result,
-        const std::string& target_camera_id = "") const;
+        const std::string& target_camera_id = "",
+        const ExtrinsicQualityReport* quality = nullptr) const;
+
+    ExtrinsicQualityReport assess_and_save_lidar_cam_quality(
+        LiDARCameraCalibrator& calibrator,
+        const LiDARScan& scan,
+        const cv::Mat& image,
+        const ExtrinsicSE3& extrin,
+        const CameraIntrinsics& cam_intrin,
+        const LiDARCameraCalibrator::TwoStageResult& result,
+        const std::string& result_subdir,
+        const std::string& camera_id,
+        QualityVerdict& worst_verdict,
+        double& min_confidence,
+        bool& quality_assessed,
+        std::vector<LidarCamPairQualityEntry>& quality_entries) const;
 
     // 保存 Cam-Cam 外参结果到 YAML
     void save_cam_cam_extrinsic_result(

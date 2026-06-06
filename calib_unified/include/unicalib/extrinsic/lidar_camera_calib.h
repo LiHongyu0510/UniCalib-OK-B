@@ -293,6 +293,24 @@ public:
         const CameraIntrinsics& cam_intrin,
         const std::string& output_path);
 
+    // 边缘对齐可视化：图像边缘(红) + LiDAR 投影边缘(绿) 叠加，比点云投影更易判读
+    void visualize_edge_alignment(
+        const LiDARScan& scan,
+        const cv::Mat& image,
+        const ExtrinsicSE3& extrin,
+        const CameraIntrinsics& cam_intrin,
+        const std::string& output_path,
+        const EdgeAlignmentScore* score = nullptr,
+        const char* verdict = nullptr);
+
+    // BEV 俯视图：LiDAR XY 投影 + 指标文字，用于多传感器一致性快速验收
+    void visualize_bev(
+        const LiDARScan& scan,
+        const ExtrinsicSE3& extrin,
+        const std::string& output_path,
+        double range_m = 30.0,
+        int resolution = 512);
+
     // 计算边缘对齐评分
     EdgeAlignmentScore evaluate_edge_alignment(
         const LiDARScan& scan,

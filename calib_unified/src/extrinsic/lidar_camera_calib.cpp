@@ -27,6 +27,7 @@
 #include <optional>
 #include <random>
 #include <tuple>
+#include <cstring>
 
 namespace {
 
@@ -1869,6 +1870,179 @@ void LiDARCameraCalibrator::visualize_projection(
 }
 
 // ===================================================================
+// 边缘图辅助：Chamfer 距离与重叠率
+// ===================================================================
+static void compute_edge_chamfer_and_overlap(
+    const cv::Mat& img_edges,
+    const cv::Mat& lidar_edges,
+    double& chamfer_px,
+    double& overlap_ratio) {
+
+    chamfer_px = -1.0;
+    overlap_ratio = -1.0;
+    if (img_edges.empty() || lidar_edges.empty()) return;
+
+    cv::Mat img_dt;
+    cv::Mat img_inv;
+    cv::bitwise_not(img_edges, img_inv);
+    cv::distanceTransform(img_inv, img_dt, cv::DIST_L2, 3);
+
+    double chamfer_sum = 0.0;
+    int chamfer_count = 0;
+    for (int v = 0; v < lidar_edges.rows; ++v) {
+        for (int u = 0; u < lidar_edges.cols; ++u) {
+            if (lidar_edges.at<uchar>(v, u) == 0) continue;
+            chamfer_sum += img_dt.at<float>(v, u);
+            ++chamfer_count;
+        }
+    }
+    if (chamfer_count > 0)
+        chamfer_px = chamfer_sum / static_cast<double>(chamfer_count);
+
+    cv::Mat lidar_dil, img_dil, overlap;
+    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
+    cv::dilate(lidar_edges, lidar_dil, kernel);
+    cv::dilate(img_edges, img_dil, kernel);
+    cv::bitwise_and(lidar_dil, img_dil, overlap);
+    const int overlap_pts = cv::countNonZero(overlap);
+    const int lidar_pts = cv::countNonZero(lidar_edges);
+    if (lidar_pts > 0)
+        overlap_ratio = static_cast<double>(overlap_pts) / static_cast<double>(lidar_pts);
+}
+
+static void make_edge_maps(
+    const LiDARScan& scan,
+    const cv::Mat& image,
+    const Sophus::SE3d& T_cam_lidar,
+    const CameraIntrinsics& cam_intrin,
+    int canny_low,
+    int canny_high,
+    cv::Mat& img_edges,
+    cv::Mat& lidar_edges) {
+
+    const cv::Mat img_calib = undistort_camera_image(image, cam_intrin);
+    const CameraIntrinsics intrin_calib = pinhole_intrinsics_without_distortion(cam_intrin);
+
+    cv::Mat gray;
+    if (img_calib.channels() == 3) cv::cvtColor(img_calib, gray, cv::COLOR_BGR2GRAY);
+    else gray = img_calib.clone();
+    cv::Canny(gray, img_edges, canny_low, canny_high);
+
+    cv::Mat lidar_img = lidar_to_intensity_image_static(scan, T_cam_lidar, intrin_calib);
+    double max_val = 0.0;
+    cv::minMaxLoc(lidar_img, nullptr, &max_val);
+    if (max_val < 1e-3) {
+        lidar_edges = cv::Mat::zeros(img_edges.size(), CV_8U);
+        return;
+    }
+    cv::Mat lidar_8u;
+    lidar_img.convertTo(lidar_8u, CV_8U, 255.0 / max_val);
+    cv::Canny(lidar_8u, lidar_edges, 30, 100);
+}
+
+// ===================================================================
+// 边缘对齐可视化
+// ===================================================================
+void LiDARCameraCalibrator::visualize_edge_alignment(
+    const LiDARScan& scan,
+    const cv::Mat& image,
+    const ExtrinsicSE3& extrin,
+    const CameraIntrinsics& cam_intrin,
+    const std::string& output_path,
+    const EdgeAlignmentScore* score,
+    const char* verdict) {
+
+    if (!scan.cloud || image.empty()) return;
+
+    const cv::Mat img_calib = undistort_camera_image(image, cam_intrin);
+    cv::Mat vis;
+    if (img_calib.channels() == 3) vis = img_calib.clone();
+    else cv::cvtColor(img_calib, vis, cv::COLOR_GRAY2BGR);
+
+    cv::Mat img_edges, lidar_edges;
+    make_edge_maps(scan, image, extrin.SE3_TargetInRef(), cam_intrin,
+                   cfg_.edge_canny_low, cfg_.edge_canny_high, img_edges, lidar_edges);
+
+    for (int v = 0; v < vis.rows; ++v) {
+        for (int u = 0; u < vis.cols; ++u) {
+            const bool img_e = img_edges.at<uchar>(v, u) > 0;
+            const bool lid_e = lidar_edges.at<uchar>(v, u) > 0;
+            if (img_e && lid_e)
+                vis.at<cv::Vec3b>(v, u) = cv::Vec3b(0, 255, 255);
+            else if (img_e)
+                vis.at<cv::Vec3b>(v, u) = cv::Vec3b(0, 0, 255);
+            else if (lid_e)
+                vis.at<cv::Vec3b>(v, u) = cv::Vec3b(0, 255, 0);
+        }
+    }
+
+    cv::putText(vis, "Red=Image  Green=LiDAR  Yellow=Overlap",
+                {10, 25}, cv::FONT_HERSHEY_SIMPLEX, 0.55, {255, 255, 255}, 2);
+    if (score != nullptr) {
+        char buf[256];
+        std::snprintf(buf, sizeof(buf), "NCC=%.3f  Chamfer=%.2fpx  Overlap=%.2f",
+                      score->ncc_score, score->chamfer_distance, score->edge_overlap_ratio);
+        cv::putText(vis, buf, {10, 50}, cv::FONT_HERSHEY_SIMPLEX, 0.55, {255, 255, 255}, 2);
+    }
+    if (verdict != nullptr && verdict[0] != '\0') {
+        cv::Scalar color = {255, 255, 255};
+        if (std::strcmp(verdict, "good") == 0) color = {0, 255, 0};
+        else if (std::strcmp(verdict, "acceptable") == 0) color = {0, 200, 255};
+        else if (std::strcmp(verdict, "bad") == 0) color = {0, 0, 255};
+        std::string label = std::string("verdict: ") + verdict;
+        cv::putText(vis, label, {10, 75}, cv::FONT_HERSHEY_SIMPLEX, 0.65, color, 2);
+    }
+    cv::imwrite(output_path, vis);
+    UNICALIB_INFO("边缘对齐可视化保存: {}", output_path);
+}
+
+// ===================================================================
+// BEV 俯视图可视化
+// ===================================================================
+void LiDARCameraCalibrator::visualize_bev(
+    const LiDARScan& scan,
+    const ExtrinsicSE3& extrin,
+    const std::string& output_path,
+    double range_m,
+    int resolution) {
+
+    if (!scan.cloud || scan.cloud->empty()) return;
+    range_m = std::max(5.0, range_m);
+    resolution = std::max(128, resolution);
+
+    cv::Mat bev = cv::Mat::zeros(resolution, resolution, CV_8UC3);
+    const double scale = static_cast<double>(resolution) / (2.0 * range_m);
+    const int cx = resolution / 2;
+    const int cy = resolution / 2;
+
+    double z_min = 1e9, z_max = -1e9;
+    for (const auto& pt : scan.cloud->points) {
+        if (std::isnan(pt.x)) continue;
+        z_min = std::min(z_min, static_cast<double>(pt.z));
+        z_max = std::max(z_max, static_cast<double>(pt.z));
+    }
+    if (z_max <= z_min) return;
+
+    for (const auto& pt : scan.cloud->points) {
+        if (std::isnan(pt.x)) continue;
+        const int u = cx + static_cast<int>(std::round(pt.x * scale));
+        const int v = cy - static_cast<int>(std::round(pt.y * scale));
+        if (u < 0 || u >= resolution || v < 0 || v >= resolution) continue;
+        const double ratio = (pt.z - z_min) / (z_max - z_min);
+        bev.at<cv::Vec3b>(v, u) = cv::Vec3b(
+            static_cast<uchar>(ratio * 255),
+            static_cast<uchar>((1.0 - ratio) * 128),
+            static_cast<uchar>(pt.intensity > 0 ? std::min(255.0f, pt.intensity) : 80.0f));
+    }
+
+    cv::putText(bev, extrin.ref_sensor_id + " BEV (XY top-down)",
+                {10, 25}, cv::FONT_HERSHEY_SIMPLEX, 0.55, {200, 200, 200}, 1);
+    cv::circle(bev, {cx, cy}, 4, {0, 0, 255}, -1);
+    cv::imwrite(output_path, bev);
+    UNICALIB_INFO("BEV 可视化保存: {}", output_path);
+}
+
+// ===================================================================
 // 边缘对齐评分
 // ===================================================================
 EdgeAlignmentScore LiDARCameraCalibrator::evaluate_edge_alignment(
@@ -1880,37 +2054,25 @@ EdgeAlignmentScore LiDARCameraCalibrator::evaluate_edge_alignment(
     EdgeAlignmentScore score;
     if (!scan.cloud || image.empty()) return score;
 
-    const cv::Mat img_calib = undistort_camera_image(image, cam_intrin);
-    const CameraIntrinsics intrin_calib = pinhole_intrinsics_without_distortion(cam_intrin);
-
-    Sophus::SE3d T = extrin.SE3_TargetInRef();
-    cv::Mat lidar_img = lidar_to_intensity_image(scan, T, intrin_calib);
-
-    cv::Mat gray;
-    if (img_calib.channels() == 3) cv::cvtColor(img_calib, gray, cv::COLOR_BGR2GRAY);
-    else gray = img_calib.clone();
     cv::Mat img_edges, lidar_edges;
-    cv::Canny(gray, img_edges, cfg_.edge_canny_low, cfg_.edge_canny_high);
-
-    double max_val;
-    cv::minMaxLoc(lidar_img, nullptr, &max_val);
-    if (max_val < 1e-3) return score;
-    cv::Mat lidar_8u;
-    lidar_img.convertTo(lidar_8u, CV_8U, 255.0/max_val);
-    cv::Canny(lidar_8u, lidar_edges, 30, 100);
+    make_edge_maps(scan, image, extrin.SE3_TargetInRef(), cam_intrin,
+                   cfg_.edge_canny_low, cfg_.edge_canny_high, img_edges, lidar_edges);
 
     score.num_lidar_edge_pts = cv::countNonZero(lidar_edges);
     score.num_image_edge_pts = cv::countNonZero(img_edges);
 
     cv::Mat e1, e2;
-    img_edges.convertTo(e1, CV_32F, 1.0/255);
-    lidar_edges.convertTo(e2, CV_32F, 1.0/255);
+    img_edges.convertTo(e1, CV_32F, 1.0 / 255);
+    lidar_edges.convertTo(e2, CV_32F, 1.0 / 255);
     cv::Scalar m1, s1, m2, s2;
     cv::meanStdDev(e1, m1, s1);
     cv::meanStdDev(e2, m2, s2);
     if (s1[0] > 1e-5 && s2[0] > 1e-5)
         score.ncc_score = (e1 - m1[0]).dot(e2 - m2[0]) /
                           (s1[0] * s2[0] * e1.total() + 1e-10);
+
+    compute_edge_chamfer_and_overlap(img_edges, lidar_edges,
+                                     score.chamfer_distance, score.edge_overlap_ratio);
 
     return score;
 }
@@ -2004,6 +2166,28 @@ LiDARCameraCalibrator::TwoStageResult LiDARCameraCalibrator::calibrate_two_stage
         fine_result = calibrate_target(lidar_scans, camera_frames, cam_intrin,
                                        lidar_id, cam_id, init_T);
         result.fine_method = "TARGET_CHESSBOARD";
+
+        const bool target_bad = !fine_result.has_value() ||
+            (fine_result.has_value() &&
+             (fine_result->residual_rms > result.manual_threshold_px || !fine_result->is_converged));
+        if (target_bad && cfg_.enable_hybrid_calibration) {
+            UNICALIB_WARN("│ [Fine] 目标法未达标，回退边缘对齐 (hybrid_calibration)...");
+            Sophus::SE3d edge_init = fine_result.has_value()
+                ? fine_result->SE3_TargetInRef() : init_T;
+            auto edge_result = calibrate_edge_align(
+                lidar_scans, camera_frames, cam_intrin, edge_init, lidar_id, cam_id);
+            if (edge_result.has_value()) {
+                const bool use_edge = !fine_result.has_value() ||
+                    (!fine_result->is_converged && edge_result->is_converged) ||
+                    (fine_result->residual_rms > result.manual_threshold_px && edge_result->is_converged);
+                if (use_edge) {
+                    fine_result = edge_result;
+                    result.fine_method = "EDGE_ALIGNMENT_FALLBACK";
+                    UNICALIB_INFO("│ [Fine] 已采用边缘对齐回退结果 (NCC-RMS={:.4f})",
+                                  fine_result->residual_rms);
+                }
+            }
+        }
     }
 
     if (fine_result.has_value()) {

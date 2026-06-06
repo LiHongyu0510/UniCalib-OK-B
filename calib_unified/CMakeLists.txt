@@ -543,6 +543,7 @@ set(UNICALIB_NEW_SOURCES
     src/common/camera_undistort.cpp
     src/common/exception_report.cpp
     src/common/accuracy_logger.cpp
+    src/common/extrinsic_quality.cpp
     src/common/calib_stage.cpp
     # 内参标定
     src/intrinsic/allan_variance.cpp

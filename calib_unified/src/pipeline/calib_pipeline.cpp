@@ -30,6 +30,7 @@
 #include "unicalib/common/logger.h"
 #include "unicalib/common/exception.h"
 #include "unicalib/common/accuracy_logger.h"
+#include "unicalib/common/extrinsic_quality.h"
 #include "unicalib/extrinsic/lidar_camera_calib.h"
 #include "unicalib/extrinsic/lidar_scan_pair.h"
 #include "unicalib/extrinsic/cam_cam_calib.h"
@@ -190,10 +191,16 @@ void PipelineReport::print_summary() const {
                       need_manual_count);
     else if (!stage_results.empty())
         UNICALIB_INFO("  标定质量: 各阶段 RMS 均在阈值内");
+    const std::string overall_q = overall_quality_verdict();
+    if (overall_q != "unknown")
+        UNICALIB_INFO("  综合质量判定: {} ({})", overall_q, all_quality_pass() ? "PASS" : "需复查");
     for (const auto& r : stage_results) {
         UNICALIB_INFO("  [{}-{}] success={} rms={:.4f} time={:.1f}ms: {}",
                       stage_name(r.stage), task_str(r.task),
                       r.success, r.residual_rms, r.elapsed_ms, r.message);
+        if (!r.quality_verdict.empty())
+            UNICALIB_INFO("    ↳ quality_verdict={} confidence={:.2f}",
+                          r.quality_verdict, r.quality_confidence);
         if (r.needs_manual_refine()) {
             UNICALIB_WARN("    ↳ RMS {:.4f} > threshold {:.4f} — 建议手动校准",
                           r.residual_rms, r.quality_threshold);
@@ -214,6 +221,8 @@ void PipelineReport::save_report(const std::string& path) const {
     f << "pipeline_id: " << pipeline_id << "\n";
     f << "total_elapsed_ms: " << total_elapsed_ms() << "\n";
     f << "all_converged: " << all_converged() << "\n";
+    f << "overall_quality_verdict: " << overall_quality_verdict() << "\n";
+    f << "all_quality_pass: " << all_quality_pass() << "\n";
     f << "stages:\n";
     for (const auto& r : stage_results) {
         f << "  - stage: " << stage_name(r.stage) << "\n";
@@ -222,6 +231,10 @@ void PipelineReport::save_report(const std::string& path) const {
         f << "    residual_rms: " << r.residual_rms << "\n";
         f << "    elapsed_ms: " << r.elapsed_ms << "\n";
         f << "    message: \"" << r.message << "\"\n";
+        if (!r.quality_verdict.empty())
+            f << "    quality_verdict: " << r.quality_verdict << "\n";
+        if (r.quality_confidence >= 0.0)
+            f << "    quality_confidence: " << r.quality_confidence << "\n";
         if (!r.log_file.empty())
             f << "    log_file: " << r.log_file << "\n";
         if (r.needs_manual_refine())
@@ -1263,6 +1276,10 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
     const size_t MAX_FRAMES = 100;
     int cameras_done = 0;
     double max_rms = 0.0;
+    QualityVerdict worst_verdict = QualityVerdict::GOOD;
+    double min_confidence = 1.0;
+    bool quality_assessed = false;
+    std::vector<LidarCamPairQualityEntry> quality_entries;
     std::string result_subdir = cfg_.output_dir;
     if (cameras_to_run.size() > 1) {
         result_subdir = cfg_.output_dir + "/lidar_camera_extrinsic";
@@ -1428,6 +1445,8 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
         calib_cfg.robust_loss_threshold = cfg_.lidar_cam_robust_loss_threshold;
         calib_cfg.enable_motion_compensation = cfg_.lidar_cam_motion_compensation_enable;
         calib_cfg.motion_compensation_method = cfg_.lidar_cam_motion_compensation_method;
+        calib_cfg.enable_hybrid_calibration = cfg_.lidar_cam_hybrid_enable;
+        calib_cfg.adaptive_strategy = cfg_.lidar_cam_adaptive_strategy;
         calib_cfg.verbose = (cfg_.log_level == "debug" || cfg_.log_level == "trace");
 
         LiDARCameraCalibrator calibrator(calib_cfg);
@@ -1511,8 +1530,7 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
                     ci, cam_for_calib[ci].first, li, lidar_for_cam[li].timestamp,
                     std::fabs(cam_for_calib[ci].first - lidar_for_cam[li].timestamp));
             }
-            std::string result_yaml = result_subdir + "/lidar_cam_" + cur_cam + "_extrinsic.yaml";
-            save_extrinsic_result(result_yaml, result, cur_cam);
+            std::optional<ExtrinsicQualityReport> pair_quality;
             if (!lidar_for_cam.empty() && !cam_for_calib.empty()) {
                 const auto [ci, li] = time_aligned_lidar_cam_indices_for_manual(
                     lidar_for_cam, cam_for_calib, cfg_.frame_sync_threshold_s, 0.0);
@@ -1520,8 +1538,16 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
                 UNICALIB_INFO("[Viz] 即将生成投影图并保存到 {}", vis_path);
                 calibrator.visualize_projection(
                     lidar_for_cam[li], cam_for_calib[ci].second, ext, cam_intrin, vis_path);
-                UNICALIB_INFO("[Viz] 投影图已保存（仅使用配置初值，未做精标定）");
+                if (cfg_.lidar_cam_auto_quality_assess) {
+                    pair_quality = assess_and_save_lidar_cam_quality(
+                        calibrator, lidar_for_cam[li], cam_for_calib[ci].second,
+                        ext, cam_intrin, result, result_subdir, cur_cam,
+                        worst_verdict, min_confidence, quality_assessed, quality_entries);
+                }
             }
+            std::string result_yaml = result_subdir + "/lidar_cam_" + cur_cam + "_extrinsic.yaml";
+            save_extrinsic_result(result_yaml, result, cur_cam,
+                                  pair_quality.has_value() ? &(*pair_quality) : nullptr);
             max_rms = std::max(max_rms, 0.0);
             cameras_done++;
             UNICALIB_INFO("[Fine-Auto/LiDAR-Cam] 相机 {} 已使用配置初值跳过精标定，直接供手动微调", cur_cam);
@@ -1551,8 +1577,7 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
                         ci, cam_for_calib[ci].first, li, lidar_for_cam[li].timestamp,
                         std::fabs(cam_for_calib[ci].first - lidar_for_cam[li].timestamp));
                 }
-                std::string result_yaml = result_subdir + "/lidar_cam_" + cur_cam + "_extrinsic.yaml";
-                save_extrinsic_result(result_yaml, result, cur_cam);
+                std::optional<ExtrinsicQualityReport> pair_quality;
                 if (!lidar_for_cam.empty() && !cam_for_calib.empty()) {
                     const auto [ci, li] = time_aligned_lidar_cam_indices_for_manual(
                         lidar_for_cam, cam_for_calib, cfg_.frame_sync_threshold_s, 0.0);
@@ -1561,8 +1586,16 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
                     calibrator.visualize_projection(
                         lidar_for_cam[li], cam_for_calib[ci].second,
                         *result.best(), cam_intrin, vis_path);
-                    UNICALIB_INFO("[Viz] 投影图已保存（当前未将结果点云回显到 3D 窗口，仅保存 PNG）");
+                    if (cfg_.lidar_cam_auto_quality_assess) {
+                        pair_quality = assess_and_save_lidar_cam_quality(
+                            calibrator, lidar_for_cam[li], cam_for_calib[ci].second,
+                            *result.best(), cam_intrin, result, result_subdir, cur_cam,
+                            worst_verdict, min_confidence, quality_assessed, quality_entries);
+                    }
                 }
+                std::string result_yaml = result_subdir + "/lidar_cam_" + cur_cam + "_extrinsic.yaml";
+                save_extrinsic_result(result_yaml, result, cur_cam,
+                                      pair_quality.has_value() ? &(*pair_quality) : nullptr);
                 max_rms = std::max(max_rms, result.best_rms());
                 cameras_done++;
                 bool fine_converged = (result.fine.has_value() && result.fine->is_converged);
@@ -1595,6 +1628,17 @@ StageResult CalibPipeline::run_fine_lidar_camera() {
         bool within_threshold = (max_rms <= r.quality_threshold);
         UNICALIB_INFO("[Fine-Auto/LiDAR-Cam] RMS 阈值={:.2f} px  最大 RMS={:.4f} px  {}",
                       r.quality_threshold, max_rms, within_threshold ? "在阈值内" : "超过阈值，建议手动校准");
+        if (quality_assessed) {
+            r.quality_verdict = quality_verdict_str(worst_verdict);
+            r.quality_confidence = min_confidence;
+            UNICALIB_INFO("[Fine-Auto/LiDAR-Cam] 自动质量判定: {} (confidence={:.2f})",
+                          r.quality_verdict, r.quality_confidence);
+            if (!quality_entries.empty()) {
+                const std::string summary_path = result_subdir + "/lidar_cam_quality_summary.yaml";
+                save_lidar_cam_quality_summary_yaml(
+                    summary_path, quality_entries, worst_verdict, min_confidence);
+            }
+        }
     }
     return r;
 }
@@ -1945,12 +1989,90 @@ CameraIntrinsics CalibPipeline::infer_intrinsics_from_images(
 }
 
 // ---------------------------------------------------------------------------
+// 辅助函数: LiDAR-Camera 质量评估与诊断图
+// ---------------------------------------------------------------------------
+ExtrinsicQualityReport CalibPipeline::assess_and_save_lidar_cam_quality(
+    LiDARCameraCalibrator& calibrator,
+    const LiDARScan& scan,
+    const cv::Mat& image,
+    const ExtrinsicSE3& extrin,
+    const CameraIntrinsics& cam_intrin,
+    const LiDARCameraCalibrator::TwoStageResult& result,
+    const std::string& result_subdir,
+    const std::string& camera_id,
+    QualityVerdict& worst_verdict,
+    double& min_confidence,
+    bool& quality_assessed,
+    std::vector<LidarCamPairQualityEntry>& quality_entries) const {
+
+    const EdgeAlignmentScore edge_score =
+        calibrator.evaluate_edge_alignment(scan, image, extrin, cam_intrin);
+
+    QualityThresholds thresholds;
+    thresholds.ncc_good = cfg_.lidar_cam_quality_ncc_good;
+    thresholds.ncc_acceptable = cfg_.lidar_cam_quality_ncc_acceptable;
+    thresholds.rms_good_px = cfg_.lidar_cam_quality_rms_good_px;
+    thresholds.rms_acceptable_px = cfg_.lidar_cam_quality_rms_acceptable_px;
+    thresholds.inlier_ratio_good = cfg_.lidar_cam_quality_inlier_ratio_good;
+    thresholds.inlier_ratio_acceptable = cfg_.lidar_cam_quality_inlier_ratio_acceptable;
+    thresholds.chamfer_good_px = cfg_.lidar_cam_quality_chamfer_good_px;
+    thresholds.chamfer_acceptable_px = cfg_.lidar_cam_quality_chamfer_acceptable_px;
+
+    const double rms_px = result.best_rms();
+    ExtrinsicQualityReport quality = assess_lidar_cam_quality(
+        edge_score.ncc_score, rms_px, -1.0,
+        edge_score.chamfer_distance, edge_score.edge_overlap_ratio, thresholds);
+
+    const std::string method_used = result.fine_method.empty() ? result.coarse_method : result.fine_method;
+    const std::string quality_path = result_subdir + "/lidar_cam_" + camera_id + "_quality_report.yaml";
+    save_quality_report_yaml(
+        quality_path, "lidar_camera_extrinsic", "fine",
+        cfg_.lidar_id, camera_id, method_used,
+        result.best() != nullptr, quality, thresholds);
+
+    if (cfg_.lidar_cam_edge_viz_enable) {
+        const std::string edge_path = result_subdir + "/lidar_cam_" + camera_id + "_edge_alignment.png";
+        calibrator.visualize_edge_alignment(
+            scan, image, extrin, cam_intrin, edge_path,
+            &edge_score, quality_verdict_str(quality.verdict));
+    }
+    if (cfg_.lidar_cam_bev_viz_enable) {
+        const std::string bev_path = result_subdir + "/lidar_cam_" + camera_id + "_bev.png";
+        calibrator.visualize_bev(scan, extrin, bev_path,
+                               cfg_.lidar_cam_bev_range_m, cfg_.lidar_cam_bev_resolution);
+    }
+
+    auto verdict_rank = [](QualityVerdict v) -> int {
+        switch (v) {
+            case QualityVerdict::BAD: return 0;
+            case QualityVerdict::UNKNOWN: return 1;
+            case QualityVerdict::ACCEPTABLE: return 2;
+            case QualityVerdict::GOOD: return 3;
+            default: return 1;
+        }
+    };
+    quality_assessed = true;
+    if (verdict_rank(quality.verdict) < verdict_rank(worst_verdict))
+        worst_verdict = quality.verdict;
+    min_confidence = std::min(min_confidence, quality.confidence);
+
+    LidarCamPairQualityEntry entry;
+    entry.lidar_id = cfg_.lidar_id;
+    entry.camera_id = camera_id;
+    entry.method_used = method_used;
+    entry.report = quality;
+    quality_entries.push_back(std::move(entry));
+    return quality;
+}
+
+// ---------------------------------------------------------------------------
 // 辅助函数: 保存外参结果
 // ---------------------------------------------------------------------------
 void CalibPipeline::save_extrinsic_result(
     const std::string& path,
     const LiDARCameraCalibrator::TwoStageResult& result,
-    const std::string& target_camera_id) const {
+    const std::string& target_camera_id,
+    const ExtrinsicQualityReport* quality) const {
 
     ::YAML::Emitter out;
     out << ::YAML::BeginMap;
@@ -2013,6 +2135,18 @@ void CalibPipeline::save_extrinsic_result(
 
     out << ::YAML::Key << "needs_manual_refine" << ::YAML::Value << result.needs_manual;
     out << ::YAML::Key << "manual_threshold_px" << ::YAML::Value << result.manual_threshold_px;
+
+    if (quality != nullptr) {
+        out << ::YAML::Key << "quality";
+        out << ::YAML::BeginMap;
+        out << ::YAML::Key << "verdict" << ::YAML::Value << quality_verdict_str(quality->verdict);
+        out << ::YAML::Key << "confidence" << ::YAML::Value << quality->confidence;
+        out << ::YAML::Key << "ncc" << ::YAML::Value << quality->ncc;
+        out << ::YAML::Key << "rms_px" << ::YAML::Value << quality->rms_px;
+        out << ::YAML::Key << "chamfer_px" << ::YAML::Value << quality->chamfer_px;
+        out << ::YAML::Key << "edge_overlap_ratio" << ::YAML::Value << quality->edge_overlap_ratio;
+        out << ::YAML::EndMap;
+    }
 
     out << ::YAML::EndMap;
 

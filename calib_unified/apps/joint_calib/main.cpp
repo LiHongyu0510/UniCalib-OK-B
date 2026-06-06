@@ -567,6 +567,11 @@ int main(int argc, char** argv) {
             if (fine["time_offset_search_range"])
                 pipe_cfg.time_offset_search_range_s = fine["time_offset_search_range"].as<double>();
             if (fine["ncc_threshold"]) pipe_cfg.ncc_threshold = fine["ncc_threshold"].as<double>();
+            if (fine["hybrid_calibration"]) {
+                const auto& h = fine["hybrid_calibration"];
+                if (h["enable"]) pipe_cfg.lidar_cam_hybrid_enable = h["enable"].as<bool>();
+                if (h["adaptive_strategy"]) pipe_cfg.lidar_cam_adaptive_strategy = h["adaptive_strategy"].as<bool>();
+            }
         }
     }
     // 传递 reference_imu
@@ -625,6 +630,14 @@ int main(int argc, char** argv) {
             if (q["rms_acceptable_px"]) pipe_cfg.lidar_cam_quality_rms_acceptable_px = q["rms_acceptable_px"].as<double>();
             if (q["inlier_ratio_good"]) pipe_cfg.lidar_cam_quality_inlier_ratio_good = q["inlier_ratio_good"].as<double>();
             if (q["inlier_ratio_acceptable"]) pipe_cfg.lidar_cam_quality_inlier_ratio_acceptable = q["inlier_ratio_acceptable"].as<double>();
+            if (q["chamfer_good_px"])   pipe_cfg.lidar_cam_quality_chamfer_good_px = q["chamfer_good_px"].as<double>();
+            if (q["chamfer_acceptable_px"]) pipe_cfg.lidar_cam_quality_chamfer_acceptable_px = q["chamfer_acceptable_px"].as<double>();
+            if (q["auto_assess"])       pipe_cfg.lidar_cam_auto_quality_assess = q["auto_assess"].as<bool>();
+            if (q["edge_viz_enable"])   pipe_cfg.lidar_cam_edge_viz_enable = q["edge_viz_enable"].as<bool>();
+            if (q["bev_viz_enable"])    pipe_cfg.lidar_cam_bev_viz_enable = q["bev_viz_enable"].as<bool>();
+            if (q["bev_range_m"])       pipe_cfg.lidar_cam_bev_range_m = q["bev_range_m"].as<double>();
+            if (q["bev_resolution"])    pipe_cfg.lidar_cam_bev_resolution = q["bev_resolution"].as<int>();
+            if (q["fail_on_bad_quality"]) pipe_cfg.lidar_cam_fail_on_bad_quality = q["fail_on_bad_quality"].as<bool>();
         }
     }
 
@@ -973,5 +986,6 @@ int main(int argc, char** argv) {
     }
 
     main_exit = report.all_converged() ? 0 : 1;
+    if (pipe_cfg.lidar_cam_fail_on_bad_quality && !report.all_quality_pass()) main_exit = 1;
     UNICALIB_MAIN_TRY_END(main_exit)
 }
