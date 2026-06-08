@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <cmath>
 #include <optional>
+#include <set>
 #include <chrono>
 #include <thread>
 
@@ -1799,6 +1800,28 @@ StageResult CalibPipeline::run_fine_cam_cam() {
         return std::nullopt;
     };
 
+    // 各相机严格按内参去畸变，供特征匹配、手动微调与 calibrate_two_stage 使用
+    std::map<std::string, CameraIntrinsics> intrinsics_per_cam;
+    std::set<std::string> cameras_to_prep(ordered.begin(), ordered.end());
+    if (!cfg_.cam_cam_pairs.empty()) {
+        cameras_to_prep.clear();
+        for (const auto& pr : cfg_.cam_cam_pairs) {
+            cameras_to_prep.insert(pr.first);
+            cameras_to_prep.insert(pr.second);
+        }
+    }
+    for (const auto& cid : cameras_to_prep) {
+        if (!frames_per_cam.count(cid)) continue;
+        auto in = load_intrin(cid);
+        if (!in) {
+            UNICALIB_WARN("[Fine-Auto/Cam-Cam] 相机 {} 缺少内参，跳过预去畸变", cid);
+            continue;
+        }
+        auto prep = prepare_cam_cam_calibration_images(frames_per_cam.at(cid), *in, cid);
+        frames_per_cam[cid] = std::move(prep.frames);
+        intrinsics_per_cam[cid] = prep.intrin;
+    }
+
 #if UNICALIB_WITH_PANGOLIN
     CalibVisualizer::Ptr cam_cam_viz;
     if (cfg_.enable_viz) {
@@ -1860,12 +1883,14 @@ StageResult CalibPipeline::run_fine_cam_cam() {
             UNICALIB_WARN("[Fine-Auto/Cam-Cam] 跳过 {}->{}: 无帧数据", id0, id1);
             return;
         }
-        auto in0 = load_intrin(id0);
-        auto in1 = load_intrin(id1);
-        if (!in0.has_value() || !in1.has_value()) {
+        auto in0_it = intrinsics_per_cam.find(id0);
+        auto in1_it = intrinsics_per_cam.find(id1);
+        if (in0_it == intrinsics_per_cam.end() || in1_it == intrinsics_per_cam.end()) {
             UNICALIB_WARN("[Fine-Auto/Cam-Cam] 跳过 {}->{}: 缺少内参", id0, id1);
             return;
         }
+        const CameraIntrinsics& in0 = in0_it->second;
+        const CameraIntrinsics& in1 = in1_it->second;
         std::optional<ExtrinsicSE3> init_extrin;
         auto cfg_ext = cam_cam_init_from_cfg(id0, id1);
         if (cfg_ext.has_value())
@@ -1904,7 +1929,7 @@ StageResult CalibPipeline::run_fine_cam_cam() {
 #endif
         auto result = calib.calibrate_two_stage(
             frames_per_cam.at(id0), frames_per_cam.at(id1),
-            *in0, *in1, cfg_.prefer_targetfree, id0, id1, init_extrin);
+            in0, in1, cfg_.prefer_targetfree, id0, id1, init_extrin);
         if (result.best()) {
             auto ext = params_->get_or_create_extrinsic(id0, id1);
             ext->ref_sensor_id = id0;
@@ -1924,8 +1949,8 @@ StageResult CalibPipeline::run_fine_cam_cam() {
                     manual_cache_.cam1_image = f1[0].second.clone();
                     manual_cache_.cam0_id = id0;
                     manual_cache_.cam1_id = id1;
-                    manual_cache_.cam0_intrin = *in0;
-                    manual_cache_.cam1_intrin = *in1;
+                    manual_cache_.cam0_intrin = in0;
+                    manual_cache_.cam1_intrin = in1;
                 }
             }
 

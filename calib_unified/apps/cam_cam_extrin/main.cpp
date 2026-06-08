@@ -44,6 +44,26 @@ static std::string resolve_data_path(const std::string& base, const std::string&
     return (fs::path(base) / p).lexically_normal().string();
 }
 
+static void resolve_path_map(const std::string& base, std::map<std::string, std::string>& paths) {
+    if (base.empty()) return;
+    for (auto& [k, v] : paths) {
+        if (!v.empty()) v = resolve_data_path(base, v);
+    }
+}
+
+static void resolve_pipeline_data_paths(PipelineConfig& pipe_cfg, const std::string& base) {
+    if (base.empty()) return;
+    resolve_path_map(base, pipe_cfg.camera_images_dirs);
+    for (auto& [k, v] : pipe_cfg.camera_intrinsic_files) {
+        if (v.empty()) continue;
+        fs::path p(v);
+        if (p.is_absolute()) continue;
+        // 保留已存在于 cwd 的 results/ 等路径；否则相对 data-dir 解析
+        if (fs::exists(v)) continue;
+        v = resolve_data_path(base, v);
+    }
+}
+
 static void load_cam_cam_pairs_from_cfg(const YAML::Node& root, PipelineConfig& pipe_cfg) {
     if (!root["cam_cam"]) return;
     const auto& cc = root["cam_cam"];
@@ -281,8 +301,12 @@ int main(int argc, char** argv) {
     const YAML::Node new_format_node = cfg["new_format"];
     if (new_format_node && new_format_node["enable"] && new_format_node["enable"].as<bool>()) {
         pipe_cfg.use_new_format = true;
-        if (new_format_node["root_dir"])
-            pipe_cfg.new_format_root_dir = new_format_node["root_dir"].as<std::string>();
+        if (new_format_node["root_dir"]) {
+            std::string root_dir = new_format_node["root_dir"].as<std::string>();
+            if (!base_data_dir.empty() && !fs::path(root_dir).is_absolute())
+                root_dir = resolve_data_path(base_data_dir, root_dir);
+            pipe_cfg.new_format_root_dir = root_dir;
+        }
         if (new_format_node["timestamp_unit"])
             pipe_cfg.new_format_timestamp_unit = new_format_node["timestamp_unit"].as<std::string>();
         if (new_format_node["oem7_imu_rate_hz"])
@@ -345,12 +369,21 @@ int main(int argc, char** argv) {
             if (!it.second.IsMap()) continue;
             std::string cam_id = it.first.as<std::string>();
             if (it.second["intrinsic_yaml"]) {
-                pipe_cfg.camera_intrinsic_files[cam_id] = it.second["intrinsic_yaml"].as<std::string>();
+                pipe_cfg.camera_intrinsic_files[cam_id] =
+                    it.second["intrinsic_yaml"].as<std::string>();
+                UNICALIB_INFO("[Cam-Cam] 内参 data.camera.{}.intrinsic_yaml: {}",
+                              cam_id, pipe_cfg.camera_intrinsic_files[cam_id]);
             } else {
                 std::string default_path = output_dir + "/" + results_camera_intrinsic + "/camera_intrinsic_" + cam_id + ".yaml";
                 pipe_cfg.camera_intrinsic_files[cam_id] = default_path;
             }
         }
+    }
+
+    resolve_pipeline_data_paths(pipe_cfg, base_data_dir);
+    for (const auto& [cam_id, intrin_path] : pipe_cfg.camera_intrinsic_files) {
+        UNICALIB_DEBUG("[Cam-Cam] 内参解析后 {} -> {} (exists={})",
+                       cam_id, intrin_path, fs::exists(intrin_path) ? "yes" : "no");
     }
 
     if (pipe_cfg.use_new_format) {

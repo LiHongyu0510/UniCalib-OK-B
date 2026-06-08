@@ -196,7 +196,7 @@ data:
     # 0519 主雷达 top_front_0519 与 0519 RAWIMU 时段不重叠，待同步数据后再改路径
     lidar_main: lidar_main/top_front_0603_1/front
     left_front: lidar_airy/20260603_1/front/left_front
-    right_back: lidar_airy/20260603_1/back/right_back
+    right_back: lidar_airy/20260603_1/front/right_back
 
     # lidar_main: lidar_main/top_front_0603
     # left_front: lidar_airy/20260603/left_front
@@ -309,11 +309,16 @@ new_format:
   oem7_gps_utc_leap_sec: 18   # 仅 unix 模式；以 IERS 公布为准，会随年代变化
   oem7_time_offset_sec: 0    # 全体 IMU 时间再加/减的秒数（细调与其它传感器钟差）
   lidar_index_files:
-    lidar_main: lidar_main/lidar_main_pcd/lidar_main_0516_1_index.csv
+    lidar_main: ""
     # 补盲索引文件就绪后再取消注释
     # left_front: lidar/left_front.csv
     # right_back: lidar/right_back.csv
-  camera_index_files: {}
+  camera_index_files:
+    center_front: Camera/center_front/3301/index.csv
+    surrounding_front: Camera/surrounding_front/3301/index.csv
+    surrounding_back: Camera/surrounding_back/3301/index.csv
+    surrounding_left: Camera/surrounding_left/3301/index.csv
+    surrounding_right: Camera/surrounding_right/3301/index.csv
   imu_index_files:
     imu_0: imu/imu/imu_1/imu_index.csv
 
@@ -481,7 +486,7 @@ lidar_lidar:
   # pairs: [ref, target] -> 标定 T_target_in_ref（目标雷达点在参考雷达坐标系下的位姿）
   pairs:
     - [lidar_main, left_front]
-    - [lidar_main, right_back]
+    # - [lidar_main, right_back]
     # - [left_front, right_back]
   lidar_list: [lidar_main, left_front, right_back]
   # 安装表 mm→m（与 IMU/雷达同一车体坐标、轴平行 R=I）：pairs [ref,target] → T_target_in_ref，t = (r_target - r_ref)/1000 [m]
@@ -497,9 +502,9 @@ lidar_lidar:
       rows: 4
       cols: 4
       dt: d
-      data: [0.95400787095130035, 0.29122180661204, 0.071125533506516472, 0.88047852999999998,
-             0.29496942273227256, -0.95423132998467763, -0.04935188475289759, 0.48751480000000003,
-             0.053497867396344934, 0.06806194406048785, -0.99624572769711306, -0.27948449000000003,
+      data: [0.94792270954835234, 0.30432817439739362, 0.093951577902979228, 0.82662338018417358,
+             0.30839591577063036, -0.95072040962514182, -0.031979084699166264, 0.46805545687675476,
+             0.079589546163451957, 0.059287983522394942, -0.99506303275287222, -0.24931249022483826,
              0.0, 0.0, 0.0, 1.0]
       # data: [0.95310819, 0.29615933, 0.06224492, 0.84047853,
       #        0.29821192, -0.95412983, -0.02656890, 0.48251480,
@@ -861,12 +866,12 @@ cam_cam:
   # 前视中心 pinhole + 周视前 fisheye：视场更易重叠，对极线/棋盘格标定比左右周视对更易对齐；勿用 surrounding_left/right 作一对（朝向差过大）。
   pairs:
     - [center_front, surrounding_front]
-    - [center_front, surrounding_left]
-    - [center_front, surrounding_right]
-    - [surrounding_front, surrounding_left]
-    - [surrounding_front, surrounding_right]
-    - [surrounding_left, surrounding_back]
-    - [surrounding_right, surrounding_back]
+    # - [center_front, surrounding_left]
+    # - [center_front, surrounding_right]
+    # - [surrounding_front, surrounding_left]
+    # - [surrounding_front, surrounding_right]
+    # - [surrounding_left, surrounding_back]
+    # - [surrounding_right, surrounding_back]
 
   # 与安装表一致（mm→m，车体轴平行假设 R=I）：pairs [ref,target] → T_target_in_ref，平移 t = r_target - r_ref（表中为说明书输出中心，相机1=surrounding_front … 相机5=center_front）
   initial_extrinsics:

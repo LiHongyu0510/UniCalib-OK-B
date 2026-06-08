@@ -92,17 +92,22 @@ cv::Mat undistort_camera_image(const cv::Mat& src, const CameraIntrinsics& intri
 CameraIntrinsics pinhole_intrinsics_without_distortion(const CameraIntrinsics& intrin) {
     CameraIntrinsics out = intrin;
     out.dist_coeffs.clear();
+    out.model = CameraIntrinsics::Model::PINHOLE;
     if (out.width <= 0 || out.height <= 0) { /* keep from intrin */ }
     return out;
 }
 
-LidarCamPreparedImages prepare_lidar_cam_calibration_images(
+static LidarCamPreparedImages prepare_calibration_images_impl(
     const std::vector<std::pair<double, cv::Mat>>& camera_frames,
-    const CameraIntrinsics& cam_intrin) {
+    const CameraIntrinsics& cam_intrin,
+    const char* log_tag,
+    const std::string& sensor_id) {
 
     LidarCamPreparedImages prep;
     prep.intrin = cam_intrin;
     prep.frames = camera_frames;
+
+    const std::string id_suffix = sensor_id.empty() ? "" : (" sensor=" + sensor_id);
 
     if (!camera_has_distortion(cam_intrin)) {
         prep.undistorted = false;
@@ -110,7 +115,8 @@ LidarCamPreparedImages prepare_lidar_cam_calibration_images(
     }
     if (!camera_intrin_valid_for_undistort(cam_intrin)) {
         UNICALIB_WARN(
-            "[LiDAR-Cam] 已配置畸变系数但内参 fx/fy 无效，标定将使用原始畸变图像");
+            "[{}] 已配置畸变系数但内参 fx/fy 无效{}，标定将使用原始畸变图像",
+            log_tag, id_suffix);
         prep.undistorted = false;
         return prep;
     }
@@ -126,7 +132,7 @@ LidarCamPreparedImages prepare_lidar_cam_calibration_images(
         }
     }
     if (n_ok == 0) {
-        UNICALIB_WARN("[LiDAR-Cam] 去畸变失败，回退使用原始图像");
+        UNICALIB_WARN("[{}] 去畸变失败{}，回退使用原始图像", log_tag, id_suffix);
         prep.frames = camera_frames;
         prep.intrin = cam_intrin;
         prep.undistorted = false;
@@ -139,20 +145,36 @@ LidarCamPreparedImages prepare_lidar_cam_calibration_images(
     const char* model_str =
         cam_intrin.model == CameraIntrinsics::Model::FISHEYE ? "fisheye" : "pinhole";
     UNICALIB_INFO(
-        "[LiDAR-Cam] 已对 {} 帧图像去畸变 (模型={}, fx={:.2f} fy={:.2f} cx={:.2f} cy={:.2f}, "
+        "[{}] 已对 {} 帧图像去畸变{} (模型={}, fx={:.2f} fy={:.2f} cx={:.2f} cy={:.2f}, "
         "畸变系数 {} 个)，标定使用针孔无畸变投影",
-        n_ok, model_str, cam_intrin.fx, cam_intrin.fy, cam_intrin.cx, cam_intrin.cy,
+        log_tag, n_ok, id_suffix, model_str,
+        cam_intrin.fx, cam_intrin.fy, cam_intrin.cx, cam_intrin.cy,
         cam_intrin.dist_coeffs.size());
     if (cam_intrin.dist_coeffs.size() >= 4) {
         UNICALIB_INFO(
-            "[LiDAR-Cam] 畸变系数: k1={:.6f} k2={:.6f} p1={:.6f} p2={:.6f}",
+            "[{}] 畸变系数{}: k1={:.6f} k2={:.6f} p1={:.6f} p2={:.6f}",
+            log_tag, id_suffix,
             cam_intrin.dist_coeffs[0], cam_intrin.dist_coeffs[1],
             cam_intrin.dist_coeffs[2], cam_intrin.dist_coeffs[3]);
         if (cam_intrin.dist_coeffs.size() > 4)
-            UNICALIB_INFO("[LiDAR-Cam] 额外畸变系数 k3={:.6f}", cam_intrin.dist_coeffs[4]);
+            UNICALIB_INFO("[{}] 额外畸变系数{} k3={:.6f}",
+                          log_tag, id_suffix, cam_intrin.dist_coeffs[4]);
     }
 
     return prep;
+}
+
+LidarCamPreparedImages prepare_lidar_cam_calibration_images(
+    const std::vector<std::pair<double, cv::Mat>>& camera_frames,
+    const CameraIntrinsics& cam_intrin) {
+    return prepare_calibration_images_impl(camera_frames, cam_intrin, "LiDAR-Cam", {});
+}
+
+LidarCamPreparedImages prepare_cam_cam_calibration_images(
+    const std::vector<std::pair<double, cv::Mat>>& camera_frames,
+    const CameraIntrinsics& cam_intrin,
+    const std::string& sensor_id) {
+    return prepare_calibration_images_impl(camera_frames, cam_intrin, "Cam-Cam", sensor_id);
 }
 
 }  // namespace ns_unicalib

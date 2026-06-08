@@ -1,7 +1,7 @@
 #pragma once
 /**
  * 相机图像去畸变 — 严格使用内参 (fx, fy, cx, cy) 与畸变系数
- * 供 LiDAR-Camera 等外参标定在优化前将图像转为针孔无畸变模型
+ * 供 LiDAR-Camera / Camera-Camera 等外参标定在优化前将图像转为针孔无畸变模型
  */
 
 #include "unicalib/common/calib_param.h"
@@ -37,5 +37,11 @@ struct LidarCamPreparedImages {
 LidarCamPreparedImages prepare_lidar_cam_calibration_images(
     const std::vector<std::pair<double, cv::Mat>>& camera_frames,
     const CameraIntrinsics& cam_intrin);
+
+/** 批量去畸变图像序列，供 Camera-Camera 标定使用（与 LiDAR-Cam 同一套 K/D 规则） */
+LidarCamPreparedImages prepare_cam_cam_calibration_images(
+    const std::vector<std::pair<double, cv::Mat>>& camera_frames,
+    const CameraIntrinsics& cam_intrin,
+    const std::string& sensor_id = {});
 
 }  // namespace ns_unicalib

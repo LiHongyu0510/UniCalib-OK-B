@@ -10,6 +10,7 @@
 #include "unicalib/common/logger.h"
 #include "unicalib/common/exception.h"
 #include "unicalib/common/math_safety.h"  // 修复：添加数学安全工具库
+#include "unicalib/common/camera_undistort.h"
 #include <opencv2/features2d.hpp>
 #include <opencv2/calib3d.hpp>
 #include <opencv2/imgproc.hpp>
@@ -389,7 +390,15 @@ CamCamCalibrator::TwoStageResult CamCamCalibrator::calibrate_two_stage(
     const bool has_initial = init_extrin.has_value() && cfg_.use_initial_if_available;
     UNICALIB_INFO("  使用初值: {} (skip_coarse={})", has_initial, has_initial && cfg_.skip_coarse_when_initial_given);
 
-    size_t N = std::min(frames_cam0.size(), frames_cam1.size());
+    // 严格按内参 K/D 去畸变，后续特征匹配/BA/立体标定均使用针孔无畸变模型
+    const auto prep0 = prepare_cam_cam_calibration_images(frames_cam0, intrin0, cam0_id);
+    const auto prep1 = prepare_cam_cam_calibration_images(frames_cam1, intrin1, cam1_id);
+    const auto& frames0 = prep0.frames;
+    const auto& frames1 = prep1.frames;
+    const CameraIntrinsics& intrin0_ud = prep0.intrin;
+    const CameraIntrinsics& intrin1_ud = prep1.intrin;
+
+    size_t N = std::min(frames0.size(), frames1.size());
     if (N < 3) {
         UNICALIB_ERROR("图像对不足 (需≥3)");
         return result;
@@ -401,7 +410,7 @@ CamCamCalibrator::TwoStageResult CamCamCalibrator::calibrate_two_stage(
     const bool run_coarse = !(has_initial && cfg_.skip_coarse_when_initial_given);
     if (run_coarse) {
         auto coarse_opt = calibrate_essential(
-            frames_cam0, frames_cam1, intrin0, intrin1, cam0_id, cam1_id);
+            frames0, frames1, intrin0_ud, intrin1_ud, cam0_id, cam1_id);
         if (coarse_opt.has_value()) {
             result.coarse = coarse_opt;
             result.coarse_method = "ESSENTIAL_MATRIX";
@@ -419,22 +428,22 @@ CamCamCalibrator::TwoStageResult CamCamCalibrator::calibrate_two_stage(
     if (prefer_targetfree) {
         std::vector<FeatureMatch> all_matches;
         for (size_t fi = 0; fi < N; ++fi) {
-            if (frames_cam0[fi].second.empty() || frames_cam1[fi].second.empty())
+            if (frames0[fi].second.empty() || frames1[fi].second.empty())
                 continue;
-            auto fm = match_features(frames_cam0[fi].second, frames_cam1[fi].second,
-                                     intrin0, intrin1);
+            auto fm = match_features(frames0[fi].second, frames1[fi].second,
+                                     intrin0_ud, intrin1_ud);
             for (auto& m : fm) all_matches.push_back(m);
         }
         UNICALIB_INFO("[Fine] 匹配点数: {}, 执行 Bundle Adjustment", all_matches.size());
         if (all_matches.size() >= 10) {
             fine_result = bundle_adjustment_two_views(
-                all_matches, intrin0, intrin1, init_T, cam0_id, cam1_id);
+                all_matches, intrin0_ud, intrin1_ud, init_T, cam0_id, cam1_id);
             result.fine_method = "BUNDLE_ADJUSTMENT";
         }
     } else {
         UNICALIB_INFO("[Fine] 执行棋盘格立体标定");
         fine_result = calibrate_stereo(
-            frames_cam0, frames_cam1, intrin0, intrin1, cam0_id, cam1_id);
+            frames0, frames1, intrin0_ud, intrin1_ud, cam0_id, cam1_id);
         result.fine_method = "CHESSBOARD_STEREO";
     }
 
