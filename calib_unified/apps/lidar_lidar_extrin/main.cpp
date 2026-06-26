@@ -814,9 +814,10 @@ int main(int argc, char** argv) {
         // 标定 4x4：T_target_in_ref（p_ref = T_calib * p_target）
         const Eigen::Matrix4d T_calib = final_ext.SE3_TargetInRef().matrix();
 
-        // IMU 链式：先对雷达标定结果求逆得 T_ref_in_target，再与 T_imu_to_ref 组合
-        // T_imu_to_target = T_imu_to_ref * inv(T_target_in_ref)
-        if (ref_id == YG(ll, "chain_imu_ref", std::string("lidar_main")) && cfg["imu_lidar"] &&
+        // IMU 链式外参（imu_lidar_chained/）：
+        //   ref == chain_imu_ref（默认 lidar_main）: T_imu__other = inv(T_other_in_ref) * T_imu__ref
+        //   target == chain_imu_target（默认 right_front）: T_imu__ref = T_target_in_ref * T_imu__target
+        if (YG(ll, "chain_imu_extrinsic", true) && cfg["imu_lidar"] &&
             cfg["imu_lidar"]["initial_extrinsics"]) {
             const YAML::Node& imu_init = cfg["imu_lidar"]["initial_extrinsics"];
             std::string imu_id = YG(ll, "chain_imu_id", std::string("imu_0"));
@@ -827,33 +828,53 @@ int main(int argc, char** argv) {
             }
             if (imu_id.empty()) imu_id = "imu_0";
 
-            const std::string imu_keys[2] = {"T_" + imu_id + "__" + ref_id, imu_id + "__" + ref_id};
-            std::optional<Eigen::Matrix4d> T_imu_to_ref;
-            for (const auto& ik : imu_keys) {
-                if (imu_init[ik]) {
-                    T_imu_to_ref = matrix4d_from_yaml_node(imu_init[ik]);
-                    if (T_imu_to_ref) break;
+            const std::string chain_imu_ref = YG(ll, "chain_imu_ref", std::string("lidar_main"));
+            const std::string chain_imu_target = YG(ll, "chain_imu_target", std::string("right_front"));
+
+            auto load_imu_extrinsic = [&](const std::string& lidar_id) -> std::optional<Eigen::Matrix4d> {
+                const std::string keys[2] = {"T_" + imu_id + "__" + lidar_id, imu_id + "__" + lidar_id};
+                for (const auto& k : keys) {
+                    if (imu_init[k]) {
+                        if (auto T = matrix4d_from_yaml_node(imu_init[k])) return T;
+                    }
                 }
-            }
-            if (T_imu_to_ref) {
-                const Eigen::Matrix4d T_calib_inv = final_ext.SE3_TargetInRef().inverse().matrix();
-                const Eigen::Matrix4d T_imu_tgt =T_calib_inv * (*T_imu_to_ref);
+                return std::nullopt;
+            };
+
+            auto save_imu_chained = [&](const std::string& lidar_id, const Eigen::Matrix4d& T_imu_lidar,
+                                        const std::string& formula) {
                 ExtrinsicSE3 imu_ext = final_ext;
                 imu_ext.ref_sensor_id = imu_id;
-                imu_ext.target_sensor_id = target_id;
-                update_extrinsic_from_matrix4(imu_ext, T_imu_tgt);
+                imu_ext.target_sensor_id = lidar_id;
+                update_extrinsic_from_matrix4(imu_ext, T_imu_lidar);
 
                 const std::string chain_dir = result_subdir + "/imu_lidar_chained";
                 fs::create_directories(chain_dir);
-                const std::string imu_out = chain_dir + "/" + imu_id + "_to_" + target_id + ".yaml";
+                const std::string imu_out = chain_dir + "/" + imu_id + "_to_" + lidar_id + ".yaml";
                 save_extrinsic_yaml(imu_ext, imu_out);
-                const std::string opencv_key = "T_" + imu_id + "__" + target_id;
-                save_opencv_matrix_yaml(chain_dir + "/" + opencv_key + ".yaml", opencv_key, T_imu_tgt);
-                UNICALIB_INFO("[LiDAR-LiDAR] T_{}__{} 已写: {} (T_imu_to_{} * inv(T_{}__{}))",
-                              imu_id, target_id, imu_out, ref_id, ref_id, target_id);
-            } else {
-                UNICALIB_WARN("[LiDAR-LiDAR] 未解析 imu_lidar.initial_extrinsics T_{}__{} / {}__{}",
-                              imu_id, ref_id, imu_id, ref_id);
+                const std::string opencv_key = "T_" + imu_id + "__" + lidar_id;
+                save_opencv_matrix_yaml(chain_dir + "/" + opencv_key + ".yaml", opencv_key, T_imu_lidar);
+                UNICALIB_INFO("[LiDAR-LiDAR] T_{}__{} 已写: {} ({})", imu_id, lidar_id, imu_out, formula);
+            };
+
+            if (ref_id == chain_imu_ref) {
+                if (auto T_imu_to_ref = load_imu_extrinsic(ref_id)) {
+                    const Eigen::Matrix4d T_imu_lidar = final_ext.SE3_TargetInRef().inverse().matrix() * (*T_imu_to_ref);
+                    save_imu_chained(target_id, T_imu_lidar,
+                                     "inv(T_" + ref_id + "__" + target_id + ") * T_" + imu_id + "__" + ref_id);
+                } else {
+                    UNICALIB_WARN("[LiDAR-LiDAR] 未解析 imu_lidar.initial_extrinsics T_{}__{} / {}__{}",
+                                  imu_id, ref_id, imu_id, ref_id);
+                }
+            } else if (target_id == chain_imu_target) {
+                if (auto T_imu_to_target = load_imu_extrinsic(target_id)) {
+                    const Eigen::Matrix4d T_imu_lidar = T_calib * (*T_imu_to_target);
+                    save_imu_chained(ref_id, T_imu_lidar,
+                                     "T_" + ref_id + "__" + target_id + " * T_" + imu_id + "__" + target_id);
+                } else {
+                    UNICALIB_WARN("[LiDAR-LiDAR] 未解析 imu_lidar.initial_extrinsics T_{}__{} / {}__{}",
+                                  imu_id, target_id, imu_id, target_id);
+                }
             }
         }
 

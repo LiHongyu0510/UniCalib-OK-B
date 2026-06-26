@@ -25,7 +25,9 @@ alwaysApply: true
 |-------------|--------|--------|--------|--------|
 | lidar_main  | 前     | 左     | 上     | 前左上 |
 | left_front  | 前     | 右     | 下     | 前右下 |
-| right_back  | 后     | 左     | 下     | 后左下 |
+| right_back  | 右     | 后     | 下     | 右后下 |
+| left_back   | 左     | 前     | 下     | 右前下 |
+| right_front | 前     | 右     | 下     | 前右下 |
 
 ## IMU
 
