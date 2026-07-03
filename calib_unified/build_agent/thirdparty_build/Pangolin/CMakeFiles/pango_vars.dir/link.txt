@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -O3 -DNDEBUG -shared -Wl,-soname,libpango_vars.so -o ../../lib/libpango_vars.so CMakeFiles/pango_vars.dir/components/pango_vars/src/vars.cpp.o CMakeFiles/pango_vars.dir/components/pango_vars/src/varstate.cpp.o  -Wl,-rpath,/home/lihongyu/Unicalib/UniCalib-OK/calib_unified/build_agent/lib: ../../lib/libpango_core.so -lrt 
