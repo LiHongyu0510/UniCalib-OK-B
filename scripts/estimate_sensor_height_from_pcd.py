@@ -47,6 +47,12 @@ SENSORS: Dict[str, SensorSpec] = {
     "right_back": SensorSpec(
         "right_back", "右后补盲雷达高度", np.array([0.0, 0.0, -1.0]), (-10.0, 5.0)
     ),
+    "left_back": SensorSpec(
+        "left_back", "左后补盲雷达高度", np.array([0.0, 0.0, -1.0]), (-10.0, 5.0)
+    ),
+    "right_front": SensorSpec(
+        "right_front", "右前补盲雷达高度", np.array([0.0, 0.0, -1.0]), (-10.0, 4.0)
+    ),
 }
 
 
@@ -526,8 +532,8 @@ def main() -> int:
             f"  {'IMU高度':18s}  {imu_h*1000:8.1f}   "
             f"(Δ相对主雷达 {(imu_h-h_main)*1000:+.0f} mm, 融合点云地面)"
         )
-    if not np.isnan(struct_h):
-        # print(f"  {'结构原点高度':18s}  {struct_h*1000:8.1f}   (主雷达点云车头近似)")
+    # if not np.isnan(struct_h):
+    #     print(f"  {'结构原点高度':18s}  {struct_h*1000:8.1f}   (主雷达点云车头近似)")
     print("=" * 60)
     return 0
 
